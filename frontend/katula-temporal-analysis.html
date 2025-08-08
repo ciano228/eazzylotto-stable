@@ -1,0 +1,2885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse Temporelle Katula - Comparaison Multi-Périodes</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: #2c3e50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background: white;
+            color: #2c3e50;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .tables-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tables-grid.grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .tables-grid.grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .tables-grid.grid-4 { grid-template-columns: repeat(2, 1fr); }
+        .tables-grid.grid-6 { grid-template-columns: repeat(3, 1fr); }
+        .tables-grid.grid-8 { grid-template-columns: repeat(4, 1fr); }
+        .tables-grid.grid-9 { grid-template-columns: repeat(3, 1fr); }
+        .tables-grid.grid-12 { grid-template-columns: repeat(4, 1fr); }
+
+        .config-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #3498db;
+        }
+
+        .config-panel h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .config-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .table-config {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+        }
+
+        .table-config h4 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            text-align: center;
+            background: #ecf0f1;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .config-row label {
+            min-width: 80px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .config-row input, .config-row select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .config-actions {
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .config-actions button {
+            padding: 12px 25px;
+            font-size: 1em;
+        }
+
+        .marking-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .marking-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+        }
+
+        .marking-section h4 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            text-align: center;
+            background: #ecf0f1;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .marking-styles {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .marking-styles label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .marking-styles label:hover {
+            background: #f8f9fa;
+        }
+
+        .frequency-colors {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-option label {
+            min-width: 60px;
+            font-weight: bold;
+        }
+
+        .color-option input[type="color"] {
+            width: 40px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .color-preview {
+            padding: 5px 10px;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .display-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .display-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* Styles de marquage avancés */
+        .mini-chip-cell.occurred-1 {
+            background: #e74c3c !important;
+            color: white !important;
+        }
+
+        .mini-chip-cell.occurred-2 {
+            background: #f39c12 !important;
+            color: white !important;
+        }
+
+        .mini-chip-cell.occurred-3 {
+            background: #8e44ad !important;
+            color: white !important;
+        }
+
+        .mini-chip-cell.occurred-4 {
+            background: #2c3e50 !important;
+            color: white !important;
+        }
+
+        .occurrence-counter {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.6em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .marking-cross::after {
+            content: '✕';
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .marking-dot::after {
+            content: '●';
+            font-size: 1.5em;
+        }
+
+        .marking-square::after {
+            content: '■';
+            font-size: 1.2em;
+        }
+
+        .marking-number::after {
+            content: attr(data-count);
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        @keyframes markingPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-marking {
+            animation: markingPulse 0.5s ease-in-out;
+        }
+
+        .mini-table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ecf0f1;
+        }
+
+        .mini-table-header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .table-period-info {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 5px;
+            background: #ecf0f1;
+            color: #2c3e50;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .mini-katula-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 2px;
+            aspect-ratio: 6/8;
+            border: 2px solid #2c3e50;
+            background: #2c3e50;
+            position: relative;
+        }
+
+        .mini-chip-cell {
+            background: white;
+            border: 1px solid #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #2c3e50;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mini-chip-cell:hover {
+            background: #ecf0f1;
+        }
+
+        /* Marquage des occurrences */
+        .mini-chip-cell.occurred {
+            background: #e74c3c !important;
+            color: white !important;
+        }
+
+        .mini-chip-cell.occurred::after {
+            content: '✕';
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Marquage des zones d'étude */
+        .mini-chip-cell.marked-zone {
+            background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+            color: white !important;
+            border: 2px solid #d35400 !important;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            transform: scale(1.05);
+        }
+
+        .mini-chip-cell.selected-zone {
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+            color: white !important;
+            border: 2px solid #a93226 !important;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+            animation: pulse-selected 2s infinite;
+        }
+
+        @keyframes pulse-selected {
+            0% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
+            50% { box-shadow: 0 0 25px rgba(231, 76, 60, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
+        }
+
+        /* Panneau de résultats */
+        .results-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #27ae60;
+        }
+
+        .results-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .results-controls button {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .results-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .result-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .result-chip {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .result-chip.highlighted {
+            background: #e74c3c;
+            animation: highlight-chip 1s ease-in-out;
+        }
+
+        @keyframes highlight-chip {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Panneau d'historique des tirages */
+        .draw-history-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #3498db;
+        }
+
+        .history-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .history-controls button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .history-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .draw-history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .draw-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .draw-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .draw-header {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .draw-date {
+            color: #3498db;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .draw-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .draw-number {
+            background: #3498db;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .draw-number:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .draw-number.played-zone {
+            background: #e74c3c;
+            animation: pulse-played 2s infinite;
+        }
+
+        @keyframes pulse-played {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .draw-info {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .zone-mapping {
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+
+        .zone-chip {
+            display: inline-block;
+            background: #95a5a6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 2px;
+            font-size: 0.75em;
+        }
+
+        .zone-chip.active {
+            background: #e74c3c;
+        }
+
+        /* Styles pour les zones jouées et surlignage temporaire */
+        .mini-chip-cell.played-zone {
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+            color: white !important;
+            border: 2px solid #a93226 !important;
+            position: relative;
+        }
+
+        .mini-chip-cell.played-zone::after {
+            content: '●';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 0.6em;
+            color: #f1c40f;
+        }
+
+        .mini-chip-cell.temp-highlight {
+            background: linear-gradient(135deg, #f1c40f, #f39c12) !important;
+            color: #2c3e50 !important;
+            border: 3px solid #e67e22 !important;
+            transform: scale(1.2);
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+            animation: temp-highlight 3s ease-in-out;
+        }
+
+        @keyframes temp-highlight {
+            0% { transform: scale(1.2); box-shadow: 0 0 20px rgba(241, 196, 15, 0.8); }
+            50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(241, 196, 15, 1); }
+            100% { transform: scale(1.2); box-shadow: 0 0 20px rgba(241, 196, 15, 0.8); }
+        }
+
+        /* Styles pour la répartition des combinaisons */
+        .combinations-breakdown {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        .universe-breakdown {
+            margin: 8px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #3498db;
+        }
+
+        .combo-details {
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .combo-chip {
+            background: #3498db;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .combo-chip:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .more-combos {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 0.7em;
+            padding: 3px 6px;
+        }
+
+        .universe-breakdown strong {
+            color: #2c3e50;
+        }
+
+        /* Lignes de séparation des quadrants */
+        .mini-katula-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: #e74c3c;
+            z-index: 10;
+            transform: translateX(-50%);
+        }
+
+        .mini-katula-grid::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e74c3c;
+            z-index: 10;
+            transform: translateY(-50%);
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .table-controls button {
+            padding: 8px 12px;
+            font-size: 0.8em;
+            border: 1px solid #95a5a6;
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .table-controls button:hover {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .analysis-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .analysis-panel h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pattern-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .pattern-item h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .pattern-item p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .patterns-summary {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .pattern-category {
+            margin-bottom: 25px;
+        }
+
+        .category-header {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+            border-left: 4px solid #3498db;
+        }
+
+        .pattern-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pattern-header h5 {
+            margin: 0;
+            color: #2c3e50;
+            flex: 1;
+        }
+
+        .confidence-badge {
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .pattern-description {
+            color: #2c3e50 !important;
+            font-weight: bold;
+            margin-bottom: 5px !important;
+        }
+
+        .pattern-details {
+            color: #7f8c8d !important;
+            font-size: 0.85em !important;
+        }
+
+        .chip-highlight {
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .high-confidence {
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        .medium-confidence {
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .low-confidence {
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .pattern-item {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pattern-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .no-patterns {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+    
+    <div class="container" style="margin-top: 100px;">
+        <div class="header">
+            <h1>🔍 Analyse Temporelle Katula</h1>
+            <p>Comparaison multi-périodes et détection de patterns récurrents</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Univers</label>
+                <select id="universeSelect">
+                    <option value="fruity">Fruity</option>
+                    <option value="mundo">Mundo</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Nombre de Tables</label>
+                <select id="tablesCountSelect" onchange="updateTablesConfiguration()">
+                    <option value="2">2 Tables</option>
+                    <option value="3">3 Tables</option>
+                    <option value="4">4 Tables</option>
+                    <option value="6" selected>6 Tables</option>
+                    <option value="8">8 Tables</option>
+                    <option value="9">9 Tables</option>
+                    <option value="12">12 Tables</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Type de Marquage</label>
+                <select id="markingTypeSelect" onchange="updateMarkingType()">
+                    <option value="chip">Par Chip</option>
+                    <option value="combination">Par Combinaison</option>
+                    <option value="denomination">Par Dénomination</option>
+                    <option value="tome">Par Tome</option>
+                    <option value="forme">Par Forme</option>
+                    <option value="granque">Par Granque</option>
+                    <option value="parite">Par Parité</option>
+                    <option value="zone">Par Zone Géométrique</option>
+                </select>
+            </div>
+            
+            <button onclick="showTablesConfiguration()">⚙️ Configurer les Tables</button>
+            <button onclick="showMarkingOptions()">🎨 Options de Marquage</button>
+            <button onclick="generateTemporalAnalysis()">🔄 Générer l'Analyse</button>
+            <button onclick="detectPatterns()">🎯 Détecter les Patterns</button>
+        </div>
+
+        <!-- Configuration des tables -->
+        <div id="tablesConfigPanel" class="config-panel" style="display: none;">
+            <h3>📅 Configuration des Périodes</h3>
+            <div id="tablesConfigContainer" class="config-container">
+                <!-- Configuration dynamique des tables -->
+            </div>
+            <div class="config-actions">
+                <button onclick="applyTablesConfiguration()">✅ Appliquer</button>
+                <button onclick="hideTablesConfiguration()">❌ Annuler</button>
+            </div>
+        </div>
+
+        <!-- Options de marquage -->
+        <div id="markingOptionsPanel" class="config-panel" style="display: none;">
+            <h3>🎨 Options de Marquage</h3>
+            <div class="marking-options">
+                <div class="marking-section">
+                    <h4>Style de Marquage</h4>
+                    <div class="marking-styles">
+                        <label><input type="radio" name="markingStyle" value="cross" checked> ✕ Croix</label>
+                        <label><input type="radio" name="markingStyle" value="dot"> ● Point</label>
+                        <label><input type="radio" name="markingStyle" value="square"> ■ Carré</label>
+                        <label><input type="radio" name="markingStyle" value="number"> 123 Nombre</label>
+                    </div>
+                </div>
+                
+                <div class="marking-section">
+                    <h4>Intensité selon Fréquence</h4>
+                    <div class="frequency-colors">
+                        <div class="color-option">
+                            <label>1 fois:</label>
+                            <input type="color" id="color1" value="#e74c3c">
+                            <span class="color-preview" style="background: #e74c3c;">✕</span>
+                        </div>
+                        <div class="color-option">
+                            <label>2-3 fois:</label>
+                            <input type="color" id="color2" value="#f39c12">
+                            <span class="color-preview" style="background: #f39c12;">✕✕</span>
+                        </div>
+                        <div class="color-option">
+                            <label>4+ fois:</label>
+                            <input type="color" id="color3" value="#8e44ad">
+                            <span class="color-preview" style="background: #8e44ad;">✕✕✕</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="marking-section">
+                    <h4>Affichage</h4>
+                    <div class="display-options">
+                        <label><input type="checkbox" id="showCount" checked> Afficher le compteur</label>
+                        <label><input type="checkbox" id="showTooltip" checked> Info-bulles détaillées</label>
+                        <label><input type="checkbox" id="animateMarking"> Animation des marquages</label>
+                    </div>
+                </div>
+            </div>
+            <div class="config-actions">
+                <button onclick="applyMarkingOptions()">✅ Appliquer</button>
+                <button onclick="hideMarkingOptions()">❌ Annuler</button>
+            </div>
+        </div>
+
+        <div id="tablesContainer" class="tables-grid">
+            <!-- Les mini tables seront générées ici -->
+        </div>
+
+        <div id="analysisPanel" class="analysis-panel" style="display: none;">
+            <h3>📊 Analyse des Patterns Détectés</h3>
+            <div id="patternsContainer" class="patterns-grid">
+                <!-- Les patterns détectés seront affichés ici -->
+            </div>
+        </div>
+
+        <div id="drawHistoryPanel" class="draw-history-panel" style="display: none;">
+            <h3>📅 Historique des Tirages - Périodes Analysées</h3>
+            <div class="history-controls">
+                <button onclick="loadRealDrawHistory()">🔄 Charger Historique Réel</button>
+                <button onclick="showDrawDetails()">📋 Détails Complets</button>
+                <button onclick="exportDrawHistory()">📊 Exporter Historique</button>
+            </div>
+            <div id="drawHistoryContainer" class="draw-history-grid">
+                <!-- L'historique des tirages sera affiché ici -->
+            </div>
+        </div>
+
+        <div id="resultsPanel" class="results-panel" style="display: none;">
+            <h3>🎯 Analyse des Zones Jouées</h3>
+            <div class="results-controls">
+                <button onclick="markPlayedZones()">🎯 Marquer Zones Jouées</button>
+                <button onclick="showZoneStatistics()">📊 Statistiques Zones</button>
+                <button onclick="exportResults()">📊 Exporter Résultats</button>
+                <button onclick="clearSelection()">🗑️ Effacer Sélection</button>
+            </div>
+            <div id="resultsContainer" class="results-grid">
+                <!-- Les résultats de tirages seront affichés ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8081/api/analytics';
+        let currentAnalysisData = null;
+        let tablesConfiguration = [];
+        let markingOptions = {
+            type: 'chip',
+            style: 'cross',
+            colors: {
+                1: '#e74c3c',
+                2: '#f39c12',
+                3: '#8e44ad'
+            },
+            showCount: true,
+            showTooltip: true,
+            animateMarking: false
+        };
+        
+        // Système de marquage des zones
+        let selectedChips = new Set();
+        let markedZones = new Set();
+        let currentSelection = {
+            chips: [],
+            periods: [],
+            universe: null
+        };
+        let drawResults = [];
+
+        // [FONCTION SUPPRIMÉE - Doublons corrigés]
+
+        // Récupérer les données temporelles pour une période
+        async function getTemporalData(universe, year, period, type) {
+            // Pour l'instant, simulons les données
+            // TODO: Remplacer par de vraies requêtes API
+            
+            const occurrences = [];
+            const numOccurrences = Math.floor(Math.random() * 8) + 3; // 3-10 occurrences
+            
+            for (let i = 0; i < numOccurrences; i++) {
+                const chipNumber = Math.floor(Math.random() * 48) + 1;
+                if (!occurrences.includes(chipNumber)) {
+                    occurrences.push(chipNumber);
+                }
+            }
+            
+            return {
+                year,
+                period,
+                type,
+                universe,
+                occurrences: occurrences.sort((a, b) => a - b),
+                totalDraws: Math.floor(Math.random() * 20) + 10
+            };
+        }
+
+        // Afficher les mini tables temporelles
+        function displayTemporalTables(analysisData) {
+            const container = document.getElementById('tablesContainer');
+            let html = '';
+            
+            analysisData.tablesData.forEach((tableData, index) => {
+                const isPrediction = tableData.type === 'prediction';
+                const headerClass = isPrediction ? 'style="background: #e67e22;"' : '';
+                const title = isPrediction ? 
+                    `${tableData.year} ${tableData.period} (Prédiction)` : 
+                    `${tableData.year} ${tableData.period}`;
+                
+                html += `
+                    <div class="mini-table-container">
+                        <div class="mini-table-header" ${headerClass}>
+                            ${title}
+                        </div>
+                        <div class="mini-katula-grid">
+                            ${generateMiniKatulaGrid(tableData)}
+                        </div>
+                        <div class="table-controls">
+                            <button onclick="showTableDetails(${index})">Caractère</button>
+                            <button onclick="showTableStats(${index})">Stats</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Générer la grille d'une mini table Katula
+        function generateMiniKatulaGrid(tableData) {
+            let html = '';
+            
+            for (let chipNumber = 1; chipNumber <= 48; chipNumber++) {
+                const hasOccurred = tableData.occurrences.includes(chipNumber);
+                const occurredClass = hasOccurred ? 'occurred' : '';
+                
+                html += `
+                    <div class="mini-chip-cell ${occurredClass}" 
+                         data-chip="${chipNumber}" 
+                         data-universe="${currentAnalysisData?.universe || 'unknown'}"
+                         data-year="${tableData.year}"
+                         data-period="${tableData.period}"
+                         onclick="showChipTemporalDetails(${chipNumber}, '${tableData.year}', '${tableData.period}')"
+                         title="Chip ${chipNumber} - ${tableData.year} ${tableData.period}">
+                        ${chipNumber}
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+
+        // Détecter les patterns récurrents (VERSION AVEC BD)
+        async function detectPatterns() {
+            if (!currentAnalysisData) {
+                alert('Veuillez d\'abord générer une analyse temporelle');
+                return;
+            }
+            
+            console.log('🔍 Détection des patterns avec BD...');
+            
+            // Afficher le loading
+            const container = document.getElementById('patternsContainer');
+            container.innerHTML = '<div class="loading">🔄 Analyse des patterns en cours...</div>';
+            document.getElementById('analysisPanel').style.display = 'block';
+            
+            try {
+                // Essayer d'abord l'analyse via l'API backend
+                const patterns = await analyzePatternsBD(currentAnalysisData);
+                displayPatterns(patterns);
+                
+            } catch (error) {
+                console.error('❌ Erreur analyse BD:', error);
+                console.log('🔄 Fallback vers analyse locale...');
+                
+                // Fallback vers l'analyse locale
+                const patterns = analyzeRecurrentPatterns(currentAnalysisData);
+                displayPatterns(patterns);
+            }
+        }
+
+        // Analyse des patterns via l'API backend
+        async function analyzePatternsBD(analysisData) {
+            const universe = analysisData.universe || document.getElementById('universeSelect').value;
+            const markingType = markingOptions.type;
+            
+            // Préparer les données pour l'API
+            const requestData = {
+                tables_config: tablesConfiguration.filter(config => config.type === 'historical'),
+                marking_type: markingType
+            };
+            
+            console.log('📤 Envoi requête analyse patterns:', requestData);
+            
+            const response = await fetch(`${API_BASE}/temporal-analysis/${universe}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Erreur API: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('📥 Résultat analyse patterns:', result);
+            
+            return result.patterns || [];
+        }
+
+        // Analyser les patterns récurrents (VERSION AVANCÉE)
+        function analyzeRecurrentPatterns(analysisData) {
+            console.log('🔍 Début de l\'analyse avancée des patterns...');
+            
+            const patterns = [];
+            const historicalTables = analysisData.tablesData.filter(t => t.type === 'historical');
+            
+            // 1. ANALYSE DES RÉCURRENCES TEMPORELLES
+            const recurrencePatterns = analyzeTemporalRecurrence(historicalTables);
+            patterns.push(...recurrencePatterns);
+            
+            // 2. ANALYSE DES CYCLES PÉRIODIQUES
+            const cyclicPatterns = analyzeCyclicPatterns(historicalTables);
+            patterns.push(...cyclicPatterns);
+            
+            // 3. ANALYSE DES SÉQUENCES ET TRANSITIONS
+            const sequencePatterns = analyzeSequencePatterns(historicalTables);
+            patterns.push(...sequencePatterns);
+            
+            // 4. ANALYSE SPATIALE (QUADRANTS, ZONES)
+            const spatialPatterns = analyzeSpatialPatterns(historicalTables);
+            patterns.push(...spatialPatterns);
+            
+            // 5. ANALYSE DES CORRÉLATIONS
+            const correlationPatterns = analyzeCorrelations(historicalTables);
+            patterns.push(...correlationPatterns);
+            
+            // 6. PRÉDICTIONS BASÉES SUR LES PATTERNS
+            const predictions = generatePredictions(patterns, historicalTables);
+            patterns.push(...predictions);
+            
+            console.log(`✅ Analyse terminée: ${patterns.length} patterns détectés`);
+            return patterns.sort((a, b) => b.confidence - a.confidence);
+        }
+
+        // 1. ANALYSE DES RÉCURRENCES TEMPORELLES
+        function analyzeTemporalRecurrence(historicalTables) {
+            const patterns = [];
+            const chipOccurrences = {};
+            
+            // Collecter les occurrences avec timestamps
+            historicalTables.forEach((table, index) => {
+                Object.entries(table.occurrences).forEach(([chipNumber, data]) => {
+                    if (data.count > 0) {
+                        if (!chipOccurrences[chipNumber]) {
+                            chipOccurrences[chipNumber] = [];
+                        }
+                        chipOccurrences[chipNumber].push({
+                            tableIndex: index,
+                            title: table.title,
+                            count: data.count,
+                            attributes: data.attributes
+                        });
+                    }
+                });
+            });
+            
+            // Analyser les récurrences
+            Object.entries(chipOccurrences).forEach(([chipNumber, occurrences]) => {
+                if (occurrences.length >= 2) {
+                    const totalOccurrences = occurrences.reduce((sum, occ) => sum + occ.count, 0);
+                    const consistency = occurrences.length / historicalTables.length;
+                    const intensity = totalOccurrences / occurrences.length;
+                    
+                    let patternType = 'Récurrence Faible';
+                    let confidence = consistency * 40 + intensity * 10;
+                    
+                    if (consistency >= 0.8) {
+                        patternType = 'Récurrence Très Forte';
+                        confidence += 30;
+                    } else if (consistency >= 0.6) {
+                        patternType = 'Récurrence Forte';
+                        confidence += 20;
+                    } else if (consistency >= 0.4) {
+                        patternType = 'Récurrence Modérée';
+                        confidence += 10;
+                    }
+                    
+                    patterns.push({
+                        type: patternType,
+                        category: 'Récurrence',
+                        description: `Chip ${chipNumber} - Consistance ${(consistency * 100).toFixed(0)}%`,
+                        details: `Apparu dans ${occurrences.length}/${historicalTables.length} périodes (${totalOccurrences} fois total)`,
+                        confidence: Math.min(confidence, 100),
+                        chipNumber: parseInt(chipNumber),
+                        data: {
+                            consistency,
+                            intensity,
+                            occurrences: occurrences.map(o => o.title)
+                        }
+                    });
+                }
+            });
+            
+            return patterns;
+        }
+
+        // 2. ANALYSE DES CYCLES PÉRIODIQUES
+        function analyzeCyclicPatterns(historicalTables) {
+            const patterns = [];
+            
+            // Analyser les cycles de 2, 3, 4 périodes
+            for (let cycleLength = 2; cycleLength <= 4; cycleLength++) {
+                const cycles = detectCycles(historicalTables, cycleLength);
+                patterns.push(...cycles);
+            }
+            
+            return patterns;
+        }
+        
+        function detectCycles(tables, cycleLength) {
+            const patterns = [];
+            const chipCycles = {};
+            
+            // Créer des fenêtres glissantes
+            for (let i = 0; i <= tables.length - cycleLength; i++) {
+                const window = tables.slice(i, i + cycleLength);
+                const windowChips = new Set();
+                
+                window.forEach(table => {
+                    Object.keys(table.occurrences).forEach(chip => {
+                        if (table.occurrences[chip].count > 0) {
+                            windowChips.add(chip);
+                        }
+                    });
+                });
+                
+                windowChips.forEach(chip => {
+                    if (!chipCycles[chip]) chipCycles[chip] = [];
+                    chipCycles[chip].push(i);
+                });
+            }
+            
+            // Détecter les cycles réguliers
+            Object.entries(chipCycles).forEach(([chip, positions]) => {
+                if (positions.length >= 2) {
+                    const intervals = [];
+                    for (let i = 1; i < positions.length; i++) {
+                        intervals.push(positions[i] - positions[i-1]);
+                    }
+                    
+                    const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+                    const consistency = intervals.filter(i => Math.abs(i - avgInterval) <= 1).length / intervals.length;
+                    
+                    if (consistency >= 0.7) {
+                        patterns.push({
+                            type: 'Cycle Périodique',
+                            category: 'Cycle',
+                            description: `Chip ${chip} - Cycle de ${cycleLength} périodes`,
+                            details: `Intervalle moyen: ${avgInterval.toFixed(1)}, Consistance: ${(consistency * 100).toFixed(0)}%`,
+                            confidence: consistency * 80,
+                            chipNumber: parseInt(chip),
+                            data: { cycleLength, avgInterval, consistency }
+                        });
+                    }
+                }
+            });
+            
+            return patterns;
+        }
+
+        // 3. ANALYSE DES SÉQUENCES ET TRANSITIONS
+        function analyzeSequencePatterns(historicalTables) {
+            const patterns = [];
+            const transitions = {};
+            
+            // Analyser les transitions entre périodes consécutives
+            for (let i = 0; i < historicalTables.length - 1; i++) {
+                const currentChips = new Set(Object.keys(historicalTables[i].occurrences).filter(c => historicalTables[i].occurrences[c].count > 0));
+                const nextChips = new Set(Object.keys(historicalTables[i + 1].occurrences).filter(c => historicalTables[i + 1].occurrences[c].count > 0));
+                
+                currentChips.forEach(chip => {
+                    if (!transitions[chip]) transitions[chip] = { followed: [], preceded: [] };
+                    
+                    nextChips.forEach(nextChip => {
+                        if (chip !== nextChip) {
+                            transitions[chip].followed.push(nextChip);
+                            if (!transitions[nextChip]) transitions[nextChip] = { followed: [], preceded: [] };
+                            transitions[nextChip].preceded.push(chip);
+                        }
+                    });
+                });
+            }
+            
+            // Identifier les séquences fréquentes
+            Object.entries(transitions).forEach(([chip, data]) => {
+                const followedCounts = {};
+                data.followed.forEach(f => followedCounts[f] = (followedCounts[f] || 0) + 1);
+                
+                Object.entries(followedCounts).forEach(([followedChip, count]) => {
+                    if (count >= 2) {
+                        const probability = count / data.followed.length;
+                        patterns.push({
+                            type: 'Séquence Fréquente',
+                            category: 'Séquence',
+                            description: `Chip ${chip} → Chip ${followedChip}`,
+                            details: `Transition observée ${count} fois (probabilité: ${(probability * 100).toFixed(0)}%)`,
+                            confidence: probability * 70 + count * 10,
+                            chipNumber: parseInt(chip),
+                            data: { followedChip: parseInt(followedChip), count, probability }
+                        });
+                    }
+                });
+            });
+            
+            return patterns;
+        }
+
+        // 4. ANALYSE SPATIALE (QUADRANTS, ZONES)
+        function analyzeSpatialPatterns(historicalTables) {
+            const patterns = [];
+            const quadrantActivity = { q1: [], q2: [], q3: [], q4: [] };
+            
+            // Mapper les chips aux quadrants
+            const chipToQuadrant = (chip) => {
+                const row = Math.ceil(chip / 6);
+                const col = ((chip - 1) % 6) + 1;
+                
+                if (row <= 4 && col <= 3) return 'q1';
+                if (row <= 4 && col > 3) return 'q2';
+                if (row > 4 && col <= 3) return 'q3';
+                return 'q4';
+            };
+            
+            // Analyser l'activité par quadrant
+            historicalTables.forEach((table, index) => {
+                const quadrantCounts = { q1: 0, q2: 0, q3: 0, q4: 0 };
+                
+                Object.entries(table.occurrences).forEach(([chip, data]) => {
+                    if (data.count > 0) {
+                        const quadrant = chipToQuadrant(parseInt(chip));
+                        quadrantCounts[quadrant] += data.count;
+                    }
+                });
+                
+                Object.entries(quadrantCounts).forEach(([quadrant, count]) => {
+                    quadrantActivity[quadrant].push(count);
+                });
+            });
+            
+            // Détecter les patterns spatiaux
+            Object.entries(quadrantActivity).forEach(([quadrant, activity]) => {
+                const avgActivity = activity.reduce((a, b) => a + b, 0) / activity.length;
+                const consistency = activity.filter(a => a > 0).length / activity.length;
+                
+                if (avgActivity >= 2 && consistency >= 0.6) {
+                    patterns.push({
+                        type: 'Zone Active',
+                        category: 'Spatial',
+                        description: `Quadrant ${quadrant.toUpperCase()} très actif`,
+                        details: `Activité moyenne: ${avgActivity.toFixed(1)}, Consistance: ${(consistency * 100).toFixed(0)}%`,
+                        confidence: (avgActivity * 10) + (consistency * 40),
+                        data: { quadrant, avgActivity, consistency }
+                    });
+                }
+            });
+            
+            return patterns;
+        }
+
+        // 5. ANALYSE DES CORRÉLATIONS
+        function analyzeCorrelations(historicalTables) {
+            const patterns = [];
+            const chipPairs = {};
+            
+            // Analyser les co-occurrences
+            historicalTables.forEach(table => {
+                const activeChips = Object.keys(table.occurrences).filter(c => table.occurrences[c].count > 0);
+                
+                for (let i = 0; i < activeChips.length; i++) {
+                    for (let j = i + 1; j < activeChips.length; j++) {
+                        const pair = `${activeChips[i]}-${activeChips[j]}`;
+                        chipPairs[pair] = (chipPairs[pair] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Identifier les corrélations fortes
+            Object.entries(chipPairs).forEach(([pair, count]) => {
+                if (count >= 2) {
+                    const [chip1, chip2] = pair.split('-');
+                    const correlation = count / historicalTables.length;
+                    
+                    if (correlation >= 0.4) {
+                        patterns.push({
+                            type: 'Corrélation Forte',
+                            category: 'Corrélation',
+                            description: `Chips ${chip1} et ${chip2} apparaissent ensemble`,
+                            details: `Co-occurrence dans ${count}/${historicalTables.length} périodes (${(correlation * 100).toFixed(0)}%)`,
+                            confidence: correlation * 80,
+                            data: { chip1: parseInt(chip1), chip2: parseInt(chip2), correlation }
+                        });
+                    }
+                }
+            });
+            
+            return patterns;
+        }
+
+        // 6. GÉNÉRATION DE PRÉDICTIONS
+        function generatePredictions(patterns, historicalTables) {
+            const predictions = [];
+            
+            // Prédictions basées sur les récurrences fortes
+            const strongRecurrences = patterns.filter(p => p.category === 'Récurrence' && p.confidence >= 70);
+            strongRecurrences.forEach(pattern => {
+                predictions.push({
+                    type: 'Prédiction Forte',
+                    category: 'Prédiction',
+                    description: `Chip ${pattern.chipNumber} probable dans la prochaine période`,
+                    details: `Basé sur une récurrence de ${(pattern.data.consistency * 100).toFixed(0)}%`,
+                    confidence: pattern.confidence * 0.8, // Réduction pour incertitude future
+                    chipNumber: pattern.chipNumber,
+                    data: { basedOn: 'recurrence', originalConfidence: pattern.confidence }
+                });
+            });
+            
+            // Prédictions basées sur les cycles
+            const cycles = patterns.filter(p => p.category === 'Cycle' && p.confidence >= 60);
+            cycles.forEach(pattern => {
+                predictions.push({
+                    type: 'Prédiction Cyclique',
+                    category: 'Prédiction',
+                    description: `Chip ${pattern.chipNumber} attendu selon cycle de ${pattern.data.cycleLength}`,
+                    details: `Cycle détecté avec ${(pattern.data.consistency * 100).toFixed(0)}% de consistance`,
+                    confidence: pattern.confidence * 0.7,
+                    chipNumber: pattern.chipNumber,
+                    data: { basedOn: 'cycle', cycleLength: pattern.data.cycleLength }
+                });
+            });
+            
+            return predictions;
+        }
+
+        // Afficher les patterns détectés (VERSION AMÉLIORÉE)
+        function displayPatterns(patterns) {
+            const container = document.getElementById('patternsContainer');
+            
+            // Grouper les patterns par catégorie
+            const groupedPatterns = {
+                'Récurrence': patterns.filter(p => p.category === 'Récurrence'),
+                'Cycle': patterns.filter(p => p.category === 'Cycle'),
+                'Séquence': patterns.filter(p => p.category === 'Séquence'),
+                'Spatial': patterns.filter(p => p.category === 'Spatial'),
+                'Corrélation': patterns.filter(p => p.category === 'Corrélation'),
+                'Prédiction': patterns.filter(p => p.category === 'Prédiction')
+            };
+            
+            let html = '';
+            
+            // Statistiques générales
+            html += `
+                <div class="patterns-summary">
+                    <h4>📈 Résumé de l'Analyse</h4>
+                    <div class="summary-stats">
+                        <span class="stat-item">Total: ${patterns.length} patterns</span>
+                        <span class="stat-item">Confiance élevée: ${patterns.filter(p => p.confidence >= 80).length}</span>
+                        <span class="stat-item">Prédictions: ${groupedPatterns['Prédiction'].length}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Afficher chaque catégorie
+            Object.entries(groupedPatterns).forEach(([category, categoryPatterns]) => {
+                if (categoryPatterns.length > 0) {
+                    html += `<div class="pattern-category">`;
+                    html += `<h4 class="category-header">${getCategoryIcon(category)} ${category} (${categoryPatterns.length})</h4>`;
+                    
+                    categoryPatterns.forEach(pattern => {
+                        const confidenceColor = getConfidenceColor(pattern.confidence);
+                        const confidenceClass = getConfidenceClass(pattern.confidence);
+                        
+                        html += `
+                            <div class="pattern-item ${confidenceClass}" style="border-left-color: ${confidenceColor};" onclick="showPatternDetails(${JSON.stringify(pattern).replace(/"/g, '&quot;')})">
+                                <div class="pattern-header">
+                                    <h5>${pattern.type}</h5>
+                                    <span class="confidence-badge" style="background: ${confidenceColor};">${Math.round(pattern.confidence)}%</span>
+                                </div>
+                                <p class="pattern-description"><strong>${pattern.description}</strong></p>
+                                <p class="pattern-details">${pattern.details}</p>
+                                ${pattern.chipNumber ? `<div class="chip-highlight">Chip ${pattern.chipNumber}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                }
+            });
+            
+            if (patterns.length === 0) {
+                html = '<div class="no-patterns">Aucun pattern significatif détecté. Essayez avec plus de données historiques.</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Fonctions utilitaires pour l'affichage
+        function getCategoryIcon(category) {
+            const icons = {
+                'Récurrence': '🔄',
+                'Cycle': '⭕',
+                'Séquence': '➡️',
+                'Spatial': '🗺️',
+                'Corrélation': '🔗',
+                'Prédiction': '🔮'
+            };
+            return icons[category] || '📊';
+        }
+
+        function getConfidenceColor(confidence) {
+            if (confidence >= 90) return '#27ae60';
+            if (confidence >= 80) return '#2ecc71';
+            if (confidence >= 70) return '#f39c12';
+            if (confidence >= 60) return '#e67e22';
+            if (confidence >= 50) return '#e74c3c';
+            return '#95a5a6';
+        }
+
+        function getConfidenceClass(confidence) {
+            if (confidence >= 80) return 'high-confidence';
+            if (confidence >= 60) return 'medium-confidence';
+            return 'low-confidence';
+        }
+
+        // Afficher les détails d'un pattern
+        function showPatternDetails(pattern) {
+            let details = `${pattern.type}\n\n`;
+            details += `Catégorie: ${pattern.category}\n`;
+            details += `Confiance: ${Math.round(pattern.confidence)}%\n\n`;
+            details += `Description: ${pattern.description}\n\n`;
+            details += `Détails: ${pattern.details}\n\n`;
+            
+            if (pattern.data) {
+                details += `Données techniques:\n`;
+                Object.entries(pattern.data).forEach(([key, value]) => {
+                    details += `- ${key}: ${typeof value === 'number' ? value.toFixed(2) : value}\n`;
+                });
+            }
+            
+            alert(details);
+        }
+
+        // Afficher les détails d'une table
+        function showTableDetails(tableIndex) {
+            const tableData = currentAnalysisData.tablesData[tableIndex];
+            alert(`Détails ${tableData.year} ${tableData.period}:\n\nOccurrences: ${tableData.occurrences.join(', ')}\nTotal tirages: ${tableData.totalDraws}`);
+        }
+
+        // Afficher les stats d'une table
+        function showTableStats(tableIndex) {
+            const tableData = currentAnalysisData.tablesData[tableIndex];
+            const coverage = ((tableData.occurrences.length / 48) * 100).toFixed(1);
+            alert(`Statistiques ${tableData.year} ${tableData.period}:\n\nCouverture: ${coverage}%\nChips actifs: ${tableData.occurrences.length}/48\nTirages: ${tableData.totalDraws}`);
+        }
+
+        // Afficher les détails temporels avec marquage multi-attributs
+        function showChipTemporalDetails(chipNumber, tableTitle, occurrence) {
+            const markingType = markingOptions.type;
+            const attributeValue = getAttributeValue(chipNumber, markingType, occurrence);
+            const selectionKey = `${attributeValue}-${tableTitle}-${markingType}`;
+            
+            // Toggle de sélection
+            if (selectedChips.has(selectionKey)) {
+                selectedChips.delete(selectionKey);
+                removeAttributeMarking(attributeValue, markingType, tableTitle);
+            } else {
+                selectedChips.add(selectionKey);
+                addAttributeMarking(attributeValue, markingType, tableTitle);
+                
+                // Ajouter à la sélection courante selon le type
+                updateCurrentSelection(attributeValue, markingType, tableTitle);
+            }
+            
+            // Mettre à jour l'affichage
+            updateSelectionDisplay();
+            
+            // Afficher les détails
+            showAttributeDetails(chipNumber, attributeValue, markingType, tableTitle, occurrence);
+        }
+
+        // Obtenir la valeur de l'attribut selon le type de marquage
+        function getAttributeValue(chipNumber, markingType, occurrence) {
+            switch (markingType) {
+                case 'chip':
+                    return chipNumber;
+                case 'denomination':
+                    return occurrence?.denomination || `denom_${chipNumber}`;
+                case 'tome':
+                    return occurrence?.tome || `tome${(chipNumber % 4) + 1}`;
+                case 'granque':
+                    return occurrence?.granque || `Q${(chipNumber % 6) + 1}`;
+                case 'forme':
+                    return occurrence?.forme || getChipForme(chipNumber);
+                case 'parite':
+                    return chipNumber % 2 === 0 ? 'pair' : 'impair';
+                case 'zone':
+                    return getChipZone(chipNumber);
+                case 'combination':
+                    return occurrence?.combination_id || `combo_${chipNumber}`;
+                default:
+                    return chipNumber;
+            }
+        }
+
+        // Obtenir la forme d'un chip (logique simplifiée)
+        function getChipForme(chipNumber) {
+            const formes = ['carre', 'triangle', 'cercle', 'rectangle', 'carre-triangle', 'cercle-rectangle'];
+            return formes[(chipNumber - 1) % formes.length];
+        }
+
+        // Obtenir la zone géométrique d'un chip
+        function getChipZone(chipNumber) {
+            if (chipNumber <= 12) return 'Q1';
+            if (chipNumber <= 24) return 'Q2';
+            if (chipNumber <= 36) return 'Q3';
+            return 'Q4';
+        }
+
+        // Mettre à jour la sélection courante selon le type d'attribut
+        function updateCurrentSelection(attributeValue, markingType, tableTitle) {
+            if (!currentSelection.periods.includes(tableTitle)) {
+                currentSelection.periods.push(tableTitle);
+            }
+
+            // Créer une structure pour chaque type d'attribut
+            if (!currentSelection[markingType]) {
+                currentSelection[markingType] = [];
+            }
+
+            if (!currentSelection[markingType].includes(attributeValue)) {
+                currentSelection[markingType].push(attributeValue);
+            }
+
+            // Maintenir la compatibilité avec l'ancien système chips
+            if (markingType === 'chip' && !currentSelection.chips.includes(attributeValue)) {
+                currentSelection.chips.push(attributeValue);
+            }
+        }
+
+        // Mettre à jour la configuration des tables
+        function updateTablesConfiguration() {
+            const count = parseInt(document.getElementById('tablesCountSelect').value);
+            initializeTablesConfiguration(count);
+        }
+
+        // Initialiser la configuration par défaut
+        function initializeTablesConfiguration(count) {
+            tablesConfiguration = [];
+            const currentYear = new Date().getFullYear();
+            
+            for (let i = 0; i < count; i++) {
+                tablesConfiguration.push({
+                    id: i + 1,
+                    title: `Table ${i + 1}`,
+                    dateStart: `${currentYear - count + i + 1}-01-01`,
+                    dateEnd: `${currentYear - count + i + 1}-12-31`,
+                    period: 'ALL',
+                    type: i === count - 1 ? 'prediction' : 'historical'
+                });
+            }
+        }
+
+        // Afficher le panneau de configuration
+        function showTablesConfiguration() {
+            const count = parseInt(document.getElementById('tablesCountSelect').value);
+            if (tablesConfiguration.length !== count) {
+                initializeTablesConfiguration(count);
+            }
+            
+            displayTablesConfiguration();
+            document.getElementById('tablesConfigPanel').style.display = 'block';
+        }
+
+        // Masquer le panneau de configuration
+        function hideTablesConfiguration() {
+            document.getElementById('tablesConfigPanel').style.display = 'none';
+        }
+
+        // Afficher la configuration des tables
+        function displayTablesConfiguration() {
+            const container = document.getElementById('tablesConfigContainer');
+            let html = '';
+            
+            tablesConfiguration.forEach((config, index) => {
+                const typeOptions = `
+                    <option value="historical" ${config.type === 'historical' ? 'selected' : ''}>Historique</option>
+                    <option value="prediction" ${config.type === 'prediction' ? 'selected' : ''}>Prédiction</option>
+                `;
+                
+                const periodOptions = `
+                    <option value="ALL" ${config.period === 'ALL' ? 'selected' : ''}>Toute l'année</option>
+                    <option value="P1" ${config.period === 'P1' ? 'selected' : ''}>Période 1</option>
+                    <option value="P2" ${config.period === 'P2' ? 'selected' : ''}>Période 2</option>
+                    <option value="P3" ${config.period === 'P3' ? 'selected' : ''}>Période 3</option>
+                    <option value="P4" ${config.period === 'P4' ? 'selected' : ''}>Période 4</option>
+                    <option value="CUSTOM" ${config.period === 'CUSTOM' ? 'selected' : ''}>Personnalisée</option>
+                `;
+                
+                html += `
+                    <div class="table-config">
+                        <h4>Table ${index + 1}</h4>
+                        
+                        <div class="config-row">
+                            <label>Titre:</label>
+                            <input type="text" id="title_${index}" value="${config.title}" 
+                                   onchange="updateTableConfig(${index}, 'title', this.value)">
+                        </div>
+                        
+                        <div class="config-row">
+                            <label>Type:</label>
+                            <select id="type_${index}" onchange="updateTableConfig(${index}, 'type', this.value)">
+                                ${typeOptions}
+                            </select>
+                        </div>
+                        
+                        <div class="config-row">
+                            <label>Période:</label>
+                            <select id="period_${index}" onchange="updateTableConfig(${index}, 'period', this.value)">
+                                ${periodOptions}
+                            </select>
+                        </div>
+                        
+                        <div class="config-row">
+                            <label>Début:</label>
+                            <input type="date" id="dateStart_${index}" value="${config.dateStart}" 
+                                   onchange="updateTableConfig(${index}, 'dateStart', this.value)">
+                        </div>
+                        
+                        <div class="config-row">
+                            <label>Fin:</label>
+                            <input type="date" id="dateEnd_${index}" value="${config.dateEnd}" 
+                                   onchange="updateTableConfig(${index}, 'dateEnd', this.value)">
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Mettre à jour la configuration d'une table
+        function updateTableConfig(index, field, value) {
+            if (tablesConfiguration[index]) {
+                tablesConfiguration[index][field] = value;
+                console.log(`Table ${index + 1} ${field} mis à jour:`, value);
+            }
+        }
+
+        // Appliquer la configuration
+        function applyTablesConfiguration() {
+            console.log('Configuration appliquée:', tablesConfiguration);
+            hideTablesConfiguration();
+            
+            // Mettre à jour la grille CSS
+            const count = tablesConfiguration.length;
+            const container = document.getElementById('tablesContainer');
+            container.className = `tables-grid grid-${count}`;
+        }
+
+        // Générer les mini tables pour l'analyse temporelle (version mise à jour)
+        async function generateTemporalAnalysis() {
+            const universe = document.getElementById('universeSelect').value;
+            
+            if (tablesConfiguration.length === 0) {
+                const count = parseInt(document.getElementById('tablesCountSelect').value);
+                initializeTablesConfiguration(count);
+            }
+            
+            console.log(`Génération analyse temporelle: ${universe}`, tablesConfiguration);
+            
+            const container = document.getElementById('tablesContainer');
+            container.innerHTML = '<div class="loading">🔄 Génération de l\'analyse temporelle...</div>';
+            
+            // Appliquer la classe CSS pour la grille
+            container.className = `tables-grid grid-${tablesConfiguration.length}`;
+            
+            try {
+                // Récupérer les données pour chaque table configurée
+                const tablesData = await Promise.all(
+                    tablesConfiguration.map(config => getTemporalDataFromConfig(universe, config))
+                );
+                
+                currentAnalysisData = {
+                    universe,
+                    tablesConfiguration,
+                    tablesData
+                };
+                
+                // Générer l'HTML des mini tables
+                displayTemporalTables(currentAnalysisData);
+                
+                // Charger automatiquement l'historique des tirages réels
+                console.log('🔄 Chargement automatique de l\'historique des tirages...');
+                setTimeout(() => {
+                    loadRealDrawHistory();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Erreur génération analyse:', error);
+                container.innerHTML = '<div class="error">Erreur lors de la génération de l\'analyse temporelle</div>';
+            }
+        }
+
+        // Récupérer les données temporelles depuis la BD (VERSION RÉELLE)
+        async function getTemporalDataFromConfig(universe, config) {
+            try {
+                const markingType = markingOptions.type;
+                
+                console.log(`🔄 Récupération données BD: ${universe}, ${config.dateStart} → ${config.dateEnd}, type: ${markingType}`);
+                
+                // Appel API pour récupérer les vraies données
+                const url = `${API_BASE}/temporal-data/${universe}?date_start=${config.dateStart}&date_end=${config.dateEnd}&marking_type=${markingType}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur API: ${response.status}`);
+                }
+                
+                const apiData = await response.json();
+                console.log(`✅ Données reçues:`, apiData);
+                
+                // Adapter les données au format attendu par l'interface
+                const occurrences = {};
+                const bdData = apiData.data;
+                
+                // Convertir les données BD au format interface
+                Object.entries(bdData.occurrences || {}).forEach(([chipNumber, data]) => {
+                    occurrences[chipNumber] = {
+                        count: data.count || 0,
+                        attributes: data.attributes || [],
+                        details: data.details || []
+                    };
+                });
+                
+                return {
+                    ...config,
+                    universe,
+                    occurrences,
+                    markingType,
+                    totalDraws: bdData.total_draws || 0,
+                    periodInfo: bdData.period_info || {},
+                    isRealData: true
+                };
+                
+            } catch (error) {
+                console.error(`❌ Erreur récupération données BD:`, error);
+                
+                // Fallback vers données simulées en cas d'erreur
+                console.log(`🔄 Fallback vers données simulées...`);
+                return await getSimulatedTemporalData(universe, config);
+            }
+        }
+
+        // Fonction de fallback avec données simulées
+        async function getSimulatedTemporalData(universe, config) {
+            const markingType = markingOptions.type;
+            const occurrences = {};
+            const numEvents = Math.floor(Math.random() * 15) + 5;
+            
+            for (let i = 0; i < numEvents; i++) {
+                const chipNumber = Math.floor(Math.random() * 48) + 1;
+                
+                let attributeKey;
+                switch (markingType) {
+                    case 'chip':
+                        attributeKey = chipNumber;
+                        break;
+                    case 'combination':
+                        attributeKey = `combo_${Math.floor(Math.random() * 100) + 1}`;
+                        break;
+                    case 'denomination':
+                        attributeKey = `denom_${Math.floor(Math.random() * 200) + 1}`;
+                        break;
+                    case 'tome':
+                        attributeKey = `tome${Math.floor((chipNumber - 1) / 12) + 1}`;
+                        break;
+                    case 'forme':
+                        attributeKey = ['carre', 'triangle', 'cercle', 'rectangle'][Math.floor(Math.random() * 4)];
+                        break;
+                    case 'granque':
+                        attributeKey = `Q${Math.floor((chipNumber - 1) / 8) + 1}`;
+                        break;
+                    default:
+                        attributeKey = chipNumber;
+                }
+                
+                if (!occurrences[chipNumber]) {
+                    occurrences[chipNumber] = {
+                        count: 0,
+                        attributes: [],
+                        details: []
+                    };
+                }
+                
+                occurrences[chipNumber].count++;
+                occurrences[chipNumber].attributes.push(attributeKey);
+                occurrences[chipNumber].details.push({
+                    attribute: attributeKey,
+                    type: markingType,
+                    timestamp: new Date(config.dateStart).getTime() + Math.random() * (new Date(config.dateEnd).getTime() - new Date(config.dateStart).getTime())
+                });
+            }
+            
+            return {
+                ...config,
+                universe,
+                occurrences,
+                markingType,
+                totalDraws: Math.floor(Math.random() * 20) + 10,
+                isRealData: false
+            };
+        }
+
+        // Générer la grille d'une mini table Katula (version améliorée)
+        function generateMiniKatulaGrid(tableData) {
+            let html = '';
+            
+            for (let chipNumber = 1; chipNumber <= 48; chipNumber++) {
+                const occurrence = tableData.occurrences[chipNumber];
+                const hasOccurred = occurrence && occurrence.count > 0;
+                
+                let classes = 'mini-chip-cell';
+                let styles = '';
+                let content = chipNumber;
+                let tooltip = `Chip ${chipNumber} - ${tableData.title}`;
+                
+                if (hasOccurred) {
+                    const count = occurrence.count;
+                    const level = count === 1 ? 1 : count <= 3 ? 2 : 3;
+                    
+                    classes += ` occurred occurred-${level} marking-${markingOptions.style}`;
+                    
+                    // Couleur personnalisée
+                    styles = `background-color: ${markingOptions.colors[level]} !important;`;
+                    
+                    // Compteur si activé
+                    if (markingOptions.showCount && count > 1) {
+                        content += `<span class="occurrence-counter">${count}</span>`;
+                    }
+                    
+                    // Tooltip détaillé si activé
+                    if (markingOptions.showTooltip) {
+                        const attributesList = occurrence.attributes.slice(0, 5).join(', ');
+                        tooltip = `Chip ${chipNumber} - ${count} occurrence(s)\n${tableData.markingType}: ${attributesList}${occurrence.attributes.length > 5 ? '...' : ''}`;
+                    }
+                    
+                    // Animation si activée
+                    if (markingOptions.animateMarking) {
+                        classes += ' animate-marking';
+                    }
+                }
+                
+                html += `
+                    <div class="${classes}" 
+                         style="${styles}"
+                         data-chip="${chipNumber}" 
+                         data-universe="${currentAnalysisData?.universe || 'unknown'}"
+                         data-count="${hasOccurred ? occurrence.count : 0}"
+                         data-table="${tableData.id}"
+                         onclick="showChipTemporalDetails(${chipNumber}, '${tableData.title}', ${JSON.stringify(occurrence || {}).replace(/"/g, '&quot;')})"
+                         title="${tooltip}">
+                        ${content}
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+
+        // Fonctions de marquage multi-attributs
+        function addAttributeMarking(attributeValue, markingType, tableTitle) {
+            const elements = getElementsForAttribute(attributeValue, markingType, tableTitle);
+            elements.forEach(element => {
+                element.classList.add('selected-zone');
+                element.setAttribute('data-marked-attribute', `${markingType}:${attributeValue}`);
+            });
+        }
+
+        function removeAttributeMarking(attributeValue, markingType, tableTitle) {
+            const elements = getElementsForAttribute(attributeValue, markingType, tableTitle);
+            elements.forEach(element => {
+                element.classList.remove('selected-zone');
+                element.removeAttribute('data-marked-attribute');
+            });
+        }
+
+        // Obtenir les éléments à marquer selon le type d'attribut
+        function getElementsForAttribute(attributeValue, markingType, tableTitle) {
+            let elements = [];
+
+            switch (markingType) {
+                case 'chip':
+                    elements = document.querySelectorAll(`[data-chip="${attributeValue}"]`);
+                    break;
+                case 'denomination':
+                    // Marquer tous les chips avec cette dénomination
+                    elements = document.querySelectorAll(`[data-denomination="${attributeValue}"]`);
+                    if (elements.length === 0) {
+                        // Fallback: marquer par pattern de nom
+                        elements = document.querySelectorAll(`[title*="${attributeValue}"]`);
+                    }
+                    break;
+                case 'tome':
+                    // Marquer tous les chips du même tome
+                    elements = document.querySelectorAll(`[data-tome="${attributeValue}"]`);
+                    if (elements.length === 0) {
+                        // Fallback: marquer par logique de tome (chips 1-12 = tome1, etc.)
+                        const tomeNumber = parseInt(attributeValue.replace('tome', ''));
+                        const startChip = (tomeNumber - 1) * 12 + 1;
+                        const endChip = tomeNumber * 12;
+                        for (let chip = startChip; chip <= endChip; chip++) {
+                            const chipElements = document.querySelectorAll(`[data-chip="${chip}"]`);
+                            elements = [...elements, ...chipElements];
+                        }
+                    }
+                    break;
+                case 'granque':
+                    // Marquer tous les chips de la même granque
+                    elements = document.querySelectorAll(`[data-granque="${attributeValue}"]`);
+                    if (elements.length === 0) {
+                        // Fallback: marquer par logique de granque (8 chips par granque)
+                        const granqueNumber = parseInt(attributeValue.replace('Q', ''));
+                        const startChipG = (granqueNumber - 1) * 8 + 1;
+                        const endChipG = granqueNumber * 8;
+                        for (let chip = startChipG; chip <= endChipG; chip++) {
+                            const chipElements = document.querySelectorAll(`[data-chip="${chip}"]`);
+                            elements = [...elements, ...chipElements];
+                        }
+                    }
+                    break;
+                case 'forme':
+                    // Marquer tous les chips avec la même forme
+                    elements = document.querySelectorAll(`[data-forme="${attributeValue}"]`);
+                    if (elements.length === 0) {
+                        // Fallback: marquer par logique de forme
+                        const allChips = document.querySelectorAll('[data-chip]');
+                        allChips.forEach(chipElement => {
+                            const chipNumber = parseInt(chipElement.dataset.chip);
+                            if (getChipForme(chipNumber) === attributeValue) {
+                                elements.push(chipElement);
+                            }
+                        });
+                    }
+                    break;
+                case 'parite':
+                    // Marquer tous les chips pairs ou impairs
+                    const allChips = document.querySelectorAll('[data-chip]');
+                    allChips.forEach(chipElement => {
+                        const chipNumber = parseInt(chipElement.dataset.chip);
+                        const chipParite = chipNumber % 2 === 0 ? 'pair' : 'impair';
+                        if (chipParite === attributeValue) {
+                            elements.push(chipElement);
+                        }
+                    });
+                    break;
+                case 'zone':
+                    // Marquer tous les chips de la même zone
+                    const allChipsZone = document.querySelectorAll('[data-chip]');
+                    allChipsZone.forEach(chipElement => {
+                        const chipNumber = parseInt(chipElement.dataset.chip);
+                        if (getChipZone(chipNumber) === attributeValue) {
+                            elements.push(chipElement);
+                        }
+                    });
+                    break;
+                default:
+                    elements = document.querySelectorAll(`[data-chip="${attributeValue}"]`);
+            }
+
+            // Filtrer par table si spécifié
+            if (tableTitle) {
+                elements = Array.from(elements).filter(element => 
+                    !element.dataset.table || element.dataset.table.includes(tableTitle)
+                );
+            }
+
+            return Array.from(elements);
+        }
+
+        // Afficher les détails selon le type d'attribut
+        function showAttributeDetails(chipNumber, attributeValue, markingType, tableTitle, occurrence) {
+            const typeLabels = {
+                'chip': 'Chip',
+                'denomination': 'Dénomination',
+                'tome': 'Tome',
+                'granque': 'Granque',
+                'forme': 'Forme',
+                'parite': 'Parité',
+                'zone': 'Zone Géométrique',
+                'combination': 'Combinaison'
+            };
+
+            const typeLabel = typeLabels[markingType] || 'Attribut';
+            const markedElements = getElementsForAttribute(attributeValue, markingType, tableTitle);
+
+            const details = `
+🎯 ${typeLabel.toUpperCase()}: ${attributeValue} - ${tableTitle}
+
+📊 Occurrences: ${occurrence?.count || 0}
+📅 Dernière apparition: ${occurrence?.last_date || 'N/A'}
+🎲 Fréquence: ${occurrence?.frequency || 'N/A'}%
+🔥 Tendance: ${occurrence?.trend || 'Stable'}
+
+🎯 Type de marquage: ${typeLabel}
+📍 Éléments marqués: ${markedElements.length}
+${markingType === 'chip' ? `🔢 Chip source: ${chipNumber}` : `🔢 Chip cliqué: ${chipNumber}`}
+
+✅ Ajouté à la sélection pour analyse des tirages
+            `;
+
+            alert(details);
+        }
+
+        function updateSelectionDisplay() {
+            if (selectedChips.size > 0) {
+                document.getElementById('resultsPanel').style.display = 'block';
+                loadDrawResults();
+            } else {
+                document.getElementById('resultsPanel').style.display = 'none';
+            }
+        }
+
+        // Charger les résultats de tirages pour la sélection
+        async function loadDrawResults() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '<div class="loading">🔄 Chargement des résultats de tirages...</div>';
+
+            try {
+                const universe = document.getElementById('universeSelect').value;
+                const chips = Array.from(currentSelection.chips);
+                
+                // Générer des résultats simulés pour le moment
+                const simulatedResults = generateSimulatedDrawResults();
+                drawResults = simulatedResults;
+                displayDrawResults(simulatedResults);
+
+            } catch (error) {
+                console.error('Erreur chargement résultats:', error);
+                const simulatedResults = generateSimulatedDrawResults();
+                displayDrawResults(simulatedResults);
+            }
+        }
+
+        // Afficher les résultats de tirages selon le type de marquage
+        function displayDrawResults(results) {
+            const container = document.getElementById('resultsContainer');
+            const markingType = markingOptions.type;
+            let html = '';
+
+            if (!results || results.length === 0) {
+                html = '<div class="no-results">Aucun résultat trouvé pour la sélection</div>';
+            } else {
+                const typeLabels = {
+                    'chip': 'chips',
+                    'denomination': 'dénominations',
+                    'tome': 'tomes',
+                    'granque': 'granques',
+                    'forme': 'formes',
+                    'parite': 'parités',
+                    'zone': 'zones',
+                    'combination': 'combinaisons'
+                };
+
+                const typeLabel = typeLabels[markingType] || 'éléments';
+                const selectedCount = currentSelection[markingType]?.length || 0;
+
+                html += `<div style="text-align: center; margin-bottom: 15px; font-weight: bold; color: #27ae60;">
+                    📊 ${results.length} tirages trouvés avec vos ${typeLabel} sélectionnés
+                    <br><small>Type de marquage: ${markingType}</small>
+                </div>`;
+
+                results.forEach(result => {
+                    const highlightedChips = result.chips.filter(chip => 
+                        currentSelection.chips.includes(parseInt(chip))
+                    );
+                    
+                    html += `
+                        <div class="result-item">
+                            <div class="result-header">
+                                <span>🎲 Tirage ${result.id}</span>
+                                <span class="result-date">${result.date}</span>
+                            </div>
+                            <div class="result-info">
+                                <strong>Univers:</strong> ${result.universe}<br>
+                                <strong>Période:</strong> ${result.period}<br>
+                                <strong>Correspondances ${typeLabel}:</strong> ${highlightedChips.length}/${selectedCount}<br>
+                                ${highlightedChips.length > 0 ? `<strong>Détails:</strong> ${highlightedChips.join(', ')}` : ''}
+                            </div>
+                            <div class="result-chips">
+                                ${result.chips.map(chip => {
+                                    const isHighlighted = isChipHighlighted(chip, result, markingType);
+                                    const attributeInfo = getChipAttributeInfo(chip, result, markingType);
+                                    return `<span class="result-chip ${isHighlighted ? 'highlighted' : ''}" 
+                                                  title="${attributeInfo}">${chip}</span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Obtenir les informations de correspondance selon le type de marquage
+        function getMatchingInfo(result, markingType) {
+            const selectedAttributes = currentSelection[markingType] || [];
+            let matchingCount = 0;
+            let matchingDetails = [];
+
+            if (result.attributes) {
+                result.attributes.forEach(chipAttr => {
+                    const attributeValue = chipAttr[markingType];
+                    if (selectedAttributes.includes(attributeValue)) {
+                        matchingCount++;
+                        if (!matchingDetails.includes(attributeValue)) {
+                            matchingDetails.push(attributeValue);
+                        }
+                    }
+                });
+            } else {
+                // Fallback pour les anciens résultats
+                result.chips.forEach(chip => {
+                    const attributeValue = getAttributeValue(chip, markingType, {});
+                    if (selectedAttributes.includes(attributeValue)) {
+                        matchingCount++;
+                        if (!matchingDetails.includes(attributeValue)) {
+                            matchingDetails.push(attributeValue);
+                        }
+                    }
+                });
+            }
+
+            return {
+                count: matchingCount,
+                details: matchingDetails.length > 0 ? matchingDetails.join(', ') : null
+            };
+        }
+
+        // Vérifier si un chip doit être surligné
+        function isChipHighlighted(chip, result, markingType) {
+            const selectedAttributes = currentSelection[markingType] || [];
+            
+            if (result.attributes) {
+                const chipAttr = result.attributes.find(attr => attr.chip === chip);
+                if (chipAttr) {
+                    return selectedAttributes.includes(chipAttr[markingType]);
+                }
+            }
+            
+            // Fallback
+            const attributeValue = getAttributeValue(chip, markingType, {});
+            return selectedAttributes.includes(attributeValue);
+        }
+
+        // Obtenir les informations d'attribut pour le tooltip
+        function getChipAttributeInfo(chip, result, markingType) {
+            if (result.attributes) {
+                const chipAttr = result.attributes.find(attr => attr.chip === chip);
+                if (chipAttr) {
+                    return `Chip ${chip}\n${markingType}: ${chipAttr[markingType]}\nTome: ${chipAttr.tome}\nGranque: ${chipAttr.granque}\nForme: ${chipAttr.forme}`;
+                }
+            }
+            
+            return `Chip ${chip}\n${markingType}: ${getAttributeValue(chip, markingType, {})}`;
+        }
+
+        // Générer des résultats simulés selon le type de marquage
+        function generateSimulatedDrawResults() {
+            const results = [];
+            const universe = document.getElementById('universeSelect').value;
+            const markingType = markingOptions.type;
+            
+            for (let i = 0; i < 15; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - i * 3);
+                
+                const chips = [];
+                const attributes = {};
+                
+                // Inclure des éléments pertinents selon le type de marquage
+                if (currentSelection[markingType] && currentSelection[markingType].length > 0 && Math.random() > 0.3) {
+                    const selectedAttribute = currentSelection[markingType][Math.floor(Math.random() * currentSelection[markingType].length)];
+                    const relevantChips = getChipsForAttribute(selectedAttribute, markingType);
+                    
+                    if (relevantChips.length > 0) {
+                        const selectedChip = relevantChips[Math.floor(Math.random() * relevantChips.length)];
+                        chips.push(selectedChip);
+                        attributes[markingType] = selectedAttribute;
+                    }
+                }
+                
+                // Ajouter des chips aléatoires
+                while (chips.length < 6) {
+                    const randomChip = Math.floor(Math.random() * 48) + 1;
+                    if (!chips.includes(randomChip)) {
+                        chips.push(randomChip);
+                    }
+                }
+
+                // Générer les attributs pour chaque chip
+                const chipAttributes = chips.map(chip => ({
+                    chip: chip,
+                    denomination: `denom_${chip}_${Math.floor(Math.random() * 10) + 1}`,
+                    tome: `tome${Math.floor((chip - 1) / 12) + 1}`,
+                    granque: `Q${Math.floor((chip - 1) / 8) + 1}`,
+                    forme: getChipForme(chip),
+                    parite: chip % 2 === 0 ? 'pair' : 'impair',
+                    zone: getChipZone(chip)
+                }));
+
+                results.push({
+                    id: `T${2000 + i}`,
+                    date: date.toLocaleDateString('fr-FR'),
+                    universe: universe,
+                    period: `Période ${i + 1}`,
+                    chips: chips.sort((a, b) => a - b),
+                    attributes: chipAttributes,
+                    markingType: markingType
+                });
+            }
+
+            return results;
+        }
+
+        // Obtenir les chips correspondant à un attribut
+        function getChipsForAttribute(attributeValue, markingType) {
+            const chips = [];
+            
+            switch (markingType) {
+                case 'chip':
+                    return [parseInt(attributeValue)];
+                case 'tome':
+                    const tomeNumber = parseInt(attributeValue.replace('tome', ''));
+                    const startChip = (tomeNumber - 1) * 12 + 1;
+                    const endChip = tomeNumber * 12;
+                    for (let chip = startChip; chip <= endChip; chip++) {
+                        chips.push(chip);
+                    }
+                    break;
+                case 'granque':
+                    const granqueNumber = parseInt(attributeValue.replace('Q', ''));
+                    const startChipG = (granqueNumber - 1) * 8 + 1;
+                    const endChipG = granqueNumber * 8;
+                    for (let chip = startChipG; chip <= endChipG; chip++) {
+                        chips.push(chip);
+                    }
+                    break;
+                case 'forme':
+                    for (let chip = 1; chip <= 48; chip++) {
+                        if (getChipForme(chip) === attributeValue) {
+                            chips.push(chip);
+                        }
+                    }
+                    break;
+                case 'parite':
+                    for (let chip = 1; chip <= 48; chip++) {
+                        const chipParite = chip % 2 === 0 ? 'pair' : 'impair';
+                        if (chipParite === attributeValue) {
+                            chips.push(chip);
+                        }
+                    }
+                    break;
+                case 'zone':
+                    for (let chip = 1; chip <= 48; chip++) {
+                        if (getChipZone(chip) === attributeValue) {
+                            chips.push(chip);
+                        }
+                    }
+                    break;
+                default:
+                    return [parseInt(attributeValue)];
+            }
+            
+            return chips;
+        }
+
+        // Fonctions de contrôle du panneau de résultats
+        function exportResults() {
+            if (!drawResults || drawResults.length === 0) {
+                alert('Aucun résultat à exporter');
+                return;
+            }
+
+            const csvContent = generateCSVExport();
+            downloadCSV(csvContent, `resultats_tirages_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        function showDetailedResults() {
+            if (currentSelection.chips.length === 0) {
+                alert('Aucune sélection active');
+                return;
+            }
+
+            const details = `
+🎯 SÉLECTION ACTIVE
+
+📊 Chips sélectionnés: ${currentSelection.chips.join(', ')}
+📅 Périodes: ${currentSelection.periods.length} périodes
+🌍 Univers: ${document.getElementById('universeSelect').value}
+
+🔍 Total éléments sélectionnés: ${selectedChips.size}
+📈 Résultats trouvés: ${drawResults ? drawResults.length : 0} tirages
+            `;
+
+            alert(details);
+        }
+
+        function clearSelection() {
+            selectedChips.clear();
+            markedZones.clear();
+            currentSelection = { chips: [], periods: [], universe: null };
+            drawResults = [];
+            
+            // Retirer tous les marquages visuels
+            document.querySelectorAll('.selected-zone, .marked-zone').forEach(element => {
+                element.classList.remove('selected-zone', 'marked-zone');
+            });
+            
+            // Masquer le panneau de résultats
+            document.getElementById('resultsPanel').style.display = 'none';
+        }
+
+        function generateCSVExport() {
+            let csv = 'Date,Univers,Periode,Chips,Chips_Selectionnes,Correspondances\n';
+            
+            drawResults.forEach(result => {
+                const highlightedChips = result.chips.filter(chip => 
+                    currentSelection.chips.includes(parseInt(chip))
+                );
+                
+                csv += `${result.date},${result.universe},${result.period},"${result.chips.join(';')}","${highlightedChips.join(';')}",${highlightedChips.length}\n`;
+            });
+            
+            return csv;
+        }
+
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // === NOUVELLES FONCTIONS POUR L'HISTORIQUE RÉEL DES TIRAGES ===
+
+        // Générer toutes les combinaisons de 2 numéros
+        function generateCombinations(numbers) {
+            const combinations = [];
+            for (let i = 0; i < numbers.length; i++) {
+                for (let j = i + 1; j < numbers.length; j++) {
+                    combinations.push([numbers[i], numbers[j]]);
+                }
+            }
+            return combinations;
+        }
+
+        // Classifier les combinaisons par univers via la BD
+        async function classifyCombinationsByUniverse(combinations) {
+            const classifiedCombos = {
+                mundo: [],
+                fruity: [],
+                trigga: [],
+                roaster: [],
+                sunshine: []
+            };
+
+            try {
+                // Appel API pour classifier chaque combinaison
+                for (const combo of combinations) {
+                    const response = await fetch(`${API_BASE}/classify-combination`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            numbers: combo
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.universe && classifiedCombos[result.universe]) {
+                            classifiedCombos[result.universe].push({
+                                numbers: combo,
+                                position: result.position,
+                                chip_id: result.chip_id,
+                                attributes: result.attributes
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('API classification non disponible, utilisation de la logique de fallback');
+                // Fallback : classification simulée basée sur des règles
+                combinations.forEach(combo => {
+                    const classification = classifyCombinationFallback(combo);
+                    classifiedCombos[classification.universe].push(classification);
+                });
+            }
+
+            return classifiedCombos;
+        }
+
+        // Classification fallback basée sur des règles logiques
+        function classifyCombinationFallback(combo) {
+            const [num1, num2] = combo;
+            const sum = num1 + num2;
+            const product = num1 * num2;
+            
+            // Règles de classification simulées
+            let universe, position, chip_id;
+            
+            if (sum % 5 === 0) {
+                universe = 'mundo';
+                chip_id = (sum % 48) + 1;
+            } else if (product % 7 === 0) {
+                universe = 'fruity';
+                chip_id = (product % 48) + 1;
+            } else if (sum % 3 === 0) {
+                universe = 'trigga';
+                chip_id = ((sum * 2) % 48) + 1;
+            } else if (num1 % 2 === 0 && num2 % 2 === 0) {
+                universe = 'roaster';
+                chip_id = ((num1 + num2 * 2) % 48) + 1;
+            } else {
+                universe = 'sunshine';
+                chip_id = ((num1 * 3 + num2) % 48) + 1;
+            }
+
+            position = getChipPosition(chip_id);
+
+            return {
+                numbers: combo,
+                universe: universe,
+                position: position,
+                chip_id: chip_id,
+                attributes: {
+                    denomination: `${universe}_combo_${num1}_${num2}`,
+                    tome: `tome${Math.floor((chip_id - 1) / 12) + 1}`,
+                    granque: `Q${Math.floor((chip_id - 1) / 8) + 1}`,
+                    forme: getChipForme(chip_id)
+                }
+            };
+        }
+
+        // Charger l'historique réel des tirages depuis la BD
+        async function loadRealDrawHistory() {
+            const container = document.getElementById('drawHistoryContainer');
+            container.innerHTML = '<div class="loading">🔄 Chargement de l\'historique des tirages...</div>';
+            
+            document.getElementById('drawHistoryPanel').style.display = 'block';
+
+            try {
+                const universe = document.getElementById('universeSelect').value;
+                const periods = getAnalyzedPeriods();
+                
+                console.log(`📅 Chargement historique ${universe} pour périodes:`, periods);
+
+                // TEMPORAIRE: Utiliser des données simulées car l'API real-draws n'est pas encore implémentée
+                console.warn('API real-draws non disponible, utilisation de données simulées réalistes');
+                const simulatedDraws = generateRealisticDrawHistory();
+                displayRealDrawHistory(simulatedDraws);
+                await markPlayedZonesFromHistory(simulatedDraws);
+
+                /* TODO: Réactiver quand l'API sera implémentée
+                // Appel API pour récupérer les vrais tirages
+                const response = await fetch(`${API_BASE}/real-draws/${universe}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        start_date: periods.start_date,
+                        end_date: periods.end_date,
+                        periods: periods.period_list
+                    })
+                });
+
+                if (response.ok) {
+                    const realDraws = await response.json();
+                    displayRealDrawHistory(realDraws);
+                    
+                    // Marquer automatiquement les zones jouées sur les tables
+                    await markPlayedZonesFromHistory(realDraws);
+                } else {
+                    console.warn('API non disponible, utilisation de données simulées réalistes');
+                    const simulatedDraws = generateRealisticDrawHistory();
+                    displayRealDrawHistory(simulatedDraws);
+                    await markPlayedZonesFromHistory(simulatedDraws);
+                }
+                */
+
+            } catch (error) {
+                console.error('Erreur chargement historique:', error);
+                const simulatedDraws = generateRealisticDrawHistory();
+                displayRealDrawHistory(simulatedDraws);
+                await markPlayedZonesFromHistory(simulatedDraws);
+            }
+        }
+
+        // Obtenir les périodes disponibles pour un univers
+        async function loadAvailablePeriods(universe) {
+            try {
+                console.log(`🔄 Chargement périodes pour ${universe}...`);
+                
+                // Timeout plus court pour éviter l'attente infinie
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 secondes max
+                
+                const response = await fetch(`${API_BASE}/temporal-periods/${universe}`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`✅ Périodes disponibles pour ${universe}:`, data);
+                    
+                    if (data.available) {
+                        updateDateRangeInputs(data.earliest_date, data.latest_date);
+                        showPeriodInfo(data);
+                    }
+                    
+                    return data;
+                } else {
+                    console.warn(`⚠️ Endpoint périodes non disponible (${response.status})`);
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.warn('⏱️ Timeout récupération périodes - utilisation des valeurs par défaut');
+                } else {
+                    console.error('❌ Erreur récupération périodes:', error);
+                }
+                
+                // Fallback avec dates par défaut
+                showDefaultPeriodInfo();
+            }
+            return null;
+        }
+
+        // Afficher les informations par défaut si l'API n'est pas disponible
+        function showDefaultPeriodInfo() {
+            const infoDiv = document.getElementById('periodInfo') || createPeriodInfoDiv();
+            
+            infoDiv.innerHTML = `
+                <div class="period-info" style="background: #fff3cd; border-color: #ffc107;">
+                    <strong>⚠️ Mode dégradé:</strong>
+                    API temporelle non disponible - utilisation de données simulées
+                    <br><small>Redémarrez le backend pour utiliser les vraies données</small>
+                </div>
+            `;
+        }
+
+        // Mettre à jour les champs de date avec les limites disponibles
+        function updateDateRangeInputs(earliestDate, latestDate) {
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                if (earliestDate) input.min = earliestDate;
+                if (latestDate) input.max = latestDate;
+            });
+        }
+
+        // Afficher les informations sur les périodes disponibles
+        function showPeriodInfo(periodData) {
+            const infoDiv = document.getElementById('periodInfo') || createPeriodInfoDiv();
+            
+            infoDiv.innerHTML = `
+                <div class="period-info">
+                    <strong>📅 Données disponibles:</strong>
+                    ${periodData.earliest_date} → ${periodData.latest_date}
+                    (${periodData.total_days} jours, ${periodData.total_records} enregistrements)
+                </div>
+            `;
+        }
+
+        // Créer le div d'info des périodes s'il n'existe pas
+        function createPeriodInfoDiv() {
+            const infoDiv = document.createElement('div');
+            infoDiv.id = 'periodInfo';
+            infoDiv.style.cssText = `
+                background: #e8f4fd;
+                border: 1px solid #3498db;
+                border-radius: 8px;
+                padding: 10px;
+                margin: 10px 0;
+                font-size: 0.9em;
+                color: #2c3e50;
+            `;
+            
+            const controls = document.querySelector('.controls');
+            controls.parentNode.insertBefore(infoDiv, controls.nextSibling);
+            
+            return infoDiv;
+        }
+
+        // Gestionnaire de changement d'univers
+        function onUniverseChange() {
+            const universe = document.getElementById('universeSelect').value;
+            loadAvailablePeriods(universe);
+        }
+
+        // Auto-charger au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'analysis', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+            
+            // Initialiser avec 6 tables par défaut
+            initializeTablesConfiguration(6);
+            
+            // Charger les périodes disponibles pour l'univers par défaut
+            const universe = document.getElementById('universeSelect').value;
+            loadAvailablePeriods(universe);
+            
+            // Ajouter le gestionnaire de changement d'univers
+            document.getElementById('universeSelect').addEventListener('change', onUniverseChange);
+        });
+    </script>
+</body>
+</html>

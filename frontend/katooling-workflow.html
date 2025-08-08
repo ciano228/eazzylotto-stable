@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow KATOOLING - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ffd700, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .workflow-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            font-size: 1.1rem;
+        }
+
+        /* Workflow Container */
+        .workflow-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Workflow Steps */
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .workflow-step {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-info {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .step-subtitle {
+            font-size: 1.1rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .step-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .step-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+
+        .step-visual {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .visual-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .visual-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .visual-description {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        /* Step-specific styles */
+        .step-1 .step-number { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .step-2 .step-number { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .step-3 .step-number { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .step-4 .step-number { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .step-5 .step-number { background: linear-gradient(135deg, #ffd700, #f1c40f); }
+
+        /* Katula Table Demo */
+        .katula-demo {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .katula-table {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .katula-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .katula-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .katula-cell.highlighted {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .katula-cell.zone-q1 { border-left: 4px solid #e74c3c; }
+        .katula-cell.zone-q2 { border-left: 4px solid #3498db; }
+        .katula-cell.zone-q3 { border-left: 4px solid #f39c12; }
+        .katula-cell.zone-q4 { border-left: 4px solid #27ae60; }
+
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+
+        .action-btn.success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #e3f2fd;
+            color: #1e3c72;
+        }
+
+        .progress-step.completed {
+            background: #e8f5e8;
+            color: #27ae60;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .progress-step.active .progress-dot {
+            background: #1e3c72;
+        }
+
+        .progress-step.completed .progress-dot {
+            background: #27ae60;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .step-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .workflow-step {
+                padding: 25px;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .progress-indicator {
+                position: static;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="workflow-badge">🚀 WORKFLOW KATOOLING</div>
+            <h1 class="hero-title">Méthode KATOOLING</h1>
+            <p class="hero-subtitle">
+                Découvrez le processus scientifique complet de prédiction loterie 
+                basé sur l'analyse multi-univers et l'intelligence artificielle
+            </p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-title">Progression</div>
+            <div class="progress-step active" data-step="1">
+                <div class="progress-dot"></div>
+                <span>Collecte</span>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="progress-dot"></div>
+                <span>Classification</span>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="progress-dot"></div>
+                <span>Analyse</span>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="progress-dot"></div>
+                <span>Prédiction</span>
+            </div>
+            <div class="progress-step" data-step="5">
+                <div class="progress-dot"></div>
+                <span>Validation</span>
+            </div>
+        </div>
+
+        <!-- Workflow Container -->
+        <div class="workflow-container">
+            <div class="workflow-steps">
+                <!-- ÉTAPE 1: COLLECTE DES DONNÉES -->
+                <div class="workflow-step step-1" id="step-1">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-info">
+                            <h2 class="step-title">Collecte des Données</h2>
+                            <p class="step-subtitle">Acquisition et validation des tirages historiques</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-description">
+                            <h3>🎯 Objectif</h3>
+                            <p>Rassembler une base de données complète et fiable des tirages historiques pour alimenter notre système d'analyse.</p>
+                            
+                            <h3>📊 Processus</h3>
+                            <ul>
+                                <li><strong>Sources multiples</strong> : Tirages officiels, bases de données certifiées</li>
+                                <li><strong>Validation</strong> : Vérification de l'intégrité et de la cohérence</li>
+                                <li><strong>Normalisation</strong> : Formatage uniforme pour l'analyse</li>
+                                <li><strong>Métadonnées</strong> : Date, heure, conditions de tirage</li>
+                            </ul>
+                            
+                            <h3>🔍 Qualité des Données</h3>
+                            <p>Chaque tirage est validé selon des critères stricts : plage de numéros, format de date, absence de doublons.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-icon">📈</div>
+                            <div class="visual-title">Base de Données</div>
+                            <div class="visual-description">
+                                Collection de tirages historiques<br>
+                                Validation automatique<br>
+                                Métadonnées enrichies
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE 2: CLASSIFICATION MULTI-UNIVERS -->
+                <div class="workflow-step step-2" id="step-2">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-info">
+                            <h2 class="step-title">Classification Multi-Univers</h2>
+                            <p class="step-subtitle">Organisation des combinaisons selon la méthode KATULA</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-description">
+                            <h3>🎯 Objectif</h3>
+                            <p>Classer chaque combinaison de numéros dans l'univers approprié selon des règles mathématiques précises.</p>
+                            
+                            <h3>🌌 Les 5 Univers</h3>
+                            <ul>
+                                <li><strong>MUNDO</strong> : Combinaisons mondiales (bleu)</li>
+                                <li><strong>FRUITY</strong> : Combinaisons fruitées (rouge)</li>
+                                <li><strong>TRIGGA</strong> : Combinaisons déclencheurs (orange)</li>
+                                <li><strong>ROASTER</strong> : Combinaisons torréfiées (violet)</li>
+                                <li><strong>SUNSHINE</strong> : Combinaisons ensoleillées (jaune)</li>
+                            </ul>
+                            
+                            <h3>🔢 Règles de Classification</h3>
+                            <p>Chaque combinaison (a,b) est analysée selon des critères mathématiques spécifiques : somme, différence, produit, parité, etc.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-icon">🌌</div>
+                            <div class="visual-title">5 Univers</div>
+                            <div class="visual-description">
+                                Classification automatique<br>
+                                Règles mathématiques<br>
+                                Visualisation par couleur
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Katula Table Demo -->
+                    <div class="katula-demo">
+                        <div class="demo-title">Table KATULA - Visualisation Multi-Univers</div>
+                        <div class="katula-table" id="katula-demo-table">
+                            <!-- Les cellules seront générées par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE 3: ANALYSE TEMPORELLE -->
+                <div class="workflow-step step-3" id="step-3">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-info">
+                            <h2 class="step-title">Analyse Temporelle</h2>
+                            <p class="step-subtitle">Détection de patterns et tendances historiques</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-description">
+                            <h3>🎯 Objectif</h3>
+                            <p>Identifier les patterns récurrents et les cycles temporels dans l'apparition des combinaisons.</p>
+                            
+                            <h3>📈 Types d'Analyse</h3>
+                            <ul>
+                                <li><strong>Fréquence</strong> : Nombre d'apparitions par période</li>
+                                <li><strong>Cycles</strong> : Patterns répétitifs dans le temps</li>
+                                <li><strong>Corrélations</strong> : Relations entre univers</li>
+                                <li><strong>Séquences</strong> : Ordres d'apparition</li>
+                                <li><strong>Spatial</strong> : Distribution géométrique</li>
+                            </ul>
+                            
+                            <h3>🔍 Comparaisons Multi-Périodes</h3>
+                            <p>Analyse comparative sur différentes périodes (2, 4, 6, 8, 12 tables) pour détecter les évolutions.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-icon">📊</div>
+                            <div class="visual-title">Patterns Temporels</div>
+                            <div class="visual-description">
+                                Analyse de fréquence<br>
+                                Détection de cycles<br>
+                                Corrélations multi-univers
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE 4: PRÉDICTIONS IA -->
+                <div class="workflow-step step-4" id="step-4">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-info">
+                            <h2 class="step-title">Prédictions IA</h2>
+                            <p class="step-subtitle">Génération de prédictions par réseaux LSTM</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-description">
+                            <h3>🎯 Objectif</h3>
+                            <p>Générer des prédictions précises en combinant l'analyse temporelle avec l'intelligence artificielle.</p>
+                            
+                            <h3>🤖 Algorithmes Utilisés</h3>
+                            <ul>
+                                <li><strong>LSTM</strong> : Réseaux de neurones récurrents</li>
+                                <li><strong>Machine Learning</strong> : Algorithmes de classification</li>
+                                <li><strong>Deep Learning</strong> : Modèles prédictifs avancés</li>
+                                <li><strong>Ensemble Methods</strong> : Combinaison de modèles</li>
+                            </ul>
+                            
+                            <h3>📊 Métriques de Confiance</h3>
+                            <p>Chaque prédiction est accompagnée d'un score de confiance basé sur l'historique des performances.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-icon">🤖</div>
+                            <div class="visual-title">Intelligence Artificielle</div>
+                            <div class="visual-description">
+                                Réseaux LSTM<br>
+                                Machine Learning<br>
+                                Scores de confiance
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ÉTAPE 5: VALIDATION & RÉSULTATS -->
+                <div class="workflow-step step-5" id="step-5">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-info">
+                            <h2 class="step-title">Validation & Résultats</h2>
+                            <p class="step-subtitle">Suivi des performances et optimisation continue</p>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-description">
+                            <h3>🎯 Objectif</h3>
+                            <p>Valider les prédictions et optimiser continuellement le système basé sur les résultats réels.</p>
+                            
+                            <h3>✅ Processus de Validation</h3>
+                            <ul>
+                                <li><strong>Suivi en temps réel</strong> : Comparaison prédictions/résultats</li>
+                                <li><strong>Statistiques de performance</strong> : Taux de réussite par univers</li>
+                                <li><strong>Analyse d'erreurs</strong> : Identification des biais</li>
+                                <li><strong>Optimisation</strong> : Ajustement des paramètres</li>
+                            </ul>
+                            
+                            <h3>📈 Métriques de Performance</h3>
+                            <p>ROI, précision, rappel, F1-score, et autres métriques avancées pour évaluer l'efficacité.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-icon">🏆</div>
+                            <div class="visual-title">Performance</div>
+                            <div class="visual-description">
+                                Validation automatique<br>
+                                Statistiques détaillées<br>
+                                Optimisation continue
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="katula-multi-universe.html" class="action-btn">🔍 Explorer les Données</a>
+                <a href="katula-temporal-analysis.html" class="action-btn secondary">📊 Analyse Temporelle</a>
+                <a href="lstm-neural-network.html" class="action-btn success">🤖 Prédictions IA</a>
+                <a href="prediction-panel.html" class="action-btn">🏆 Résultats</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Génération de la table KATULA demo
+        function generateKatulaTable() {
+            const table = document.getElementById('katula-demo-table');
+            const universes = ['MUNDO', 'FRUITY', 'TRIGGA', 'ROASTER', 'SUNSHINE'];
+            const colors = ['#3498db', '#e74c3c', '#f39c12', '#9b59b6', '#f1c40f'];
+            
+            for (let i = 1; i <= 36; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'katula-cell';
+                cell.textContent = i;
+                
+                // Assigner un univers aléatoire pour la démo
+                const randomUniverse = Math.floor(Math.random() * universes.length);
+                cell.style.borderLeft = `4px solid ${colors[randomUniverse]}`;
+                
+                // Ajouter des zones géométriques
+                if (i <= 9) cell.classList.add('zone-q1');
+                else if (i <= 18) cell.classList.add('zone-q2');
+                else if (i <= 27) cell.classList.add('zone-q3');
+                else cell.classList.add('zone-q4');
+                
+                cell.addEventListener('click', () => {
+                    cell.classList.toggle('highlighted');
+                });
+                
+                table.appendChild(cell);
+            }
+        }
+
+        // Gestion du scroll pour le progress indicator
+        function updateProgressIndicator() {
+            const steps = document.querySelectorAll('.workflow-step');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            
+            steps.forEach((step, index) => {
+                const rect = step.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
+                
+                if (isVisible) {
+                    progressSteps.forEach((pStep, pIndex) => {
+                        pStep.classList.remove('active', 'completed');
+                        if (pIndex < index) {
+                            pStep.classList.add('completed');
+                        } else if (pIndex === index) {
+                            pStep.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            generateKatulaTable();
+            updateProgressIndicator();
+            
+            window.addEventListener('scroll', updateProgressIndicator);
+        });
+    </script>
+</body>
+</html> 

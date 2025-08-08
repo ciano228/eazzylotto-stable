@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Boutons - EazzyCalculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        #console {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test des Boutons Smart Input</h1>
+    
+    <div class="test-section">
+        <h2>Test des Fonctions</h2>
+        <button onclick="testLoadSessions()" class="btn-primary">🔄 Test loadSessions</button>
+        <button onclick="testShowModal()" class="btn-primary">➕ Test showCreateSessionModal</button>
+        <button onclick="testAPI()" class="btn-secondary">🔌 Test API Direct</button>
+        <button onclick="clearConsole()" class="btn-secondary">🧹 Clear Console</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console de Debug</h2>
+        <div id="console"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        function log(message) {
+            const console = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            console.textContent += `[${timestamp}] ${message}\n`;
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        function clearConsole() {
+            document.getElementById('console').textContent = '';
+        }
+        
+        async function testLoadSessions() {
+            log('🧪 Test loadSessions...');
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                const data = await response.json();
+                log(`✅ API Response: ${data.length} sessions trouvées`);
+                data.forEach(session => {
+                    log(`  - ${session.name} (${session.lottery_type})`);
+                });
+            } catch (error) {
+                log(`❌ Erreur: ${error.message}`);
+            }
+        }
+        
+        function testShowModal() {
+            log('🧪 Test showCreateSessionModal...');
+            try {
+                // Simuler la création d'une modal
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                `;
+                modal.innerHTML = `
+                    <h3>✅ Modal Test Réussie</h3>
+                    <p>La fonction showCreateSessionModal fonctionne !</p>
+                    <button onclick="this.parentElement.remove()">Fermer</button>
+                `;
+                document.body.appendChild(modal);
+                log('✅ Modal créée avec succès');
+            } catch (error) {
+                log(`❌ Erreur modal: ${error.message}`);
+            }
+        }
+        
+        async function testAPI() {
+            log('🧪 Test API Direct...');
+            try {
+                // Test de base
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                log(`Status: ${response.status}`);
+                log(`Headers: ${JSON.stringify([...response.headers])}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ API fonctionne: ${data.length} sessions`);
+                } else {
+                    log(`❌ API erreur: ${response.statusText}`);
+                }
+            } catch (error) {
+                log(`❌ Erreur connexion: ${error.message}`);
+            }
+        }
+        
+        // Auto-test au chargement
+        window.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Page de test chargée');
+            log('Cliquez sur les boutons pour tester les fonctions');
+        });
+    </script>
+</body>
+</html>

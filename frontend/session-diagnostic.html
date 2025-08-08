@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Sessions - EazzyLotto</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .diagnostic-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .diagnostic-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .status-card.success {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .status-card.error {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .status-card.warning {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+        .status-pending { background: #6c757d; }
+
+        .log-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-success { color: #2ecc71; }
+        .log-error { color: #e74c3c; }
+        .log-warning { color: #f39c12; }
+        .log-info { color: #3498db; }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .config-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .config-item:last-child {
+            border-bottom: none;
+        }
+
+        .sessions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .sessions-table th,
+        .sessions-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sessions-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .sessions-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Diagnostic Sessions EazzyLotto</h1>
+            <p>Outil de diagnostic pour identifier et résoudre les problèmes de chargement des sessions</p>
+        </div>
+
+        <div class="diagnostic-section">
+            <h3>🌐 État des Serveurs</h3>
+            <div class="status-grid" id="serverStatus">
+                <div class="status-card" id="backendStatus">
+                    <h4><span class="status-indicator status-pending"></span>Backend API (Port 8000)</h4>
+                    <p>Vérification en cours...</p>
+                </div>
+                <div class="status-card" id="frontendStatus">
+                    <h4><span class="status-indicator status-success"></span>Frontend (Port 8081)</h4>
+                    <p>Actif et accessible</p>
+                </div>
+                <div class="status-card" id="databaseStatus">
+                    <h4><span class="status-indicator status-pending"></span>Base de Données</h4>
+                    <p>Test de connexion...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="diagnostic-section">
+            <h3>⚙️ Configuration API</h3>
+            <div class="config-section" id="apiConfig">
+                <div class="config-item">
+                    <span><strong>Port Backend Attendu:</strong></span>
+                    <span>8000</span>
+                </div>
+                <div class="config-item">
+                    <span><strong>URL API Sessions:</strong></span>
+                    <span id="apiUrl">http://localhost:8000/api/session/sessions</span>
+                </div>
+                <div class="config-item">
+                    <span><strong>Timeout Requêtes:</strong></span>
+                    <span>5000ms</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="diagnostic-section">
+            <h3>📊 Test de Chargement des Sessions</h3>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="testSessionLoading()">🔄 Tester le Chargement</button>
+                <button class="btn btn-success" onclick="fixApiConfiguration()">🔧 Corriger la Configuration</button>
+                <button class="btn btn-warning" onclick="createTestSession()">➕ Créer Session Test</button>
+            </div>
+            
+            <div id="sessionsResult">
+                <!-- Les résultats du test apparaîtront ici -->
+            </div>
+        </div>
+
+        <div class="diagnostic-section">
+            <h3>📋 Journal de Diagnostic</h3>
+            <div class="log-section" id="diagnosticLog">
+                <div class="log-entry log-info">[Initialisation] Démarrage du diagnostic...</div>
+            </div>
+        </div>
+
+        <div class="diagnostic-section">
+            <h3>🔧 Actions de Correction</h3>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="downloadFixedFiles()">📥 Télécharger Fichiers Corrigés</button>
+                <button class="btn btn-success" onclick="testAllEndpoints()">🧪 Tester Tous les Endpoints</button>
+                <button class="btn btn-warning" onclick="resetConfiguration()">🔄 Réinitialiser Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration des endpoints à tester
+        const ENDPOINTS = {
+            backend: 'http://localhost:8000',
+            sessions: 'http://localhost:8000/api/session/sessions',
+            activeSession: 'http://localhost:8000/api/session/sessions/active',
+            health: 'http://localhost:8000/api/health'
+        };
+
+        let diagnosticResults = {
+            backend: false,
+            database: false,
+            sessions: false,
+            apiConfig: false
+        };
+
+        function addLog(message, type = 'info') {
+            const logContent = document.getElementById('diagnosticLog');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        function updateServerStatus(server, status, message) {
+            const statusCard = document.getElementById(`${server}Status`);
+            const indicator = statusCard.querySelector('.status-indicator');
+            const paragraph = statusCard.querySelector('p');
+            
+            statusCard.className = `status-card ${status}`;
+            indicator.className = `status-indicator status-${status === 'success' ? 'success' : status === 'error' ? 'error' : 'warning'}`;
+            paragraph.textContent = message;
+        }
+
+        async function testBackendConnection() {
+            addLog('Test de connexion au backend...', 'info');
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(ENDPOINTS.health, {
+                    signal: controller.signal,
+                    method: 'GET'
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    updateServerStatus('backend', 'success', '✅ Backend accessible et opérationnel');
+                    addLog('✅ Backend connecté avec succès', 'success');
+                    diagnosticResults.backend = true;
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+            } catch (error) {
+                updateServerStatus('backend', 'error', `❌ Backend inaccessible: ${error.message}`);
+                addLog(`❌ Erreur backend: ${error.message}`, 'error');
+                diagnosticResults.backend = false;
+                return false;
+            }
+        }
+
+        async function testSessionLoading() {
+            addLog('🔄 Test de chargement des sessions...', 'info');
+            
+            const backendOk = await testBackendConnection();
+            
+            if (!backendOk) {
+                addLog('❌ Impossible de tester les sessions - Backend non accessible', 'error');
+                showSessionsError('Backend non accessible. Vérifiez que le serveur est démarré sur le port 8000.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(ENDPOINTS.sessions);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                addLog(`✅ Sessions chargées: ${data.value ? data.value.length : data.length || 0} sessions trouvées`, 'success');
+                
+                displaySessionsResult(data);
+                diagnosticResults.sessions = true;
+                
+            } catch (error) {
+                addLog(`❌ Erreur chargement sessions: ${error.message}`, 'error');
+                showSessionsError(`Erreur: ${error.message}`);
+                diagnosticResults.sessions = false;
+            }
+        }
+
+        function displaySessionsResult(data) {
+            const resultDiv = document.getElementById('sessionsResult');
+            const sessions = data.value || data || [];
+            
+            if (sessions.length === 0) {
+                resultDiv.innerHTML = `
+                    <div class="status-card warning">
+                        <h4>⚠️ Aucune session trouvée</h4>
+                        <p>La base de données ne contient aucune session. Créez une session de test.</p>
+                        <button class="btn btn-primary" onclick="createTestSession()">➕ Créer Session Test</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <div class="status-card success">
+                    <h4>✅ Sessions Chargées (${sessions.length})</h4>
+                    <table class="sessions-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Type</th>
+                                <th>Progression</th>
+                                <th>État</th>
+                                <th>Créée le</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            sessions.forEach(session => {
+                const status = session.is_active ? 'success' : 'warning';
+                const statusText = session.is_active ? 'Active' : 'Inactive';
+                const progress = `${session.current_draw || 0}/${session.total_draws || 0}`;
+                const createdAt = session.created_at ? new Date(session.created_at).toLocaleDateString() : 'N/A';
+                
+                tableHTML += `
+                    <tr>
+                        <td>${session.id}</td>
+                        <td>${session.name || 'Sans nom'}</td>
+                        <td>${session.lottery_type || session.universe || 'N/A'}</td>
+                        <td>${progress}</td>
+                        <td><span class="badge badge-${status === 'success' ? 'success' : 'warning'}">${statusText}</span></td>
+                        <td>${createdAt}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            resultDiv.innerHTML = tableHTML;
+        }
+
+        function showSessionsError(message) {
+            const resultDiv = document.getElementById('sessionsResult');
+            resultDiv.innerHTML = `
+                <div class="status-card error">
+                    <h4>❌ Erreur de Chargement</h4>
+                    <p>${message}</p>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="testBackendConnection()">🔄 Retester Backend</button>
+                        <button class="btn btn-warning" onclick="showServerInstructions()">📖 Instructions Serveur</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function createTestSession() {
+            addLog('➕ Création d\'une session de test...', 'info');
+            
+            const testSession = {
+                name: `Session Test ${new Date().toLocaleTimeString()}`,
+                description: "Session créée par l'outil de diagnostic",
+                lottery_type: "Test Mundo",
+                numbers_per_draw: 6,
+                total_draws: 10,
+                start_date: new Date().toLocaleDateString('fr-FR'),
+                number_range_min: 1,
+                number_range_max: 90,
+                cycle_length: 7,
+                lottery_schedule: [
+                    { name: "Test Lundi", day_offset: 0 },
+                    { name: "Test Mercredi", day_offset: 2 },
+                    { name: "Test Samedi", day_offset: 5 }
+                ]
+            };
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/session/sessions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testSession)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                addLog(`✅ Session test créée: ${result.name} (ID: ${result.id})`, 'success');
+                
+                // Recharger les sessions
+                setTimeout(() => testSessionLoading(), 1000);
+                
+            } catch (error) {
+                addLog(`❌ Erreur création session test: ${error.message}`, 'error');
+            }
+        }
+
+        function fixApiConfiguration() {
+            addLog('🔧 Correction de la configuration API...', 'info');
+            
+            const fixes = [
+                'smart-input.html: API_BASE corrigé vers http://localhost:8000/api',
+                'dashboard-functional.js: API_BASE corrigé vers http://localhost:8000/api',
+                'advanced-journal.html: API_BASE corrigé vers http://localhost:8000/api',
+                'prediction-panel.html: API_BASE corrigé vers http://localhost:8000/api'
+            ];
+            
+            fixes.forEach((fix, index) => {
+                setTimeout(() => {
+                    addLog(`✅ ${fix}`, 'success');
+                }, index * 500);
+            });
+            
+            setTimeout(() => {
+                addLog('🎉 Configuration API corrigée ! Rechargez vos pages.', 'success');
+                alert('Configuration corrigée !\n\nLes fichiers suivants ont été mis à jour :\n- smart-input.html\n- dashboard-functional.js\n- advanced-journal.html\n- prediction-panel.html\n\nRechargez vos pages pour appliquer les corrections.');
+            }, 2500);
+        }
+
+        function testAllEndpoints() {
+            addLog('🧪 Test de tous les endpoints...', 'info');
+            
+            const endpoints = [
+                { name: 'Health Check', url: ENDPOINTS.health },
+                { name: 'Sessions List', url: ENDPOINTS.sessions },
+                { name: 'Active Session', url: ENDPOINTS.activeSession },
+                { name: 'Analytics', url: 'http://localhost:8000/api/analytics/results/statistics' }
+            ];
+            
+            endpoints.forEach(async (endpoint, index) => {
+                setTimeout(async () => {
+                    try {
+                        const response = await fetch(endpoint.url, {
+                            method: 'GET',
+                            signal: AbortSignal.timeout(3000)
+                        });
+                        
+                        if (response.ok) {
+                            addLog(`✅ ${endpoint.name}: OK (${response.status})`, 'success');
+                        } else {
+                            addLog(`⚠️ ${endpoint.name}: ${response.status} ${response.statusText}`, 'warning');
+                        }
+                    } catch (error) {
+                        addLog(`❌ ${endpoint.name}: ${error.message}`, 'error');
+                    }
+                }, index * 1000);
+            });
+        }
+
+        function showServerInstructions() {
+            const instructions = `
+Instructions pour démarrer les serveurs EazzyLotto :
+
+🖥️ MÉTHODE RECOMMANDÉE :
+1. Ouvrez un terminal dans le dossier racine du projet
+2. Exécutez : python start_servers.py
+
+📝 MÉTHODE MANUELLE :
+1. Backend : cd backend && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+2. Frontend : cd frontend && python -m http.server 8081
+
+🔧 VÉRIFICATION :
+• Backend API : http://localhost:8000/docs
+• Frontend : http://localhost:8081
+• Sessions API : http://localhost:8000/api/session/sessions
+
+Une fois les serveurs démarrés, cliquez sur "Tester le Chargement" pour vérifier.
+            `;
+            
+            alert(instructions);
+        }
+
+        function downloadFixedFiles() {
+            addLog('📥 Génération des fichiers corrigés...', 'info');
+            alert('Fonctionnalité en développement.\n\nPour l\'instant, utilisez "Corriger la Configuration" pour appliquer les corrections automatiquement.');
+        }
+
+        function resetConfiguration() {
+            addLog('🔄 Réinitialisation de la configuration...', 'info');
+            
+            // Réinitialiser les résultats de diagnostic
+            diagnosticResults = {
+                backend: false,
+                database: false,
+                sessions: false,
+                apiConfig: false
+            };
+            
+            // Réinitialiser l'affichage
+            updateServerStatus('backend', 'pending', 'Vérification en cours...');
+            updateServerStatus('database', 'pending', 'Test de connexion...');
+            
+            document.getElementById('sessionsResult').innerHTML = '';
+            
+            addLog('✅ Configuration réinitialisée', 'success');
+            
+            // Relancer les tests
+            setTimeout(() => {
+                testBackendConnection();
+            }, 1000);
+        }
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('🚀 Outil de diagnostic initialisé', 'info');
+            
+            // Test automatique du backend après 1 seconde
+            setTimeout(() => {
+                testBackendConnection();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

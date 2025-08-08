@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Tables de Katula Multi-Univers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: #2c3e50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .universes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .universe-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .universe-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .universe-container.mundo {
+            border-color: #3498db;
+        }
+
+        .universe-container.fruity {
+            border-color: #e74c3c;
+        }
+
+        .universe-container.trigga {
+            border-color: #f39c12;
+        }
+
+        .universe-container.roaster {
+            border-color: #9b59b6;
+        }
+
+        .universe-container.sunshine {
+            border-color: #f1c40f;
+        }
+
+        .universe-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .universe-header.mundo {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .universe-header.fruity {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .universe-header.trigga {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .universe-header.roaster {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .universe-header.sunshine {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+        }
+
+        .katula-matrix {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            margin: 15px 0;
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .chip-cell {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 80px;
+            font-size: 0.7em;
+            overflow: hidden;
+        }
+
+        .chip-header {
+            background: #34495e;
+            color: white;
+            text-align: center;
+            padding: 4px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .chip-drawers {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chip-drawer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #bdc3c7;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .chip-drawer:last-child {
+            border-bottom: none;
+        }
+
+        .chip-drawer:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: scale(1.05);
+        }
+
+        .chip-drawer.active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .chip-drawer.hot {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .chip-drawer.cold {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .chip-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .chip-cell.has-forme {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .chip-cell.hot {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: pulse 2s infinite;
+        }
+
+        .chip-cell.cold {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .chip-number {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .chip-forme {
+            font-size: 0.7em;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .chip-frequency {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6em;
+        }
+
+        .universe-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 3px solid #3498db;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+
+        .formes-legend {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .formes-legend h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .formes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .forme-item {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.8em;
+            border: 1px solid #ddd;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .universes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .katula-matrix {
+                gap: 2px;
+                padding: 10px;
+            }
+
+            .chip-cell {
+                min-height: 40px;
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+    
+    <div class="container" style="margin-top: 100px;">
+        <div class="header">
+            <h1>🌍 Tables de Katula Multi-Univers</h1>
+            <p>Visualisation simultanée des 5 univers avec leurs formes spécifiques</p>
+        </div>
+
+        <div class="controls">
+            <button onclick="loadAllUniverses()" id="loadAllBtn">🌍 Charger Tous les Univers</button>
+            <button onclick="analyzeAllPatterns()" id="analyzeAllBtn">📊 Analyser Tous les Patterns</button>
+            <button onclick="compareUniverses()" id="compareBtn">⚖️ Comparer Univers</button>
+        </div>
+
+        <div id="universesContainer" class="universes-grid"></div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            🔄 Chargement des Tables de Katula pour tous les univers...
+        </div>
+    </div>
+
+    <script src="assets/js/universal-header.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8081/api/analytics';
+        const UNIVERSES = ['mundo', 'fruity', 'trigga', 'roaster', 'sunshine'];
+        let universesData = {};
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'research', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+            
+            loadAllUniverses();
+        });
+
+        async function loadAllUniverses() {
+            const loadBtn = document.getElementById('loadAllBtn');
+            loadBtn.disabled = true;
+            loadBtn.textContent = '🔄 Chargement...';
+
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('universesContainer').innerHTML = '';
+
+            try {
+                // Charger les données pour chaque univers
+                for (const universe of UNIVERSES) {
+                    await loadUniverseData(universe);
+                }
+
+                displayAllUniverses();
+                showSuccess('Toutes les Tables de Katula chargées avec succès!');
+
+            } catch (error) {
+                showError('Erreur lors du chargement: ' + error.message);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🌍 Charger Tous les Univers';
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+
+        async function loadUniverseData(universe) {
+            try {
+                console.log(`Chargement de ${universe}...`);
+
+                // Vérifier si le serveur backend est disponible
+                const healthCheck = await fetch(`${API_BASE.replace('/api/analytics', '')}/`).catch(() => null);
+                if (!healthCheck) {
+                    throw new Error(`Serveur backend non disponible. Veuillez démarrer le serveur avec 'python start_servers.py'`);
+                }
+
+                // Charger la table de Katula
+                const tableResponse = await fetch(`${API_BASE}/katula/table/${universe}`);
+                if (!tableResponse.ok) {
+                    throw new Error(`Erreur table ${universe}: ${tableResponse.status}`);
+                }
+                const tableData = await tableResponse.json();
+                console.log(`Table ${universe} chargée:`, tableData);
+
+                // Charger les formes (optionnel)
+                let formesData = { attribute_analysis: { forme: { sample_values: ['forme1', 'forme2', 'forme3'] } } };
+                try {
+                    const formesResponse = await fetch(`${API_BASE}/attributes/discover/${universe}`);
+                    if (formesResponse.ok) {
+                        formesData = await formesResponse.json();
+                    }
+                } catch (e) {
+                    console.warn(`Formes non disponibles pour ${universe}:`, e);
+                }
+
+                // Charger les patterns (optionnel)
+                let patternsData = { pattern_insights: { hot_zones: [], cold_zones: [] } };
+                try {
+                    const patternsResponse = await fetch(`${API_BASE}/katula/patterns/${universe}?limit=50`);
+                    if (patternsResponse.ok) {
+                        patternsData = await patternsResponse.json();
+                    }
+                } catch (e) {
+                    console.warn(`Patterns non disponibles pour ${universe}:`, e);
+                }
+
+                universesData[universe] = {
+                    table: tableData,
+                    formes: formesData,
+                    patterns: patternsData
+                };
+
+                console.log(`${universe} chargé avec succès`);
+
+            } catch (error) {
+                console.error(`Erreur chargement ${universe}:`, error);
+                universesData[universe] = {
+                    error: error.message
+                };
+            }
+        }
+
+        function displayAllUniverses() {
+            const container = document.getElementById('universesContainer');
+            let html = '';
+
+            UNIVERSES.forEach(universe => {
+                const data = universesData[universe];
+
+                if (data && !data.error) {
+                    html += createUniverseHTML(universe, data);
+                } else {
+                    html += createErrorUniverseHTML(universe, data?.error || 'Erreur inconnue');
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function createUniverseHTML(universe, data) {
+            const universeTitle = universe.charAt(0).toUpperCase() + universe.slice(1);
+
+            let html = `
+                <div class="universe-container ${universe}">
+                    <div class="universe-header ${universe}">
+                        🌍 ${universeTitle}
+                    </div>
+            `;
+
+            // Matrice de Katula
+            if (data.table && data.table.matrix) {
+                html += '<div class="katula-matrix">';
+
+                try {
+                    data.table.matrix.forEach((row, rowIndex) => {
+                        row.forEach((cell, colIndex) => {
+                            const chipClass = 'has-forme'; // Classe simple par défaut
+                            const forme = getChipForme(cell.chip_number, data.formes) || '';
+
+                            html += `
+                                <div class="chip-cell ${chipClass}" 
+                                     onclick="showChipDetails('${cell.chip_id}', '${universe}')"
+                                     title="Chip ${cell.chip_number} - ${cell.position}">
+                                    <div class="chip-number">${cell.chip_number}</div>
+                                    ${forme ? `<div class="chip-forme">${forme.substring(0, 4)}</div>` : ''}
+                                </div>
+                            `;
+                        });
+                    });
+                } catch (e) {
+                    console.error(`Erreur affichage matrice ${universe}:`, e);
+                    html += '<div class="error">Erreur affichage matrice</div>';
+                }
+
+                html += '</div>';
+            } else {
+                html += '<div class="loading">Matrice non disponible</div>';
+            }
+
+            // Statistiques simplifiées
+            html += `
+                <div class="universe-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">48</div>
+                        <div class="stat-label">Total Chips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">✓</div>
+                        <div class="stat-label">Chargé</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${universe}</div>
+                        <div class="stat-label">Univers</div>
+                    </div>
+                </div>
+            `;
+
+            // Légende des formes simplifiée
+            html += createFormesLegend(universe, data.formes);
+
+            html += '</div>';
+
+            return html;
+        }
+
+        function createErrorUniverseHTML(universe, error) {
+            const universeTitle = universe.charAt(0).toUpperCase() + universe.slice(1);
+
+            return `
+                <div class="universe-container ${universe}">
+                    <div class="universe-header ${universe}">
+                        🌍 ${universeTitle}
+                    </div>
+                    <div class="error">
+                        Erreur: ${error}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createUniverseStats(universe, data) {
+            let totalChips = 48;
+            let activeChips = 0;
+            let hotZones = 0;
+
+            if (data.patterns && data.patterns.pattern_insights) {
+                hotZones = data.patterns.pattern_insights.hot_zones?.length || 0;
+            }
+
+            if (data.patterns && data.patterns.frequency_analysis) {
+                const frequencies = data.patterns.frequency_analysis.by_zone || {};
+                activeChips = Object.values(frequencies).reduce((sum, freq) => sum + freq, 0);
+            }
+
+            return `
+                <div class="universe-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${totalChips}</div>
+                        <div class="stat-label">Total Chips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${activeChips}</div>
+                        <div class="stat-label">Activité</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${hotZones}</div>
+                        <div class="stat-label">Zones Chaudes</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createFormesLegend(universe, formesData) {
+            if (!formesData || !formesData.attribute_analysis || !formesData.attribute_analysis.forme) {
+                return '<div class="formes-legend"><h4>Formes non disponibles</h4></div>';
+            }
+
+            const formes = formesData.attribute_analysis.forme.sample_values || [];
+
+            let html = `
+                <div class="formes-legend">
+                    <h4>🎨 Formes de ${universe}</h4>
+                    <div class="formes-grid">
+            `;
+
+            formes.forEach(forme => {
+                html += `<div class="forme-item">${forme}</div>`;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function getChipClass(cell, patternsData) {
+            let classes = [];
+
+            // Vérifier si le chip a une forme associée
+            if (cell.chip_number <= 48) {
+                classes.push('has-forme');
+            }
+
+            // Vérifier les zones chaudes/froides
+            if (patternsData && patternsData.pattern_insights) {
+                const hotZones = patternsData.pattern_insights.hot_zones || [];
+                const coldZones = patternsData.pattern_insights.cold_zones || [];
+
+                const isHot = hotZones.some(zone =>
+                    cell.geometric_zone === zone.zone && zone.ratio > 0.15
+                );
+                const isCold = coldZones.some(zone =>
+                    cell.geometric_zone === zone.zone && zone.ratio < 0.05
+                );
+
+                if (isHot) classes.push('hot');
+                else if (isCold) classes.push('cold');
+            }
+
+            return classes.join(' ');
+        }
+
+        function getChipForme(chipNumber, formesData) {
+            // Logique simplifiée pour associer une forme à un chip
+            // Dans un vrai système, cela viendrait de la base de données
+            if (!formesData || !formesData.attribute_analysis || !formesData.attribute_analysis.forme) {
+                return null;
+            }
+
+            const formes = formesData.attribute_analysis.forme.sample_values || [];
+            if (formes.length === 0) return null;
+
+            // Associer cycliquement les formes aux chips
+            const formeIndex = (chipNumber - 1) % formes.length;
+            return formes[formeIndex];
+        }
+
+        function getChipFrequency(chipNumber, patternsData) {
+            // Retourner la fréquence d'apparition du chip
+            if (!patternsData || !patternsData.position_history) {
+                return 0;
+            }
+
+            return patternsData.position_history.filter(pos =>
+                pos.position.includes(`C${chipNumber}`)
+            ).length;
+        }
+
+        async function analyzeAllPatterns() {
+            const analyzeBtn = document.getElementById('analyzeAllBtn');
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '📊 Analyse...';
+
+            try {
+                // Recharger les patterns pour tous les univers
+                for (const universe of UNIVERSES) {
+                    if (universesData[universe] && !universesData[universe].error) {
+                        const response = await fetch(`${API_BASE}/katula/patterns/${universe}?limit=100`);
+                        const data = await response.json();
+                        universesData[universe].patterns = data;
+                    }
+                }
+
+                displayAllUniverses();
+                showSuccess('Analyse des patterns terminée pour tous les univers!');
+
+            } catch (error) {
+                showError('Erreur lors de l\'analyse: ' + error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '📊 Analyser Tous les Patterns';
+            }
+        }
+
+        async function compareUniverses() {
+            const compareBtn = document.getElementById('compareBtn');
+            compareBtn.disabled = true;
+            compareBtn.textContent = '⚖️ Comparaison...';
+
+            try {
+                let comparison = {};
+
+                UNIVERSES.forEach(universe => {
+                    const data = universesData[universe];
+                    if (data && !data.error && data.patterns) {
+                        const patterns = data.patterns;
+                        comparison[universe] = {
+                            total_combinations: patterns.analysis_period || 0,
+                            hot_zones: patterns.pattern_insights?.hot_zones?.length || 0,
+                            cold_zones: patterns.pattern_insights?.cold_zones?.length || 0,
+                            most_active_quadrant: patterns.pattern_insights?.most_active_quadrant?.[0] || 'N/A'
+                        };
+                    }
+                });
+
+                displayComparison(comparison);
+                showSuccess('Comparaison des univers terminée!');
+
+            } catch (error) {
+                showError('Erreur lors de la comparaison: ' + error.message);
+            } finally {
+                compareBtn.disabled = false;
+                compareBtn.textContent = '⚖️ Comparer Univers';
+            }
+        }
+
+        function displayComparison(comparison) {
+            // Afficher la comparaison dans une popup ou section dédiée
+            let comparisonText = '🌍 COMPARAISON DES UNIVERS:\n\n';
+
+            Object.entries(comparison).forEach(([universe, stats]) => {
+                comparisonText += `${universe.toUpperCase()}:\n`;
+                comparisonText += `- Zones chaudes: ${stats.hot_zones}\n`;
+                comparisonText += `- Zones froides: ${stats.cold_zones}\n`;
+                comparisonText += `- Quadrant actif: ${stats.most_active_quadrant}\n\n`;
+            });
+
+            alert(comparisonText);
+        }
+
+        function showChipDetails(chipId, universe) {
+            const data = universesData[universe];
+            if (data && data.table && data.table.chip_positions && data.table.chip_positions[chipId]) {
+                const chipInfo = data.table.chip_positions[chipId];
+                const forme = getChipForme(chipInfo.chip_number, data.formes);
+
+                alert(`
+🌍 UNIVERS: ${universe.toUpperCase()}
+🎯 Chip: ${chipInfo.chip_id}
+📍 Position: ${chipInfo.position}
+📏 Ligne: ${chipInfo.row} | Colonne: ${chipInfo.column}
+🎨 Forme: ${forme || 'Non définie'}
+🗺️ Zone: ${chipInfo.geometric_zone}
+🎯 Quadrant: ${chipInfo.quadrant}
+🏷️ Type: ${chipInfo.edge_info.edge_type}
+                `);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.getElementById('universesContainer'));
+
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.textContent = message;
+            document.querySelector('.container').insertBefore(successDiv, document.getElementById('universesContainer'));
+
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+    </script>
+</body>
+
+</html>
