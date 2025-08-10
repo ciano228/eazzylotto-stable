@@ -1,6 +1,5 @@
 [build]
   publish = "frontend"
-  command = "echo 'Static site ready'"
 
 [[redirects]]
   from = "/*"
