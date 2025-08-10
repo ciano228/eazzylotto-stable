@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Interface de Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: #1890ff;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #40a9ff;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .numbers-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .number-tag {
+            background-color: #1890ff;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .result-container {
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .error-container {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            color: #ff4d4f;
+        }
+
+        .universe-card {
+            background-color: #fafafa;
+            border-left: 4px solid #1890ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .universe-mundo {
+            border-left-color: #52c41a;
+        }
+
+        .universe-fruity {
+            border-left-color: #fa8c16;
+        }
+
+        .universe-trigga {
+            border-left-color: #eb2f96;
+        }
+
+        .universe-roaster {
+            border-left-color: #722ed1;
+        }
+
+        .universe-sunshine {
+            border-left-color: #fadb14;
+        }
+
+        .combination-tag {
+            background-color: #e6f7ff;
+            color: #1890ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 2px;
+            display: inline-block;
+            font-size: 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🎯 EazzyCalculator</h1>
+        <p>Interface de Test - Système d'analyse de loterie</p>
+    </div>
+
+    <div class="grid">
+        <div class="container">
+            <h2>🎲 Créer un Nouveau Tirage</h2>
+            <form id="drawForm">
+                <div class="form-group">
+                    <label for="lotteryName">Nom de la Loterie:</label>
+                    <input type="text" id="lotteryName" placeholder="Ex: Loto du Samedi" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="drawDate">Date du Tirage:</label>
+                    <input type="date" id="drawDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numberInput">Ajouter un numéro (1-90):</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="numberInput" min="1" max="90" placeholder="Numéro">
+                        <button type="button" onclick="addNumber()"
+                            style="width: auto; padding: 8px 16px;">Ajouter</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Numéros sélectionnés:</label>
+                    <div id="selectedNumbers" class="numbers-container">
+                        <span style="color: #999;">Aucun numéro sélectionné</span>
+                    </div>
+                </div>
+
+                <button type="submit" id="createDrawBtn">Créer le Tirage</button>
+            </form>
+        </div>
+
+        <div class="container">
+            <h2>📊 Analyse des Tirages</h2>
+            <div class="form-group">
+                <label for="drawSelect">Sélectionner un tirage:</label>
+                <select id="drawSelect">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="universeSelect">Filtrer par univers:</label>
+                <select id="universeSelect">
+                    <option value="">Tous les univers</option>
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="analyzeDraw()">Analyser le Tirage</button>
+        </div>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8002/api';
+        // Activer le mode sans-credentials pour éviter les problèmes CORS
+        const fetchOptions = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: 'cors',
+            credentials: 'omit'
+        };
+        let selectedNumbers = [];
+        let draws = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function () {
+            loadDraws();
+
+            // Définir la date d'aujourd'hui par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('drawDate').value = today;
+        });
+
+        // Gestion du formulaire
+        document.getElementById('drawForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            createDraw();
+        });
+
+        function addNumber() {
+            const input = document.getElementById('numberInput');
+            const num = parseInt(input.value);
+
+            if (!num || num < 1 || num > 90) {
+                alert('Veuillez entrer un numéro entre 1 et 90');
+                return;
+            }
+
+            if (selectedNumbers.includes(num)) {
+                alert('Ce numéro a déjà été ajouté');
+                return;
+            }
+
+            selectedNumbers.push(num);
+            selectedNumbers.sort((a, b) => a - b);
+            updateNumbersDisplay();
+            input.value = '';
+        }
+
+        function removeNumber(num) {
+            selectedNumbers = selectedNumbers.filter(n => n !== num);
+            updateNumbersDisplay();
+        }
+
+        function updateNumbersDisplay() {
+            const container = document.getElementById('selectedNumbers');
+
+            if (selectedNumbers.length === 0) {
+                container.innerHTML = '<span style="color: #999;">Aucun numéro sélectionné</span>';
+                return;
+            }
+
+            container.innerHTML = selectedNumbers.map(num =>
+                `<span class="number-tag" onclick="removeNumber(${num})" style="cursor: pointer;" title="Cliquer pour supprimer">${num}</span>`
+            ).join('');
+        }
+
+        async function createDraw() {
+            if (selectedNumbers.length < 5) {
+                alert('Veuillez sélectionner au moins 5 numéros');
+                return;
+            }
+
+            const btn = document.getElementById('createDrawBtn');
+            btn.disabled = true;
+            btn.textContent = 'Création en cours...';
+
+            try {
+                const drawData = {
+                    lottery_name: document.getElementById('lotteryName').value,
+                    draw_date: formatDate(document.getElementById('drawDate').value),
+                    winning_numbers: selectedNumbers,
+                    number_range_min: 1,
+                    number_range_max: 90
+                };
+
+                const response = await fetch(`${API_BASE}/lottery/draws`, {
+                    method: 'POST',
+                    ...fetchOptions,
+                    body: JSON.stringify(drawData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showResult('✅ Tirage créé avec succès!', `
+                        <strong>ID du tirage:</strong> ${result.draw_id}<br>
+                        <strong>Combinaisons générées:</strong> ${result.total_combinations}<br>
+                        <strong>Aperçu des univers:</strong><br>
+                        ${Object.entries(result.universes_preview || {}).map(([universe, count]) =>
+                        `<span class="combination-tag">${universe}: ${count}</span>`
+                    ).join(' ')}
+                    `);
+
+                    // Reset form
+                    document.getElementById('drawForm').reset();
+                    selectedNumbers = [];
+                    updateNumbersDisplay();
+                    loadDraws(); // Recharger la liste des tirages
+                } else {
+                    showError('Erreur lors de la création du tirage: ' + result.detail);
+                }
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Créer le Tirage';
+            }
+        }
+
+        async function loadDraws() {
+            try {
+                const response = await fetch(`${API_BASE}/lottery/draws`, fetchOptions);
+                const data = await response.json();
+                draws = data;
+
+                const select = document.getElementById('drawSelect');
+                select.innerHTML = '<option value="">Sélectionner un tirage</option>';
+
+                data.forEach(draw => {
+                    const option = document.createElement('option');
+                    option.value = draw.id;
+                    option.textContent = `${draw.lottery_name} - ${draw.draw_date} (${draw.winning_numbers.join(', ')})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des tirages:', error);
+            }
+        }
+
+        async function analyzeDraw() {
+            const drawId = document.getElementById('drawSelect').value;
+            const universe = document.getElementById('universeSelect').value;
+
+            if (!drawId) {
+                alert('Veuillez sélectionner un tirage');
+                return;
+            }
+
+            try {
+                let url = `${API_BASE}/analysis/draw/${drawId}`;
+                if (universe) {
+                    url += `?universe=${universe}`;
+                }
+
+                const response = await fetch(url, fetchOptions);
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayAnalysis(result);
+                } else {
+                    showError('Erreur lors de l\'analyse: ' + result.detail);
+                }
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            }
+        }
+
+        function displayAnalysis(result) {
+            let html = `
+                <div class="container">
+                    <h2>📊 Résultats de l'Analyse</h2>
+                    <div style="background-color: #f0f9ff; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        <strong>Tirage:</strong> ${result.draw_info.lottery_name}<br>
+                        <strong>Date:</strong> ${result.draw_info.draw_date}<br>
+                        <strong>Numéros gagnants:</strong> ${result.draw_info.winning_numbers.join(' - ')}
+                    </div>
+            `;
+
+            if (result.universe) {
+                // Analyse d'un univers spécifique
+                html += `
+                    <h3>Univers: ${result.universe.toUpperCase()} (${result.total_combinations} combinaisons)</h3>
+                    <div class="universe-card universe-${result.universe}">
+                `;
+
+                result.combinations.forEach(combo => {
+                    html += `
+                        <div style="margin: 8px 0; padding: 8px; background: white; border-radius: 4px;">
+                            <strong>${combo.combination}</strong> - 
+                            Forme: ${combo.forme}, Engine: ${combo.engine}, 
+                            Beastie: ${combo.beastie}, Tome: ${combo.tome}
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            } else {
+                // Analyse de tous les univers
+                html += '<h3>Répartition par Univers</h3>';
+
+                Object.entries(result.universes).forEach(([universe, combinations]) => {
+                    html += `
+                        <div class="universe-card universe-${universe}">
+                            <h4>${universe.toUpperCase()} (${combinations.length} combinaisons)</h4>
+                    `;
+
+                    combinations.slice(0, 5).forEach(combo => {
+                        html += `<span class="combination-tag">${combo.combination}</span>`;
+                    });
+
+                    if (combinations.length > 5) {
+                        html += `<span style="color: #666;"> +${combinations.length - 5} autres...</span>`;
+                    }
+
+                    html += '</div>';
+                });
+            }
+
+            html += '</div>';
+            document.getElementById('results').innerHTML = html;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        function showResult(title, content) {
+            document.getElementById('results').innerHTML = `
+                <div class="result-container">
+                    <h3>${title}</h3>
+                    <div>${content}</div>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('results').innerHTML = `
+                <div class="error-container">
+                    <h3>❌ Erreur</h3>
+                    <div>${message}</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>

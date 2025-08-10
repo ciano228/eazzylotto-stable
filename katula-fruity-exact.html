@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Katula de Fruity - Reproduction Exacte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: #00bcd4;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .column-headers {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 2px;
+            margin-bottom: 10px;
+        }
+
+        .column-header {
+            background: #d32f2f;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-rows: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .ligne-container {
+            display: grid;
+            grid-template-columns: auto repeat(6, 1fr);
+            gap: 2px;
+            align-items: stretch;
+        }
+
+        .ligne-label {
+            background: #333;
+            color: white;
+            padding: 20px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .chip-cell {
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #333;
+            min-height: 120px;
+        }
+
+        .chip-drawer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #ccc;
+            padding: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .chip-drawer:last-child {
+            border-bottom: none;
+        }
+
+        /* Couleurs selon les données de l'image */
+        .drawer-road { background: #ff9800; }
+        .drawer-table { background: #00bcd4; }
+        .drawer-chair { background: #ffeb3b; }
+        .drawer-door { background: #9e9e9e; }
+        .drawer-window { background: #00bcd4; }
+        .drawer-fire { background: #ff9800; }
+        .drawer-rainbow { background: #ffeb3b; }
+        .drawer-flower { background: #ff9800; }
+        .drawer-shoes { background: #795548; }
+        .drawer-book { background: #4caf50; }
+        .drawer-bottle { background: #ffeb3b; }
+        .drawer-umbrella { background: #00bcd4; }
+        .drawer-gold { background: #ff9800; }
+        .drawer-house { background: #9e9e9e; }
+        .drawer-mountain { background: #795548; }
+        .drawer-bike { background: #e91e63; }
+        .drawer-forest { background: #4caf50; }
+        .drawer-football { background: #00bcd4; }
+        .drawer-hotel { background: #9e9e9e; }
+        .drawer-canoe { background: #795548; }
+        .drawer-rope { background: #795548; }
+        .drawer-drum { background: #ffeb3b; }
+        .drawer-river { background: #ff9800; }
+        .drawer-mango { background: #ffeb3b; }
+        .drawer-blade { background: #e91e63; }
+        .drawer-bed { background: #ffeb3b; }
+        .drawer-spoon { background: #795548; }
+        .drawer-king { background: #00bcd4; }
+        .drawer-star { background: #ffeb3b; }
+        .drawer-empty { background: #f5f5f5; color: #999; }
+    </style>
+</head>
+<body>    
+<div class="container">
+        <div class="header">TABLE KATULA DE FRUITY</div>
+        
+        <div class="column-headers">
+            <div class="column-header">Colonne 1</div>
+            <div class="column-header">Colonne 2</div>
+            <div class="column-header">Colonne 3</div>
+            <div class="column-header">Colonne 4</div>
+            <div class="column-header">Colonne 5</div>
+            <div class="column-header">Colonne 6</div>
+        </div>
+
+        <div class="katula-grid">
+            <!-- LIGNE 1 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 1</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-road">road 1</div>
+                    <div class="chip-drawer drawer-fire">fire 1</div>
+                    <div class="chip-drawer drawer-shoes">shoes 1</div>
+                    <div class="chip-drawer drawer-bottle">bottle 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-table">table 1</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 4</div>
+                    <div class="chip-drawer drawer-book">book 1</div>
+                    <div class="chip-drawer drawer-umbrella">umbrella 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 1</div>
+                    <div class="chip-drawer drawer-flower">flower 1</div>
+                    <div class="chip-drawer drawer-shoes">shoes 2</div>
+                    <div class="chip-drawer drawer-bottle">bottle 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-door">door 1</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-book">book 2</div>
+                    <div class="chip-drawer drawer-bottle">bottle 3</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-road">road 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-gold">gold 3</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-window">window 3</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>
+
+            <!-- LIGNE 2 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 2</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-house">house 1</div>
+                    <div class="chip-drawer drawer-fire">fire 2</div>
+                    <div class="chip-drawer drawer-shoes">shoes 3</div>
+                    <div class="chip-drawer drawer-bottle">bottle 4</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-gold">gold 5</div>
+                    <div class="chip-drawer drawer-mountain">mountain 1</div>
+                    <div class="chip-drawer drawer-shoes">shoes 4</div>
+                    <div class="chip-drawer drawer-gold">gold 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 3</div>
+                    <div class="chip-drawer drawer-fire">fire 3</div>
+                    <div class="chip-drawer drawer-shoes">shoes 8</div>
+                    <div class="chip-drawer drawer-bottle">bottle 5</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bike">bike 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-shoes">shoes 5</div>
+                    <div class="chip-drawer drawer-gold">gold 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-bottle">bottle 6</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-table">table 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>     
+       <!-- LIGNE 3 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 3</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-road">road 6</div>
+                    <div class="chip-drawer drawer-mountain">mountain 2</div>
+                    <div class="chip-drawer drawer-shoes">shoes 6</div>
+                    <div class="chip-drawer drawer-bottle">bottle 9</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-window">window 1</div>
+                    <div class="chip-drawer drawer-mountain">mountain 3</div>
+                    <div class="chip-drawer drawer-shoes">shoes 7</div>
+                    <div class="chip-drawer drawer-gold">gold 4</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 5</div>
+                    <div class="chip-drawer drawer-fire">fire 4</div>
+                    <div class="chip-drawer drawer-football">football 1</div>
+                    <div class="chip-drawer drawer-bottle">bottle 10</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-window">window 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-football">football 2</div>
+                    <div class="chip-drawer drawer-gold">gold 5</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-road">road 3</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-bottle">bottle 7</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-window">window 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>
+
+            <!-- LIGNE 4 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 4</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bike">bike 1</div>
+                    <div class="chip-drawer drawer-forest">forest 1</div>
+                    <div class="chip-drawer drawer-football">football 3</div>
+                    <div class="chip-drawer drawer-hotel">hotel 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 7</div>
+                    <div class="chip-drawer drawer-forest">forest 2</div>
+                    <div class="chip-drawer drawer-canoe">canoe 1</div>
+                    <div class="chip-drawer drawer-hotel">hotel 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-door">door 2</div>
+                    <div class="chip-drawer drawer-forest">forest 3</div>
+                    <div class="chip-drawer drawer-book">book 3</div>
+                    <div class="chip-drawer drawer-gold">gold 6</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 1</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-star">star 5</div>
+                    <div class="chip-drawer drawer-drum">drum 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 8</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-drum">drum 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bike">bike 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>
+
+            <!-- LIGNE 5 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 5</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bike">bike 3</div>
+                    <div class="chip-drawer drawer-forest">forest 4</div>
+                    <div class="chip-drawer drawer-canoe">canoe 2</div>
+                    <div class="chip-drawer drawer-rope">rope 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 2</div>
+                    <div class="chip-drawer drawer-forest">forest 5</div>
+                    <div class="chip-drawer drawer-book">book 4</div>
+                    <div class="chip-drawer drawer-rope">rope 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-table">table 3</div>
+                    <div class="chip-drawer drawer-forest">forest 6</div>
+                    <div class="chip-drawer drawer-mango">mango 1</div>
+                    <div class="chip-drawer drawer-drum">drum 4</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 3</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-book">book 5</div>
+                    <div class="chip-drawer drawer-drum">drum 5</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-table">table 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-bottle">bottle 8</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>     
+       <!-- LIGNE 6 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 6</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-blade">blade 1</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 1</div>
+                    <div class="chip-drawer drawer-canoe">canoe 3</div>
+                    <div class="chip-drawer drawer-spoon">spoon 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bed">bed 2</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 2</div>
+                    <div class="chip-drawer drawer-canoe">canoe 4</div>
+                    <div class="chip-drawer drawer-spoon">spoon 2</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bed">bed 3</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 3</div>
+                    <div class="chip-drawer drawer-mango">mango 2</div>
+                    <div class="chip-drawer drawer-spoon">spoon 3</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-blade">blade 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-mango">mango 3</div>
+                    <div class="chip-drawer drawer-spoon">spoon 4</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bed">bed 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-king">king 1</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-blade">blade 3</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>
+
+            <!-- LIGNE 7 -->
+            <div class="ligne-container">
+                <div class="ligne-label">LIGNE 7</div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 7</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 8</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bed">bed 5</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 9-6</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-bed">bed 6</div>
+                    <div class="chip-drawer drawer-rainbow">rainbow 5-7</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-road">road 4</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-chair">chair 2</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+                <div class="chip-cell">
+                    <div class="chip-drawer drawer-river">river 5</div>
+                    <div class="chip-drawer drawer-empty">---</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ajouter interactivité si nécessaire
+        document.querySelectorAll('.chip-drawer').forEach(drawer => {
+            drawer.addEventListener('click', function() {
+                if (!this.textContent.includes('---')) {
+                    alert(`Tiroir sélectionné: ${this.textContent}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

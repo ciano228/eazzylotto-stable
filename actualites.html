@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualités - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .main-content {
+            padding: 120px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffd700, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 60px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-date {
+            background: #4facfe;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .news-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .news-excerpt {
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .news-link {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .news-link:hover {
+            color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .featured-news {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(79, 172, 254, 0.2));
+            border: 2px solid #ffd700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-news::before {
+            content: '⭐ FEATURED';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #ffd700;
+            color: #1e3c72;
+            padding: 5px 40px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body data-page="actualites">
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">📰 Actualités EazzyLotto</h1>
+        <p class="page-subtitle">
+            Restez informés des dernières nouveautés KATOOLING et des évolutions de notre plateforme
+        </p>
+
+        <div class="news-grid">
+            <article class="news-card featured-news">
+                <div class="news-date">28 Janvier 2024</div>
+                <h2 class="news-title">🚀 Lancement Officiel de KATOOLING</h2>
+                <p class="news-excerpt">
+                    Après des mois de recherche et développement, nous sommes fiers d'annoncer le lancement 
+                    officiel de notre méthode révolutionnaire KATOOLING. Cette approche géométrique unique 
+                    transforme l'analyse des combinaisons de loto.
+                </p>
+                <a href="#" class="news-link">Lire la suite →</a>
+            </article>
+
+            <article class="news-card">
+                <div class="news-date">25 Janvier 2024</div>
+                <h2 class="news-title">🤖 Nouvelle IA Prédictive</h2>
+                <p class="news-excerpt">
+                    Notre équipe a développé un nouveau modèle d'intelligence artificielle spécialisé 
+                    dans l'analyse spatiale des patterns de loto. Taux de précision amélioré de 15%.
+                </p>
+                <a href="#" class="news-link">Découvrir →</a>
+            </article>
+
+            <article class="news-card">
+                <div class="news-date">22 Janvier 2024</div>
+                <h2 class="news-title">📊 Mise à Jour de la Table Katula</h2>
+                <p class="news-excerpt">
+                    La Table Katula 8x6 a été optimisée avec de nouveaux algorithmes de positionnement 
+                    géométrique. Interface plus intuitive et calculs plus rapides.
+                </p>
+                <a href="#" class="news-link">Voir les améliorations →</a>
+            </article>
+
+            <article class="news-card">
+                <div class="news-date">20 Janvier 2024</div>
+                <h2 class="news-title">🌍 Extension Multi-Univers</h2>
+                <p class="news-excerpt">
+                    Nous avons ajouté deux nouveaux univers d'analyse : Roaster et Sunshine. 
+                    Portant le total à 5 univers distincts pour une segmentation optimale.
+                </p>
+                <a href="#" class="news-link">Explorer →</a>
+            </article>
+
+            <article class="news-card">
+                <div class="news-date">18 Janvier 2024</div>
+                <h2 class="news-title">📱 Application Mobile en Développement</h2>
+                <p class="news-excerpt">
+                    Notre équipe travaille sur une application mobile native pour iOS et Android. 
+                    Accès à KATOOLING partout, synchronisation cloud et notifications push.
+                </p>
+                <a href="#" class="news-link">En savoir plus →</a>
+            </article>
+
+            <article class="news-card">
+                <div class="news-date">15 Janvier 2024</div>
+                <h2 class="news-title">🏆 Premiers Résultats Gagnants</h2>
+                <p class="news-excerpt">
+                    Nos premiers utilisateurs bêta rapportent des résultats encourageants avec 
+                    la méthode KATOOLING. Témoignages et statistiques de performance.
+                </p>
+                <a href="#" class="news-link">Voir les témoignages →</a>
+            </article>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            UniversalHeader.injectHeader('header-container', 'actualites', { 
+                showNavigation: true,
+                showUserInfo: false 
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .main-content {
+            padding: 120px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffd700, #2ed573);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 60px;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .support-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            color: #1e3c72;
+        }
+
+        .support-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .support-description {
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .support-cta {
+            background: linear-gradient(135deg, #2ed573, #27ae60);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .support-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+        }
+
+        .faq-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+
+        .faq-title {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffd700;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .faq-answer {
+            padding: 0 20px 20px;
+            opacity: 0.9;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body data-page="support">
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">🛟 Support EazzyLotto</h1>
+        <p class="page-subtitle">
+            Notre équipe d'experts est là pour vous accompagner dans votre découverte de KATOOLING
+        </p>
+
+        <div class="support-grid">
+            <div class="support-card">
+                <div class="support-icon">📚</div>
+                <h3 class="support-title">Documentation</h3>
+                <p class="support-description">
+                    Guides complets, tutoriels vidéo et documentation technique 
+                    pour maîtriser la méthode KATOOLING.
+                </p>
+                <a href="#" class="support-cta">Consulter</a>
+            </div>
+
+            <div class="support-card">
+                <div class="support-icon">💬</div>
+                <h3 class="support-title">Chat en Direct</h3>
+                <p class="support-description">
+                    Support instantané avec nos experts. Disponible 24/7 
+                    pour répondre à toutes vos questions.
+                </p>
+                <a href="#" class="support-cta">Démarrer</a>
+            </div>
+
+            <div class="support-card">
+                <div class="support-icon">🎓</div>
+                <h3 class="support-title">Formation</h3>
+                <p class="support-description">
+                    Sessions de formation personnalisées pour optimiser 
+                    votre utilisation de la Table Katula.
+                </p>
+                <a href="#" class="support-cta">Réserver</a>
+            </div>
+
+            <div class="support-card">
+                <div class="support-icon">🔧</div>
+                <h3 class="support-title">Support Technique</h3>
+                <p class="support-description">
+                    Assistance technique pour résoudre les problèmes 
+                    et optimiser les performances de votre compte.
+                </p>
+                <a href="#" class="support-cta">Contacter</a>
+            </div>
+
+            <div class="support-card">
+                <div class="support-icon">👥</div>
+                <h3 class="support-title">Communauté</h3>
+                <p class="support-description">
+                    Rejoignez notre communauté d'utilisateurs pour échanger 
+                    conseils, stratégies et expériences.
+                </p>
+                <a href="#" class="support-cta">Rejoindre</a>
+            </div>
+
+            <div class="support-card">
+                <div class="support-icon">📞</div>
+                <h3 class="support-title">Support Téléphonique</h3>
+                <p class="support-description">
+                    Assistance téléphonique prioritaire pour les abonnés 
+                    Premium. Experts dédiés disponibles.
+                </p>
+                <a href="#" class="support-cta">Appeler</a>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h3 class="faq-title">❓ Questions Fréquentes</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Qu'est-ce que la méthode KATOOLING ?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    KATOOLING est notre méthode révolutionnaire qui transforme les combinaisons de loto 
+                    en coordonnées géométriques sur une Table Katula 8x6. Cette approche permet de 
+                    prédire les zones gagnantes futures avec une précision inégalée.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Comment fonctionne la Table Katula ?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    La Table Katula est une grille 8x6 (48 positions) où chaque combinaison de 2 numéros 
+                    est positionnée selon ses attributs géométriques. Cette représentation spatiale 
+                    permet d'identifier des patterns et tendances invisibles avec les méthodes traditionnelles.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Quel est le taux de précision de vos prédictions ?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Nos algorithmes d'IA géométrique atteignent un taux de précision moyen de 89% 
+                    sur l'identification des zones actives. Les résultats varient selon l'univers 
+                    et la période d'analyse sélectionnés.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Combien coûte l'abonnement EazzyLotto ?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Nous proposons plusieurs formules d'abonnement adaptées à tous les besoins : 
+                    Découverte (29€/mois), Expert (59€/mois) et Premium (99€/mois). 
+                    Essai gratuit de 7 jours disponible.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            UniversalHeader.injectHeader('header-container', 'support', { 
+                showNavigation: true,
+                showUserInfo: false 
+            });
+        });
+
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Fermer toutes les autres FAQ
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Ouvrir/fermer la FAQ cliquée
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

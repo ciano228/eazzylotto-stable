@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>EazzyCalculator - Saisie Intelligente Cyclique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/smart-input.css">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            padding-top: 120px; /* Espace pour le header universel */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 15px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1890ff, #40a9ff);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .session-selector {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #1890ff;
+        }
+
+        .session-controls {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        select, input, button {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+        }
+
+        button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #40a9ff;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #d9d9d9;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .numbers-input {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .number-input {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background: white;
+            position: relative;
+        }
+
+        .number-input.valid {
+            border-color: #52c41a;
+            background: #f6ffed;
+        }
+
+        .number-input.invalid {
+            border-color: #ff4d4f;
+            background: #fff2f0;
+        }
+
+        .number-input.duplicate {
+            border-color: #faad14;
+            background: #fffbe6;
+        }
+
+        .date-input {
+            transition: all 0.3s ease;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #1890ff !important;
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+        }
+
+        .date-input.invalid {
+            border-color: #ff4d4f !important;
+            background: #fff2f0;
+        }
+
+        .date-input-section {
+            position: relative;
+        }
+
+        .input-feedback {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .feedback-valid {
+            background: #52c41a;
+            color: white;
+        }
+
+        .feedback-invalid {
+            background: #ff4d4f;
+            color: white;
+        }
+
+        .feedback-duplicate {
+            background: #faad14;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #52c41a;
+        }
+
+        .btn-primary:hover {
+            background: #73d13d;
+        }
+
+        .btn-secondary {
+            background: #faad14;
+        }
+
+        .btn-secondary:hover {
+            background: #ffc53d;
+        }
+
+        .btn-danger {
+            background: #ff4d4f;
+        }
+
+        .btn-danger:hover {
+            background: #ff7875;
+        }
+
+        .results-section {
+            background: #f0f2f5;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border-left: 4px solid #1890ff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #1890ff;
+            font-size: 16px;
+        }
+
+        .result-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .result-numbers {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .number-ball {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1890ff, #40a9ff);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-edit {
+            background: #faad14;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-edit:hover {
+            background: #ffc53d;
+        }
+
+        .btn-delete {
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-delete:hover {
+            background: #ff7875;
+        }
+
+        .lottery-info {
+            background: #e6f7ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #1890ff;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #f6ffed;
+            color: #52c41a;
+            border: 1px solid #b7eb8f;
+        }
+
+        .message.error {
+            background: #fff2f0;
+            color: #ff4d4f;
+            border: 1px solid #ffccc7;
+        }
+
+        .message.info {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .session-info {
+            background: linear-gradient(135deg, #e6f7ff, #f0f5ff);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #1890ff;
+        }
+
+        .session-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1890ff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .session-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .numbers-input {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // Injecter le header universel au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof UniversalHeader !== 'undefined') {
+                const headerHtml = UniversalHeader.generateHeader('smart-input');
+                document.body.insertAdjacentHTML('afterbegin', headerHtml);
+                UniversalHeader.initializeHeader();
+            }
+        });
+    </script>
+    
+    <div class="container">
+        <!-- Le titre est géré par le header universel -->
+
+        <div class="main-content">
+            <!-- Sélecteur de Session -->
+            <div class="session-selector">
+                <h3>📋 Gestion des Sessions</h3>
+                <div class="session-controls">
+                    <div class="form-group">
+                        <label for="sessionSelect">Session Active</label>
+                        <select id="sessionSelect">
+                            <option value="">Sélectionner une session...</option>
+                        </select>
+                    </div>
+                    <button onclick="loadSessions()">🔄 Actualiser</button>
+                    <button onclick="showCreateSessionModal()" class="btn-primary">➕ Nouvelle Session</button>
+                </div>
+            </div>
+
+            <!-- Informations de Session -->
+            <div id="sessionInfo" class="session-info" style="display: none;">
+                <h3 id="sessionTitle">Session: </h3>
+                <div class="session-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="currentDrawStat">-</div>
+                        <div class="stat-label">Tirage Actuel</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalDrawsStat">-</div>
+                        <div class="stat-label">Total Tirages</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="numbersPerDrawStat">-</div>
+                        <div class="stat-label">Numéros par Tirage</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="lotteryTypeStat">-</div>
+                        <div class="stat-label">Type de Loterie</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="periodStat">-</div>
+                        <div class="stat-label">Tirages par Période</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section de Saisie -->
+            <div id="inputSection" class="input-section" style="display: none;">
+                <h3>🎲 Saisie des Numéros - Tirage <span id="drawNumber">1</span></h3>
+                
+                <!-- Informations du tirage (auto-remplies) -->
+                <div class="draw-info" style="background: #e6f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #1890ff;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-weight: bold; color: #1890ff; display: block; margin-bottom: 5px;">🎯 Nom du Loto</label>
+                            <input type="text" id="currentLottoName" readonly style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px; background: #f5f5f5; color: #666;">
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; color: #1890ff; display: block; margin-bottom: 5px;">📅 Date Prévue</label>
+                            <input type="text" id="expectedDate" readonly style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px; background: #f5f5f5; color: #666;">
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666; text-align: center;">
+                        💡 Ces informations sont générées automatiquement selon le cycle défini lors de la création de la session
+                    </div>
+                </div>
+                
+                <!-- Champ de date obligatoire -->
+                <div class="date-input-section" style="margin-bottom: 20px; padding: 15px; background: #e6f7ff; border-radius: 8px; border-left: 4px solid #1890ff;">
+                    <div class="form-group">
+                        <label for="drawDate" style="font-weight: bold; color: #1890ff; margin-bottom: 8px; display: block;">
+                            📅 Date du Tirage <span style="color: #ff4d4f;">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="drawDate" 
+                            class="date-input" 
+                            required
+                            style="width: 200px; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px; background: white;"
+                        />
+                        <small style="color: #666; margin-left: 10px; font-style: italic;">
+                            Date obligatoire pour l'enregistrement
+                        </small>
+                    </div>
+                </div>
+                
+                <div id="numbersInput" class="numbers-input">
+                    <!-- Les inputs seront générés dynamiquement -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button onclick="saveResult()" class="btn-primary">💾 Enregistrer Résultat</button>
+                    <button onclick="generateRandomNumbers()" class="btn-secondary">🎲 Génération Aléatoire</button>
+                    <button onclick="saveNoDrawResult()" class="btn-warning" style="background: #faad14;">🚫 No Draw</button>
+                    <button onclick="clearInputs()" class="btn-danger">🗑️ Effacer</button>
+                </div>
+                
+                <!-- Explication No Draw -->
+                <div class="no-draw-info" style="margin-top: 15px; padding: 12px; background: #fff7e6; border-radius: 6px; border-left: 3px solid #faad14;">
+                    <small style="color: #d46b08;">
+                        <strong>💡 No Draw :</strong> Utilisez cette option si aucun tirage n'a eu lieu à la date prévue 
+                        (jour férié, report, problème technique, etc.). Le cycle de la session sera maintenu.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Section des Résultats -->
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">📊 Historique des Résultats</h3>
+                    <button onclick="showScheduleOverview()" style="background: #722ed1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📅 Vue Planning</button>
+                </div>
+                
+                <!-- Vue Planning (masquée par défaut) -->
+                <div id="scheduleOverview" style="display: none; margin-bottom: 30px; padding: 20px; background: #f0f2f5; border-radius: 10px;">
+                    <h4 style="color: #722ed1; margin-top: 0;">📅 Planning des Tirages</h4>
+                    <div id="scheduleContent">
+                        <!-- Le planning sera généré ici -->
+                    </div>
+                </div>
+                
+                <div id="resultsHistory">
+                    <!-- L'historique sera affiché ici -->
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="messageContainer"></div>
+        </div>
+    </div>
+
+    <script>
+    const API_BASE = 'http://localhost:8000/api';
+    let currentSession = null;
+    let currentDrawData = null;        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM chargé, initialisation...');
+            
+            // Test des fonctions critiques
+            if (typeof loadSessions === 'function') {
+                console.log('✅ loadSessions existe');
+                loadSessions();
+            } else {
+                console.error('❌ loadSessions n\'existe pas');
+            }
+            
+            if (typeof loadActiveSession === 'function') {
+                console.log('✅ loadActiveSession existe');
+                loadActiveSession();
+            } else {
+                console.error('❌ loadActiveSession n\'existe pas');
+            }
+        });
+
+        // Gestion des sessions
+        async function loadSessions() {
+            console.log('🔄 Chargement des sessions...', API_BASE);
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                console.log('📡 Réponse API:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const sessions = await response.json();
+                console.log('📋 Sessions reçues:', sessions.length, sessions);
+                
+                const select = document.getElementById('sessionSelect');
+                select.innerHTML = '<option value="">Sélectionner une session...</option>';
+                
+                sessions.forEach(session => {
+                    const option = document.createElement('option');
+                    option.value = session.id;
+                    option.textContent = `${session.name} (${session.lottery_type}) - Tirage ${session.current_draw}/${session.total_draws}`;
+                    if (session.is_active) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        activateSession(this.value);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('❌ Erreur loadSessions:', error);
+                showMessage(`❌ Erreur lors du chargement des sessions: ${error.message}`, 'error');
+                
+                // Afficher des détails supplémentaires pour le debug
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showMessage('🔌 Problème de connexion - Vérifiez que le backend fonctionne', 'error');
+                }
+            }
+        }
+
+        async function loadActiveSession() {
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/active`);
+                const data = await response.json();
+                
+                if (response.ok && data.session) {
+                    currentSession = data.session;
+                    updateSessionDisplay();
+                    loadCurrentDraw();
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement de la session active:', error);
+            }
+        }
+
+        async function activateSession(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${sessionId}/activate`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    await loadActiveSession();
+                    showMessage('✅ Session activée avec succès', 'success');
+                } else {
+                    showMessage('❌ Erreur lors de l\'activation de la session', 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Gestion des tirages
+        async function loadCurrentDraw() {
+            if (!currentSession) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/current-draw`);
+                const draw = await response.json();
+                
+                if (response.ok) {
+                    currentDrawData = draw;
+                    updateDrawDisplay();
+                    loadResultsHistory();
+                } else {
+                    showMessage('❌ Erreur lors du chargement du tirage', 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function loadResultsHistory() {
+            if (!currentSession) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                
+                if (response.ok) {
+                    displayResultsHistory(draws);
+                    
+                    // Mettre à jour les statistiques en temps réel
+                    const completedDraws = draws.filter(draw => draw.numbers && draw.numbers.length > 0);
+                    updateSessionStats(completedDraws.length);
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'historique:', error);
+            }
+        }
+
+        function updateSessionStats(completedCount) {
+            if (!currentSession) return;
+            
+            // Calculer les statistiques de période avec la taille de période correcte
+            const drawsPerPeriod = currentSession.cycle_length || 7;
+            const currentPeriod = Math.floor((completedCount - 1) / drawsPerPeriod) + 1;
+            const drawsInCurrentPeriod = ((completedCount - 1) % drawsPerPeriod) + 1;
+            const progressInPeriod = Math.round((drawsInCurrentPeriod / drawsPerPeriod) * 100);
+            
+            // Ajouter une barre de progression si elle n'existe pas
+            let progressContainer = document.querySelector('.progress-container');
+            if (!progressContainer && currentSession) {
+                const sessionInfo = document.getElementById('sessionInfo');
+                progressContainer = document.createElement('div');
+                progressContainer.className = 'progress-container';
+                progressContainer.innerHTML = `
+                    <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #1890ff;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-weight: bold; color: #1890ff; margin-bottom: 5px;">📊 Progression Globale</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #52c41a;">${completedCount} tirages total</div>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; color: #1890ff; margin-bottom: 5px;">🔄 Période Actuelle</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #faad14;">Période ${currentPeriod} - ${drawsInCurrentPeriod}/${drawsPerPeriod}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="font-weight: bold; color: #1890ff;">Progression de la période ${currentPeriod}</span>
+                                <span style="font-weight: bold; color: #52c41a;">${drawsInCurrentPeriod}/${drawsPerPeriod} (${progressInPeriod}%)</span>
+                            </div>
+                            <div class="progress-bar" style="width: 100%; height: 10px; background: #f0f0f0; border-radius: 5px; overflow: hidden;">
+                                <div class="progress-fill" style="width: ${progressInPeriod}%; height: 100%; background: linear-gradient(90deg, #1890ff, #52c41a); transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="font-size: 12px; color: #666; text-align: center;">
+                            💡 Une période = ${drawsPerPeriod} tirages cycliques
+                        </div>
+                    </div>
+                `;
+                sessionInfo.appendChild(progressContainer);
+            } else if (progressContainer) {
+                // Mettre à jour les statistiques existantes
+                const globalStats = progressContainer.querySelector('div:nth-child(1) div:nth-child(2)');
+                const periodStats = progressContainer.querySelector('div:nth-child(2) div:nth-child(2)');
+                const progressFill = progressContainer.querySelector('.progress-fill');
+                const progressText = progressContainer.querySelector('span:last-of-type');
+                
+                if (globalStats) globalStats.textContent = `${completedCount} tirages total`;
+                if (periodStats) periodStats.textContent = `Période ${currentPeriod} - ${drawsInCurrentPeriod}/${drawsPerPeriod}`;
+                if (progressFill) progressFill.style.width = `${progressInPeriod}%`;
+                if (progressText) progressText.textContent = `${drawsInCurrentPeriod}/${drawsPerPeriod} (${progressInPeriod}%)`;
+            }
+        }
+
+        // Interface utilisateur
+        function updateSessionDisplay() {
+            if (!currentSession) return;
+            
+            document.getElementById('sessionInfo').style.display = 'block';
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            document.getElementById('sessionTitle').textContent = `Session: ${currentSession.name}`;
+            document.getElementById('totalDrawsStat').textContent = currentSession.total_draws;
+            document.getElementById('numbersPerDrawStat').textContent = currentSession.numbers_per_draw;
+            
+            // Corriger l'affichage du type de loterie pour refléter la réalité
+            const realLotteryType = `${currentSession.numbers_per_draw}/${extractLotteryRange(currentSession.lottery_type).max}`;
+            document.getElementById('lotteryTypeStat').textContent = realLotteryType;
+            
+            // Afficher la période (utiliser cycle_length du backend)
+            const drawsPerPeriod = currentSession.cycle_length || 7;
+            const numberOfPeriods = Math.ceil(currentSession.total_draws / drawsPerPeriod);
+            document.getElementById('periodStat').textContent = `${drawsPerPeriod} (${numberOfPeriods} périodes)`;
+        }
+
+        function updateDrawDisplay() {
+            if (!currentDrawData) return;
+            
+            // Calculer le nom du loto selon le cycle
+            const cyclePosition = ((currentDrawData.draw_number - 1) % currentSession.cycle_length);
+            const lottoName = currentDrawData.lottery_name || `Tirage ${currentDrawData.draw_number}`;
+            
+            document.getElementById('drawNumber').textContent = currentDrawData.draw_number;
+            document.getElementById('currentDrawStat').textContent = `${currentDrawData.draw_number}/${currentSession.total_draws}`;
+            
+            // Mettre à jour le titre avec le nom du loto
+            const drawTitle = document.querySelector('#inputSection h3');
+            if (drawTitle) {
+                drawTitle.innerHTML = `🎯 ${lottoName} - Tirage ${currentDrawData.draw_number} <span style="color: #666; font-size: 0.8em;">(Période ${Math.floor((currentDrawData.draw_number - 1) / currentSession.cycle_length) + 1})</span>`;
+            }
+            
+            // Générer les inputs intelligents pour les numéros
+            const container = document.getElementById('numbersInput');
+            container.innerHTML = '';
+            
+            // Extraire la plage de numéros du type de loterie (ex: "5/90" -> max = 90)
+            const lotteryRange = extractLotteryRange(currentSession.lottery_type);
+            
+            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+                const inputWrapper = document.createElement('div');
+                inputWrapper.style.position = 'relative';
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `num${i}`;
+                input.className = 'number-input';
+                input.placeholder = `N°${i}`;
+                input.maxLength = '2';
+                input.setAttribute('data-index', i);
+                input.setAttribute('data-max', lotteryRange.max);
+                input.setAttribute('data-min', lotteryRange.min);
+                
+                // Événements pour la saisie intelligente
+                input.addEventListener('input', handleSmartInput);
+                input.addEventListener('keydown', handleKeyNavigation);
+                input.addEventListener('paste', handlePaste);
+                
+                inputWrapper.appendChild(input);
+                container.appendChild(inputWrapper);
+            }
+            
+            // Remplir automatiquement les informations du loto
+            fillLottoInfo(currentDrawData.draw_number);
+            
+            // Initialiser la date avec la date du jour
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('drawDate');
+            if (dateInput) {
+                dateInput.value = today;
+                dateInput.addEventListener('change', validateDrawDate);
+            }
+            
+            // Focus sur le premier input
+            setTimeout(() => {
+                document.getElementById('num1')?.focus();
+            }, 100);
+        }
+
+        function fillLottoInfo(drawNumber) {
+            if (!currentSession || !currentSession.lottery_schedule) return;
+            
+            // Calculer la position dans le cycle
+            const cyclePosition = (drawNumber - 1) % currentSession.cycle_length;
+            const currentPeriod = Math.floor((drawNumber - 1) / currentSession.cycle_length) + 1;
+            
+            // Récupérer les informations du loto selon le cycle
+            const lottoInfo = currentSession.lottery_schedule[cyclePosition];
+            
+            if (lottoInfo) {
+                // Remplir le nom du loto
+                const lottoNameInput = document.getElementById('currentLottoName');
+                if (lottoNameInput) {
+                    lottoNameInput.value = lottoInfo.name;
+                }
+                
+                // Calculer la date prévue
+                const expectedDate = calculateExpectedDate(drawNumber, lottoInfo.day_offset);
+                const expectedDateInput = document.getElementById('expectedDate');
+                if (expectedDateInput) {
+                    expectedDateInput.value = expectedDate;
+                }
+            }
+        }
+        
+        function calculateExpectedDate(drawNumber, dayOffset) {
+            if (!currentSession || !currentSession.start_date) {
+                return 'Date non définie';
+            }
+            
+            try {
+                // Convertir la date de début de session
+                let startDate;
+                if (typeof currentSession.start_date === 'string') {
+                    // Format ISO ou DD/MM/YYYY
+                    if (currentSession.start_date.includes('/')) {
+                        const parts = currentSession.start_date.split('/');
+                        startDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                    } else {
+                        startDate = new Date(currentSession.start_date);
+                    }
+                } else {
+                    startDate = new Date(currentSession.start_date);
+                }
+                
+                // Calculer le nombre de jours depuis le début
+                const cycleNumber = Math.floor((drawNumber - 1) / currentSession.cycle_length);
+                const positionInCycle = (drawNumber - 1) % currentSession.cycle_length;
+                
+                // Calculer la date prévue
+                const daysFromStart = (cycleNumber * 7) + dayOffset; // Supposer une semaine = 7 jours
+                const expectedDate = new Date(startDate);
+                expectedDate.setDate(startDate.getDate() + daysFromStart);
+                
+                return expectedDate.toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (error) {
+                console.error('Erreur calcul date:', error);
+                return 'Erreur calcul date';
+            }
+        }
+
+        function extractLotteryRange(lotteryType) {
+            // Extraire la plage de numéros du type de loterie
+            const match = lotteryType.match(/(\d+)\/(\d+)/);
+            if (match) {
+                return {
+                    min: 1,
+                    max: parseInt(match[2])
+                };
+            }
+            return { min: 1, max: 90 }; // Valeur par défaut
+        }
+
+        function handleSmartInput(event) {
+            const input = event.target;
+            const value = input.value.replace(/\D/g, ''); // Garder seulement les chiffres
+            const maxValue = parseInt(input.getAttribute('data-max'));
+            const minValue = parseInt(input.getAttribute('data-min'));
+            const index = parseInt(input.getAttribute('data-index'));
+            
+            // Limiter à 2 chiffres
+            if (value.length > 2) {
+                input.value = value.substring(0, 2);
+                return;
+            }
+            
+            input.value = value;
+            
+            // Validation en temps réel
+            if (value.length > 0) {
+                const numValue = parseInt(value);
+                
+                // Vérifier la plage
+                if (numValue < minValue || numValue > maxValue) {
+                    setInputState(input, 'invalid', `${minValue}-${maxValue}`);
+                    return;
+                }
+                
+                // Vérifier les doublons
+                if (checkDuplicate(input, numValue)) {
+                    setInputState(input, 'duplicate', 'Doublon');
+                    return;
+                }
+                
+                setInputState(input, 'valid', '✓');
+                
+                // Passer au champ suivant si 2 chiffres ou si le nombre est >= 10
+                if (value.length === 2 || (value.length === 1 && numValue >= 10)) {
+                    const nextInput = document.getElementById(`num${index + 1}`);
+                    if (nextInput) {
+                        nextInput.focus();
+                    }
+                }
+            } else {
+                clearInputState(input);
+            }
+            
+            // Mettre à jour l'état des boutons
+            updateButtonStates();
+        }
+
+        function handleKeyNavigation(event) {
+            const input = event.target;
+            const index = parseInt(input.getAttribute('data-index'));
+            
+            if (event.key === 'ArrowRight' || event.key === 'Tab') {
+                const nextInput = document.getElementById(`num${index + 1}`);
+                if (nextInput) {
+                    event.preventDefault();
+                    nextInput.focus();
+                }
+            } else if (event.key === 'ArrowLeft') {
+                const prevInput = document.getElementById(`num${index - 1}`);
+                if (prevInput) {
+                    event.preventDefault();
+                    prevInput.focus();
+                }
+            } else if (event.key === 'Backspace' && input.value === '') {
+                const prevInput = document.getElementById(`num${index - 1}`);
+                if (prevInput) {
+                    event.preventDefault();
+                    prevInput.focus();
+                    prevInput.select();
+                }
+            }
+        }
+
+        function handlePaste(event) {
+            event.preventDefault();
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const numbers = pastedText.match(/\d+/g);
+            
+            if (numbers) {
+                const startIndex = parseInt(event.target.getAttribute('data-index'));
+                numbers.forEach((num, i) => {
+                    const input = document.getElementById(`num${startIndex + i}`);
+                    if (input && parseInt(num) <= parseInt(input.getAttribute('data-max'))) {
+                        input.value = num;
+                        handleSmartInput({ target: input });
+                    }
+                });
+            }
+        }
+
+        function setInputState(input, state, message) {
+            // Nettoyer les classes précédentes
+            input.classList.remove('valid', 'invalid', 'duplicate');
+            
+            // Ajouter la nouvelle classe
+            input.classList.add(state);
+            
+            // Ajouter le feedback visuel
+            let feedback = input.parentElement.querySelector('.input-feedback');
+            if (!feedback) {
+                feedback = document.createElement('div');
+                feedback.className = 'input-feedback';
+                input.parentElement.appendChild(feedback);
+            }
+            
+            feedback.textContent = message;
+            feedback.className = `input-feedback feedback-${state}`;
+        }
+
+        function clearInputState(input) {
+            input.classList.remove('valid', 'invalid', 'duplicate');
+            const feedback = input.parentElement.querySelector('.input-feedback');
+            if (feedback) {
+                feedback.remove();
+            }
+        }
+
+        function checkDuplicate(currentInput, value) {
+            const currentIndex = parseInt(currentInput.getAttribute('data-index'));
+            
+            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+                if (i !== currentIndex) {
+                    const otherInput = document.getElementById(`num${i}`);
+                    if (otherInput && parseInt(otherInput.value) === value) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function validateDrawDate() {
+            const dateInput = document.getElementById('drawDate');
+            if (!dateInput) return true;
+            
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
+            today.setHours(23, 59, 59, 999); // Fin de journée
+            
+            if (!dateInput.value) {
+                dateInput.classList.add('invalid');
+                showMessage('📅 La date du tirage est obligatoire', 'error');
+                return false;
+            }
+            
+            if (selectedDate > today) {
+                dateInput.classList.add('invalid');
+                showMessage('📅 La date ne peut pas être dans le futur', 'error');
+                return false;
+            }
+            
+            dateInput.classList.remove('invalid');
+            return true;
+        }
+
+        function updateButtonStates() {
+            const saveButton = document.querySelector('button[onclick="saveResult()"]');
+            if (!saveButton) return;
+            
+            let allValid = true;
+            let filledCount = 0;
+            
+            // Vérifier les numéros
+            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+                const input = document.getElementById(`num${i}`);
+                if (input && input.value) {
+                    filledCount++;
+                    if (input.classList.contains('invalid') || input.classList.contains('duplicate')) {
+                        allValid = false;
+                    }
+                }
+            }
+            
+            // Vérifier la date
+            const dateValid = validateDrawDate();
+            if (!dateValid) {
+                allValid = false;
+            }
+            
+            const isComplete = filledCount === currentSession.numbers_per_draw && dateValid;
+            
+            saveButton.disabled = !allValid || !isComplete;
+            saveButton.textContent = isComplete && allValid
+                ? '💾 Enregistrer Résultat' 
+                : `💾 Enregistrer (${filledCount}/${currentSession.numbers_per_draw}${!dateValid ? ' - Date manquante' : ''})`;
+        }
+
+        function displayResultsHistory(draws) {
+            const container = document.getElementById('resultsHistory');
+            
+            if (!draws || draws.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">📋 Aucun résultat enregistré</p>';
+                return;
+            }
+            
+            // Inclure tous les tirages (résultats normaux et No Draw)
+            const completedDraws = draws.filter(draw => {
+                const numbers = draw.winning_numbers || draw.numbers;
+                const isNoDraw = draw.is_no_draw || (numbers && numbers.length === 0 && draw.is_completed);
+                return (numbers && numbers.length > 0) || isNoDraw;
+            });
+            
+            // Trier par numéro de tirage décroissant (plus récent en haut)
+            completedDraws.sort((a, b) => b.draw_number - a.draw_number);
+            
+            // Grouper par périodes (cycles de tirages)
+            const periodsData = groupDrawsByPeriods(completedDraws);
+            
+            let html = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h4 style="margin: 0; color: #1890ff;">📊 Historique des Résultats (${completedDraws.length})</h4>
+                    <button onclick="refreshHistory()" style="background: #1890ff; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">🔄 Actualiser</button>
+                </div>
+                <div style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
+            `;
+            
+            // Afficher par périodes
+            periodsData.forEach((period, periodIndex) => {
+                const isCurrentPeriod = periodIndex === 0;
+                
+                // Ajouter un délimiteur rouge entre les périodes (sauf pour la première)
+                if (periodIndex > 0) {
+                    html += `
+                        <div class="period-delimiter" style="margin: 30px 0; height: 4px; background: linear-gradient(90deg, #ff4d4f, #ff7875, #ff4d4f); border-radius: 2px; box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);"></div>
+                    `;
+                }
+                
+                html += `
+                    <div class="period-section" style="margin-bottom: 30px;">
+                        <div class="period-header" style="background: ${isCurrentPeriod ? '#e6f7ff' : '#f5f5f5'}; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid ${isCurrentPeriod ? '#1890ff' : '#d9d9d9'};">
+                            <h5 style="margin: 0; color: ${isCurrentPeriod ? '#1890ff' : '#666'};">
+                                🔄 Période ${period.periodNumber} 
+                                ${isCurrentPeriod ? '<span style="background: #52c41a; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 10px;">ACTUELLE</span>' : ''}
+                            </h5>
+                            <div style="margin-top: 8px; font-size: 14px; color: #666;">
+                                <strong>Tirages:</strong> ${period.draws.length}/${currentSession.total_draws} | 
+                                <strong>Progression:</strong> ${Math.round((period.draws.length / currentSession.total_draws) * 100)}% |
+                                <strong>Période:</strong> ${period.startDate} - ${period.endDate}
+                            </div>
+                        </div>
+                `;
+                
+                // Afficher les tirages de cette période
+                period.draws.forEach((draw, index) => {
+                    const isLatest = periodIndex === 0 && index === 0;
+                    const numbers = draw.winning_numbers || draw.numbers;
+                    const drawDate = formatDrawDate(draw.draw_date);
+                    const isNoDraw = draw.is_no_draw || (numbers && numbers.length === 0 && draw.is_completed);
+                    
+                    html += `
+                        <div class="result-item ${isLatest ? 'latest-result' : ''} ${isNoDraw ? 'no-draw-item' : ''}" data-draw-id="${draw.id}">
+                            <div class="result-header">
+                                <div class="result-title">
+                                    ${isNoDraw ? '🚫' : '🎯'} Tirage ${draw.draw_number}
+                                    ${isNoDraw ? '<span style="background: #faad14; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 10px;">NO DRAW</span>' : ''}
+                                    ${isLatest && !isNoDraw ? '<span style="background: #52c41a; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 10px;">DERNIER</span>' : ''}
+                                </div>
+                                <div class="result-date">${drawDate}</div>
+                            </div>
+                            
+                            ${isNoDraw ? `
+                                <div class="no-draw-display" style="padding: 15px; background: #fff7e6; border-radius: 8px; margin: 10px 0; text-align: center;">
+                                    <div style="font-size: 48px; color: #faad14; margin-bottom: 10px;">🚫</div>
+                                    <div style="font-weight: bold; color: #d46b08; margin-bottom: 5px;">Aucun tirage effectué</div>
+                                    <div style="color: #8c4a00; font-size: 14px;">
+                                        ${draw.no_draw_reason || 'Raison non spécifiée'}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="result-numbers">
+                                    ${numbers.map(num => `<div class="number-ball">${num}</div>`).join('')}
+                                </div>
+                            `}
+                            
+                            <div class="lottery-info">
+                                <strong>Loterie:</strong> ${draw.lottery_name || 'Standard'} | 
+                                <strong>Session:</strong> ${currentSession.name} | 
+                                ${isNoDraw ? '<strong>Statut:</strong> No Draw' : `<strong>Numéros:</strong> ${numbers.length}`} | 
+                                <strong>Type:</strong> ${currentSession.numbers_per_draw}/${extractLotteryRange(currentSession.lottery_type).max}
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button class="btn-edit" onclick="editResult(${draw.id}, ${draw.draw_number})">
+                                    ✏️ Modifier
+                                </button>
+                                <button class="btn-delete" onclick="deleteResult(${draw.id}, ${draw.draw_number})">
+                                    🗑️ Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>'; // Fermer period-section
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Ajouter les styles pour les périodes
+            addPeriodStyles();
+        }
+
+        function groupDrawsByPeriods(draws) {
+            if (!currentSession || !draws.length) return [];
+            
+            const periodsData = [];
+            // Utiliser une période configurable (par défaut 7 tirages par période)
+            const drawsPerPeriod = currentSession.cycle_length || 7;
+            
+            // Grouper les tirages par périodes
+            for (let i = 0; i < draws.length; i += drawsPerPeriod) {
+                const periodDraws = draws.slice(i, i + drawsPerPeriod);
+                const periodNumber = Math.floor(draws[i].draw_number - 1) / drawsPerPeriod + 1;
+                
+                // Calculer les dates de début et fin de période
+                const sortedDraws = [...periodDraws].sort((a, b) => a.draw_number - b.draw_number);
+                const startDate = sortedDraws[0] ? formatDrawDate(sortedDraws[0].draw_date, true) : 'N/A';
+                const endDate = sortedDraws[sortedDraws.length - 1] ? formatDrawDate(sortedDraws[sortedDraws.length - 1].draw_date, true) : 'En cours';
+                
+                periodsData.push({
+                    periodNumber: Math.floor(periodNumber),
+                    draws: periodDraws,
+                    startDate,
+                    endDate,
+                    isComplete: periodDraws.length === drawsPerPeriod,
+                    drawsPerPeriod: drawsPerPeriod
+                });
+            }
+            
+            return periodsData;
+        }
+
+        function formatDrawDate(dateString, shortFormat = false) {
+            try {
+                // Gérer différents formats de date
+                let date;
+                if (dateString.includes('/')) {
+                    // Format DD/MM/YYYY
+                    const parts = dateString.split('/');
+                    date = new Date(parts[2], parts[1] - 1, parts[0]);
+                } else {
+                    date = new Date(dateString);
+                }
+                
+                if (shortFormat) {
+                    return date.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                } else {
+                    return date.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            } catch (error) {
+                return dateString; // Retourner la date originale si erreur
+            }
+        }
+
+        function addPeriodStyles() {
+            if (document.querySelector('#period-styles')) return;
+            
+            const style = document.createElement('style');
+            style.id = 'period-styles';
+            style.textContent = `
+                .latest-result {
+                    border-left-color: #52c41a !important;
+                    background: linear-gradient(135deg, #f6ffed, #ffffff) !important;
+                }
+                
+                .period-section {
+                    border: 1px solid #e8e8e8;
+                    border-radius: 12px;
+                    padding: 15px;
+                    background: #fafafa;
+                }
+                
+                .period-header {
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+                
+                .period-delimiter {
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .period-delimiter::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                    animation: shimmer 2s infinite;
+                }
+                
+                @keyframes shimmer {
+                    0% { left: -100%; }
+                    100% { left: 100%; }
+                }
+                
+                .period-delimiter::after {
+                    content: '🔄 NOUVELLE PÉRIODE 🔄';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #ff4d4f;
+                    color: white;
+                    padding: 4px 12px;
+                    border-radius: 12px;
+                    font-size: 11px;
+                    font-weight: bold;
+                    box-shadow: 0 2px 8px rgba(255, 77, 79, 0.4);
+                }
+                
+                .no-draw-item {
+                    border-left-color: #faad14 !important;
+                    background: linear-gradient(135deg, #fff7e6, #ffffff) !important;
+                }
+                
+                .btn-warning {
+                    background: #faad14;
+                    color: white;
+                    border: none;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-warning:hover {
+                    background: #ffc53d;
+                    transform: translateY(-2px);
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        async function refreshHistory() {
+            if (!currentSession) return;
+            
+            showMessage('🔄 Actualisation de l\'historique...', 'info');
+            await loadResultsHistory();
+            showMessage('✅ Historique actualisé', 'success');
+        }
+
+        async function editResult(drawId, drawNumber) {
+            if (!currentSession) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                
+                if (response.ok) {
+                    const draw = draws.find(d => d.id === drawId);
+                    if (draw) {
+                        // Gérer les deux formats de données (winning_numbers ou numbers)
+                        const numbers = draw.winning_numbers || draw.numbers;
+                        
+                        if (numbers && numbers.length > 0) {
+                            // Remplir les champs avec les numéros existants
+                            numbers.forEach((num, index) => {
+                                const input = document.getElementById(`num${index + 1}`);
+                                if (input) {
+                                    input.value = num;
+                                    handleSmartInput({ target: input });
+                                }
+                            });
+                            
+                            // Pré-remplir la date du tirage
+                            const dateInput = document.getElementById('drawDate');
+                            if (dateInput && draw.draw_date) {
+                                // Convertir la date au format YYYY-MM-DD pour l'input date
+                                let dateValue = draw.draw_date;
+                                if (dateValue.includes('/')) {
+                                    // Format DD/MM/YYYY -> YYYY-MM-DD
+                                    const parts = dateValue.split('/');
+                                    dateValue = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                                }
+                                dateInput.value = dateValue;
+                                dateInput.classList.remove('invalid');
+                            }
+                            
+                            // Changer le bouton pour indiquer la modification
+                            const saveButton = document.querySelector('button[onclick="saveResult()"]');
+                            if (saveButton) {
+                                saveButton.textContent = `✏️ Modifier Tirage ${drawNumber} (${draw.lottery_name || 'Standard'})`;
+                                saveButton.setAttribute('data-edit-mode', drawId);
+                            }
+                            
+                            // Scroll vers la section de saisie
+                            document.getElementById('inputSection').scrollIntoView({ behavior: 'smooth' });
+                            
+                            showMessage(`✏️ Mode édition activé pour le tirage ${drawNumber} - ${draw.lottery_name || 'Standard'}`, 'info');
+                        }
+                    }
+                }
+            } catch (error) {
+                showMessage('❌ Erreur lors du chargement du résultat', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function deleteResult(drawId, drawNumber) {
+            const confirmMessage = `⚠️ SUPPRESSION INTELLIGENTE ⚠️\n\nVoulez-vous supprimer le tirage ${drawNumber} ?\n\n🔄 Le système va automatiquement :\n• Réorganiser les numéros de tirages suivants\n• Maintenir la cohérence des dates\n• Préserver l'ordre chronologique\n\nCette action est irréversible.`;
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            try {
+                showMessage('🔄 Suppression et réorganisation en cours...', 'info');
+                
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws/${drawId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showMessage(`✅ Tirage ${drawNumber} supprimé et session réorganisée`, 'success');
+                    
+                    // Recharger complètement les données pour refléter la réorganisation
+                    await loadResultsHistory();
+                    await loadCurrentDraw();
+                    await loadActiveSession(); // Recharger les stats de session
+                } else {
+                    const error = await response.json();
+                    showMessage(`❌ Erreur lors de la suppression: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Actions
+        async function saveResult() {
+            if (!currentSession || !currentDrawData) {
+                showMessage('❌ Aucune session active', 'error');
+                return;
+            }
+            
+            // Validation de la date
+            const dateInput = document.getElementById('drawDate');
+            if (!dateInput || !dateInput.value) {
+                showMessage('📅 La date du tirage est obligatoire', 'error');
+                dateInput?.focus();
+                return;
+            }
+            
+            if (!validateDrawDate()) {
+                dateInput.focus();
+                return;
+            }
+            
+            const drawDate = dateInput.value;
+            
+            const numbers = [];
+            const maxValue = extractLotteryRange(currentSession.lottery_type).max;
+            
+            // Validation complète des numéros
+            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+                const input = document.getElementById(`num${i}`);
+                const value = parseInt(input.value);
+                
+                if (!value || value < 1 || value > maxValue) {
+                    showMessage(`❌ Numéro ${i} invalide (doit être entre 1 et ${maxValue})`, 'error');
+                    input.focus();
+                    return;
+                }
+                
+                if (numbers.includes(value)) {
+                    showMessage(`❌ Le numéro ${value} est déjà utilisé`, 'error');
+                    input.focus();
+                    return;
+                }
+                
+                numbers.push(value);
+            }
+            
+            // Vérifier le mode édition
+            const saveButton = document.querySelector('button[onclick="saveResult()"]');
+            const editMode = saveButton.getAttribute('data-edit-mode');
+            
+            try {
+                let response;
+                let successMessage;
+                
+                // Récupérer le nom du loto automatiquement rempli
+                const lottoNameInput = document.getElementById('currentLottoName');
+                const lottoName = lottoNameInput ? lottoNameInput.value : `Tirage ${currentDrawData.draw_number}`;
+                
+                if (editMode) {
+                    // Mode édition - PUT request
+                    response = await fetch(
+                        `${API_BASE}/session/sessions/${currentSession.id}/draws/${editMode}`,
+                        {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                numbers: numbers,
+                                draw_date: drawDate,
+                                lottery_name: lottoName
+                            })
+                        }
+                    );
+                    successMessage = `✅ ${lottoName} modifié avec succès (${drawDate})`;
+                } else {
+                    // Mode création - POST request
+                    response = await fetch(
+                        `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                numbers: numbers,
+                                draw_date: drawDate,
+                                lottery_name: lottoName
+                            })
+                        }
+                    );
+                    
+                
+                if (response.ok) {
+                    showMessage(successMessage, 'success');
+                    clearInputs();
+                    resetEditMode();
+                    
+                    // Actualiser l'historique en temps réel
+                    await loadResultsHistory();
+                    
+                    if (!editMode) {
+                        // Passer au tirage suivant seulement en mode création
+                        await loadCurrentDraw();
+                    }
+                } else {
+                    const error = await response.json();
+                    showMessage(`❌ Erreur: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        function resetEditMode() {
+            const saveButton = document.querySelector('button[onclick="saveResult()"]');
+            if (saveButton) {
+                saveButton.textContent = '💾 Enregistrer Résultat';
+                saveButton.removeAttribute('data-edit-mode');
+            }
+        }
+
+        async function saveNoDrawResult() {
+            if (!currentSession || !currentDrawData) {
+                showMessage('❌ Aucune session active', 'error');
+                return;
+            }
+            
+            // Validation de la date
+            const dateInput = document.getElementById('drawDate');
+            if (!dateInput || !dateInput.value) {
+                showMessage('📅 La date du tirage est obligatoire même pour un No Draw', 'error');
+                dateInput?.focus();
+                return;
+            }
+            
+            if (!validateDrawDate()) {
+                dateInput.focus();
+                return;
+            }
+            
+            const drawDate = dateInput.value;
+            
+            // Demander la raison du No Draw
+            const reason = prompt('Raison du No Draw (optionnel):\n\nExemples:\n- Jour férié\n- Problème technique\n- Tirage reporté\n- Maintenance système');
+            
+            if (reason === null) return; // Utilisateur a annulé
+            
+            // Récupérer le nom du loto automatiquement rempli
+            const lottoNameInput = document.getElementById('currentLottoName');
+            const lottoName = lottoNameInput ? lottoNameInput.value : `Tirage ${currentDrawData.draw_number}`;
+            
+            try {
+                const response = await fetch(
+                    `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            numbers: [],
+                            draw_date: drawDate,
+                            is_no_draw: true,
+                            no_draw_reason: reason || 'Non spécifié',
+                            lottery_name: lottoName
+                        })
+                    }
+                );
+                
+                if (response.ok) {
+                    showMessage(`🚫 No Draw enregistré pour ${lottoName} le ${drawDate}${reason ? ` (${reason})` : ''}`, 'success');
+                    clearInputs();
+                    
+                    // Actualiser l'historique en temps réel
+                    await loadResultsHistory();
+                    await loadCurrentDraw(); // Passer au tirage suivant
+                } else {
+                    const error = await response.json();
+                    showMessage(`❌ Erreur: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        function generateRandomNumbers() {
+            if (!currentSession) return;
+            
+            const numbers = [];
+            while (numbers.length < currentSession.numbers_per_draw) {
+                const num = Math.floor(Math.random() * 90) + 1;
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            
+            numbers.sort((a, b) => a - b);
+            
+            for (let i = 0; i < numbers.length; i++) {
+                document.getElementById(`num${i + 1}`).value = numbers[i];
+            }
+            
+            showMessage('🎲 Numéros générés aléatoirement', 'info');
+        }
+
+        function clearInputs() {
+            if (!currentSession) return;
+            
+            // Réinitialiser les numéros
+            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+                const input = document.getElementById(`num${i}`);
+                if (input) {
+                    input.value = '';
+                    clearInputState(input);
+                }
+            }
+            
+            // Réinitialiser la date avec la date du jour
+            const dateInput = document.getElementById('drawDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+                dateInput.classList.remove('invalid');
+            }
+            
+            resetEditMode();
+            updateButtonStates();
+            
+            // Focus sur le premier input
+            setTimeout(() => {
+                document.getElementById('num1')?.focus();
+            }, 100);
+        }
+
+        function showCreateSessionModal() {
+            // Créer une modal moderne pour la création de session
+            const modalHtml = `
+                <div id="sessionModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                        <h3 style="margin-top: 0; color: #1890ff; text-align: center;">➕ Créer une Nouvelle Session</h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Nom de la session <span style="color: #ff4d4f;">*</span></label>
+                            <input type="text" id="modalSessionName" placeholder="Ex: Loto Hebdomadaire" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Description</label>
+                            <textarea id="modalSessionDescription" placeholder="Description optionnelle de la session" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px; height: 60px; resize: vertical;"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Type de loterie <span style="color: #ff4d4f;">*</span></label>
+                                <input type="text" id="modalLotteryType" value="5/90" placeholder="Ex: 5/90" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Numéros par tirage <span style="color: #ff4d4f;">*</span></label>
+                                <input type="number" id="modalNumbersPerDraw" value="5" min="1" max="10" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Tirages par période <span style="color: #ff4d4f;">*</span></label>
+                                <input type="number" id="modalDrawsPerPeriod" value="7" min="1" max="30" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                                <small style="color: #666; font-size: 12px;">Une période = cycle complet</small>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Nombre de périodes <span style="color: #ff4d4f;">*</span></label>
+                                <input type="number" id="modalNumberOfPeriods" value="4" min="1" max="20" style="width: 100%; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                                <small style="color: #666; font-size: 12px;">Total = <span id="totalDrawsDisplay">28</span> tirages</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Définition de la première période -->
+                        <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #1890ff;">
+                            <h4 style="margin: 0 0 15px 0; color: #1890ff;">🔄 Définition de la Première Période (Cycle de Base)</h4>
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                                Définissez les lotos de la première période. Les périodes suivantes répéteront automatiquement ce cycle.
+                            </p>
+                            
+                            <div id="periodDefinition">
+                                <!-- Les champs de définition seront générés ici -->
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Date de début de la session <span style="color: #ff4d4f;">*</span></label>
+                                <input type="date" id="modalStartDate" style="width: 200px; padding: 10px; border: 2px solid #d9d9d9; border-radius: 6px; font-size: 16px;">
+                                <small style="color: #666; margin-left: 10px;">Les dates suivantes seront calculées automatiquement</small>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e6f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #1890ff;">
+                            <h4 style="margin: 0 0 10px 0; color: #1890ff;">📊 Résumé de la Session</h4>
+                            <div style="font-size: 14px; color: #666;">
+                                <div>• <strong>Périodes :</strong> <span id="periodsDisplay">4</span> cycles de <span id="drawsDisplay">7</span> tirages</div>
+                                <div>• <strong>Total tirages :</strong> <span id="totalDisplay">28</span></div>
+                                <div>• <strong>Type :</strong> <span id="typeDisplay">5/90</span> (<span id="numbersDisplay">5</span> numéros par tirage)</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button onclick="closeSessionModal()" style="padding: 10px 20px; background: #d9d9d9; color: #666; border: none; border-radius: 6px; cursor: pointer;">Annuler</button>
+                            <button onclick="createSessionFromModal()" style="padding: 10px 20px; background: #1890ff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Créer la Session</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Ajouter les événements pour le calcul automatique
+            const drawsPerPeriod = document.getElementById('modalDrawsPerPeriod');
+            const numberOfPeriods = document.getElementById('modalNumberOfPeriods');
+            const lotteryType = document.getElementById('modalLotteryType');
+            const numbersPerDraw = document.getElementById('modalNumbersPerDraw');
+            
+            function updateSummary() {
+                const draws = parseInt(drawsPerPeriod.value) || 7;
+                const periods = parseInt(numberOfPeriods.value) || 4;
+                const total = draws * periods;
+                const type = lotteryType.value || '5/90';
+                const numbers = parseInt(numbersPerDraw.value) || 5;
+                
+                document.getElementById('totalDrawsDisplay').textContent = total;
+                document.getElementById('periodsDisplay').textContent = periods;
+                document.getElementById('drawsDisplay').textContent = draws;
+                document.getElementById('totalDisplay').textContent = total;
+                document.getElementById('typeDisplay').textContent = type;
+                document.getElementById('numbersDisplay').textContent = numbers;
+                
+                // Régénérer les champs de définition de période
+                generatePeriodDefinitionFields(draws);
+            }
+            
+            function generatePeriodDefinitionFields(drawsCount) {
+                const container = document.getElementById('periodDefinition');
+                container.innerHTML = '';
+                
+                for (let i = 1; i <= drawsCount; i++) {
+                    const fieldHtml = \`
+                        <div style="display: grid; grid-template-columns: auto 1fr 1fr auto; gap: 10px; align-items: center; margin-bottom: 10px; padding: 10px; background: white; border-radius: 6px;">
+                            <div style="font-weight: bold; color: #1890ff; min-width: 80px;">Tirage \${i}:</div>
+                            <div>
+                                <input type="text" id="lotto\${i}Name" placeholder="Nom du loto (ex: Loto Lundi)" style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px;">
+                            </div>
+                            <div>
+                                <select id="lotto\${i}Day" style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px;">
+                                    <option value="0">Lundi</option>
+                                    <option value="1">Mardi</option>
+                                    <option value="2">Mercredi</option>
+                                    <option value="3">Jeudi</option>
+                                    <option value="4">Vendredi</option>
+                                    <option value="5">Samedi</option>
+                                    <option value="6">Dimanche</option>
+                                </select>
+                            </div>
+                            <div style="font-size: 12px; color: #666; min-width: 60px;">
+                                J+\${i-1}
+                            </div>
+                        </div>
+                    \`;
+                    container.insertAdjacentHTML('beforeend', fieldHtml);
+                }
+                
+                // Initialiser la date de début avec aujourd'hui
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('modalStartDate').value = today;
+            }
+            
+            drawsPerPeriod.addEventListener('input', updateSummary);
+            numberOfPeriods.addEventListener('input', updateSummary);
+            lotteryType.addEventListener('input', updateSummary);
+            numbersPerDraw.addEventListener('input', updateSummary);
+            
+            // Initialiser les champs de définition de période
+            updateSummary();
+            
+            // Focus sur le premier champ
+            setTimeout(() => {
+                document.getElementById('modalSessionName').focus();
+            }, 100);
+        }
+
+        function closeSessionModal() {
+            const modal = document.getElementById('sessionModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        async function createSessionFromModal() {
+            const name = document.getElementById('modalSessionName').value.trim();
+            const description = document.getElementById('modalSessionDescription').value.trim();
+            const lotteryType = document.getElementById('modalLotteryType').value.trim();
+            const numbersPerDraw = parseInt(document.getElementById('modalNumbersPerDraw').value);
+            const drawsPerPeriod = parseInt(document.getElementById('modalDrawsPerPeriod').value);
+            const numberOfPeriods = parseInt(document.getElementById('modalNumberOfPeriods').value);
+            const startDate = document.getElementById('modalStartDate').value;
+            
+            // Validation des champs de base
+            if (!name) {
+                showMessage('❌ Le nom de la session est obligatoire', 'error');
+                document.getElementById('modalSessionName').focus();
+                return;
+            }
+            
+            if (!lotteryType || !numbersPerDraw || !drawsPerPeriod || !numberOfPeriods || !startDate) {
+                showMessage('❌ Tous les champs obligatoires doivent être remplis', 'error');
+                return;
+            }
+            
+            // Collecter les données de la première période
+            const lotterySchedule = [];
+            for (let i = 1; i <= drawsPerPeriod; i++) {
+                const lottoName = document.getElementById(\`lotto\${i}Name\`).value.trim();
+                const lottoDay = parseInt(document.getElementById(\`lotto\${i}Day\`).value);
+                
+                if (!lottoName) {
+                    showMessage(\`❌ Le nom du loto pour le tirage \${i} est obligatoire\`, 'error');
+                    document.getElementById(\`lotto\${i}Name\`).focus();
+                    return;
+                }
+                
+                lotterySchedule.push({
+                    name: lottoName,
+                    day_offset: lottoDay
+                });
+            }
+            
+            const totalDraws = drawsPerPeriod * numberOfPeriods;
+            
+            closeSessionModal();
+            await createSession(name, description, lotteryType, numbersPerDraw, totalDraws, drawsPerPeriod, lotterySchedule, startDate);
+        }
+
+        async function createSession(name, description, lotteryType, numbersPerDraw, totalDraws, drawsPerPeriod = null, lotterySchedule = [], startDate = null) {
+            try {
+                const sessionData = {
+                    name,
+                    description,
+                    lottery_type: lotteryType,
+                    numbers_per_draw: numbersPerDraw,
+                    total_draws: totalDraws,
+                    cycle_length: drawsPerPeriod || 7,
+                    lottery_schedule: lotterySchedule,
+                    start_date: startDate
+                };
+                
+                const response = await fetch(`${API_BASE}/session/sessions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sessionData)
+                });
+                
+                if (response.ok) {
+                    const newSession = await response.json();
+                    showMessage('✅ Session créée avec succès', 'success');
+                    
+                    // Recharger la liste des sessions
+                    await loadSessions();
+                    
+                    // Activer automatiquement la nouvelle session
+                    if (newSession && newSession.id) {
+                        setTimeout(() => {
+                            const select = document.getElementById('sessionSelect');
+                            select.value = newSession.id;
+                            activateSession(newSession.id);
+                        }, 500);
+                    }
+                } else {
+                    const error = await response.json();
+                    showMessage(`❌ Erreur: ${error.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Erreur de connexion', 'error');
+                console.error('Erreur:', error);
+            }
+        }
+
+        function showScheduleOverview() {
+            const scheduleDiv = document.getElementById('scheduleOverview');
+            const isVisible = scheduleDiv.style.display !== 'none';
+            
+            if (isVisible) {
+                scheduleDiv.style.display = 'none';
+                return;
+            }
+            
+            scheduleDiv.style.display = 'block';
+            generateScheduleContent();
+        }
+
+        async function generateScheduleContent() {
+            if (!currentSession) return;
+            
+            const container = document.getElementById('scheduleContent');
+            
+            try {
+                // Récupérer tous les tirages de la session
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                
+                let html = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                `;
+                
+                // Générer le planning pour tous les tirages prévus
+                for (let i = 1; i <= currentSession.total_draws; i++) {
+                    const draw = draws.find(d => d.draw_number === i);
+                    const hasResult = draw && ((draw.winning_numbers && draw.winning_numbers.length > 0) || draw.is_no_draw);
+                    
+                    let statusIcon, statusText, statusColor, bgColor;
+                    
+                    if (hasResult) {
+                        if (draw.is_no_draw) {
+                            statusIcon = '🚫';
+                            statusText = 'No Draw';
+                            statusColor = '#faad14';
+                            bgColor = '#fff7e6';
+                        } else {
+                            statusIcon = '✅';
+                            statusText = 'Complété';
+                            statusColor = '#52c41a';
+                            bgColor = '#f6ffed';
+                        }
+                    } else {
+                        statusIcon = '⏳';
+                        statusText = 'En attente';
+                        statusColor = '#1890ff';
+                        bgColor = '#e6f7ff';
+                    }
+                    
+                    html += `
+                        <div style="padding: 15px; background: ${bgColor}; border-radius: 8px; border-left: 4px solid ${statusColor};">
+                            <div style="font-weight: bold; color: ${statusColor}; margin-bottom: 8px;">
+                                ${statusIcon} Tirage ${i}
+                            </div>
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                Statut: <strong style="color: ${statusColor};">${statusText}</strong>
+                            </div>
+                            ${draw ? `
+                                <div style="font-size: 12px; color: #666;">
+                                    Date: ${formatDrawDate(draw.draw_date, true)}
+                                </div>
+                            ` : `
+                                <div style="font-size: 12px; color: #999; font-style: italic;">
+                                    Date à définir
+                                </div>
+                            `}
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                
+                // Ajouter les statistiques
+                const completedCount = draws.filter(d => d.winning_numbers && d.winning_numbers.length > 0).length;
+                const noDrawCount = draws.filter(d => d.is_no_draw).length;
+                const pendingCount = currentSession.total_draws - completedCount - noDrawCount;
+                
+                html += `
+                    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
+                        <h5 style="margin-top: 0; color: #1890ff;">📈 Statistiques de la Session</h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #52c41a;">${completedCount}</div>
+                                <div style="font-size: 12px; color: #666;">Tirages Complétés</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #faad14;">${noDrawCount}</div>
+                                <div style="font-size: 12px; color: #666;">No Draw</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #1890ff;">${pendingCount}</div>
+                                <div style="font-size: 12px; color: #666;">En Attente</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #722ed1;">${Math.round(((completedCount + noDrawCount) / currentSession.total_draws) * 100)}%</div>
+                                <div style="font-size: 12px; color: #666;">Progression</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                container.innerHTML = '<p style="color: #ff4d4f;">❌ Erreur lors du chargement du planning</p>';
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Fonction de test pour les boutons
+        function testButtonFunctions() {
+            console.log('🧪 Test des fonctions de boutons...');
+            
+            // Test loadSessions
+            if (typeof loadSessions === 'function') {
+                console.log('✅ loadSessions disponible');
+            } else {
+                console.error('❌ loadSessions manquante');
+            }
+            
+            // Test showCreateSessionModal
+            if (typeof showCreateSessionModal === 'function') {
+                console.log('✅ showCreateSessionModal disponible');
+            } else {
+                console.error('❌ showCreateSessionModal manquante');
+            }
+            
+            // Test des éléments DOM
+            const sessionSelect = document.getElementById('sessionSelect');
+            if (sessionSelect) {
+                console.log('✅ sessionSelect trouvé');
+            } else {
+                console.error('❌ sessionSelect manquant');
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

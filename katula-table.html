@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Table de Katula</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: #2c3e50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .katula-matrix {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chip-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .chip-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .chip-cell.hot {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .chip-cell.cold {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .chip-cell.predicted {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .chip-number {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .chip-position {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .chip-frequency {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+
+        .stats-card h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .zone-item:last-child {
+            border-bottom: none;
+        }
+
+        .zone-name {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .zone-frequency {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .predictions-container {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .predictions-container h3 {
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+
+        .prediction-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-color.normal {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .legend-color.hot {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .legend-color.cold {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .legend-color.predicted {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .katula-matrix {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 4px;
+                padding: 10px;
+            }
+
+            .chip-cell {
+                min-height: 60px;
+                font-size: 0.9em;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Table de Katula</h1>
+            <p>Matrice géométrique 8x6 pour la visualisation spatiale des combinaisons</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="universeSelect">Univers:</label>
+                <select id="universeSelect">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+
+            <button onclick="loadKatulaTable()" id="loadBtn">🎯 Charger Table</button>
+            <button onclick="analyzePatterns()" id="analyzeBtn">📊 Analyser Patterns</button>
+            <button onclick="predictZones()" id="predictBtn">🔮 Prédire Zones</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color normal"></div>
+                <span>Normal</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color hot"></div>
+                <span>Zone Chaude</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color cold"></div>
+                <span>Zone Froide</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color predicted"></div>
+                <span>Prédiction</span>
+            </div>
+        </div>
+
+        <div id="katulaMatrix" class="katula-matrix"></div>
+
+        <div id="predictionsContainer" class="predictions-container" style="display: none;"></div>
+
+        <div id="statsContainer" class="stats-container"></div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            🔄 Chargement de la Table de Katula...
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8006/api/analytics';
+        let currentTable = null;
+        let currentAnalysis = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadKatulaTable();
+        });
+
+        async function loadKatulaTable() {
+            const loadBtn = document.getElementById('loadBtn');
+            const universe = document.getElementById('universeSelect').value;
+
+            loadBtn.disabled = true;
+            loadBtn.textContent = '🔄 Chargement...';
+            
+            document.getElementById('loadingIndicator').style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_BASE}/katula/table/${universe}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentTable = data;
+                    displayKatulaMatrix(data);
+                    showSuccess(`Table de Katula chargée pour ${universe}!`);
+                } else {
+                    showError('Erreur lors du chargement: ' + data.detail);
+                }
+
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🎯 Charger Table';
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+
+        function displayKatulaMatrix(tableData) {
+            const container = document.getElementById('katulaMatrix');
+            
+            if (!tableData.matrix) {
+                container.innerHTML = '<div class="loading">Aucune matrice disponible.</div>';
+                return;
+            }
+
+            let html = '';
+            
+            // Parcourir la matrice 8x6
+            tableData.matrix.forEach(row => {
+                row.forEach(cell => {
+                    html += `
+                        <div class="chip-cell" 
+                             onclick="showChipDetails('${cell.chip_id}')"
+                             data-chip="${cell.chip_id}"
+                             data-position="${cell.position}">
+                            <div class="chip-number">${cell.chip_number}</div>
+                            <div class="chip-position">${cell.position}</div>
+                        </div>
+                    `;
+                });
+            });
+            
+            container.innerHTML = html;
+        }
+
+        async function analyzePatterns() {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const universe = document.getElementById('universeSelect').value;
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '📊 Analyse...';
+
+            try {
+                const response = await fetch(`${API_BASE}/katula/patterns/${universe}?limit=100`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentAnalysis = data;
+                    displayPatternAnalysis(data);
+                    updateMatrixWithFrequencies(data);
+                    showSuccess('Analyse des patterns terminée!');
+                } else {
+                    showError('Erreur lors de l\'analyse: ' + data.detail);
+                }
+
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '📊 Analyser Patterns';
+            }
+        }
+
+        function displayPatternAnalysis(analysisData) {
+            const container = document.getElementById('statsContainer');
+            
+            let html = '';
+            
+            // Fréquences par zone
+            if (analysisData.frequency_analysis && analysisData.frequency_analysis.by_zone) {
+                html += `
+                    <div class="stats-card">
+                        <h3>📊 Fréquences par Zone</h3>
+                `;
+                
+                for (const [zone, frequency] of Object.entries(analysisData.frequency_analysis.by_zone)) {
+                    html += `
+                        <div class="zone-item">
+                            <span class="zone-name">${zone.replace('_', ' ')}</span>
+                            <span class="zone-frequency">${frequency}</span>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+            }
+            
+            // Quadrants
+            if (analysisData.frequency_analysis && analysisData.frequency_analysis.by_quadrant) {
+                html += `
+                    <div class="stats-card">
+                        <h3>🎯 Fréquences par Quadrant</h3>
+                `;
+                
+                for (const [quadrant, frequency] of Object.entries(analysisData.frequency_analysis.by_quadrant)) {
+                    html += `
+                        <div class="zone-item">
+                            <span class="zone-name">${quadrant.replace('_', ' ')}</span>
+                            <span class="zone-frequency">${frequency}</span>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+            }
+            
+            // Zones chaudes et froides
+            if (analysisData.pattern_insights) {
+                const insights = analysisData.pattern_insights;
+                
+                if (insights.hot_zones && insights.hot_zones.length > 0) {
+                    html += `
+                        <div class="stats-card" style="border-left-color: #e74c3c;">
+                            <h3>🔥 Zones Chaudes</h3>
+                    `;
+                    
+                    insights.hot_zones.forEach(zone => {
+                        html += `
+                            <div class="zone-item">
+                                <span class="zone-name">${zone.zone.replace('_', ' ')}</span>
+                                <span class="zone-frequency" style="background: #e74c3c;">${(zone.ratio * 100).toFixed(1)}%</span>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                if (insights.cold_zones && insights.cold_zones.length > 0) {
+                    html += `
+                        <div class="stats-card" style="border-left-color: #95a5a6;">
+                            <h3>❄️ Zones Froides</h3>
+                    `;
+                    
+                    insights.cold_zones.forEach(zone => {
+                        html += `
+                            <div class="zone-item">
+                                <span class="zone-name">${zone.zone.replace('_', ' ')}</span>
+                                <span class="zone-frequency" style="background: #95a5a6;">${(zone.ratio * 100).toFixed(1)}%</span>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function updateMatrixWithFrequencies(analysisData) {
+            // Mettre à jour la matrice avec les informations de fréquence
+            const cells = document.querySelectorAll('.chip-cell');
+            
+            // Reset all cells to normal
+            cells.forEach(cell => {
+                cell.className = 'chip-cell';
+            });
+            
+            // Marquer les zones chaudes et froides
+            if (analysisData.pattern_insights) {
+                const insights = analysisData.pattern_insights;
+                
+                // Zones chaudes
+                if (insights.hot_zones) {
+                    insights.hot_zones.forEach(zone => {
+                        markZoneCells(zone.zone, 'hot');
+                    });
+                }
+                
+                // Zones froides
+                if (insights.cold_zones) {
+                    insights.cold_zones.forEach(zone => {
+                        markZoneCells(zone.zone, 'cold');
+                    });
+                }
+            }
+        }
+
+        function markZoneCells(zoneName, className) {
+            // Cette fonction devrait marquer les cellules selon leur zone
+            // Pour l'instant, implémentation simplifiée
+            const cells = document.querySelectorAll('.chip-cell');
+            
+            // Logique pour identifier les cellules de chaque zone
+            // (à implémenter selon la logique de zones)
+        }
+
+        async function predictZones() {
+            const predictBtn = document.getElementById('predictBtn');
+            const universe = document.getElementById('universeSelect').value;
+
+            predictBtn.disabled = true;
+            predictBtn.textContent = '🔮 Prédiction...';
+
+            try {
+                const response = await fetch(`${API_BASE}/katula/predict/${universe}?method=frequency`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayPredictions(data);
+                    markPredictedZones(data);
+                    showSuccess('Prédictions générées!');
+                } else {
+                    showError('Erreur lors de la prédiction: ' + data.detail);
+                }
+
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            } finally {
+                predictBtn.disabled = false;
+                predictBtn.textContent = '🔮 Prédire Zones';
+            }
+        }
+
+        function displayPredictions(predictionData) {
+            const container = document.getElementById('predictionsContainer');
+            
+            if (!predictionData.predictions || predictionData.predictions.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            let html = '<h3>🔮 Prédictions des Prochaines Zones</h3>';
+            
+            predictionData.predictions.slice(0, 5).forEach((pred, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                
+                html += `
+                    <div class="prediction-item">
+                        <span>${medal} ${pred.zone.replace('_', ' ')}</span>
+                        <span>${(pred.probability * 100).toFixed(1)}%</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+
+        function markPredictedZones(predictionData) {
+            // Marquer les zones prédites sur la matrice
+            if (predictionData.recommended_zones) {
+                predictionData.recommended_zones.forEach(zone => {
+                    markZoneCells(zone.zone, 'predicted');
+                });
+            }
+        }
+
+        function showChipDetails(chipId) {
+            if (currentTable && currentTable.chip_positions && currentTable.chip_positions[chipId]) {
+                const chipInfo = currentTable.chip_positions[chipId];
+                
+                alert(`
+Chip: ${chipInfo.chip_id}
+Position: ${chipInfo.position}
+Ligne: ${chipInfo.row}
+Colonne: ${chipInfo.column}
+Zone: ${chipInfo.geometric_zone}
+Quadrant: ${chipInfo.quadrant}
+Type: ${chipInfo.edge_info.edge_type}
+                `);
+            }
+        }
+
+        function showError(message) {
+            const container = document.getElementById('statsContainer');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function showSuccess(message) {
+            // Afficher un message de succès temporaire
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #00b894;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.parentNode.removeChild(successDiv);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

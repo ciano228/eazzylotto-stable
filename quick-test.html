@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Test Rapide EazzyLotto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #1890ff;
+            margin-bottom: 30px;
+        }
+        .link-button {
+            display: inline-block;
+            background: #1890ff;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .link-button:hover {
+            background: #40a9ff;
+            transform: translateY(-2px);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background: #f6ffed; color: #52c41a; border: 2px solid #52c41a; }
+        .error { background: #fff2f0; color: #ff4d4f; border: 2px solid #ff4d4f; }
+        .info { background: #e6f7ff; color: #1890ff; border: 2px solid #1890ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 EazzyLotto - Test Rapide</h1>
+        
+        <div id="status" class="status info">
+            🔄 Vérification des serveurs en cours...
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <h3>📋 Pages Disponibles</h3>
+            <a href="smart-input-complete.html" class="link-button">
+                🎯 Smart Input Complete
+            </a>
+            <a href="test-session-complete.html" class="link-button">
+                🧪 Test Session
+            </a>
+            <a href="index.html" class="link-button">
+                🏠 Accueil
+            </a>
+            <a href="dashboard.html" class="link-button">
+                📊 Dashboard
+            </a>
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <h3>🔧 Tests Techniques</h3>
+            <button onclick="testFrontend()" class="link-button">
+                🌐 Test Frontend
+            </button>
+            <button onclick="testBackend()" class="link-button">
+                🔌 Test Backend
+            </button>
+            <button onclick="testAPI()" class="link-button">
+                📡 Test API
+            </button>
+        </div>
+        
+        <div id="results" style="margin-top: 30px;"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        async function testFrontend() {
+            addResult('🌐 Test du serveur frontend...', 'info');
+            try {
+                const response = await fetch('/index.html');
+                if (response.ok) {
+                    addResult('✅ Frontend OK - Port 8081 accessible', 'success');
+                } else {
+                    addResult('❌ Frontend erreur - Status: ' + response.status, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Frontend inaccessible: ' + error.message, 'error');
+            }
+        }
+        
+        async function testBackend() {
+            addResult('🔌 Test du serveur backend...', 'info');
+            try {
+                const response = await fetch('http://localhost:8006/docs');
+                if (response.ok) {
+                    addResult('✅ Backend OK - Port 8006 accessible', 'success');
+                } else {
+                    addResult('❌ Backend erreur - Status: ' + response.status, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Backend inaccessible: ' + error.message, 'error');
+            }
+        }
+        
+        async function testAPI() {
+            addResult('📡 Test de l\'API sessions...', 'info');
+            try {
+                const response = await fetch('http://localhost:8006/api/session/sessions');
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(\`✅ API OK - \${data.length} sessions trouvées\`, 'success');
+                } else {
+                    addResult('❌ API erreur - Status: ' + response.status, 'error');
+                }
+            } catch (error) {
+                addResult('❌ API inaccessible: ' + error.message, 'error');
+            }
+        }
+        
+        // Test automatique au chargement
+        window.addEventListener('load', async () => {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            try {
+                await testFrontend();
+                await testBackend();
+                await testAPI();
+                statusDiv.innerHTML = '✅ Tous les serveurs sont opérationnels !';
+                statusDiv.className = 'status success';
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Problème détecté - Voir les détails ci-dessous';
+                statusDiv.className = 'status error';
+            }
+        });
+    </script>
+</body>
+</html>

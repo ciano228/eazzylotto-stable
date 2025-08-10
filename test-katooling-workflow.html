@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Workflow KATOOLING - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .number-inputs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .number-input {
+            width: 60px;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #1e3c72;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3c72;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .example-btn {
+            background: #e9ecef;
+            color: #2c3e50;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .example-btn:hover {
+            background: #1e3c72;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test Workflow KATOOLING</h1>
+            <p>Interface de test pour le workflow complet de prédiction loterie</p>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="test-section">
+            <h2 class="section-title">⚙️ Configuration du Test</h2>
+            
+            <div class="input-group">
+                <label>Numéros d'entrée (5-6 numéros entre 1 et 90):</label>
+                <div class="number-inputs">
+                    <input type="number" class="number-input" id="num1" min="1" max="90" placeholder="1">
+                    <input type="number" class="number-input" id="num2" min="1" max="90" placeholder="15">
+                    <input type="number" class="number-input" id="num3" min="1" max="90" placeholder="23">
+                    <input type="number" class="number-input" id="num4" min="1" max="90" placeholder="45">
+                    <input type="number" class="number-input" id="num5" min="1" max="90" placeholder="67">
+                    <input type="number" class="number-input" id="num6" min="1" max="90" placeholder="89">
+                </div>
+            </div>
+
+            <div>
+                <button class="example-btn" onclick="loadExample('basic')">Exemple Basique</button>
+                <button class="example-btn" onclick="loadExample('advanced')">Exemple Avancé</button>
+                <button class="example-btn" onclick="clearInputs()">Effacer</button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="test-section">
+            <h2 class="section-title">🚀 Actions</h2>
+            <button class="btn" onclick="executeFullWorkflow()" id="executeBtn">
+                <span class="loading-spinner" style="display: none;"></span>
+                Exécuter Workflow Complet
+            </button>
+            <button class="btn" onclick="testAPIStatus()" id="statusBtn">
+                Tester Statut API
+            </button>
+            <button class="btn" onclick="clearResults()" id="clearBtn">
+                Effacer Résultats
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" style="display: none;">
+            <h2 class="section-title">📊 Résultats</h2>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/katooling';
+
+        function getInputNumbers() {
+            const numbers = [];
+            for (let i = 1; i <= 6; i++) {
+                const value = document.getElementById(`num${i}`).value;
+                if (value && value !== '') {
+                    numbers.push(parseInt(value));
+                }
+            }
+            return numbers;
+        }
+
+        function validateNumbers(numbers) {
+            if (numbers.length < 5) {
+                alert('Au moins 5 numéros sont requis');
+                return false;
+            }
+            
+            for (let num of numbers) {
+                if (num < 1 || num > 90) {
+                    alert(`Numéro invalide: ${num}. Les numéros doivent être entre 1 et 90`);
+                    return false;
+                }
+            }
+            
+            if (new Set(numbers).size !== numbers.length) {
+                alert('Les numéros ne doivent pas être en double');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function showLoading(buttonId) {
+            const button = document.getElementById(buttonId);
+            const spinner = button.querySelector('.loading-spinner');
+            button.disabled = true;
+            spinner.style.display = 'inline-block';
+        }
+
+        function hideLoading(buttonId) {
+            const button = document.getElementById(buttonId);
+            const spinner = button.querySelector('.loading-spinner');
+            button.disabled = false;
+            spinner.style.display = 'none';
+        }
+
+        function addResult(title, content) {
+            const container = document.getElementById('resultsContainer');
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            card.innerHTML = `
+                <div class="result-title">${title}</div>
+                <div class="result-content">${content}</div>
+            `;
+            
+            container.appendChild(card);
+        }
+
+        function loadExample(type) {
+            const examples = {
+                basic: [1, 15, 23, 45, 67, 89],
+                advanced: [5, 12, 28, 34, 56, 78]
+            };
+            
+            const numbers = examples[type];
+            numbers.forEach((num, index) => {
+                document.getElementById(`num${index + 1}`).value = num;
+            });
+        }
+
+        function clearInputs() {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`num${i}`).value = '';
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        async function executeFullWorkflow() {
+            const numbers = getInputNumbers();
+            if (!validateNumbers(numbers)) return;
+            
+            showLoading('executeBtn');
+            
+            try {
+                const response = await fetch(`${API_BASE}/execute`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        input_numbers: numbers,
+                        prediction_horizon: 5
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    addResult('Workflow Complet Exécuté', JSON.stringify(result, null, 2));
+                } else {
+                    addResult('Erreur API', JSON.stringify(result, null, 2));
+                }
+                
+            } catch (error) {
+                addResult('Erreur de Connexion', error.message);
+            } finally {
+                hideLoading('executeBtn');
+                document.getElementById('resultsSection').style.display = 'block';
+            }
+        }
+
+        async function testAPIStatus() {
+            showLoading('statusBtn');
+            
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    addResult('Statut API', JSON.stringify(result, null, 2));
+                } else {
+                    addResult('Erreur Statut API', JSON.stringify(result, null, 2));
+                }
+                
+            } catch (error) {
+                addResult('Erreur de Connexion API', error.message);
+            } finally {
+                hideLoading('statusBtn');
+                document.getElementById('resultsSection').style.display = 'block';
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            loadExample('basic');
+        });
+    </script>
+</body>
+</html> 
