@@ -9,8 +9,8 @@ const EazzyLotto = {
         appName: 'EazzyLotto',
         domain: 'eazzylotto.com',
         version: '1.0.0',
-        apiBase: 'http://localhost:8081/api',
-        frontendPort: 8081
+        apiBase: 'http://localhost:8000/api',
+        frontendPort: 8005
     },
 
     // Thème et couleurs

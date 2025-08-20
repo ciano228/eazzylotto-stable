@@ -1,0 +1,258 @@
+/* Styles pour le sélecteur de tirage */
+.draw-selector-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border: 2px solid #1890ff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    color: #333;
+}
+
+.selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.selector-header h3 {
+    margin: 0;
+    color: #1890ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.audio-guide-btn {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.audio-guide-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+
+.selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.selector-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.selector-group label {
+    font-weight: 600;
+    color: #1890ff;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.selector-group select,
+.selector-group input {
+    padding: 12px;
+    border: 2px solid #1890ff;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.selector-group select[multiple] {
+    height: auto;
+    min-height: 100px;
+}
+
+.selector-group input[type="date"] {
+    color-scheme: light;
+    background: white;
+    color: #333;
+}
+
+.multiple-dates-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.date-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-input-row input {
+    flex: 1;
+}
+
+.remove-date-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.remove-date-btn:hover {
+    background: #ff3742;
+    transform: scale(1.05);
+}
+
+.add-date-btn {
+    background: #2ed573;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.add-date-btn:hover {
+    background: #26d0ce;
+    transform: translateY(-1px);
+}
+
+.selector-group small {
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.selector-group select:focus,
+.selector-group input:focus {
+    outline: none;
+    border-color: #ffd700;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.selector-group select option {
+    background: white;
+    color: #333;
+    padding: 8px;
+}
+
+.selector-group select option:checked {
+    background: #1890ff;
+    color: white;
+}
+
+.selector-group select option:hover {
+    background: #f0f9ff;
+}
+
+.current-selection {
+    background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+    border: 2px solid #1890ff;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.selection-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #1890ff;
+    font-size: 1.1rem;
+}
+
+.apply-btn {
+    background: linear-gradient(135deg, #2ed573, #26d0ce);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+}
+
+/* Animation pour les notifications */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.draw-notification {
+    animation: slideIn 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .selector-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .current-selection {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .selector-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .date-input-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .date-input-row input {
+        width: 100%;
+    }
+}

@@ -19,8 +19,8 @@ def start_backend():
 def start_frontend():
     """Démarre le serveur frontend"""
     print("🎨 Démarrage du frontend...")
-    frontend_cmd = [sys.executable, "server.py"]
-    return subprocess.Popen(frontend_cmd, cwd="frontend")
+    frontend_cmd = [sys.executable, "start_frontend.py"]
+    return subprocess.Popen(frontend_cmd)
 
 if __name__ == "__main__":
     print("🚀 Démarrage des serveurs...")
@@ -35,8 +35,9 @@ if __name__ == "__main__":
     
     print("\n✅ Serveurs démarrés !")
     print("🔧 Backend: http://localhost:8000")
-    print("🎨 Frontend: http://localhost:8081")
-    print("🎯 Interface: http://localhost:8081/katula-dynamic.html")
+    print("🎨 Frontend: http://localhost:8080")
+    print("🎯 Interface: http://localhost:8080/katula-dynamic.html")
+    print("🔬 Validation KATOOLING: http://localhost:8080/katooling-validation.html")
     print("\n💡 Appuyez sur Ctrl+C pour arrêter les deux serveurs")
     
     try:

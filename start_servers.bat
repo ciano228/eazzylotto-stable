@@ -1,4 +1,4 @@
-@echo off
+start@echo off
 echo ========================================
 echo    DEMARRAGE DES SERVEURS EAZZYCALCULATOR
 echo ========================================

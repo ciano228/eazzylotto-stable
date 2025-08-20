@@ -47,7 +47,7 @@ const UniversalHeader = {
     // Générer la navigation
     generateNavigation: function(currentPage = '') {
         const navItems = [
-            { key: 'accueil', label: 'Accueil', url: 'accueil.html' },
+            { key: 'accueil', label: 'Accueil', url: 'index.html' },
             { key: 'katooling', label: 'Méthode KATOOLING', url: 'katooling-method.html' },
             { key: 'dashboard', label: 'Dashboard', url: 'dashboard.html' },
             { key: 'evenements', label: 'Événements', url: 'evenements.html' },
@@ -61,7 +61,7 @@ const UniversalHeader = {
         navItems.forEach(item => {
             const activeClass = currentPage === item.key ? 'active' : '';
             navHTML += `
-                <a href="${item.url}" class="nav-link ${activeClass}">
+                <a href="${item.url}" class="nav-link ${activeClass}" translate="no">
                     ${item.label}
                 </a>
             `;
@@ -104,6 +104,19 @@ const UniversalHeader = {
         
         this.addHeaderStyles();
         this.initHeaderInteractions();
+        
+        // Charger le gestionnaire de paramètres si disponible
+        this.loadSettingsManager();
+    },
+    
+    // Charger le gestionnaire de paramètres
+    loadSettingsManager: function() {
+        if (!document.getElementById('settings-manager-script')) {
+            const script = document.createElement('script');
+            script.id = 'settings-manager-script';
+            script.src = 'assets/js/settings-manager.js';
+            document.head.appendChild(script);
+        }
     },
 
     // Ajouter les styles du header
@@ -169,7 +182,10 @@ const UniversalHeader = {
             .eazzylotto-logo::before {
                 content: '';
                 position: absolute;
-                top: -2px;
+                top: -2px; 
+
+
+                 
                 left: -2px;
                 right: -2px;
                 bottom: -2px;
@@ -347,6 +363,109 @@ const UniversalHeader = {
             .logout-btn:hover {
                 background: rgba(255, 255, 255, 0.1);
             }
+            
+            /* Quick Settings */
+            .quick-settings {
+                position: relative;
+                margin-right: 15px;
+            }
+            
+            .settings-toggle {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: white;
+                padding: 8px 10px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+            
+            .settings-toggle:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: rotate(90deg);
+            }
+            
+            .quick-settings-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                padding: 15px;
+                min-width: 200px;
+                z-index: 1001;
+                display: none;
+                margin-top: 5px;
+            }
+            
+            .quick-settings-menu.show {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+            
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .quick-settings-menu .setting-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                color: #2c3e50;
+            }
+            
+            .quick-settings-menu .setting-item:last-child {
+                margin-bottom: 0;
+                border-top: 1px solid #eee;
+                padding-top: 10px;
+            }
+            
+            .quick-settings-menu label {
+                font-size: 12px;
+                font-weight: 500;
+            }
+            
+            .quick-settings-menu select {
+                background: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 11px;
+                color: #2c3e50;
+            }
+            
+            .theme-toggle {
+                background: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 4px 8px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: all 0.3s ease;
+            }
+            
+            .theme-toggle:hover {
+                background: #e9ecef;
+            }
+            
+            .settings-link {
+                color: #1e3c72;
+                text-decoration: none;
+                font-size: 11px;
+                font-weight: 500;
+                padding: 4px 0;
+                display: block;
+                text-align: center;
+            }
+            
+            .settings-link:hover {
+                color: #2a5298;
+                text-decoration: underline;
+            }
 
             /* Responsive */
             @media (max-width: 1024px) {
@@ -389,6 +508,37 @@ const UniversalHeader = {
                 }
             }
 
+            /* Variables CSS globales pour thèmes */
+            :root {
+                --bg-color: #f8f9fa;
+                --text-color: #2c3e50;
+                --card-bg: white;
+            }
+            
+            .dark-theme {
+                --bg-color: #1a1a1a;
+                --text-color: #e0e0e0;
+                --card-bg: #2d2d2d;
+            }
+            
+            /* Appliquer le thème seulement aux pages qui n'ont pas de fond personnalisé */
+            body:not(.custom-background):not([style*="background"]) {
+                background: var(--bg-color) !important;
+                color: var(--text-color) !important;
+                transition: background 0.3s ease, color 0.3s ease;
+            }
+            
+            /* Préserver les fonds définis dans les styles inline ou CSS */
+            body[style*="background"],
+            body.custom-background {
+                /* Ne pas écraser le fond personnalisé */
+            }
+            
+            .container, .dashboard-card, .settings-section, .universe-container {
+                background: var(--card-bg) !important;
+                color: var(--text-color) !important;
+            }
+
             /* Ajustement du contenu principal */
             body.has-header {
                 padding-top: 80px;
@@ -427,18 +577,62 @@ const UniversalHeader = {
 
         // Ajouter la classe au body
         document.body.classList.add('has-header');
+        
+        // Fermer le menu des paramètres en cliquant ailleurs
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('quickSettingsMenu');
+            const toggle = document.querySelector('.settings-toggle');
+            if (menu && !menu.contains(e.target) && e.target !== toggle) {
+                menu.classList.remove('show');
+            }
+        });
     },
 
     // Fonction de déconnexion
     logout: function() {
         if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-            // Supprimer les données de session
             localStorage.removeItem('eazzylotto_user');
             localStorage.removeItem('eazzylotto_loginTime');
-            
-            // Rediriger vers la page d'accueil
             window.location.href = 'index.html';
         }
+    },
+    
+    // Fonctions pour les paramètres rapides
+    toggleQuickSettings: function() {
+        const menu = document.getElementById('quickSettingsMenu');
+        if (menu) {
+            menu.classList.toggle('show');
+            
+            const settings = JSON.parse(localStorage.getItem('eazzylotto_settings') || '{}');
+            const langSelect = document.getElementById('headerLanguage');
+            const themeBtn = document.getElementById('themeToggle');
+            
+            if (langSelect) langSelect.value = settings.language || 'fr';
+            if (themeBtn) themeBtn.innerHTML = settings.theme === 'dark' ? '&#9728;' : '&#9789;';
+        }
+    },
+    
+    changeLanguage: function(lang) {
+        const settings = JSON.parse(localStorage.getItem('eazzylotto_settings') || '{}');
+        settings.language = lang;
+        localStorage.setItem('eazzylotto_settings', JSON.stringify(settings));
+        
+        if (window.i18n) {
+            window.i18n.setLanguage(lang);
+        }
+        
+        window.dispatchEvent(new CustomEvent('settingsApplied', { detail: settings }));
+    },
+    
+    toggleTheme: function() {
+        const settings = JSON.parse(localStorage.getItem('eazzylotto_settings') || '{}');
+        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('eazzylotto_settings', JSON.stringify(settings));
+        
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) themeBtn.innerHTML = settings.theme === 'dark' ? '&#9728;' : '&#9789;';
+        
+        window.dispatchEvent(new CustomEvent('settingsApplied', { detail: settings }));
     }
 };
 
@@ -450,6 +644,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const showUserInfo = document.body.dataset.showUserInfo === 'true';
         UniversalHeader.injectHeader('header-container', currentPage, { showUserInfo });
     }
+    
+    // Écouter les changements de paramètres pour mettre à jour le header
+    window.addEventListener('settingsApplied', function(event) {
+        const settings = event.detail;
+        // Appliquer le thème au header si nécessaire
+        const header = document.querySelector('.eazzylotto-header');
+        if (header && settings.theme === 'dark') {
+            header.classList.add('dark-theme');
+        } else if (header) {
+            header.classList.remove('dark-theme');
+        }
+    });
 });
 
 // Export global

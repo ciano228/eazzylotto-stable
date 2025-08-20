@@ -22,7 +22,7 @@
         @media (max-width: 700px) { .main-container { padding-top: 80px; } .abonnement-options { flex-direction: column; gap: 16px; } }
     </style>
 </head>
-<body>
+<body class="custom-background">
     <div id="header-container"></div>
     <div class="main-container">
         <div class="abonnement-card">
@@ -32,7 +32,7 @@
                     <div class="option-title">Découverte</div>
                     <div class="option-price">Gratuit</div>
                     <div class="option-desc">Accès limité aux fonctionnalités de base et à la communauté.</div>
-                    <button class="option-btn" disabled>Inclus</button>
+                    <button class="option-btn" onclick="showFreeFeatures()" style="background: linear-gradient(90deg, #28a745, #20c997); color: white;">✓ Actuel</button>
                 </div>
                 <div class="option">
                     <div class="option-title">Premium</div>
@@ -97,6 +97,11 @@
             };
         }
     });
+
+    // Fonction pour afficher les fonctionnalités gratuites
+    function showFreeFeatures() {
+        alert('🎉 PLAN DÉCOUVERTE ACTUEL\n\n✅ Fonctionnalités incluses :\n\n• Dashboard principal\n• Analyse de base des patterns\n• Visualisation des données\n• Accès aux 5 univers (Mundo, Fruity, Trigga, Roaster, Sunshine)\n• Historique limité (30 jours)\n• Support communautaire\n\n💡 Passez au Premium pour débloquer toutes les fonctionnalités avancées !');
+    }
     </script>
 </body>
 </html>

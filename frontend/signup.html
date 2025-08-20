@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Katooling</title>
     <script src="assets/js/universal-header.js"></script>
+    <script src="assets/js/auth.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%); min-height: 100vh; color: #222; }
@@ -22,7 +23,7 @@
         @media (max-width: 700px) { .main-container { padding-top: 80px; } }
     </style>
 </head>
-<body>
+<body class="custom-background">
     <div id="header-container"></div>
     <div class="main-container">
         <form class="form-card" id="signupForm" autocomplete="off">
@@ -72,11 +73,49 @@
                 showUserInfo: false
             });
         }
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('Inscription simulée ! (Aucune base de données réelle)');
-            window.location.href = 'dashboard.html';
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('.submit-btn');
+            const errorContainer = document.getElementById('signupError') || createErrorContainer();
+            
+            const userData = {
+                email: formData.get('contact'),
+                password: formData.get('password'),
+                first_name: formData.get('identity').split(' ')[0] || formData.get('identity'),
+                last_name: formData.get('identity').split(' ').slice(1).join(' ') || ''
+            };
+            
+            submitBtn.textContent = 'Inscription en cours...';
+            submitBtn.disabled = true;
+            errorContainer.style.display = 'none';
+            
+            const result = await auth.register(userData);
+            
+            if (result.success) {
+                errorContainer.innerHTML = '<div class="auth-success">✅ Inscription réussie ! Redirection...</div>';
+                errorContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } else {
+                errorContainer.innerHTML = `<div class="auth-error">❌ ${result.error}</div>`;
+                errorContainer.style.display = 'block';
+                
+                submitBtn.textContent = 'S\'inscrire';
+                submitBtn.disabled = false;
+            }
         });
+        
+        function createErrorContainer() {
+            const container = document.createElement('div');
+            container.id = 'signupError';
+            container.style.display = 'none';
+            document.querySelector('.form-card').insertBefore(container, document.getElementById('signupForm'));
+            return container;
+        }
     });
     </script>
 </body>

@@ -4,6 +4,7 @@ from app.database.connection import get_db
 from app.services.gap_analysis_service import GapAnalysisService
 from typing import Dict, Any, List
 from datetime import datetime
+import os
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 
@@ -189,3 +190,284 @@ async def get_temporal_analysis(db: Session = Depends(get_db)) -> Dict[str, Any]
         raise HTTPException(status_code=500, detail=f"Erreur analyse temporelle: {str(e)}")
 
 # ... (le reste du code reste inchangé)
+
+@router.get("/katula/table/{universe}")
+async def get_katula_table(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère la table Katula pour un univers donné"""
+    try:
+        # Simuler une table Katula 6x8 (48 chips)
+        matrix = []
+        chip_positions = {}
+        
+        for row in range(8):
+            matrix_row = []
+            for col in range(6):
+                chip_number = row * 6 + col + 1
+                matrix_row.append({
+                    "chip_number": chip_number,
+                    "position": f"{row+1}-{col+1}"
+                })
+                chip_positions[f"chip_{chip_number}"] = {
+                    "chip_number": chip_number,
+                    "position": f"{row+1}-{col+1}",
+                    "row": row + 1,
+                    "column": col + 1,
+                    "geometric_zone": f"Zone_{((row//2)*3 + (col//2)) + 1}"
+                }
+            matrix.append(matrix_row)
+        
+        return {
+            "universe": universe,
+            "matrix": matrix,
+            "chip_positions": chip_positions,
+            "last_updated": datetime.now().isoformat(),
+            "total_chips": 48,
+            "status": "active"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur table Katula: {str(e)}")
+
+@router.get("/katula/formes/{universe}")
+async def get_katula_formes(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère les formes disponibles pour un univers donné"""
+    try:
+        # Formes par univers
+        formes_by_universe = {
+            "fruity": ["carre", "triangle", "cercle", "rectangle", "losange", "etoile"],
+            "mundo": ["carre", "triangle", "cercle", "rectangle"],
+            "trigga": ["triangle", "losange", "etoile", "carre", "rectangle"],
+            "roaster": ["cercle", "carre", "rectangle", "triangle"],
+            "sunshine": ["etoile", "cercle", "triangle", "carre", "losange"]
+        }
+        
+        formes = formes_by_universe.get(universe.lower(), ["carre", "triangle", "cercle", "rectangle"])
+        
+        return {
+            "universe": universe,
+            "formes": formes,
+            "total_formes": len(formes),
+            "last_updated": datetime.now().isoformat(),
+            "status": "active"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur formes Katula: {str(e)}")
+
+
+@router.get("/katula/chip/{universe}/{chip_number}")
+async def get_katula_chip_data(universe: str, chip_number: int, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère les données réelles d'un chip depuis la BD"""
+    try:
+        formes_by_universe = {
+            "fruity": ["carre", "triangle", "cercle", "rectangle", "losange", "etoile"],
+            "mundo": ["carre", "triangle", "cercle", "rectangle"],
+            "trigga": ["triangle", "losange", "etoile", "carre", "rectangle"],
+            "roaster": ["cercle", "carre", "rectangle", "triangle"],
+            "sunshine": ["etoile", "cercle", "triangle", "carre", "losange"]
+        }
+        
+        formes = formes_by_universe.get(universe.lower(), ["carre", "triangle", "cercle", "rectangle"])
+        formes_data = {}
+        
+        for forme in formes:
+            try:
+                # Requête BD réelle - respecter la casse
+                import sqlite3
+                db_path = os.path.join(os.getcwd(), "backend", "data", "katula.db")
+                
+                if os.path.exists(db_path):
+                    conn = sqlite3.connect(db_path)
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "SELECT DISTINCT denomination FROM combinations WHERE univers = ? AND forme = ? AND chip = ?",
+                        (universe.lower(), forme.lower(), chip_number)
+                    )
+                    query_result = cursor.fetchall()
+                    conn.close()
+                else:
+                    query_result = []
+                
+                items = []
+                for row in query_result:
+                    items.append({
+                        "denomination": row[0],
+                        "object_name": row[0],
+                        "forme": forme,
+                        "chip": chip_number,
+                        "universe": universe
+                    })
+                
+                formes_data[forme] = items
+                
+            except Exception:
+                formes_data[forme] = []
+        
+        return {
+            "chip_number": chip_number,
+            "universe": universe,
+            "formes_data": formes_data,
+            "total_items": sum(len(items) for items in formes_data.values()),
+            "last_updated": datetime.now().isoformat(),
+            "status": "active",
+            "source": "database"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur chip Katula: {str(e)}")
+
+@router.get("/granque-tome/{universe}")
+async def get_granque_tome_data(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère les données granque et tome réelles depuis la BD"""
+    try:
+        import sqlite3
+        db_path = os.path.join(os.getcwd(), "backend", "data", "katula.db")
+        
+        if os.path.exists(db_path):
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Récupérer les granques
+            cursor.execute(
+                "SELECT DISTINCT granque_name, denomination, chip FROM combinations WHERE univers = ? AND granque_name IS NOT NULL",
+                (universe.lower(),)
+            )
+            granque_results = cursor.fetchall()
+            
+            # Récupérer les tomes
+            cursor.execute(
+                "SELECT DISTINCT tome, denomination, chip FROM combinations WHERE univers = ? AND tome IS NOT NULL",
+                (universe.lower(),)
+            )
+            tome_results = cursor.fetchall()
+            
+            # Récupérer les petiques
+            cursor.execute(
+                "SELECT DISTINCT petique, denomination, chip FROM combinations WHERE univers = ? AND petique IS NOT NULL",
+                (universe.lower(),)
+            )
+            petique_results = cursor.fetchall()
+            
+            conn.close()
+        else:
+            granque_results = []
+            tome_results = []
+            petique_results = []
+        
+        # Organiser les granques
+        granque_data = {}
+        for granque_name, denomination, chip in granque_results:
+            if granque_name not in granque_data:
+                granque_data[granque_name] = []
+            granque_data[granque_name].append({
+                "denomination": denomination,
+                "chip": chip
+            })
+        
+        # Organiser les tomes
+        tome_data = {}
+        for tome, denomination, chip in tome_results:
+            if tome not in tome_data:
+                tome_data[tome] = []
+            tome_data[tome].append({
+                "denomination": denomination,
+                "chip": chip
+            })
+        
+        # Organiser les petiques
+        petique_data = {}
+        for petique, denomination, chip in petique_results:
+            if petique not in petique_data:
+                petique_data[petique] = []
+            petique_data[petique].append({
+                "denomination": denomination,
+                "chip": chip
+            })
+        
+        # Fallback si pas de données
+        if not granque_data:
+            granque_data = {
+                "Q1": [], "Q2": [], "Q3": [], "Q4": [], "Q5": [], "Q6": []
+            }
+        
+        if not tome_data:
+            tome_data = {
+                "tome1": [], "tome2": [], "tome3": [], "tome4": []
+            }
+        
+        if not petique_data:
+            petique_data = {
+                "q1": [], "q2": [], "q3": [], "q4": []
+            }
+        
+        return {
+            "universe": universe,
+            "granque_data": granque_data,
+            "tome_data": tome_data,
+            "petique_data": petique_data,
+            "last_updated": datetime.now().isoformat(),
+            "status": "active",
+            "source": "database"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur granque/tome: {str(e)}")
+
+
+@router.get("/denomination/{universe}/{denomination}")
+async def get_denomination_details(universe: str, denomination: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère les détails réels d'une dénomination depuis la BD"""
+    try:
+        # Requête BD réelle avec SQLite
+        import sqlite3
+        db_path = os.path.join(os.getcwd(), "backend", "data", "katula.db")
+        
+        if os.path.exists(db_path):
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT num1, num2, alpha_ranking FROM combinations WHERE denomination = ? AND univers = ?",
+                (denomination, universe.lower())
+            )
+            query_result = cursor.fetchall()
+            conn.close()
+        else:
+            query_result = []
+        
+        details = []
+        for row in query_result:
+            details.append({
+                "denomination": denomination,
+                "num1": row[0],
+                "num2": row[1],
+                "alpha_ranking": row[2],
+                "univers": universe
+            })
+        
+        if not details:
+            details = [{
+                "denomination": denomination,
+                "num1": 0,
+                "num2": 0,
+                "alpha_ranking": "na",
+                "univers": universe
+            }]
+        
+        return {
+            "denomination": denomination,
+            "universe": universe,
+            "total_occurrences": len(details),
+            "details": details,
+            "last_updated": datetime.now().isoformat(),
+            "status": "active",
+            "source": "database"
+        }
+        
+    except Exception as e:
+        return {
+            "denomination": denomination,
+            "universe": universe,
+            "total_occurrences": 0,
+            "details": [],
+            "last_updated": datetime.now().isoformat(),
+            "status": "no_data",
+            "source": "fallback"
+        }

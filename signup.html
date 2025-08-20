@@ -72,10 +72,46 @@
                 showUserInfo: false
             });
         }
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('Inscription simulée ! (Aucune base de données réelle)');
-            window.location.href = 'dashboard.html';
+            
+            const identity = document.getElementById('identity').value;
+            const contact = document.getElementById('contact').value;
+            const password = document.getElementById('password').value;
+            const country = document.getElementById('country').value;
+            
+            if (!identity || !contact || !password || !country) {
+                alert('Veuillez remplir tous les champs.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: contact,
+                        password: password,
+                        first_name: identity.split(' ')[0] || identity,
+                        last_name: identity.split(' ').slice(1).join(' ') || ''
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('user_id', data.user_id);
+                    alert('Inscription réussie !');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const error = await response.json();
+                    alert('Erreur d\'inscription: ' + (error.detail || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                alert('Erreur de connexion au serveur');
+            }
         });
     });
     </script>

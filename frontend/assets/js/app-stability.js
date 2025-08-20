@@ -46,18 +46,10 @@ const AppStability = {
         console.log('✅ Page marquée comme stable');
     },
 
-    // Forcer la stabilité des liens
+    // Forcer la stabilité des liens - DÉSACTIVÉ pour éviter les conflits
     enforceStableLinks: function() {
-        const links = document.querySelectorAll('a[href]');
-        links.forEach(link => {
-            const href = link.getAttribute('href');
-            
-            // Corriger les liens vers des pages obsolètes
-            if (href === 'katooling-method.html') {
-                link.setAttribute('href', 'katooling-workflow.html');
-                console.log('🔧 Lien corrigé: katooling-method.html → katooling-workflow.html');
-            }
-        });
+        // Fonction désactivée pour éviter les interférences avec la navigation
+        console.log('🔧 Correction automatique des liens désactivée');
     },
 
     // Initialiser la stabilité

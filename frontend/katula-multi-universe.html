@@ -380,7 +380,7 @@
     </style>
 </head>
 
-<body>
+<body class="custom-background">
     <!-- Header Universel -->
     <div id="header-container"></div>
     
@@ -452,9 +452,9 @@
                 console.log(`Chargement de ${universe}...`);
 
                 // Vérifier si le serveur backend est disponible
-                const healthCheck = await fetch(`${API_BASE.replace('/api/analytics', '')}/`).catch(() => null);
+                const healthCheck = await fetch(`http://localhost:8000/`).catch(() => null);
                 if (!healthCheck) {
-                    throw new Error(`Serveur backend non disponible. Veuillez démarrer le serveur avec 'python start_servers.py'`);
+                    throw new Error(`Serveur backend non disponible sur port 8000`);
                 }
 
                 // Charger la table de Katula

@@ -9,6 +9,33 @@
     <script src="assets/js/universal-header.js"></script>
     <script src="assets/js/app-stability.js"></script>
     <script src="assets/js/dashboard-functional.js"></script>
+    <script>
+        // Vérification d'authentification au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Vous devez être connecté pour accéder au dashboard.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Vérifier la validité du token
+            fetch('http://localhost:8000/api/session/test', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user_id');
+                    alert('Session expirée. Veuillez vous reconnecter.');
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(() => {
+                alert('Erreur de connexion au serveur.');
+            });
+        });
+    </script>
     <style>
         * {
             margin: 0;

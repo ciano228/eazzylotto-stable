@@ -6,7 +6,7 @@
     <title>Workflow KATOOLING - EazzyLotto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="assets/js/universal-header.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -22,9 +22,78 @@
             min-height: 100vh;
         }
 
+        /* Navigation flottante */
+        .floating-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: rgba(30, 60, 114, 0.1);
+            color: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.home-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            color: #1e3c72;
+        }
+
+        .nav-btn.dashboard-btn:hover {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        .nav-text {
+            font-size: 0.85rem;
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 0 5px;
+        }
+
         /* Main Content */
         .main-content {
-            padding-top: 100px;
+            padding-top: 120px;
             min-height: 100vh;
         }
 
@@ -340,6 +409,32 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .floating-nav {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                border-radius: 15px;
+            }
+
+            .nav-container {
+                justify-content: space-between;
+                gap: 2px;
+            }
+
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+
+            .nav-text {
+                display: none;
+            }
+
+            .nav-icon {
+                font-size: 1.1rem;
+            }
+
             .hero-title {
                 font-size: 2.5rem;
             }
@@ -367,6 +462,32 @@
     </style>
 </head>
 <body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+
+    <!-- Navigation flottante -->
+    <div class="floating-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-btn home-btn" title="Accueil">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Accueil</span>
+            </a>
+            <a href="dashboard.html" class="nav-btn dashboard-btn" title="Dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <div class="nav-divider"></div>
+            <button class="nav-btn scroll-btn" onclick="scrollToTop()" title="Haut de page">
+                <span class="nav-icon">⬆️</span>
+                <span class="nav-text">Haut</span>
+            </button>
+            <button class="nav-btn scroll-btn" onclick="scrollToBottom()" title="Bas de page">
+                <span class="nav-icon">⬇️</span>
+                <span class="nav-text">Bas</span>
+            </button>
+        </div>
+    </div>
+
     <div class="main-content">
         <!-- Hero Section -->
         <div class="hero-section">
@@ -661,6 +782,21 @@
                         }
                     });
                 }
+            });
+        }
+
+        // Fonctions de navigation
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
             });
         }
 

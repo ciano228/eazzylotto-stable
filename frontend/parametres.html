@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EazzyLotto - Paramètres</title>
     <script src="assets/js/universal-header.js"></script>
+    <script src="assets/js/i18n.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -170,6 +171,35 @@
             font-size: 1.1em;
         }
 
+        /* Variables CSS pour thèmes */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --card-bg: white;
+        }
+        
+        .dark-theme {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d2d;
+        }
+        
+        body {
+            background: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .container, .settings-section {
+            background: var(--card-bg) !important;
+            color: var(--text-color) !important;
+        }
+        
+        .no-animations * {
+            animation-duration: 0s !important;
+            transition-duration: 0s !important;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 100px 20px 20px;
@@ -187,27 +217,24 @@
         }
     </style>
 </head>
-<body>
+<body class="custom-background">
     <div id="header-container"></div>
     
     <div class="container">
         <div class="page-header">
-            <h1>⚙️ Paramètres</h1>
+            <h1>⚙️ <span data-i18n="Paramètres">Paramètres</span></h1>
             <p>Configurez votre expérience EazzyLotto selon vos préférences</p>
         </div>
 
         <div class="settings-content">
-            <div class="development-notice">
-                <h2>🚧 Page en Développement</h2>
-                <p>Cette page de paramètres est actuellement en cours de développement. Les fonctionnalités seront ajoutées progressivement.</p>
-            </div>
+
 
             <div class="settings-section">
                 <h3>🎯 Préférences de Prédiction</h3>
                 
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Univers par défaut</div>
+                        <div class="setting-label" data-i18n="Univers par défaut">Univers par défaut</div>
                         <div class="setting-description">Sélectionnez l'univers de loterie utilisé par défaut</div>
                     </div>
                     <div class="setting-control">
@@ -223,7 +250,7 @@
 
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Niveau de confiance minimum</div>
+                        <div class="setting-label" data-i18n="Niveau de confiance minimum">Niveau de confiance minimum</div>
                         <div class="setting-description">Seuil minimum pour afficher les prédictions</div>
                     </div>
                     <div class="setting-control">
@@ -252,7 +279,7 @@
                 
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Thème de l'interface</div>
+                        <div class="setting-label" data-i18n="Thème de l'interface">Thème de l'interface</div>
                         <div class="setting-description">Choisissez l'apparence de l'application</div>
                     </div>
                     <div class="setting-control">
@@ -266,7 +293,7 @@
 
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Langue de l'interface</div>
+                        <div class="setting-label" data-i18n="Langue de l'interface">Langue de l'interface</div>
                         <div class="setting-description">Sélectionnez votre langue préférée</div>
                     </div>
                     <div class="setting-control">
@@ -337,7 +364,7 @@
                         <div class="setting-description">Enregistrer toutes les modifications</div>
                     </div>
                     <div class="setting-control">
-                        <button class="btn" onclick="saveSettings()">Sauvegarder</button>
+                        <button class="btn" onclick="saveSettings()" data-i18n="Sauvegarder">Sauvegarder</button>
                     </div>
                 </div>
 
@@ -347,7 +374,7 @@
                         <div class="setting-description">Restaurer les paramètres par défaut</div>
                     </div>
                     <div class="setting-control">
-                        <button class="btn btn-secondary" onclick="resetSettings()">Réinitialiser</button>
+                        <button class="btn btn-secondary" onclick="resetSettings()" data-i18n="Réinitialiser">Réinitialiser</button>
                     </div>
                 </div>
 
@@ -357,7 +384,7 @@
                         <div class="setting-description">Télécharger vos paramètres</div>
                     </div>
                     <div class="setting-control">
-                        <button class="btn btn-secondary" onclick="exportSettings()">Exporter</button>
+                        <button class="btn btn-secondary" onclick="exportSettings()" data-i18n="Exporter">Exporter</button>
                     </div>
                 </div>
             </div>
@@ -375,32 +402,77 @@
                 });
             }
 
-            // Charger les paramètres sauvegardés
+            // Charger et appliquer les paramètres sauvegardés
             loadSettings();
+            
+            // Appliquer immédiatement les paramètres existants
+            const existingSettings = JSON.parse(localStorage.getItem('eazzylotto_settings') || '{}');
+            if (Object.keys(existingSettings).length > 0) {
+                applySettings(existingSettings);
+            }
         });
 
         function toggleSetting(element) {
             element.classList.toggle('active');
+            // Sauvegarder automatiquement si l'option est activée
+            const autoSave = JSON.parse(localStorage.getItem('eazzylotto_settings') || '{}').autoSave;
+            if (autoSave !== false) {
+                setTimeout(saveSettings, 100);
+            }
         }
 
         function saveSettings() {
-            // Simuler la sauvegarde des paramètres
+            const toggles = document.querySelectorAll('.toggle-switch');
             const settings = {
                 defaultUniverse: document.getElementById('defaultUniverse').value,
                 confidenceLevel: document.getElementById('confidenceLevel').value,
                 theme: document.getElementById('theme').value,
                 language: document.getElementById('language').value,
                 historyDuration: document.getElementById('historyDuration').value,
-                notifications: document.querySelector('.toggle-switch').classList.contains('active'),
-                animations: document.querySelectorAll('.toggle-switch')[2].classList.contains('active'),
-                autoLogin: document.querySelectorAll('.toggle-switch')[3].classList.contains('active'),
-                autoSave: document.querySelectorAll('.toggle-switch')[4].classList.contains('active')
+                notifications: toggles[0] ? toggles[0].classList.contains('active') : true,
+                animations: toggles[1] ? toggles[1].classList.contains('active') : true,
+                autoLogin: toggles[2] ? toggles[2].classList.contains('active') : true,
+                autoSave: toggles[3] ? toggles[3].classList.contains('active') : true
             };
 
             localStorage.setItem('eazzylotto_settings', JSON.stringify(settings));
             
-            // Afficher une notification de succès
-            showNotification('Paramètres sauvegardés avec succès !', 'success');
+            // Appliquer immédiatement
+            applySettings(settings);
+            
+            const message = window.i18n ? window.i18n.translate('Paramètres sauvegardés avec succès !') : 'Paramètres appliqués avec succès !';
+            showNotification(message, 'success');
+        }
+        
+        function applySettings(settings) {
+            // Appliquer le thème immédiatement
+            if (settings.theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.documentElement.style.setProperty('--bg-color', '#1a1a1a');
+                document.documentElement.style.setProperty('--text-color', '#e0e0e0');
+            } else {
+                document.body.classList.remove('dark-theme');
+                document.documentElement.style.setProperty('--bg-color', '#f8f9fa');
+                document.documentElement.style.setProperty('--text-color', '#2c3e50');
+            }
+            
+            // Appliquer les animations
+            if (!settings.animations) {
+                document.body.classList.add('no-animations');
+            } else {
+                document.body.classList.remove('no-animations');
+            }
+            
+            // Appliquer la langue
+            if (window.i18n && settings.language) {
+                window.i18n.setLanguage(settings.language);
+            }
+            
+            // Sauvegarder globalement
+            window.eazzyLottoSettings = settings;
+            
+            // Notifier les autres composants
+            window.dispatchEvent(new CustomEvent('settingsChanged', { detail: settings }));
         }
 
         function loadSettings() {
@@ -408,12 +480,19 @@
             if (savedSettings) {
                 const settings = JSON.parse(savedSettings);
                 
-                // Appliquer les paramètres sauvegardés
+                // Appliquer les paramètres sauvegardés aux contrôles
                 document.getElementById('defaultUniverse').value = settings.defaultUniverse || 'mundo';
                 document.getElementById('confidenceLevel').value = settings.confidenceLevel || '80';
                 document.getElementById('theme').value = settings.theme || 'light';
                 document.getElementById('language').value = settings.language || 'fr';
                 document.getElementById('historyDuration').value = settings.historyDuration || '90';
+                
+                // Appliquer l'état des toggles
+                const toggles = document.querySelectorAll('.toggle-switch');
+                if (toggles[0]) toggles[0].classList.toggle('active', settings.notifications !== false);
+                if (toggles[1]) toggles[1].classList.toggle('active', settings.animations !== false);
+                if (toggles[2]) toggles[2].classList.toggle('active', settings.autoLogin !== false);
+                if (toggles[3]) toggles[3].classList.toggle('active', settings.autoSave !== false);
             }
         }
 

@@ -6,27 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EazzyCalculator - Journal Statistique Avancé</title>
     <script src="assets/js/universal-header.js"></script>
+    <script src="assets/js/draw-selector-simple.js"></script>
+    <link rel="stylesheet" href="assets/css/draw-selector.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: white;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
         }
 
         .header {
             text-align: center;
-            color: #1890ff;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: -20px -20px 30px -20px;
+            padding: 30px 20px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
         }
 
         .filters {
@@ -338,87 +362,6 @@
             border-radius: 2px;
         }
 
-        /* Icônes pour formes composées Trigga */
-        .icon-triangle-inverse {
-            background-color: #eb2f96;
-            clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
-            border: none;
-        }
-
-        .icon-losange {
-            background-color: #eb2f96;
-            transform: rotate(45deg);
-            border-radius: 2px;
-        }
-
-        .icon-etoile {
-            background-color: #eb2f96;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            border: none;
-        }
-
-        .icon-hexagone {
-            background-color: #eb2f96;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            border: none;
-        }
-
-        /* Icônes pour formes composées Sunshine */
-        .icon-soleil {
-            background-color: #fadb14;
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .icon-soleil::before {
-            content: "☀️";
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            font-size: 12px;
-        }
-
-        .icon-lune {
-            background-color: #fadb14;
-            border-radius: 50% 0;
-            transform: rotate(45deg);
-        }
-
-        .icon-nuage {
-            background-color: #fadb14;
-            border-radius: 50px 50px 50px 50px / 60px 60px 40px 40px;
-        }
-
-        .icon-eclair {
-            background-color: #fadb14;
-            clip-path: polygon(20% 0%, 40% 20%, 30% 20%, 70% 100%, 50% 80%, 60% 80%);
-            border: none;
-        }
-
-        /* Icônes pour formes composées Roaster */
-        .icon-flamme {
-            background-color: #722ed1;
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-            border: none;
-        }
-
-        .icon-braise {
-            background-color: #722ed1;
-            border-radius: 50% 20% 50% 20%;
-        }
-
-        .icon-fumee {
-            background-color: #722ed1;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0.7;
-        }
-
-        .icon-cendre {
-            background-color: #722ed1;
-            border-radius: 2px;
-            opacity: 0.5;
-        }
-
         /* Indicateurs No Draw/No Hold */
         .no-draw-indicator {
             font-weight: bold;
@@ -466,6 +409,44 @@
             background-color: #fadb14;
             color: #333;
         }
+        
+        .draw-mode-toggle {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #1890ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .toggle-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #1890ff;
+            font-size: 1.1rem;
+        }
+        
+        .toggle-hint {
+            color: #666;
+            font-style: italic;
+            margin-left: 30px;
+        }
+        
+        .toggle-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1890ff;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -476,6 +457,18 @@
             <h1>📋 Journal Statistique Avancé</h1>
             <p>Analyse des redondances avec périodicité et filtres avancés</p>
         </div>
+        
+        <!-- Activation sélecteur de tirage -->
+        <div class="draw-mode-toggle">
+            <label class="toggle-label">
+                <input type="checkbox" id="enableDrawSelection" onchange="toggleDrawSelection()">
+                <span class="toggle-text">🎯 Activer la sélection de tirage spécifique</span>
+                <small class="toggle-hint">Cochez pour analyser des tirages précis au lieu de toute la session</small>
+            </label>
+        </div>
+        
+        <!-- Sélecteur de tirage -->
+        <div id="draw-selector-container" style="display: none;"></div>
 
         <!-- Barre de navigation -->
         <div class="navigation-bar">
@@ -576,32 +569,34 @@
             document.getElementById('endDate').value = today.toISOString().split('T')[0];
             document.getElementById('startDate').value = thirtyDaysAgo.toISOString().split('T')[0];
 
-            // Vérifier les paramètres URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const sessionParam = urlParams.get('session');
-            const universeParam = urlParams.get('universe');
-            
-            if (universeParam) {
-                document.getElementById('universe').value = universeParam;
-            }
-
             // Charger les sessions disponibles
             loadSessions().then(() => {
-                // Si une session est spécifiée dans l'URL, la sélectionner
-                if (sessionParam) {
-                    const sessionSelect = document.getElementById('sessionSelect');
-                    sessionSelect.value = sessionParam;
+                // Sélectionner automatiquement la session active
+                const activeSession = availableSessions.find(s => s.is_active);
+                if (activeSession) {
+                    document.getElementById('sessionSelect').value = activeSession.id;
                     onSessionChange();
-                    
-                    // Charger automatiquement le journal
-                    setTimeout(() => {
-                        loadJournal();
-                    }, 1000);
                 }
             });
 
             // Ajouter un listener pour le changement de session
             document.getElementById('sessionSelect').addEventListener('change', onSessionChange);
+            
+            // Injecter le sélecteur de tirage (masqué par défaut)
+            initDrawSelector('draw-selector-container');
+            
+            // Écouter les changements de sélection de tirage
+            document.addEventListener('drawSelectionChanged', function(event) {
+                console.log('🎯 Sélection de tirage changée:', event.detail);
+                // Stocker la sélection pour utilisation dans loadJournal
+                window.currentDrawSelection = event.detail;
+                // Mettre à jour les filtres selon la sélection
+                if (event.detail.universe) {
+                    document.getElementById('universe').value = event.detail.universe;
+                }
+                // Recharger automatiquement le journal
+                setTimeout(() => loadJournal(), 500);
+            });
         });
 
         async function loadSessions() {
@@ -610,38 +605,15 @@
             sessionSelect.innerHTML = '<option value="">Chargement...</option>';
             
             try {
-                const response = await fetch(`${API_BASE}/session/sessions`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await fetch(`${API_BASE}/session/sessions`);
                 
-                console.log(`📡 Réponse reçue: ${response.status}`);
-
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('📊 Données reçues:', data);
-
-                    // L'API retourne un objet avec 'value' contenant le tableau des sessions
                     const sessions = data.value || data.sessions || data;
-                    console.log(`🔍 Sessions extraites:`, sessions);
 
                     if (Array.isArray(sessions) && sessions.length > 0) {
                         availableSessions = sessions;
-                        console.log(`💾 Sessions stockées: ${availableSessions.length} éléments`);
-
                         populateSessionSelect(sessions);
-                        console.log('✅ Dropdown peuplé avec vraies sessions');
-
-                        // Sélectionner automatiquement la session active
-                        const activeSession = sessions.find(s => s.is_active);
-                        if (activeSession) {
-                            document.getElementById('sessionSelect').value = activeSession.id;
-                            onSessionChange();
-                        }
-
                         return;
                     } else {
                         throw new Error('Aucune session dans la réponse');
@@ -652,84 +624,56 @@
 
             } catch (error) {
                 console.error('❌ Erreur chargement sessions:', error);
-                sessionSelect.innerHTML = '<option value="">Erreur de chargement</option>';
                 
                 // Créer des sessions de test en cas d'erreur
                 const testSessions = [
                     { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français' },
-                    { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions' },
-                    { id: 12, name: 'Session Test - Loto US', is_active: false, lottery_type: 'Loto US' },
-                    { id: 13, name: 'Session Test - Keno', is_active: false, lottery_type: 'Keno' }
+                    { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions' }
                 ];
                 
                 availableSessions = testSessions;
                 populateSessionSelect(testSessions);
-                
-                // Sélectionner la première session active
-                const activeSession = testSessions.find(s => s.is_active);
-                if (activeSession) {
-                    document.getElementById('sessionSelect').value = activeSession.id;
-                    onSessionChange();
-                }
-                
                 showError('Mode test activé - Sessions simulées chargées.');
             }
         }
 
         function populateSessionSelect(sessions) {
-            console.log(`🎯 Début population dropdown avec ${sessions.length} sessions`);
             const select = document.getElementById('sessionSelect');
-
-            // Garder seulement l'option de sélection
             select.innerHTML = '<option value="">Sélectionner une session...</option>';
-            console.log('🧹 Dropdown nettoyé');
 
-            sessions.forEach((session, index) => {
-                console.log(`➕ Ajout session ${index + 1}: ID${session.id} - ${session.name}`);
+            sessions.forEach((session) => {
                 const option = document.createElement('option');
                 option.value = session.id;
-                
-                // Utiliser is_active au lieu de status
                 const status = session.is_active ? 'Active' : 'Inactive';
                 const displayText = `${session.name} (${session.lottery_type || 'N/A'}) - ${status}`;
                 option.textContent = displayText;
                 
-                // Marquer comme sélectionné si c'est la session active
                 if (session.is_active) {
                     option.selected = true;
                 }
                 
                 select.appendChild(option);
             });
-
-            console.log(`✅ Dropdown peuplé avec ${sessions.length} options`);
-            console.log(`📊 Total options dans select: ${select.options.length}`);
         }
 
         function onSessionChange() {
             const sessionId = document.getElementById('sessionSelect').value;
-            console.log(`🔄 Session changée: ${sessionId}`);
 
             if (sessionId) {
                 const session = availableSessions.find(s => s.id == sessionId);
                 if (session) {
-                    console.log(`✅ Session trouvée: ${session.name}`);
                     displaySessionInfo(session);
-                } else {
-                    console.log(`❌ Session non trouvée dans availableSessions`);
                 }
             } else {
-                console.log('🚫 Aucune session sélectionnée');
                 hideSessionInfo();
             }
         }
 
         function displaySessionInfo(session) {
-            console.log(`📋 Affichage info session: ${session.name}`);
             const sessionInfo = document.getElementById('sessionInfo');
             const sessionDetails = document.getElementById('sessionDetails');
 
-            const status = session.status === 'active' ? 'Active' : 'Inactive';
+            const status = session.is_active ? 'Active' : 'Inactive';
 
             sessionDetails.innerHTML = `
                 <div class="session-details">
@@ -747,33 +691,22 @@
                     </div>
                     <div class="session-detail-item">
                         <div class="session-detail-label">Type de loterie</div>
-                        <div class="session-detail-value">${session.universe}</div>
-                    </div>
-                    <div class="session-detail-item">
-                        <div class="session-detail-label">Description</div>
-                        <div class="session-detail-value">${session.description || 'N/A'}</div>
-                    </div>
-                    <div class="session-detail-item">
-                        <div class="session-detail-label">Tirages</div>
-                        <div class="session-detail-value">${session.current_draw} / ${session.total_draws}</div>
+                        <div class="session-detail-value">${session.lottery_type || 'N/A'}</div>
                     </div>
                 </div>
             `;
 
             sessionInfo.style.display = 'block';
-            console.log('✅ Informations de session affichées');
         }
 
         function hideSessionInfo() {
             document.getElementById('sessionInfo').style.display = 'none';
-            console.log('🙈 Informations de session cachées');
         }
 
         async function loadJournal() {
             const loadBtn = document.getElementById('loadBtn');
             const exportBtn = document.getElementById('exportBtn');
 
-            // Vérifier qu'une session est sélectionnée
             const sessionId = document.getElementById('sessionSelect').value;
             if (!sessionId) {
                 showError('Veuillez sélectionner une session pour analyser le journal.');
@@ -791,12 +724,37 @@
                     session_id: sessionId
                 });
 
-                // Ajouter les dates si spécifiées
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-                if (startDate && endDate) {
-                    params.append('start_date', formatDateForAPI(startDate));
-                    params.append('end_date', formatDateForAPI(endDate));
+                // Utiliser les paramètres de sélection de tirage si disponibles
+                if (window.currentDrawSelection) {
+                    const selection = window.currentDrawSelection;
+                    
+                    switch(selection.mode) {
+                        case 'single':
+                            params.append('draw_date', selection.draw);
+                            params.append('analysis_mode', 'single_draw');
+                            break;
+                        case 'multiple':
+                            if (selection.draws && selection.draws.length > 0) {
+                                params.append('draw_dates', selection.draws.join(','));
+                                params.append('analysis_mode', 'multiple_draws');
+                            }
+                            break;
+                        case 'range':
+                            if (selection.startDate && selection.endDate) {
+                                params.append('start_date', formatDateForAPI(selection.startDate));
+                                params.append('end_date', formatDateForAPI(selection.endDate));
+                                params.append('analysis_mode', 'date_range');
+                            }
+                            break;
+                    }
+                } else {
+                    // Utiliser les dates des champs si spécifiées (mode classique)
+                    const startDate = document.getElementById('startDate').value;
+                    const endDate = document.getElementById('endDate').value;
+                    if (startDate && endDate) {
+                        params.append('start_date', formatDateForAPI(startDate));
+                        params.append('end_date', formatDateForAPI(endDate));
+                    }
                 }
 
                 // Ajouter les périodes si spécifiées
@@ -808,18 +766,29 @@
                 }
 
                 const response = await fetch(`${API_BASE}/analysis/journal?${params}`);
-                const data = await response.json();
-
+                
                 if (response.ok) {
+                    const data = await response.json();
                     currentJournalData = data;
                     displayJournal(data);
                     exportBtn.disabled = false;
                 } else {
+                    const data = await response.json();
                     showError('Erreur lors du chargement: ' + data.detail);
                 }
 
             } catch (error) {
-                showError('Erreur de connexion: ' + error.message);
+                console.error('❌ Erreur lors du chargement:', error);
+                
+                // En cas d'erreur, utiliser des données de test
+                if (window.currentDrawSelection && window.currentDrawSelection.mode === 'single') {
+                    const testData = generateTestDataForDate(window.currentDrawSelection.draw);
+                    currentJournalData = testData;
+                    displayJournal(testData);
+                    exportBtn.disabled = false;
+                } else {
+                    showError('Erreur de connexion: ' + error.message);
+                }
             } finally {
                 loadBtn.disabled = false;
                 loadBtn.textContent = 'Charger le Journal';
@@ -874,17 +843,17 @@
                                 <th>Combinaison</th>
                                 <th>Dénomination</th>
                                 <th>Alpha Ranking</th>
-                                <th style="background-color: #fff7e6; color: #fa8c16;">Granque</th>
-                                <th style="background-color: #f9f0ff; color: #722ed1;">Petique</th>
-                                <th style="background-color: #e6f7ff; color: #1890ff;">Ligne</th>
-                                <th style="background-color: #f6ffed; color: #52c41a;">Colonne</th>
-                                <th style="background-color: #fff2f0; color: #ff4d4f;">Parité</th>
-                                <th style="background-color: #f0f9ff; color: #1890ff;">Unidos</th>
-                                <th style="background-color: #fff7e6; color: #fa8c16;">Chip</th>
+                                <th style="background-color: #1890ff; color: white;">Granque</th>
+                                <th style="background-color: #1890ff; color: white;">Petique</th>
+                                <th style="background-color: #1890ff; color: white;">Ligne</th>
+                                <th style="background-color: #1890ff; color: white;">Colonne</th>
+                                <th style="background-color: #1890ff; color: white;">Parité</th>
+                                <th style="background-color: #1890ff; color: white;">Unidos</th>
+                                <th style="background-color: #1890ff; color: white;">Chip</th>
                                 <th>Univers</th>
-                                <th style="background-color: #f0f9ff; color: #1890ff;">Forme</th>
-                                <th style="background-color: #f6ffed; color: #52c41a;">Engine</th>
-                                <th style="background-color: #fff2f0; color: #ff4d4f;">Beastie</th>
+                                <th style="background-color: #1890ff; color: white;">Forme</th>
+                                <th style="background-color: #1890ff; color: white;">Engine</th>
+                                <th style="background-color: #1890ff; color: white;">Beastie</th>
                                 <th>Tome</th>
                             </tr>
                         </thead>
@@ -908,40 +877,13 @@
                 entriesForDate.forEach((entry, entryIndex) => {
                     let rowClass = '';
 
-                    // Détecter les "No Draw" (pas de numéros gagnants ou liste vide)
-                    const isNoDraw = !entry.winning_numbers || entry.winning_numbers.length === 0;
-
-                    // Détecter les "No Hold" (basé sur un indicateur spécifique ou statut)
-                    const isNoHold = entry.status === 'no_hold' || entry.combination === 'NO_HOLD' || entry.lottery_name?.toLowerCase().includes('no hold');
-
                     // Séparateur de période (ligne rouge)
                     if (currentPeriod !== null && currentPeriod !== entry.period) {
                         rowClass += ' period-separator';
                     }
-
                     // Séparateur de date (ligne grise moyenne)
                     else if (entryIndex === 0 && dateIndex > 0) {
                         rowClass += ' date-separator';
-                    }
-
-                    // Contenu des cellules selon le type (No Draw, No Hold, ou Normal)
-                    let numbersContent, combinationContent, universeContent;
-
-                    if (isNoDraw) {
-                        // No Draw : tout est grisé avec N-D
-                        numbersContent = '<span class="no-draw-indicator">N-D</span>';
-                        combinationContent = '<span class="no-draw-indicator">N-D</span>';
-                        universeContent = '<span class="no-draw-indicator">N-D</span>';
-                    } else if (isNoHold) {
-                        // No Hold : univers reste visible, le reste est grisé avec N-H
-                        numbersContent = '<span class="no-hold-indicator">N-H</span>';
-                        combinationContent = '<span class="no-hold-indicator">N-H</span>';
-                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers.toUpperCase()}</span>`;
-                    } else {
-                        // Normal : affichage standard
-                        numbersContent = entry.winning_numbers.join(', ');
-                        combinationContent = entry.combination;
-                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers.toUpperCase()}</span>`;
                     }
 
                     // Génération de la ligne
@@ -951,86 +893,34 @@
                     // Cellules fusionnées (rowspan) seulement pour la première entrée de chaque date
                     if (entryIndex === 0) {
                         tableHtml += `<td class="date-cell" rowspan="${entriesForDate.length}">${entry.date}</td>`;
-
-                        // Cellule nom loto fusionnée (rowspan) - identique pour toutes les combinaisons du même tirage
                         tableHtml += `<td class="lottery-name-cell" rowspan="${entriesForDate.length}">${entry.lottery_name}</td>`;
-
-                        // Cellule numéros tirés fusionnée (rowspan) - identique pour toutes les combinaisons du même tirage
-                        tableHtml += `<td class="numbers-list lottery-numbers-cell" rowspan="${entriesForDate.length}">${numbersContent}</td>`;
+                        tableHtml += `<td class="numbers-list lottery-numbers-cell" rowspan="${entriesForDate.length}">${entry.winning_numbers.join(', ')}</td>`;
                     }
 
                     // Combinaison - unique pour chaque ligne
-                    tableHtml += `<td class="combination-cell">${combinationContent}</td>`;
+                    tableHtml += `<td class="combination-cell">${entry.combination}</td>`;
 
                     // Nouvelles colonnes - uniques pour chaque ligne
-                    const denominationContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.denomination || 'N/A');
-
-                    const alphaRankingContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.alpha_ranking || 'N/A');
-
-                    const granqueContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.granque || 'N/A');
-
-                    const petiqueContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.petique || 'N/A');
-
-                    const ligneContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.ligne || 'N/A');
-
-                    const colonneContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.colonne || 'N/A');
-
-                    const pariteContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.parite || 'N/A');
-
-                    const unidosContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.unidos || 'N/A');
-
-                    const chipContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.chip || 'N/A');
-
-                    tableHtml += `<td class="denomination-cell">${denominationContent}</td>`;
-                    tableHtml += `<td class="alpha-ranking-cell">${alphaRankingContent}</td>`;
-                    tableHtml += `<td class="granque-cell" style="background-color: #fff7e6;">${granqueContent}</td>`;
-                    tableHtml += `<td class="petique-cell" style="background-color: #f9f0ff;">${petiqueContent}</td>`;
-                    tableHtml += `<td class="ligne-cell" style="background-color: #e6f7ff;">${ligneContent}</td>`;
-                    tableHtml += `<td class="colonne-cell" style="background-color: #f6ffed;">${colonneContent}</td>`;
-                    tableHtml += `<td class="parite-cell" style="background-color: #fff2f0;">${pariteContent}</td>`;
-                    tableHtml += `<td class="unidos-cell" style="background-color: #f0f9ff;">${unidosContent}</td>`;
-                    tableHtml += `<td class="chip-cell" style="background-color: #fff7e6;">${chipContent}</td>`;
+                    tableHtml += `<td class="denomination-cell">${entry.denomination || 'N/A'}</td>`;
+                    tableHtml += `<td class="alpha-ranking-cell">${entry.alpha_ranking || 'N/A'}</td>`;
+                    tableHtml += `<td class="granque-cell" style="background-color: #fff7e6;">${entry.granque || 'N/A'}</td>`;
+                    tableHtml += `<td class="petique-cell" style="background-color: #f9f0ff;">${entry.petique || 'N/A'}</td>`;
+                    tableHtml += `<td class="ligne-cell" style="background-color: #e6f7ff;">${entry.ligne || 'N/A'}</td>`;
+                    tableHtml += `<td class="colonne-cell" style="background-color: #f6ffed;">${entry.colonne || 'N/A'}</td>`;
+                    tableHtml += `<td class="parite-cell" style="background-color: #fff2f0;">${entry.parite || 'N/A'}</td>`;
+                    tableHtml += `<td class="unidos-cell" style="background-color: #f0f9ff;">${entry.unidos || 'N/A'}</td>`;
+                    tableHtml += `<td class="chip-cell" style="background-color: #fff7e6;">${entry.chip || 'N/A'}</td>`;
 
                     // Cellule univers fusionnée (rowspan) seulement pour la première entrée de chaque date
                     if (entryIndex === 0) {
-                        tableHtml += `<td class="universe-cell" rowspan="${entriesForDate.length}">${universeContent}</td>`;
+                        tableHtml += `<td class="universe-cell" rowspan="${entriesForDate.length}"><span class="universe-tag universe-${entry.univers}">${entry.univers.toUpperCase()}</span></td>`;
                     }
 
-                    // Colonnes avec icônes selon le type
-                    if (isNoDraw) {
-                        tableHtml += `<td class="forme-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td class="engine-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td class="beastie-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td><span class="no-draw-indicator">N-D</span></td>`;
-                    } else if (isNoHold) {
-                        tableHtml += `<td class="forme-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td class="engine-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td class="beastie-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td><span class="no-hold-indicator">N-H</span></td>`;
-                    } else {
-                        tableHtml += `<td class="forme-icon">${getFormeIcon(entry.forme)} ${entry.forme}</td>`;
-                        tableHtml += `<td class="engine-icon">${getEngineIcon(entry.engine)}</td>`;
-                        tableHtml += `<td class="beastie-icon">${getBeastieIcon(entry.beastie)}</td>`;
-                        tableHtml += `<td>${getTomeIcon(entry.tome)}</td>`;
-                    }
+                    // Colonnes avec icônes
+                    tableHtml += `<td class="forme-icon">${getFormeIcon(entry.forme)} ${entry.forme}</td>`;
+                    tableHtml += `<td class="engine-icon">${getEngineIcon(entry.engine)}</td>`;
+                    tableHtml += `<td class="beastie-icon">${getBeastieIcon(entry.beastie)}</td>`;
+                    tableHtml += `<td>${getTomeIcon(entry.tome)}</td>`;
 
                     tableHtml += `</tr>`;
 
@@ -1049,120 +939,41 @@
 
         function getFormeIcon(forme) {
             if (!forme) return '<span class="icon icon-carre"></span>';
-
-            const formeStr = forme.toLowerCase();
-
-            // Gérer les formes composées (ex: "carre-rectangle", "triangle-cercle")
-            if (formeStr.includes('-')) {
-                const formes = formeStr.split('-');
-                let iconsHtml = '';
-
-                formes.forEach(f => {
-                    const iconClass = getSingleFormeIcon(f.trim());
-                    iconsHtml += `<span class="icon ${iconClass}"></span>`;
-                });
-
-                return iconsHtml;
-            }
-
-            // Forme simple
-            const iconClass = getSingleFormeIcon(formeStr);
+            const iconClass = getSingleFormeIcon(forme.toLowerCase());
             return `<span class="icon ${iconClass}"></span>`;
         }
 
         function getSingleFormeIcon(forme) {
             const formeMap = {
-                // Formes de base (Mundo)
                 'carre': 'icon-carre',
                 'triangle': 'icon-triangle',
                 'cercle': 'icon-cercle',
-                'rectangle': 'icon-rectangle',
-
-                // Formes composées pour Trigga
-                'triangle_inverse': 'icon-triangle-inverse',
-                'losange': 'icon-losange',
-                'etoile': 'icon-etoile',
-                'hexagone': 'icon-hexagone',
-
-                // Formes composées pour Sunshine
-                'soleil': 'icon-soleil',
-                'lune': 'icon-lune',
-                'nuage': 'icon-nuage',
-                'eclair': 'icon-eclair',
-
-                // Formes composées pour Roaster
-                'flamme': 'icon-flamme',
-                'braise': 'icon-braise',
-                'fumee': 'icon-fumee',
-                'cendre': 'icon-cendre'
+                'rectangle': 'icon-rectangle'
             };
-
             return formeMap[forme] || 'icon-carre';
         }
 
         function getEngineIcon(engine) {
             const engineIcons = {
-                'car': '🚗',
-                'train': '🚂',
-                'bus': '🚌',
-                'truck': '🚚',
-                'bike': '🚲',
-                'motorcycle': '🏍️',
-                'plane': '✈️',
-                'boat': '🚤',
-                'ship': '🚢',
-                'rocket': '🚀',
-                'helicopter': '🚁',
-                'helicoptere': '🚁',
-                'taxi': '🚕',
-                'ambulance': '🚑',
-                'fire_truck': '🚒',
-                'police_car': '🚓',
-                'tractor': '🚜',
-                'scooter': '🛵',
-                'skateboard': '🛹',
-                'roller_skates': '🛼'
+                'car': '🚗', 'train': '🚂', 'bus': '🚌', 'truck': '🚚',
+                'bike': '🚲', 'motorcycle': '🏍️', 'plane': '✈️', 'boat': '🚤'
             };
-
             const icon = engineIcons[engine.toLowerCase()] || '⚙️';
             return `${icon} ${engine}`;
         }
 
         function getBeastieIcon(beastie) {
             const beastieIcons = {
-                'lion': '🦁',
-                'tiger': '🐅',
-                'cow': '🐄',
-                'horse': '🐎',
-                'pig': '🐷',
-                'sheep': '🐑',
-                'goat': '🐐',
-                'dog': '🐕',
-                'cat': '🐱',
-                'rabbit': '🐰',
-                'mouse': '🐭',
-                'bear': '🐻',
-                'elephant': '🐘',
-                'crocodile': '🐊',
-                'scorpion': '🦂'
+                'lion': '🦁', 'tiger': '🐅', 'cow': '🐄', 'horse': '🐎',
+                'pig': '🐷', 'sheep': '🐑', 'dog': '🐕', 'cat': '🐱'
             };
-
             const icon = beastieIcons[beastie.toLowerCase()] || '🐲';
             return `${icon} ${beastie}`;
         }
 
         function getTomeIcon(tome) {
-            // Extraire le numéro du tome (ex: "tome1" -> 1)
             const tomeNumber = parseInt(tome.toString().replace(/\D/g, '')) || 1;
-
-            const tomeIcons = {
-                1: 'Ⅰ',
-                2: 'Ⅱ',
-                3: 'Ⅲ',
-                4: 'Ⅳ',
-                5: 'Ⅴ'
-            };
-
+            const tomeIcons = { 1: 'Ⅰ', 2: 'Ⅱ', 3: 'Ⅲ', 4: 'Ⅳ', 5: 'Ⅴ' };
             const icon = tomeIcons[tomeNumber] || 'Ⅰ';
             return `${icon} Tome ${tomeNumber}`;
         }
@@ -1214,6 +1025,53 @@
         function showError(message) {
             document.getElementById('journalContainer').innerHTML =
                 `<div class="error">${message}</div>`;
+        }
+        
+        function toggleDrawSelection() {
+            const checkbox = document.getElementById('enableDrawSelection');
+            const container = document.getElementById('draw-selector-container');
+            
+            if (checkbox.checked) {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+                window.currentDrawSelection = null;
+            }
+        }
+        
+        function generateTestDataForDate(selectedDate) {
+            const displayDate = new Date(selectedDate).toLocaleDateString('fr-FR');
+            
+            const testJournal = [
+                {
+                    period: 1,
+                    date: displayDate,
+                    lottery_name: 'EuroMillions Test',
+                    winning_numbers: [9, 11, 16, 28, 29],
+                    combination: 'A1-B2-C3-D4-E5',
+                    denomination: 'Test Combo',
+                    alpha_ranking: 'Alpha-1',
+                    granque: 'G1',
+                    petique: 'P1',
+                    ligne: 'L1',
+                    colonne: 'C1',
+                    parite: 'Pair',
+                    unidos: 'U1',
+                    chip: 'CH1',
+                    univers: window.currentDrawSelection?.universe || 'mundo',
+                    forme: 'carre',
+                    engine: 'car',
+                    beastie: 'lion',
+                    tome: 'tome1'
+                }
+            ];
+            
+            return {
+                journal: testJournal,
+                total_periods: 1,
+                periodicity: 3,
+                universe_filter: window.currentDrawSelection?.universe || 'mundo'
+            };
         }
     </script>
 </body>

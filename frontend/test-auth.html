@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Authentification</title>
+    <link href="https://cdn.jsdelivr.net/npm/antd@5.12.0/dist/reset.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #1890ff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #40a9ff; }
+        .success { color: green; margin: 10px 0; }
+        .error { color: red; margin: 10px 0; }
+        .token { background: #f0f0f0; padding: 10px; border-radius: 4px; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h2>Test d'Authentification EazzyCalculator</h2>
+    
+    <div id="loginForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="email" value="test@example.com">
+        </div>
+        <div class="form-group">
+            <label>Mot de passe:</label>
+            <input type="password" id="password" value="testpassword123">
+        </div>
+        <button onclick="login()">Se connecter</button>
+    </div>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            try {
+                const response = await axios.post('http://localhost:8000/api/auth/login', {
+                    email: email,
+                    password: password
+                });
+
+                const { access_token, user_id } = response.data;
+                
+                resultDiv.innerHTML = `
+                    <div class="success">✅ Connexion réussie !</div>
+                    <p><strong>User ID:</strong> ${user_id}</p>
+                    <p><strong>Token:</strong></p>
+                    <div class="token">${access_token}</div>
+                    <button onclick="testAPI('${access_token}')" style="margin-top: 10px;">Tester API protégée</button>
+                `;
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ Erreur: ${error.response?.data?.detail || error.message}</div>
+                `;
+            }
+        }
+
+        async function testAPI(token) {
+            try {
+                const response = await axios.get('http://localhost:8000/api/session/test', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                document.getElementById('result').innerHTML += `
+                    <div class="success">✅ API protégée accessible !</div>
+                    <pre>${JSON.stringify(response.data, null, 2)}</pre>
+                `;
+
+            } catch (error) {
+                document.getElementById('result').innerHTML += `
+                    <div class="error">❌ Accès API refusé: ${error.response?.data?.detail || error.message}</div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

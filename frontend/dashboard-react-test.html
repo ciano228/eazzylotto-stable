@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Dashboard React Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/antd@5.12.0/dist/reset.css" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/antd@5.12.0/dist/antd.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .login-card {
+            width: 400px;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 200px;
+            background: #001529;
+            color: white;
+            padding: 16px;
+        }
+        .content {
+            flex: 1;
+            padding: 24px;
+            background: #f0f2f5;
+        }
+        .header {
+            background: white;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
+            margin-bottom: 24px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .menu-item.active {
+            background: #1890ff;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Button, Input, Card, message, Tabs, Table, Progress, Tag } = antd;
+
+        // Composant Login
+        const Login = ({ onLogin }) => {
+            const [loading, setLoading] = useState(false);
+            const [activeTab, setActiveTab] = useState('login');
+            const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+            const [registerForm, setRegisterForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                
+                // Simulation de connexion
+                setTimeout(() => {
+                    if (loginForm.username && loginForm.password) {
+                        localStorage.setItem('token', 'demo_token');
+                        localStorage.setItem('user_id', '1');
+                        message.success('Connexion réussie');
+                        onLogin();
+                    } else {
+                        message.error('Veuillez remplir tous les champs');
+                    }
+                    setLoading(false);
+                }, 500);
+            };
+
+            const handleRegister = async (e) => {
+                e.preventDefault();
+                if (registerForm.password !== registerForm.confirmPassword) {
+                    message.error('Les mots de passe ne correspondent pas');
+                    return;
+                }
+
+                setLoading(true);
+                
+                // Simulation d'inscription
+                setTimeout(() => {
+                    if (registerForm.username && registerForm.email && registerForm.password) {
+                        message.success('Inscription réussie, vous pouvez maintenant vous connecter');
+                        setActiveTab('login');
+                    } else {
+                        message.error('Veuillez remplir tous les champs');
+                    }
+                    setLoading(false);
+                }, 500);
+            };
+
+            return (
+                <div className="login-container">
+                    <div className="login-card">
+                        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                            <h1>EazzyCalculator</h1>
+                            <p>Plateforme d'analyse de loterie</p>
+                        </div>
+                        
+                        <Tabs activeKey={activeTab} onChange={setActiveTab} centered>
+                            <Tabs.TabPane tab="Connexion" key="login">
+                                <form onSubmit={handleLogin}>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input 
+                                            placeholder="Nom d'utilisateur"
+                                            value={loginForm.username}
+                                            onChange={(e) => setLoginForm({...loginForm, username: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input.Password 
+                                            placeholder="Mot de passe"
+                                            value={loginForm.password}
+                                            onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <Button type="primary" htmlType="submit" loading={loading} block>
+                                        Se connecter
+                                    </Button>
+                                </form>
+                            </Tabs.TabPane>
+                            <Tabs.TabPane tab="Inscription" key="register">
+                                <form onSubmit={handleRegister}>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input 
+                                            placeholder="Nom d'utilisateur"
+                                            value={registerForm.username}
+                                            onChange={(e) => setRegisterForm({...registerForm, username: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input 
+                                            placeholder="Email"
+                                            type="email"
+                                            value={registerForm.email}
+                                            onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input.Password 
+                                            placeholder="Mot de passe"
+                                            value={registerForm.password}
+                                            onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div style={{ marginBottom: 16 }}>
+                                        <Input.Password 
+                                            placeholder="Confirmer le mot de passe"
+                                            value={registerForm.confirmPassword}
+                                            onChange={(e) => setRegisterForm({...registerForm, confirmPassword: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <Button type="primary" htmlType="submit" loading={loading} block>
+                                        S'inscrire
+                                    </Button>
+                                </form>
+                            </Tabs.TabPane>
+                        </Tabs>
+                    </div>
+                </div>
+            );
+        };
+
+        // Composant Dashboard
+        const Dashboard = () => {
+            const [user, setUser] = useState(null);
+            const [currentView, setCurrentView] = useState('dashboard');
+            const [loading, setLoading] = useState(true);
+            const [stats, setStats] = useState({});
+            const [sessions, setSessions] = useState([]);
+            const [predictions, setPredictions] = useState([]);
+
+            useEffect(() => {
+                checkAuth();
+                loadData();
+            }, []);
+
+            const checkAuth = async () => {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    setUser(null);
+                    setLoading(false);
+                    return;
+                }
+                
+                // Utiliser directement un utilisateur de test
+                setUser({ username: 'Utilisateur Test', id: 1, email: 'test@example.com' });
+                setLoading(false);
+            };
+
+            const loadData = async () => {
+                // Utiliser directement les données de test
+                setStats({ totalSessions: 45, totalDraws: 1250, winRate: 12.5, avgAccuracy: 78.3 });
+                setSessions([
+                    { id: 1, name: 'Session Test 1', date: '2024-01-15', draws: [1, 5, 12, 23, 34], status: 'active' },
+                    { id: 2, name: 'Session Test 2', date: '2024-01-14', draws: [3, 8, 15, 27, 41], status: 'completed' }
+                ]);
+                setPredictions([
+                    { id: 1, numbers: [7, 14, 21, 28, 35], confidence: 85, model: 'LSTM', date: '2024-01-15', status: 'pending' },
+                    { id: 2, numbers: [3, 12, 19, 26, 42], confidence: 78, model: 'Random Forest', date: '2024-01-14', status: 'verified' }
+                ]);
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_id');
+                message.success('Déconnexion réussie');
+                window.location.reload();
+            };
+
+            const renderContent = () => {
+                switch (currentView) {
+                    case 'sessions':
+                        return (
+                            <div>
+                                <h2>Gestion des Sessions</h2>
+                                <Table 
+                                    dataSource={sessions}
+                                    columns={[
+                                        { title: 'Nom', dataIndex: 'name', key: 'name' },
+                                        { title: 'Date', dataIndex: 'date', key: 'date' },
+                                        { title: 'Tirages', dataIndex: 'draws', key: 'draws', render: draws => draws?.join(', ') },
+                                        { title: 'Statut', dataIndex: 'status', key: 'status', render: status => <Tag color={status === 'active' ? 'green' : 'blue'}>{status}</Tag> }
+                                    ]}
+                                    rowKey="id"
+                                />
+                            </div>
+                        );
+                    case 'analytics':
+                        return (
+                            <div>
+                                <h2>Analytics & Statistiques</h2>
+                                <div className="stats-grid">
+                                    <div className="stat-card">
+                                        <h3>Sessions Totales</h3>
+                                        <div style={{ fontSize: '24px', color: '#3f8600' }}>{stats.totalSessions}</div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h3>Tirages Analysés</h3>
+                                        <div style={{ fontSize: '24px', color: '#1890ff' }}>{stats.totalDraws}</div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h3>Taux de Réussite</h3>
+                                        <div style={{ fontSize: '24px', color: '#cf1322' }}>{stats.winRate}%</div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h3>Précision Moyenne</h3>
+                                        <div style={{ fontSize: '24px', color: '#722ed1' }}>{stats.avgAccuracy}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case 'ml':
+                        return (
+                            <div>
+                                <h2>Prédictions Machine Learning</h2>
+                                <Table 
+                                    dataSource={predictions}
+                                    columns={[
+                                        { title: 'Numéros', dataIndex: 'numbers', key: 'numbers', render: numbers => numbers?.join(', ') },
+                                        { title: 'Confiance', dataIndex: 'confidence', key: 'confidence', render: conf => <Progress percent={conf} size="small" /> },
+                                        { title: 'Modèle', dataIndex: 'model', key: 'model', render: model => <Tag color="purple">{model}</Tag> },
+                                        { title: 'Date', dataIndex: 'date', key: 'date' },
+                                        { title: 'Statut', dataIndex: 'status', key: 'status', render: status => <Tag color="blue">{status}</Tag> }
+                                    ]}
+                                    rowKey="id"
+                                />
+                            </div>
+                        );
+                    default:
+                        return (
+                            <div>
+                                <h1>Bienvenue {user?.username}</h1>
+                                <p>Tableau de bord EazzyCalculator</p>
+                                <div className="stats-grid">
+                                    <div className="stat-card">
+                                        <h3>Sessions Totales</h3>
+                                        <div style={{ fontSize: '24px', color: '#3f8600' }}>{stats.totalSessions || 0}</div>
+                                    </div>
+                                    <div className="stat-card">
+                                        <h3>Tirages Analysés</h3>
+                                        <div style={{ fontSize: '24px', color: '#1890ff' }}>{stats.totalDraws || 0}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                }
+            };
+
+            if (loading) {
+                return <div style={{ textAlign: 'center', padding: '50px' }}>Chargement...</div>;
+            }
+
+            return (
+                <div className="dashboard-container">
+                    <div className="sidebar">
+                        <h3 style={{ color: 'white', textAlign: 'center' }}>EazzyCalculator</h3>
+                        <div className={`menu-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')}>
+                            📊 Tableau de bord
+                        </div>
+                        <div className={`menu-item ${currentView === 'sessions' ? 'active' : ''}`} onClick={() => setCurrentView('sessions')}>
+                            🎯 Sessions
+                        </div>
+                        <div className={`menu-item ${currentView === 'analytics' ? 'active' : ''}`} onClick={() => setCurrentView('analytics')}>
+                            📈 Analytics
+                        </div>
+                        <div className={`menu-item ${currentView === 'ml' ? 'active' : ''}`} onClick={() => setCurrentView('ml')}>
+                            🤖 Prédictions ML
+                        </div>
+                        <div className="menu-item" onClick={handleLogout} style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '20px' }}>
+                            🚪 Déconnexion
+                        </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <div className="header">
+                            <h2>EazzyCalculator Dashboard</h2>
+                            <div>👤 {user?.username}</div>
+                        </div>
+                        <div className="content">
+                            {renderContent()}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Application principale
+        const App = () => {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                const token = localStorage.getItem('token');
+                setIsAuthenticated(!!token);
+                setLoading(false);
+            }, []);
+
+            const handleLogin = () => {
+                setIsAuthenticated(true);
+            };
+
+            if (loading) {
+                return <div>Chargement...</div>;
+            }
+
+            return isAuthenticated ? <Dashboard /> : <Login onLogin={handleLogin} />;
+        };
+
+        // Rendu de l'application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

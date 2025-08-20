@@ -50,16 +50,41 @@
                 showUserInfo: false
             });
         }
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const identity = document.getElementById('identity').value;
             const password = document.getElementById('password').value;
+            
             if (!identity || !password) {
                 alert('Veuillez renseigner votre email ou pseudonyme et votre mot de passe.');
                 return;
             }
-            alert('Connexion simulée pour : ' + identity + ' (Aucune base de données réelle)');
-            window.location.href = 'dashboard.html';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: identity,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('user_id', data.user_id);
+                    alert('Connexion réussie !');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const error = await response.json();
+                    alert('Erreur de connexion: ' + (error.detail || 'Identifiants incorrects'));
+                }
+            } catch (error) {
+                alert('Erreur de connexion au serveur');
+            }
         });
 
         // Handler pour le lien "Mot de passe oublié ?"

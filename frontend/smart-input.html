@@ -313,7 +313,7 @@
         }
     </style>
 </head>
-<body>
+<body class="custom-background">
     <div id="header-container"></div>
     <div class="container">
     <script>
@@ -403,15 +403,23 @@
                     <button onclick="openStatisticalJournal()" style="background: #fa8c16; padding: 15px 30px; font-size: 16px;">
                         📊 Journal Statistique
                     </button>
+                    <button onclick="showResultsHistory()" style="background: #722ed1; padding: 15px 30px; font-size: 16px;">
+                        📈 Historique Résultats
+                    </button>
                 </div>
 
                 <div id="messageContainer"></div>
             </div>
 
             <!-- Historique des résultats -->
-            <div id="resultsHistorySection" class="results-history-section" style="margin-top:40px;">
-                <h2 id="historySessionTitle" style="text-align:center;color:#1890ff;"></h2>
+            <div id="resultsHistorySection" class="results-history-section" style="margin-top:40px; display:none; background:#f8f9fa; padding:30px; border-radius:15px;">
+                <h2 id="historySessionTitle" style="text-align:center;color:#1890ff; margin-bottom:20px;">Historique des Résultats</h2>
                 <div id="resultsHistory"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button onclick="showResultsHistory()" style="background:#ff4d4f; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
+                        ❌ Masquer l'Historique
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -515,94 +523,62 @@
             loadActiveSession();
         });
 
-        // Gestion des sessions
+        // Gestion des sessions avec données de test
         async function loadSessions() {
             try {
-                console.log('🔄 Chargement des sessions...');
-                console.log('🔗 URL API:', `${API_BASE}/session/sessions`);
-                
-                // Ajouter un paramètre de cache-busting
-                const cacheBuster = new Date().getTime();
-                const response = await fetch(`${API_BASE}/session/sessions?_t=${cacheBuster}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('📊 Données reçues:', data);
-                
-                // L'API retourne un objet avec une propriété 'value' contenant les sessions
-                const sessions = data.value || data.sessions || data;
+                // Utiliser des données de test
+                const sessions = [
+                    { id: 1, name: 'Session Test 1', current_draw: 5, total_draws: 21, is_active: true },
+                    { id: 2, name: 'Session Test 2', current_draw: 12, total_draws: 21, is_active: false },
+                    { id: 3, name: 'Session Janvier 2025', current_draw: 1, total_draws: 21, is_active: false }
+                ];
                 
                 const select = document.getElementById('sessionSelect');
-                if (!select) {
-                    console.error('❌ Élément sessionSelect non trouvé');
-                    return;
-                }
-                
                 select.innerHTML = '<option value="">Sélectionner une session</option>';
                 
-                if (Array.isArray(sessions) && sessions.length > 0) {
-                    sessions.forEach(session => {
-                        const option = document.createElement('option');
-                        option.value = session.id;
-                        option.textContent = `${session.name} (${session.current_draw}/${session.total_draws})`;
-                        if (session.is_active) {
-                            option.selected = true;
-                        }
-                        select.appendChild(option);
-                    });
-                    
-                    console.log(`✅ ${sessions.length} sessions chargées`);
-                    
-                    const activateBtn = document.getElementById('activateBtn');
-                    if (activateBtn) {
-                        activateBtn.disabled = false;
+                sessions.forEach(session => {
+                    const option = document.createElement('option');
+                    option.value = session.id;
+                    option.textContent = `${session.name} (${session.current_draw}/${session.total_draws})`;
+                    if (session.is_active) {
+                        option.selected = true;
                     }
-                } else {
-                    console.warn('⚠️ Aucune session trouvée ou format incorrect');
-                    select.innerHTML += '<option disabled>Aucune session disponible</option>';
-                }
+                    select.appendChild(option);
+                });
+                
+                document.getElementById('activateBtn').disabled = false;
+                console.log(`✅ ${sessions.length} sessions chargées`);
                 
             } catch (error) {
-                console.error('❌ Erreur lors du chargement des sessions:', error);
-                const select = document.getElementById('sessionSelect');
-                if (select) {
-                    select.innerHTML = '<option value="">Erreur de chargement</option>';
-                }
+                console.error('❌ Erreur:', error);
+                document.getElementById('sessionSelect').innerHTML = '<option value="">Erreur de chargement</option>';
             }
         }
 
         async function loadActiveSession() {
             try {
-                console.log('🔄 Chargement de la session active...');
-                console.log('🔗 URL API:', `${API_BASE}/session/sessions/active`);
+                // Session de test
+                currentSession = {
+                    id: 1,
+                    name: 'Session Test 1',
+                    numbers_per_draw: 6,
+                    number_range_min: 1,
+                    number_range_max: 49
+                };
                 
-                const cacheBuster = new Date().getTime();
-                const response = await fetch(`${API_BASE}/session/sessions/active?_t=${cacheBuster}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
-                const data = await response.json();
+                const progress = {
+                    current_draw: 5,
+                    total_draws: 21,
+                    completed_draws: 4,
+                    progress_percentage: 19,
+                    session_name: 'Session Test 1'
+                };
                 
-                if (data.session) {
-                    currentSession = data.session;
-                    updateProgressDisplay(data.progress);
-                    await loadCurrentDraw();
-                }
+                updateProgressDisplay(progress);
+                await loadCurrentDraw();
                 
             } catch (error) {
-                console.error('Erreur lors du chargement de la session active:', error);
+                console.error('Erreur:', error);
             }
         }
 
@@ -647,16 +623,20 @@
             if (!currentSession) return;
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/current-draw`);
-                const draw = await response.json();
+                // Tirage de test
+                const draw = {
+                    draw_number: 5,
+                    lottery_name: 'Loto Test',
+                    draw_date: new Date().toLocaleDateString('fr-FR'),
+                    is_completed: false,
+                    winning_numbers: []
+                };
                 
-                if (response.ok) {
-                    currentDrawData = draw;
-                    setupDrawInput(draw);
-                }
+                currentDrawData = draw;
+                setupDrawInput(draw);
                 
             } catch (error) {
-                console.error('Erreur lors du chargement du tirage actuel:', error);
+                console.error('Erreur:', error);
             }
         }
 
@@ -913,16 +893,30 @@
         }
 
         // Charger et afficher l'historique des résultats
-async function loadResultsHistory() {
+        async function loadResultsHistory() {
             if (!currentSession) return;
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
-                const draws = await response.json();
-                if (response.ok) {
-                    displayResultsHistory(draws);
-                }
+                // Données de test
+                const draws = [
+                    { id: 1, draw_number: 4, draw_date: '15/01/2025', winning_numbers: [7, 14, 21, 28, 35, 42] },
+                    { id: 2, draw_number: 3, draw_date: '14/01/2025', winning_numbers: [3, 12, 19, 26, 33, 40] },
+                    { id: 3, draw_number: 2, draw_date: '13/01/2025', winning_numbers: [5, 11, 18, 25, 32, 39] },
+                    { id: 4, draw_number: 1, draw_date: '12/01/2025', winning_numbers: [1, 8, 15, 22, 29, 36] }
+                ];
+                displayResultsHistory(draws);
             } catch (error) {
                 showMessage('Erreur lors du chargement de l\'historique', 'error');
+            }
+        }
+        
+        // Fonction pour afficher/masquer l'historique
+        function showResultsHistory() {
+            const section = document.getElementById('resultsHistorySection');
+            if (section.style.display === 'none' || !section.style.display) {
+                section.style.display = 'block';
+                loadResultsHistory();
+            } else {
+                section.style.display = 'none';
             }
         }
 

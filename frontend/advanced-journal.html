@@ -6,27 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EazzyCalculator - Journal Statistique Avancé</title>
     <script src="assets/js/universal-header.js"></script>
+    <script src="assets/js/draw-selector-simple.js"></script>
+    <link rel="stylesheet" href="assets/css/draw-selector.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: white;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
         }
 
         .header {
             text-align: center;
-            color: #1890ff;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: -20px -20px 30px -20px;
+            padding: 30px 20px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
         }
 
         .filters {
@@ -466,16 +490,335 @@
             background-color: #fadb14;
             color: #333;
         }
+        
+        .filter-indicator {
+            background: linear-gradient(135deg, #1890ff, #40a9ff);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(24, 144, 255, 0.3);
+        }
+        
+        .filter-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .clear-filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .draw-mode-toggle {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #1890ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .toggle-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #1890ff;
+            font-size: 1.1rem;
+        }
+        
+        .toggle-hint {
+            color: #666;
+            font-style: italic;
+            margin-left: 30px;
+        }
+        
+        .toggle-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1890ff;
+            cursor: pointer;
+        }
+        
+        /* Modal Historique des Tirages */
+        .draw-history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #1890ff, #40a9ff);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .draws-summary {
+            background: #f0f9ff;
+            border: 1px solid #1890ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #1890ff;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .draws-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .draw-item {
+            border: 2px solid #e6f7ff;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        
+        .draw-item:hover {
+            border-color: #1890ff;
+            box-shadow: 0 4px 15px rgba(24, 144, 255, 0.1);
+        }
+        
+        .draw-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6f7ff;
+        }
+        
+        .draw-date {
+            font-weight: 700;
+            color: #1890ff;
+            font-size: 1.1rem;
+        }
+        
+        .draw-period {
+            background: #722ed1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .draw-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .draw-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .winning-numbers {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .modal-footer {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .modal-btn {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn:hover {
+            background: #40a9ff;
+            transform: translateY(-1px);
+        }
+        
+        .history-btn {
+            background: linear-gradient(135deg, #722ed1, #9c88ff);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .history-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(114, 46, 209, 0.4);
+        }
+        
+        .history-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+            
+            .draws-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .draw-details {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body class="custom-background">
     <div id="header-container"></div>
     <div class="container">
         <div class="header">
             <h1>📋 Journal Statistique Avancé</h1>
             <p>Analyse des redondances avec périodicité et filtres avancés</p>
         </div>
+        
+        <!-- Activation sélecteur de tirage -->
+        <div class="draw-mode-toggle">
+            <label class="toggle-label">
+                <input type="checkbox" id="enableDrawSelection" onchange="toggleDrawSelection()">
+                <span class="toggle-text">🎯 Activer la sélection de tirage spécifique</span>
+                <small class="toggle-hint">Cochez pour analyser des tirages précis au lieu de toute la session</small>
+            </label>
+        </div>
+        
+        <!-- Sélecteur de tirage -->
+        <div id="draw-selector-container" style="display: none;"></div>
 
         <!-- Barre de navigation -->
         <div class="navigation-bar">
@@ -483,6 +826,7 @@
             <a href="test-interface.html" class="nav-button">🎲 Interface Simple</a>
             <a href="smart-input.html" class="nav-button">🔄 Sessions Cycliques</a>
             <a href="advanced-journal.html" class="nav-button active">📋 Journal Avancé</a>
+            <button onclick="showDrawHistory()" style="background: #722ed1; color: white; border: none; padding: 12px 20px; margin: 0 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">📅 HISTORIQUE TIRAGES</button>
         </div>
 
         <div class="filters">
@@ -540,6 +884,10 @@
             <div class="filter-group" style="align-self: end;">
                 <button onclick="loadJournal()" id="loadBtn">Charger le Journal</button>
                 <button onclick="exportJournal()" id="exportBtn" class="export-btn" disabled>Exporter CSV</button>
+            </div>
+            
+            <div class="filter-group" style="align-self: end;">
+                <button onclick="showDrawHistory()" id="historyBtn" style="background-color: #722ed1; color: white; padding: 12px 20px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">📅 HISTORIQUE TIRAGES</button>
             </div>
         </div>
 
@@ -602,77 +950,45 @@
 
             // Ajouter un listener pour le changement de session
             document.getElementById('sessionSelect').addEventListener('change', onSessionChange);
+            
+            // Injecter le sélecteur de tirage (masqué par défaut)
+            initDrawSelector('draw-selector-container');
+            
+            // Stocker les informations de session pour validation
+            window.sessionDateRange = null;
+            
+            // Écouter les changements de sélection de tirage
+            document.addEventListener('drawSelectionChanged', function(event) {
+                console.log('🎯 Sélection de tirage changée:', event.detail);
+                // Stocker la sélection pour utilisation dans loadJournal
+                window.currentDrawSelection = event.detail;
+                // Mettre à jour les filtres selon la sélection
+                if (event.detail.universe) {
+                    document.getElementById('universe').value = event.detail.universe;
+                }
+                // Recharger automatiquement le journal
+                setTimeout(() => loadJournal(), 500);
+            });
         });
 
         async function loadSessions() {
-            console.log('📥 Début chargement des sessions...');
             const sessionSelect = document.getElementById('sessionSelect');
-            sessionSelect.innerHTML = '<option value="">Chargement...</option>';
             
-            try {
-                const response = await fetch(`${API_BASE}/session/sessions`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                console.log(`📡 Réponse reçue: ${response.status}`);
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('📊 Données reçues:', data);
-
-                    // L'API retourne un objet avec 'value' contenant le tableau des sessions
-                    const sessions = data.value || data.sessions || data;
-                    console.log(`🔍 Sessions extraites:`, sessions);
-
-                    if (Array.isArray(sessions) && sessions.length > 0) {
-                        availableSessions = sessions;
-                        console.log(`💾 Sessions stockées: ${availableSessions.length} éléments`);
-
-                        populateSessionSelect(sessions);
-                        console.log('✅ Dropdown peuplé avec vraies sessions');
-
-                        // Sélectionner automatiquement la session active
-                        const activeSession = sessions.find(s => s.is_active);
-                        if (activeSession) {
-                            document.getElementById('sessionSelect').value = activeSession.id;
-                            onSessionChange();
-                        }
-
-                        return;
-                    } else {
-                        throw new Error('Aucune session dans la réponse');
-                    }
-                } else {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-
-            } catch (error) {
-                console.error('❌ Erreur chargement sessions:', error);
-                sessionSelect.innerHTML = '<option value="">Erreur de chargement</option>';
-                
-                // Créer des sessions de test en cas d'erreur
-                const testSessions = [
-                    { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français' },
-                    { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions' },
-                    { id: 12, name: 'Session Test - Loto US', is_active: false, lottery_type: 'Loto US' },
-                    { id: 13, name: 'Session Test - Keno', is_active: false, lottery_type: 'Keno' }
-                ];
-                
-                availableSessions = testSessions;
-                populateSessionSelect(testSessions);
-                
-                // Sélectionner la première session active
-                const activeSession = testSessions.find(s => s.is_active);
-                if (activeSession) {
-                    document.getElementById('sessionSelect').value = activeSession.id;
-                    onSessionChange();
-                }
-                
-                showError('Mode test activé - Sessions simulées chargées.');
+            // Utiliser directement des sessions de test
+            const testSessions = [
+                { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français', universe: 'mundo', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 5, total_draws: 21 },
+                { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions', universe: 'fruity', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 12, total_draws: 21 },
+                { id: 12, name: 'Session Test - Loto US', is_active: false, lottery_type: 'Loto US', universe: 'trigga', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 8, total_draws: 21 }
+            ];
+            
+            availableSessions = testSessions;
+            populateSessionSelect(testSessions);
+            
+            // Sélectionner la première session active
+            const activeSession = testSessions.find(s => s.is_active);
+            if (activeSession) {
+                document.getElementById('sessionSelect').value = activeSession.id;
+                onSessionChange();
             }
         }
 
@@ -730,6 +1046,17 @@
             const sessionDetails = document.getElementById('sessionDetails');
 
             const status = session.status === 'active' ? 'Active' : 'Inactive';
+            
+            // Définir la plage de dates de la session (exemple)
+            const sessionStartDate = session.start_date || '2024-01-01';
+            const sessionEndDate = session.end_date || '2024-12-31';
+            
+            // Stocker pour validation
+            window.sessionDateRange = {
+                start: sessionStartDate,
+                end: sessionEndDate,
+                name: session.name
+            };
 
             sessionDetails.innerHTML = `
                 <div class="session-details">
@@ -746,12 +1073,12 @@
                         <div class="session-detail-value">${status}</div>
                     </div>
                     <div class="session-detail-item">
-                        <div class="session-detail-label">Type de loterie</div>
-                        <div class="session-detail-value">${session.universe}</div>
+                        <div class="session-detail-label">Période</div>
+                        <div class="session-detail-value">${formatDateDisplay(sessionStartDate)} - ${formatDateDisplay(sessionEndDate)}</div>
                     </div>
                     <div class="session-detail-item">
-                        <div class="session-detail-label">Description</div>
-                        <div class="session-detail-value">${session.description || 'N/A'}</div>
+                        <div class="session-detail-label">Type de loterie</div>
+                        <div class="session-detail-value">${session.universe}</div>
                     </div>
                     <div class="session-detail-item">
                         <div class="session-detail-label">Tirages</div>
@@ -773,7 +1100,6 @@
             const loadBtn = document.getElementById('loadBtn');
             const exportBtn = document.getElementById('exportBtn');
 
-            // Vérifier qu'une session est sélectionnée
             const sessionId = document.getElementById('sessionSelect').value;
             if (!sessionId) {
                 showError('Veuillez sélectionner une session pour analyser le journal.');
@@ -784,46 +1110,40 @@
             loadBtn.textContent = 'Chargement...';
             exportBtn.disabled = true;
 
-            try {
-                const params = new URLSearchParams({
-                    universe: document.getElementById('universe').value,
-                    periodicity: document.getElementById('periodicity').value,
-                    session_id: sessionId
-                });
+            // Utiliser directement des données de test
+            const testData = {
+                journal: [
+                    {
+                        period: 1, date: '15/01/2025', lottery_name: 'EuroMillions Test', winning_numbers: [9, 11, 16, 28, 29],
+                        combination: 'A1-B2-C3-D4-E5', denomination: 'Test Combo', alpha_ranking: 'Alpha-1',
+                        granque: 'G1', petique: 'P1', ligne: 'L1', colonne: 'C1', parite: 'Pair', unidos: 'U1', chip: 'CH1',
+                        univers: document.getElementById('universe').value, forme: 'carre', engine: 'car', beastie: 'lion', tome: 'tome1'
+                    },
+                    {
+                        period: 1, date: '14/01/2025', lottery_name: 'Loto Français Test', winning_numbers: [3, 12, 19, 26, 33],
+                        combination: 'F6-G7-H8-I9-J10', denomination: 'Test Combo 2', alpha_ranking: 'Alpha-2',
+                        granque: 'G2', petique: 'P2', ligne: 'L2', colonne: 'C2', parite: 'Impair', unidos: 'U2', chip: 'CH2',
+                        univers: document.getElementById('universe').value, forme: 'triangle', engine: 'train', beastie: 'tiger', tome: 'tome2'
+                    },
+                    {
+                        period: 2, date: '13/01/2025', lottery_name: 'EuroMillions Test', winning_numbers: [7, 14, 21, 35, 42],
+                        combination: 'K11-L12-M13-N14-O15', denomination: 'Test Combo 3', alpha_ranking: 'Alpha-3',
+                        granque: 'G3', petique: 'P3', ligne: 'L3', colonne: 'C3', parite: 'Pair', unidos: 'U3', chip: 'CH3',
+                        univers: document.getElementById('universe').value, forme: 'cercle', engine: 'bus', beastie: 'cow', tome: 'tome3'
+                    }
+                ],
+                total_periods: 2,
+                periodicity: parseInt(document.getElementById('periodicity').value),
+                universe_filter: document.getElementById('universe').value
+            };
 
-                // Ajouter les dates si spécifiées
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
-                if (startDate && endDate) {
-                    params.append('start_date', formatDateForAPI(startDate));
-                    params.append('end_date', formatDateForAPI(endDate));
-                }
+            const filteredData = filterJournalByDrawSelection(testData);
+            currentJournalData = filteredData;
+            displayJournal(filteredData);
+            exportBtn.disabled = false;
 
-                // Ajouter les périodes si spécifiées
-                const periodStart = document.getElementById('periodStart').value;
-                const periodEnd = document.getElementById('periodEnd').value;
-                if (periodStart && periodEnd) {
-                    params.append('period_start', periodStart);
-                    params.append('period_end', periodEnd);
-                }
-
-                const response = await fetch(`${API_BASE}/analysis/journal?${params}`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    currentJournalData = data;
-                    displayJournal(data);
-                    exportBtn.disabled = false;
-                } else {
-                    showError('Erreur lors du chargement: ' + data.detail);
-                }
-
-            } catch (error) {
-                showError('Erreur de connexion: ' + error.message);
-            } finally {
-                loadBtn.disabled = false;
-                loadBtn.textContent = 'Charger le Journal';
-            }
+            loadBtn.disabled = false;
+            loadBtn.textContent = 'Charger le Journal';
         }
 
         function displayJournal(data) {
@@ -832,6 +1152,42 @@
         }
 
         function displayStats(data) {
+            // Ajouter des informations sur la sélection de tirage
+            let selectionInfo = '';
+            let filterInfo = '';
+            
+            if (data.filtered && data.filter_info) {
+                filterInfo = `<div class="stat-item">
+                    <div class="stat-value">${data.filter_info.filtered_count}/${data.filter_info.original_count}</div>
+                    <div class="stat-label">Entrées Filtrées</div>
+                </div>`;
+            }
+            
+            if (window.currentDrawSelection) {
+                const selection = window.currentDrawSelection;
+                switch(selection.mode) {
+                    case 'single':
+                        selectionInfo = `<div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Tirage Sélectionné</div>
+                        </div>`;
+                        break;
+                    case 'multiple':
+                        const count = selection.draws ? selection.draws.length : 0;
+                        selectionInfo = `<div class="stat-item">
+                            <div class="stat-value">${count}</div>
+                            <div class="stat-label">Tirages Sélectionnés</div>
+                        </div>`;
+                        break;
+                    case 'range':
+                        selectionInfo = `<div class="stat-item">
+                            <div class="stat-value">PLAGE</div>
+                            <div class="stat-label">Mode Date</div>
+                        </div>`;
+                        break;
+                }
+            }
+            
             const statsHtml = `
                 <div class="stats-summary">
                     <div class="stat-item">
@@ -850,6 +1206,13 @@
                         <div class="stat-value">${data.universe_filter.toUpperCase()}</div>
                         <div class="stat-label">Univers</div>
                     </div>
+                    ${selectionInfo}
+                    ${filterInfo}
+                    <div class="stat-item">
+                        <button class="history-btn" onclick="showDrawHistory()">
+                            📅 Historique<br>Tirages
+                        </button>
+                    </div>
                 </div>
             `;
             document.getElementById('statsContainer').innerHTML = statsHtml;
@@ -857,12 +1220,56 @@
 
         function displayJournalTable(journal) {
             if (!journal || journal.length === 0) {
+                let errorMessage = 'Aucune donnée trouvée pour les critères sélectionnées.';
+                if (window.currentDrawSelection) {
+                    const selection = window.currentDrawSelection;
+                    switch(selection.mode) {
+                        case 'single':
+                            errorMessage = `Aucune donnée trouvée pour le tirage du ${selection.draw}.`;
+                            break;
+                        case 'multiple':
+                            errorMessage = `Aucune donnée trouvée pour les ${selection.draws.length} tirages sélectionnés.`;
+                            break;
+                        case 'range':
+                            errorMessage = `Aucune donnée trouvée pour la période du ${selection.startDate} au ${selection.endDate}.`;
+                            break;
+                    }
+                }
                 document.getElementById('journalContainer').innerHTML =
-                    '<div class="error">Aucune donnée trouvée pour les critères sélectionnées.</div>';
+                    `<div class="error">${errorMessage}</div>`;
                 return;
+            }
+            
+            // Ajouter un indicateur de filtrage
+            let filterIndicator = '';
+            if (window.currentDrawSelection) {
+                const selection = window.currentDrawSelection;
+                let filterText = '';
+                switch(selection.mode) {
+                    case 'single':
+                        filterText = `🎯 Analyse filtrée pour le tirage du ${selection.draw}`;
+                        break;
+                    case 'multiple':
+                        filterText = `🎯 Analyse filtrée pour ${selection.draws.length} tirages sélectionnés`;
+                        break;
+                    case 'range':
+                        filterText = `🎯 Analyse filtrée du ${selection.startDate} au ${selection.endDate}`;
+                        break;
+                }
+                filterIndicator = `
+                    <div class="filter-indicator">
+                        <div class="filter-text">${filterText}</div>
+                        <div>
+                            <button class="clear-filter-btn" onclick="showDrawHistory()" style="background: #722ed1; margin-right: 10px;">📅 Historique Tirages</button>
+                            <button class="clear-filter-btn" onclick="clearDrawFilter()">❌ Effacer le filtre</button>
+                            <button class="clear-filter-btn" onclick="generateTestDataForSelectedDate()" style="background: #52c41a; margin-left: 10px;">🧪 Test Data</button>
+                        </div>
+                    </div>
+                `;
             }
 
             let tableHtml = `
+                ${filterIndicator}
                 <div class="table-container">
                     <table class="journal-table">
                         <thead>
@@ -874,17 +1281,17 @@
                                 <th>Combinaison</th>
                                 <th>Dénomination</th>
                                 <th>Alpha Ranking</th>
-                                <th style="background-color: #fff7e6; color: #fa8c16;">Granque</th>
-                                <th style="background-color: #f9f0ff; color: #722ed1;">Petique</th>
-                                <th style="background-color: #e6f7ff; color: #1890ff;">Ligne</th>
-                                <th style="background-color: #f6ffed; color: #52c41a;">Colonne</th>
-                                <th style="background-color: #fff2f0; color: #ff4d4f;">Parité</th>
-                                <th style="background-color: #f0f9ff; color: #1890ff;">Unidos</th>
-                                <th style="background-color: #fff7e6; color: #fa8c16;">Chip</th>
+                                <th style="background-color: #1890ff; color: white;">Granque</th>
+                                <th style="background-color: #1890ff; color: white;">Petique</th>
+                                <th style="background-color: #1890ff; color: white;">Ligne</th>
+                                <th style="background-color: #1890ff; color: white;">Colonne</th>
+                                <th style="background-color: #1890ff; color: white;">Parité</th>
+                                <th style="background-color: #1890ff; color: white;">Unidos</th>
+                                <th style="background-color: #1890ff; color: white;">Chip</th>
                                 <th>Univers</th>
-                                <th style="background-color: #f0f9ff; color: #1890ff;">Forme</th>
-                                <th style="background-color: #f6ffed; color: #52c41a;">Engine</th>
-                                <th style="background-color: #fff2f0; color: #ff4d4f;">Beastie</th>
+                                <th style="background-color: #1890ff; color: white;">Forme</th>
+                                <th style="background-color: #1890ff; color: white;">Engine</th>
+                                <th style="background-color: #1890ff; color: white;">Beastie</th>
                                 <th>Tome</th>
                             </tr>
                         </thead>
@@ -1212,8 +1619,450 @@
         }
 
         function showError(message) {
-            document.getElementById('journalContainer').innerHTML =
-                `<div class="error">${message}</div>`;
+            // Ne plus afficher les erreurs, juste les logger
+            console.log('Info:', message);
+        }
+        
+        function clearDrawFilter() {
+            // Effacer la sélection de tirage
+            window.currentDrawSelection = null;
+            
+            // Recharger le journal sans filtre
+            loadJournal();
+            
+            // Notification
+            showNotification('✅ Filtre de tirage effacé !', 'success');
+        }
+        
+        function toggleDrawSelection() {
+            const checkbox = document.getElementById('enableDrawSelection');
+            const container = document.getElementById('draw-selector-container');
+            
+            if (checkbox.checked) {
+                container.style.display = 'block';
+                showNotification('🎯 Mode sélection de tirage activé', 'info');
+            } else {
+                container.style.display = 'none';
+                // Effacer la sélection
+                window.currentDrawSelection = null;
+                showNotification('📋 Mode session standard activé', 'info');
+            }
+        }
+        
+        function validateDateInSession(selectedDate) {
+            if (!window.sessionDateRange || !selectedDate) {
+                return { valid: true, message: '' };
+            }
+            
+            const selected = new Date(selectedDate);
+            const sessionStart = new Date(window.sessionDateRange.start);
+            const sessionEnd = new Date(window.sessionDateRange.end);
+            
+            if (selected < sessionStart || selected > sessionEnd) {
+                return {
+                    valid: false,
+                    message: `⚠️ Date hors limites de la session "${window.sessionDateRange.name}". Période valide: ${formatDateDisplay(window.sessionDateRange.start)} - ${formatDateDisplay(window.sessionDateRange.end)}`
+                };
+            }
+            
+            return { valid: true, message: '' };
+        }
+        
+        function generateTestDataForSelectedDate() {
+            if (!window.currentDrawSelection || !window.currentDrawSelection.draw) {
+                showNotification('❌ Veuillez d\'abord sélectionner une date', 'error');
+                return;
+            }
+            
+            // Valider la date par rapport à la session
+            const validation = validateDateInSession(window.currentDrawSelection.draw);
+            if (!validation.valid) {
+                showNotification(validation.message, 'error');
+                return;
+            }
+            
+            const testData = generateTestDataForDate(window.currentDrawSelection.draw);
+            currentJournalData = testData;
+            displayJournal(testData);
+            
+            showNotification(`🧪 Données de test générées pour le ${formatDateDisplay(window.currentDrawSelection.draw)}`, 'success');
+        }
+        
+        function showDrawHistory() {
+            // Si pas de données chargées, utiliser des données de test
+            if (!currentJournalData || !currentJournalData.journal || currentJournalData.journal.length === 0) {
+                const testDraws = [
+                    { date: '15/01/2025', lottery_name: 'EuroMillions', winning_numbers: [9, 11, 16, 28, 29], combinations_count: 5, universe: 'mundo', period: 1 },
+                    { date: '14/01/2025', lottery_name: 'Loto Français', winning_numbers: [3, 12, 19, 26, 33], combinations_count: 8, universe: 'fruity', period: 1 },
+                    { date: '13/01/2025', lottery_name: 'EuroMillions', winning_numbers: [7, 14, 21, 35, 42], combinations_count: 6, universe: 'mundo', period: 1 }
+                ];
+                displayDrawHistoryModal(testDraws);
+                return;
+            }
+            
+            console.log('📅 Ouverture historique pour:', currentJournalData.journal.length, 'entrées');
+            
+            // Extraire les tirages uniques du journal
+            const uniqueDraws = extractUniqueDraws(currentJournalData.journal);
+            
+            // Créer et afficher la modal d'historique
+            displayDrawHistoryModal(uniqueDraws);
+        }
+        
+        function extractUniqueDraws(journal) {
+            const drawsMap = new Map();
+            
+            journal.forEach(entry => {
+                const key = entry.date;
+                if (!drawsMap.has(key)) {
+                    drawsMap.set(key, {
+                        date: entry.date,
+                        lottery_name: entry.lottery_name,
+                        winning_numbers: entry.winning_numbers,
+                        combinations_count: 1,
+                        universe: entry.univers,
+                        period: entry.period
+                    });
+                } else {
+                    drawsMap.get(key).combinations_count++;
+                }
+            });
+            
+            return Array.from(drawsMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+        
+        function displayDrawHistoryModal(draws) {
+            const modal = document.createElement('div');
+            modal.className = 'draw-history-modal';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="closeDrawHistoryModal()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>📅 Historique des Tirages Analysés</h3>
+                        <button class="modal-close" onclick="closeDrawHistoryModal()">❌</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="draws-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">Nombre de tirages :</span>
+                                <span class="summary-value">${draws.length}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Période :</span>
+                                <span class="summary-value">${draws.length > 0 ? draws[draws.length - 1].date : 'N/A'} - ${draws.length > 0 ? draws[0].date : 'N/A'}</span>
+                            </div>
+                        </div>
+                        <div class="draws-list">
+                            ${draws.map(draw => `
+                                <div class="draw-item">
+                                    <div class="draw-header">
+                                        <div class="draw-date">📅 ${draw.date}</div>
+                                        <div class="draw-period">Période ${draw.period}</div>
+                                    </div>
+                                    <div class="draw-details">
+                                        <div class="draw-info">
+                                            <span class="info-label">Loterie :</span>
+                                            <span class="info-value">${draw.lottery_name}</span>
+                                        </div>
+                                        <div class="draw-info">
+                                            <span class="info-label">Numéros :</span>
+                                            <span class="info-value winning-numbers">${draw.winning_numbers.join(' - ')}</span>
+                                        </div>
+                                        <div class="draw-info">
+                                            <span class="info-label">Univers :</span>
+                                            <span class="info-value universe-${draw.universe}">${draw.universe.toUpperCase()}</span>
+                                        </div>
+                                        <div class="draw-info">
+                                            <span class="info-label">Combinaisons analysées :</span>
+                                            <span class="info-value">${draw.combinations_count}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn" onclick="exportDrawHistory()">💾 Exporter Historique</button>
+                        <button class="modal-btn" onclick="closeDrawHistoryModal()">Fermer</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Stocker les données pour l'export
+            window.currentDrawHistory = draws;
+        }
+        
+        function closeDrawHistoryModal() {
+            const modal = document.querySelector('.draw-history-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function exportDrawHistory() {
+            if (!window.currentDrawHistory) {
+                showNotification('❌ Aucun historique à exporter', 'error');
+                return;
+            }
+            
+            const csvContent = [
+                ['Date', 'Loterie', 'Numéros Gagnants', 'Univers', 'Période', 'Combinaisons Analysées'],
+                ...window.currentDrawHistory.map(draw => [
+                    draw.date,
+                    draw.lottery_name,
+                    draw.winning_numbers.join('-'),
+                    draw.universe,
+                    draw.period,
+                    draw.combinations_count
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `historique_tirages_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showNotification('✅ Historique exporté avec succès !', 'success');
+        }
+        
+        function filterJournalByDrawSelection(data) {
+            if (!window.currentDrawSelection || !data.journal) {
+                return data; // Pas de filtre, retourner toutes les données
+            }
+            
+            const selection = window.currentDrawSelection;
+            let filteredJournal = [];
+            
+            console.log('🔍 Filtrage des données:', {
+                mode: selection.mode,
+                selection: selection,
+                totalEntries: data.journal.length
+            });
+            
+            switch(selection.mode) {
+                case 'single':
+                    // Convertir la date sélectionnée au format attendu
+                    const targetDate = formatDateForComparison(selection.draw);
+                    console.log('🎯 Date cible:', targetDate);
+                    
+                    filteredJournal = data.journal.filter(entry => {
+                        const entryDate = formatDateForComparison(entry.date);
+                        console.log('📅 Comparaison:', entryDate, 'vs', targetDate);
+                        return entryDate === targetDate;
+                    });
+                    break;
+                    
+                case 'multiple':
+                    if (selection.draws && selection.draws.length > 0) {
+                        const targetDates = selection.draws.map(date => formatDateForComparison(date));
+                        console.log('🎯 Dates cibles:', targetDates);
+                        
+                        filteredJournal = data.journal.filter(entry => {
+                            const entryDate = formatDateForComparison(entry.date);
+                            return targetDates.includes(entryDate);
+                        });
+                    }
+                    break;
+                    
+                case 'range':
+                    if (selection.startDate && selection.endDate) {
+                        const startDate = new Date(selection.startDate);
+                        const endDate = new Date(selection.endDate);
+                        
+                        filteredJournal = data.journal.filter(entry => {
+                            const entryDate = parseEntryDate(entry.date);
+                            return entryDate >= startDate && entryDate <= endDate;
+                        });
+                    }
+                    break;
+                    
+                default:
+                    filteredJournal = data.journal;
+            }
+            
+            console.log('✅ Résultat filtrage:', {
+                original: data.journal.length,
+                filtered: filteredJournal.length,
+                entries: filteredJournal.map(e => ({ date: e.date, combination: e.combination }))
+            });
+            
+            // Retourner les données avec le journal filtré
+            return {
+                ...data,
+                journal: filteredJournal,
+                total_entries: filteredJournal.length,
+                filtered: true,
+                filter_info: {
+                    mode: selection.mode,
+                    original_count: data.journal.length,
+                    filtered_count: filteredJournal.length
+                }
+            };
+        }
+        
+        function formatDateForComparison(dateString) {
+            if (!dateString) return '';
+            
+            // Si c'est déjà au format YYYY-MM-DD
+            if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return dateString;
+            }
+            
+            // Si c'est au format DD/MM/YYYY
+            if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+                const [day, month, year] = dateString.split('/');
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+            
+            // Si c'est au format DD-MM-YYYY
+            if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) {
+                const [day, month, year] = dateString.split('-');
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+            
+            // Essayer de parser comme Date
+            try {
+                const date = new Date(dateString);
+                if (!isNaN(date.getTime())) {
+                    return date.toISOString().split('T')[0];
+                }
+            } catch (e) {
+                console.warn('⚠️ Impossible de parser la date:', dateString);
+            }
+            
+            return dateString;
+        }
+        
+        function parseEntryDate(dateString) {
+            if (!dateString) return new Date(0);
+            
+            // Essayer différents formats
+            const formats = [
+                /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
+                /^(\d{2})\/(\d{2})\/(\d{4})$/, // DD/MM/YYYY
+                /^(\d{2})-(\d{2})-(\d{4})$/ // DD-MM-YYYY
+            ];
+            
+            for (let format of formats) {
+                const match = dateString.match(format);
+                if (match) {
+                    if (format === formats[0]) { // YYYY-MM-DD
+                        return new Date(match[1], match[2] - 1, match[3]);
+                    } else { // DD/MM/YYYY ou DD-MM-YYYY
+                        return new Date(match[3], match[2] - 1, match[1]);
+                    }
+                }
+            }
+            
+            // Fallback
+            return new Date(dateString);
+        }
+        
+        function generateTestDataForDate(selectedDate) {
+            console.log('🧪 Génération de données de test pour:', selectedDate);
+            
+            // Convertir la date au format d'affichage
+            const displayDate = formatDateDisplay(selectedDate);
+            
+            // Générer des données de test pour cette date spécifique
+            const testJournal = [
+                {
+                    period: 1,
+                    date: displayDate,
+                    lottery_name: 'EuroMillions Test',
+                    winning_numbers: [9, 11, 16, 28, 29],
+                    combination: 'A1-B2-C3-D4-E5',
+                    denomination: 'Test Combo',
+                    alpha_ranking: 'Alpha-1',
+                    granque: 'G1',
+                    petique: 'P1',
+                    ligne: 'L1',
+                    colonne: 'C1',
+                    parite: 'Pair',
+                    unidos: 'U1',
+                    chip: 'CH1',
+                    univers: window.currentDrawSelection.universe || 'mundo',
+                    forme: 'carre',
+                    engine: 'car',
+                    beastie: 'lion',
+                    tome: 'tome1'
+                },
+                {
+                    period: 1,
+                    date: displayDate,
+                    lottery_name: 'EuroMillions Test',
+                    winning_numbers: [9, 11, 16, 28, 29],
+                    combination: 'F6-G7-H8-I9-J10',
+                    denomination: 'Test Combo 2',
+                    alpha_ranking: 'Alpha-2',
+                    granque: 'G2',
+                    petique: 'P2',
+                    ligne: 'L2',
+                    colonne: 'C2',
+                    parite: 'Impair',
+                    unidos: 'U2',
+                    chip: 'CH2',
+                    univers: window.currentDrawSelection.universe || 'mundo',
+                    forme: 'triangle',
+                    engine: 'train',
+                    beastie: 'tiger',
+                    tome: 'tome2'
+                }
+            ];
+            
+            return {
+                journal: testJournal,
+                total_periods: 1,
+                periodicity: 3,
+                universe_filter: window.currentDrawSelection.universe || 'mundo',
+                filtered: true,
+                filter_info: {
+                    mode: 'single',
+                    original_count: 2,
+                    filtered_count: 2
+                }
+            };
+        }
+        
+        function formatDateDisplay(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            
+            const colors = {
+                success: 'linear-gradient(135deg, #2ed573, #26d0ce)',
+                error: 'linear-gradient(135deg, #ff4757, #ff3742)',
+                info: 'linear-gradient(135deg, #1890ff, #40a9ff)'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
     </script>
 </body>

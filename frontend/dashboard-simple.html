@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1890ff;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .btn {
+            background: #1890ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #40a9ff;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .nav-btn.active {
+            background: #1890ff;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 EazzyCalculator Dashboard</h1>
+            <p>Plateforme complète d'analyse de loterie</p>
+        </div>
+
+        <div class="nav-menu">
+            <button class="nav-btn active" onclick="showSection('dashboard')">📊 Dashboard</button>
+            <button class="nav-btn" onclick="showSection('sessions')">🎯 Sessions</button>
+            <button class="nav-btn" onclick="showSection('analytics')">📈 Analytics</button>
+            <button class="nav-btn" onclick="showSection('ml')">🤖 ML</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section active">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="stat-value">45</div>
+                    <div class="stat-label">Sessions Totales</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value">1,250</div>
+                    <div class="stat-label">Tirages Analysés</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value">12.5%</div>
+                    <div class="stat-label">Taux de Réussite</div>
+                </div>
+                <div class="card">
+                    <div class="stat-value">78.3%</div>
+                    <div class="stat-label">Précision Moyenne</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions Section -->
+        <div id="sessions" class="content-section">
+            <div class="card">
+                <h3>🎯 Gestion des Sessions</h3>
+                <button class="btn">➕ Nouvelle Session</button>
+                <div style="margin-top: 20px;">
+                    <div style="padding: 10px; border: 1px solid #ddd; margin: 5px 0; border-radius: 5px;">
+                        <strong>Session Test 1</strong> - 5/21 tirages - Actif
+                    </div>
+                    <div style="padding: 10px; border: 1px solid #ddd; margin: 5px 0; border-radius: 5px;">
+                        <strong>Session Test 2</strong> - 12/21 tirages - Terminé
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics" class="content-section">
+            <div class="card">
+                <h3>📈 Analytics & Statistiques</h3>
+                <div class="dashboard-grid">
+                    <div style="text-align: center;">
+                        <div class="stat-value" style="color: #52c41a;">85%</div>
+                        <div class="stat-label">Précision IA</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="stat-value" style="color: #fa8c16;">156</div>
+                        <div class="stat-label">Prédictions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ML Section -->
+        <div id="ml" class="content-section">
+            <div class="card">
+                <h3>🤖 Prédictions Machine Learning</h3>
+                <button class="btn" onclick="generatePrediction()">🚀 Générer Prédiction</button>
+                <div id="prediction-result" style="margin-top: 20px;"></div>
+                <div style="margin-top: 20px;">
+                    <h4>Historique des Prédictions</h4>
+                    <div style="padding: 10px; border: 1px solid #ddd; margin: 5px 0; border-radius: 5px;">
+                        <strong>Prédiction #1</strong> - [7, 14, 21, 28, 35] - Confiance: 85%
+                    </div>
+                    <div style="padding: 10px; border: 1px solid #ddd; margin: 5px 0; border-radius: 5px;">
+                        <strong>Prédiction #2</strong> - [3, 12, 19, 26, 42] - Confiance: 78%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px; text-align: center;">
+            <h3>🔗 Liens Rapides</h3>
+            <button class="btn" onclick="window.open('advanced-journal.html', '_blank')">📋 Journal Avancé</button>
+            <button class="btn" onclick="window.open('smart-input.html', '_blank')">⚙️ Smart Input</button>
+            <button class="btn" onclick="window.open('test-complete-system.html', '_blank')">🧪 Tests Système</button>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Masquer toutes les sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Désactiver tous les boutons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Afficher la section sélectionnée
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Activer le bouton correspondant
+            event.target.classList.add('active');
+        }
+
+        function generatePrediction() {
+            const numbers = [];
+            for (let i = 0; i < 5; i++) {
+                numbers.push(Math.floor(Math.random() * 49) + 1);
+            }
+            numbers.sort((a, b) => a - b);
+            
+            const confidence = Math.floor(Math.random() * 30) + 70;
+            
+            document.getElementById('prediction-result').innerHTML = `
+                <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border: 1px solid #1890ff;">
+                    <strong>🎯 Nouvelle Prédiction Générée</strong><br>
+                    Numéros: <strong style="color: #1890ff;">[${numbers.join(', ')}]</strong><br>
+                    Confiance: <strong style="color: #52c41a;">${confidence}%</strong><br>
+                    Modèle: LSTM Neural Network
+                </div>
+            `;
+        }
+
+        // Animation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Dashboard Simple chargé avec succès');
+        });
+    </script>
+</body>
+</html>

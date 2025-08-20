@@ -433,11 +433,13 @@ const UniversalHeader = {
     logout: function() {
         if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
             // Supprimer les données de session
+            localStorage.removeItem('token');
+            localStorage.removeItem('user_id');
             localStorage.removeItem('eazzylotto_user');
             localStorage.removeItem('eazzylotto_loginTime');
             
-            // Rediriger vers la page d'accueil
-            window.location.href = 'index.html';
+            // Rediriger vers la page de connexion
+            window.location.href = 'login.html';
         }
     }
 };

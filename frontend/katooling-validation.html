@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation KATOOLING - Données Réelles</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 120px auto 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .validation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .validation-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .validation-section h3 {
+            color: #1e3c72;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2a5298;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            background: #1e3c72;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .katula-cell {
+            background: white;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #1e3c72;
+            min-height: 35px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .katula-cell:hover {
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+
+        .katula-cell.highlighted {
+            background: #ffd700;
+            color: #1e3c72;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .validation-result {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #28a745;
+        }
+
+        .validation-result.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .validation-result.warning {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .validation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 100px 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="custom-background">
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔬 Validation KATOOLING</h1>
+            <p>Vérification des données réelles et conformité des calculs</p>
+        </div>
+
+        <div class="content">
+            <div class="controls">
+                <select id="universeSelect">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+                <button class="btn" onclick="loadKatulaData()">📊 Charger Table Katula</button>
+                <button class="btn" onclick="loadSessionsData()">📋 Charger Sessions</button>
+                <button class="btn btn-success" onclick="validateCalculations()">✅ Valider Calculs</button>
+            </div>
+
+            <div class="validation-grid">
+                <!-- Table Katula -->
+                <div class="validation-section">
+                    <h3>📊 Table Katula Réelle</h3>
+                    <div id="katulaContainer">
+                        <div class="loading">Cliquez sur "Charger Table Katula" pour voir les données</div>
+                    </div>
+                </div>
+
+                <!-- Sessions Data -->
+                <div class="validation-section">
+                    <h3>📋 Sessions & Combinaisons</h3>
+                    <div id="sessionsContainer">
+                        <div class="loading">Cliquez sur "Charger Sessions" pour voir les données</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="validation-section">
+                <h3>📈 Statistiques de Validation</h3>
+                <div id="statsContainer" class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalChips">-</div>
+                        <div class="stat-label">Chips Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalSessions">-</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCombinations">-</div>
+                        <div class="stat-label">Combinaisons</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="validationScore">-</div>
+                        <div class="stat-label">Score Validation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résultats de validation -->
+            <div class="validation-section">
+                <h3>🔍 Résultats de Validation</h3>
+                <div id="validationResults">
+                    <div class="loading">Lancez la validation pour voir les résultats</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let currentKatulaData = null;
+        let currentSessionsData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'validation', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+        });
+
+        async function loadKatulaData() {
+            const universe = document.getElementById('universeSelect').value;
+            const container = document.getElementById('katulaContainer');
+            
+            container.innerHTML = '<div class="loading">🔄 Chargement de la table Katula...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/analytics/katula/table/${universe}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentKatulaData = data;
+                    displayKatulaTable(data);
+                    updateStats();
+                } else {
+                    throw new Error(data.detail || 'Erreur lors du chargement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                container.innerHTML = `<div class="error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+
+        async function loadSessionsData() {
+            const container = document.getElementById('sessionsContainer');
+            
+            container.innerHTML = '<div class="loading">🔄 Chargement des sessions...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentSessionsData = data;
+                    displaySessionsData(data);
+                    updateStats();
+                } else {
+                    throw new Error(data.detail || 'Erreur lors du chargement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                container.innerHTML = `<div class="error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+
+        function displayKatulaTable(data) {
+            const container = document.getElementById('katulaContainer');
+            
+            let html = `
+                <div class="validation-result">
+                    <strong>📊 Table Katula - ${data.universe || 'Univers'}</strong><br>
+                    Total positions: ${data.matrix ? data.matrix.length * data.matrix[0].length : 'N/A'}<br>
+                    Dernière mise à jour: ${data.last_updated || 'N/A'}
+                </div>
+            `;
+
+            if (data.matrix && data.matrix.length > 0) {
+                html += '<div class="katula-grid">';
+                
+                data.matrix.forEach((row, rowIndex) => {
+                    row.forEach((cell, colIndex) => {
+                        const chipNumber = cell.chip_number || (rowIndex * 6 + colIndex + 1);
+                        html += `
+                            <div class="katula-cell" 
+                                 data-chip="${chipNumber}"
+                                 data-position="${cell.position || `${rowIndex+1}-${colIndex+1}`}"
+                                 title="Chip ${chipNumber} - Position ${cell.position || `${rowIndex+1}-${colIndex+1}`}">
+                                ${chipNumber}
+                            </div>
+                        `;
+                    });
+                });
+                
+                html += '</div>';
+            }
+
+            // Afficher les détails des positions
+            if (data.chip_positions) {
+                html += '<table class="data-table"><thead><tr><th>Chip</th><th>Position</th><th>Ligne</th><th>Colonne</th><th>Zone</th></tr></thead><tbody>';
+                
+                Object.entries(data.chip_positions).slice(0, 10).forEach(([chipId, info]) => {
+                    html += `
+                        <tr>
+                            <td>${info.chip_number}</td>
+                            <td>${info.position}</td>
+                            <td>${info.row}</td>
+                            <td>${info.column}</td>
+                            <td>${info.geometric_zone || 'N/A'}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table>';
+                if (Object.keys(data.chip_positions).length > 10) {
+                    html += `<p><em>... et ${Object.keys(data.chip_positions).length - 10} autres positions</em></p>`;
+                }
+            }
+
+            container.innerHTML = html;
+        }
+
+        function displaySessionsData(data) {
+            const container = document.getElementById('sessionsContainer');
+            
+            let html = `
+                <div class="validation-result">
+                    <strong>📋 Sessions Chargées</strong><br>
+                    Total sessions: ${Array.isArray(data) ? data.length : (data.value ? data.value.length : 'N/A')}
+                </div>
+            `;
+
+            const sessions = Array.isArray(data) ? data : (data.value || []);
+            
+            if (sessions.length > 0) {
+                html += '<table class="data-table"><thead><tr><th>ID</th><th>Nom</th><th>Type</th><th>Statut</th><th>Tirages</th></tr></thead><tbody>';
+                
+                sessions.slice(0, 10).forEach(session => {
+                    html += `
+                        <tr>
+                            <td>${session.id}</td>
+                            <td>${session.name || 'N/A'}</td>
+                            <td>${session.lottery_type || 'N/A'}</td>
+                            <td>${session.is_active ? '✅ Active' : '❌ Inactive'}</td>
+                            <td>${session.total_draws || session.numbers_per_draw || 'N/A'}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table>';
+                
+                if (sessions.length > 10) {
+                    html += `<p><em>... et ${sessions.length - 10} autres sessions</em></p>`;
+                }
+            }
+
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            if (currentKatulaData) {
+                document.getElementById('totalChips').textContent = 
+                    currentKatulaData.matrix ? currentKatulaData.matrix.length * currentKatulaData.matrix[0].length : '48';
+            }
+
+            if (currentSessionsData) {
+                const sessions = Array.isArray(currentSessionsData) ? currentSessionsData : (currentSessionsData.value || []);
+                document.getElementById('totalSessions').textContent = sessions.length;
+                
+                const totalCombinations = sessions.reduce((sum, session) => {
+                    return sum + (session.total_draws || session.numbers_per_draw || 0);
+                }, 0);
+                document.getElementById('totalCombinations').textContent = totalCombinations;
+            }
+        }
+
+        async function validateCalculations() {
+            const container = document.getElementById('validationResults');
+            
+            container.innerHTML = '<div class="loading">🔄 Validation en cours...</div>';
+
+            try {
+                const validations = [];
+
+                // Validation 1: Structure de la table Katula
+                if (currentKatulaData) {
+                    const katulaValidation = validateKatulaStructure(currentKatulaData);
+                    validations.push(katulaValidation);
+                }
+
+                // Validation 2: Cohérence des sessions
+                if (currentSessionsData) {
+                    const sessionsValidation = validateSessionsData(currentSessionsData);
+                    validations.push(sessionsValidation);
+                }
+
+                // Validation 3: Logique KATOOLING
+                if (currentKatulaData && currentSessionsData) {
+                    const katoolingValidation = validateKatoolingLogic(currentKatulaData, currentSessionsData);
+                    validations.push(katoolingValidation);
+                }
+
+                displayValidationResults(validations);
+
+            } catch (error) {
+                container.innerHTML = `<div class="error">❌ Erreur de validation: ${error.message}</div>`;
+            }
+        }
+
+        function validateKatulaStructure(data) {
+            const issues = [];
+            let score = 100;
+
+            // Vérifier la matrice 6x8
+            if (!data.matrix || data.matrix.length !== 8) {
+                issues.push("❌ La matrice devrait avoir 8 lignes");
+                score -= 20;
+            } else if (data.matrix[0].length !== 6) {
+                issues.push("❌ La matrice devrait avoir 6 colonnes");
+                score -= 20;
+            }
+
+            // Vérifier les positions des chips
+            if (data.chip_positions) {
+                const chipCount = Object.keys(data.chip_positions).length;
+                if (chipCount !== 48) {
+                    issues.push(`⚠️ Nombre de chips: ${chipCount}/48`);
+                    score -= 10;
+                }
+            }
+
+            return {
+                title: "Structure Table Katula",
+                score: Math.max(0, score),
+                issues: issues.length > 0 ? issues : ["✅ Structure conforme"],
+                type: issues.length > 0 ? "warning" : "success"
+            };
+        }
+
+        function validateSessionsData(data) {
+            const sessions = Array.isArray(data) ? data : (data.value || []);
+            const issues = [];
+            let score = 100;
+
+            if (sessions.length === 0) {
+                issues.push("❌ Aucune session trouvée");
+                score = 0;
+            } else {
+                const activeSessions = sessions.filter(s => s.is_active).length;
+                if (activeSessions === 0) {
+                    issues.push("⚠️ Aucune session active");
+                    score -= 30;
+                }
+
+                sessions.forEach((session, index) => {
+                    if (!session.name) {
+                        issues.push(`⚠️ Session ${index + 1}: nom manquant`);
+                        score -= 5;
+                    }
+                });
+            }
+
+            return {
+                title: "Données Sessions",
+                score: Math.max(0, score),
+                issues: issues.length > 0 ? issues : ["✅ Sessions conformes"],
+                type: issues.length > 0 ? "warning" : "success"
+            };
+        }
+
+        function validateKatoolingLogic(katulaData, sessionsData) {
+            const issues = [];
+            let score = 100;
+
+            // Vérifier la logique de transformation combinaison → coordonnées
+            if (katulaData.chip_positions) {
+                let validPositions = 0;
+                Object.values(katulaData.chip_positions).forEach(pos => {
+                    if (pos.row >= 1 && pos.row <= 8 && pos.column >= 1 && pos.column <= 6) {
+                        validPositions++;
+                    }
+                });
+
+                const totalPositions = Object.keys(katulaData.chip_positions).length;
+                const validityRatio = validPositions / totalPositions;
+                
+                if (validityRatio < 1) {
+                    issues.push(`⚠️ ${Math.round((1-validityRatio)*100)}% positions invalides`);
+                    score -= Math.round((1-validityRatio)*50);
+                }
+            }
+
+            // Vérifier la cohérence univers/sessions
+            const sessions = Array.isArray(sessionsData) ? sessionsData : (sessionsData.value || []);
+            const universe = document.getElementById('universeSelect').value;
+            
+            if (sessions.length > 0 && katulaData.universe && katulaData.universe !== universe) {
+                issues.push("⚠️ Incohérence univers sélectionné/données");
+                score -= 20;
+            }
+
+            return {
+                title: "Logique KATOOLING",
+                score: Math.max(0, score),
+                issues: issues.length > 0 ? issues : ["✅ Logique KATOOLING conforme"],
+                type: issues.length > 0 ? "warning" : "success"
+            };
+        }
+
+        function displayValidationResults(validations) {
+            const container = document.getElementById('validationResults');
+            
+            let html = '';
+            let totalScore = 0;
+
+            validations.forEach(validation => {
+                const resultClass = validation.type === 'success' ? 'validation-result' : 
+                                  validation.type === 'warning' ? 'validation-result warning' : 
+                                  'validation-result error';
+
+                html += `
+                    <div class="${resultClass}">
+                        <strong>${validation.title} - Score: ${validation.score}%</strong>
+                        <ul>
+                            ${validation.issues.map(issue => `<li>${issue}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+
+                totalScore += validation.score;
+            });
+
+            const avgScore = validations.length > 0 ? Math.round(totalScore / validations.length) : 0;
+            document.getElementById('validationScore').textContent = `${avgScore}%`;
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

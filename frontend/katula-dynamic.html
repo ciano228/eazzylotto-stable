@@ -626,6 +626,46 @@
             background: #ecf0f1;
         }
         
+        .combinations-grid {
+            margin: 20px 0;
+        }
+        
+        .combinations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .combination-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .combination-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .combination-numbers {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .no-combinations {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 40px;
+        }
+        
         /* Couleurs pour les positions alphabétiques */
         .position-a { background: #e8f5e8; color: #27ae60; }
         .position-b { background: #e3f2fd; color: #2196f3; }
@@ -763,9 +803,17 @@
             box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
         }
         
-        .chip-drawer:not(.empty) .drawer-text {
+        .clickable-denomination {
             text-decoration: underline;
             text-decoration-style: dotted;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .clickable-denomination:hover {
+            color: #2980b9;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .chip-drawer.empty {
@@ -1315,7 +1363,7 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api/analytics';
+        const API_BASE = 'http://localhost:8081/api/analytics';
         let currentUniverse = null;
         let universeData = null;
         let selectedForme = null;
@@ -2196,23 +2244,37 @@
                 const tableData = await tableResponse.json();
                 
                 // Charger les formes spécifiques à cet univers
-                const formesResponse = await fetch(`${API_BASE}/formes/${universe}`);
+                const formesResponse = await fetch(`${API_BASE}/katula/formes/${universe}`);
                 let formesData = { formes: ['carre', 'triangle', 'cercle', 'rectangle'] };
                 if (formesResponse.ok) {
                     formesData = await formesResponse.json();
                 }
                 
-                // Charger les données détaillées pour chaque chip (1-48)
+                // Charger les données détaillées pour chaque chip (1-48) depuis la BD
                 const chipDetails = {};
                 for (let chipNum = 1; chipNum <= 48; chipNum++) {
                     try {
-                        const chipResponse = await fetch(`${API_BASE}/formes/${universe}/chip/${chipNum}`);
+                        // Utiliser l'endpoint correct pour récupérer les vraies données
+                        const chipResponse = await fetch(`${API_BASE}/katula/chip/${universe}/${chipNum}`);
                         if (chipResponse.ok) {
                             const chipData = await chipResponse.json();
                             chipDetails[chipNum] = chipData;
+                            console.log(`Chip ${chipNum} chargé:`, chipData);
+                            
+                            // Debug spécifique pour les formes_data
+                            if (chipData.formes_data) {
+                                Object.entries(chipData.formes_data).forEach(([forme, items]) => {
+                                    if (items.length > 0) {
+                                        console.log(`  ${forme}: ${items.length} items`, items);
+                                    }
+                                });
+                            }
+                        } else {
+                            console.warn(`Chip ${chipNum} non trouvé, status: ${chipResponse.status}`);
+                            chipDetails[chipNum] = { formes_data: {} };
                         }
                     } catch (e) {
-                        console.warn(`Chip ${chipNum} non disponible:`, e);
+                        console.warn(`Erreur chip ${chipNum}:`, e);
                         chipDetails[chipNum] = { formes_data: {} };
                     }
                 }
@@ -2322,6 +2384,8 @@
                 let displayText = '---';
                 let allDenominations = [];
                 
+                console.log(`Chip ${chipNumber}, Forme ${forme}:`, formeItems);
+                
                 if (formeItems.length > 0) {
                     // Extraire toutes les dénominations uniques
                     allDenominations = [...new Set(formeItems.map(item => item.denomination))];
@@ -2333,6 +2397,10 @@
                         // Dénominations multiples - les joindre avec "/"
                         displayText = allDenominations.join('/');
                     }
+                    
+                    console.log(`Affichage: ${displayText}`);
+                } else {
+                    console.log(`Aucune donnée pour chip ${chipNumber}, forme ${forme}`);
                 }
                 
                 // Stocker toutes les dénominations pour la recherche
@@ -2341,11 +2409,12 @@
                 html += `
                     <div class="chip-drawer ${isEmpty ? 'empty' : ''}" 
                          data-forme="${forme}" data-chip="${chipNumber}"
-                         data-denomination="${displayText}"
-                         data-all-denominations="${searchDenominations}"
-                         onclick="showDenominationDetails('${searchDenominations}', '${currentUniverse}', event)">
+                         data-denomination="${displayText}">
                         ${generateFormeIcon(forme)}
-                        <span class="drawer-text">${displayText}</span>
+                        <span class="drawer-text ${isEmpty ? '' : 'clickable-denomination'}" 
+                              onclick="${isEmpty ? '' : `showDenominationCombinations('${displayText}', '${currentUniverse}', event)`}">
+                            ${displayText}
+                        </span>
                     </div>
                 `;
             });
@@ -2557,6 +2626,88 @@
 
         // Variables globales pour la sélection des quadrants
         let selectedQuadrant = null;
+
+        async function showDenominationCombinations(denomination, universe, event) {
+            event.stopPropagation();
+            
+            if (denomination === '---') return;
+            
+            try {
+                console.log(`Récupération combinaisons pour: ${denomination}`);
+                
+                const response = await fetch(`${API_BASE}/denomination/${universe}/${encodeURIComponent(denomination)}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayCombinationsModal(data);
+                } else {
+                    alert(`Aucune combinaison trouvée pour "${denomination}"`);
+                }
+                
+            } catch (error) {
+                console.error('Erreur récupération combinaisons:', error);
+                alert(`Erreur: ${error.message}`);
+            }
+        }
+        
+        function displayCombinationsModal(data) {
+            const { denomination, universe, details } = data;
+            
+            const modalHTML = `
+                <div id="combinationsModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>🎯 ${denomination.toUpperCase()}</h2>
+                            <span class="modal-close" onclick="closeCombinationsModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-info">
+                                <span class="info-badge universe">UNIVERS: ${universe.toUpperCase()}</span>
+                                <span class="info-badge count">COMBINAISONS: ${details.length}</span>
+                            </div>
+                            <div class="combinations-grid">
+                                ${generateCombinationsGrid(details)}
+                            </div>
+                            <div class="modal-actions">
+                                <button onclick="closeCombinationsModal()" class="btn-close">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function generateCombinationsGrid(details) {
+            if (details.length === 0) {
+                return '<div class="no-combinations">Aucune combinaison trouvée</div>';
+            }
+            
+            let html = '<div class="combinations-list">';
+            
+            details.forEach((detail, index) => {
+                const positionClass = `position-${detail.alpha_ranking || 'na'}`;
+                html += `
+                    <div class="combination-item">
+                        <div class="combination-numbers">${detail.num1}-${detail.num2}</div>
+                        <div class="combination-position ${positionClass}">
+                            Position: ${detail.alpha_ranking || 'n/a'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        function closeCombinationsModal() {
+            const modal = document.getElementById('combinationsModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
 
         async function showDenominationDetails(denomination, universe, event) {
             // Empêcher la propagation pour éviter le clic sur le chip
@@ -2864,9 +3015,9 @@
             // Cacher les statistiques si nécessaire
         }
 
-        // Auto-charger Fruity au démarrage pour démonstration
+        // Auto-charger Mundo au démarrage
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('universeSelect').value = 'fruity';
+            document.getElementById('universeSelect').value = 'mundo';
             setTimeout(() => loadUniverse(), 1000);
         });
     </script>
