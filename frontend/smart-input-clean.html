@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>EazzyCalculator - Saisie Intelligente Cyclique</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/smart-input.css">
+    <script src="assets/js/universal-header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'smart-input', {
+                    showNavigation: true,
+                    showUserInfo: false
+                });
+            }
+        });
+    </script>
+    <style>
+        /* Styles actuels... */
+        /* À déplacer dans smart-input.css */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Sélecteur de Session -->
+            <div class="session-selector">
+                <h3>📋 Gestion des Sessions</h3>
+                <div class="session-controls">
+                    <div class="form-group">
+                        <label for="sessionSelect">Session Active</label>
+                        <select id="sessionSelect">
+                            <option value="">Sélectionner une session...</option>
+                        </select>
+                    </div>
+                    <button id="refreshButton">🔄 Actualiser</button>
+                    <button id="newSessionButton" class="btn-primary">➕ Nouvelle Session</button>
+                </div>
+            </div>
+
+            <!-- Informations de Session -->
+            <div id="sessionInfo" class="session-info" style="display: none;">
+                <h3 id="sessionTitle">Session: </h3>
+                <div class="session-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="currentDrawStat">-</div>
+                        <div class="stat-label">Tirage Actuel</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalDrawsStat">-</div>
+                        <div class="stat-label">Total Tirages</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="numbersPerDrawStat">-</div>
+                        <div class="stat-label">Numéros par Tirage</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="lotteryTypeStat">-</div>
+                        <div class="stat-label">Type de Loterie</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="periodStat">-</div>
+                        <div class="stat-label">Tirages par Période</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section de Saisie -->
+            <div id="inputSection" class="input-section" style="display: none;">
+                <h3>🎲 Saisie des Numéros - Tirage <span id="drawNumber">1</span></h3>
+                
+                <!-- Informations du tirage -->
+                <div class="draw-info">
+                    <div class="draw-info-grid">
+                        <div>
+                            <label for="currentLottoName">🎯 Nom du Loto</label>
+                            <input type="text" id="currentLottoName" readonly>
+                        </div>
+                        <div>
+                            <label for="expectedDate">📅 Date Prévue</label>
+                            <input type="text" id="expectedDate" readonly>
+                        </div>
+                    </div>
+                    <div class="info-message">
+                        💡 Ces informations sont générées automatiquement selon le cycle défini
+                    </div>
+                </div>
+                
+                <!-- Date du tirage -->
+                <div class="date-input-section">
+                    <div class="form-group">
+                        <label for="drawDate">
+                            📅 Date du Tirage <span class="required">*</span>
+                        </label>
+                        <input type="date" id="drawDate" class="date-input">
+                    </div>
+                </div>
+                
+                <!-- Saisie des numéros -->
+                <div id="numbersInput" class="numbers-input"></div>
+                
+                <!-- Boutons d'action -->
+                <div class="action-buttons">
+                    <button id="saveButton" class="btn-primary">💾 Enregistrer Résultat</button>
+                    <button id="randomButton" class="btn-secondary">🎲 Génération Aléatoire</button>
+                    <button id="noDrawButton" class="btn-warning">🚫 No Draw</button>
+                    <button id="clearButton" class="btn-danger">🗑️ Effacer</button>
+                </div>
+            </div>
+
+            <!-- Vue Planning -->
+            <div id="scheduleOverview" class="schedule-overview" style="display: none;">
+                <h4>📅 Planning des Tirages</h4>
+                <div id="scheduleContent"></div>
+            </div>
+            
+            <!-- Historique des résultats -->
+            <div id="resultsHistory"></div>
+            
+            <!-- Messages -->
+            <div id="messageContainer"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/smart-input.js"></script>
+</body>
+</html>
