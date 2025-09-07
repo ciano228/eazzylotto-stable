@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrice Katula</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Matrice Katula</h1>
+        
+        <div class="universe-selector">
+            <label for="universe-select">Sélectionner l'univers:</label>
+            <select id="universe-select" onchange="initKatulaMatrix(this.value)">
+                <option value="monde">Monde</option>
+                <option value="euro">Euro</option>
+                <option value="loto">Loto</option>
+            </select>
+        </div>
+
+        <div id="katula-matrix-container">
+            <!-- La matrice sera injectée ici -->
+        </div>
+    </div>
+
+    <script src="/static/js/katula-matrix.js"></script>
+    <script>
+        // Initialiser la matrice au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            initKatulaMatrix();
+        });
+    </script>
+</body>
+</html>

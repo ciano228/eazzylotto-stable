@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Nouvelles Colonnes - EazzyCalculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            color: #2c3e50;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .test-section h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        .data-table th,
+        .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .universe-selector {
+            margin: 10px 0;
+        }
+        
+        select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test des Nouvelles Colonnes</h1>
+            <p>Vérification des colonnes granque-name, tome et des 5 univers complets</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🌍 Test des Univers Disponibles</h3>
+            <button onclick="testUniverses()" id="testUniversesBtn">Tester les Univers</button>
+            <div id="universesResult" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Test des Données de Table</h3>
+            <div class="universe-selector">
+                <label for="universeSelect">Sélectionner un univers:</label>
+                <select id="universeSelect">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+                <button onclick="testTableData()" id="testTableBtn">Tester Table Data</button>
+            </div>
+            <div id="tableResult" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Test des Combinaisons</h3>
+            <button onclick="testCombinations()" id="testCombinationsBtn">Tester Combinaisons</button>
+            <div id="combinationsResult" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📈 Test des Statistiques</h3>
+            <button onclick="testStats()" id="testStatsBtn">Tester Statistiques</button>
+            <div id="statsResult" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔎 Test de Recherche</h3>
+            <div>
+                <input type="text" id="searchGranque" placeholder="Granque-name (ex: alpha)" style="margin: 5px; padding: 8px;">
+                <input type="text" id="searchTome" placeholder="Tome (ex: tome1)" style="margin: 5px; padding: 8px;">
+                <button onclick="testSearch()" id="testSearchBtn">Rechercher</button>
+            </div>
+            <div id="searchResult" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Test Katula Table</h3>
+            <button onclick="testKatulaTable()" id="testKatulaBtn">Tester Katula Table</button>
+            <div id="katulaResult" class="results" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        async function testUniverses() {
+            const btn = document.getElementById('testUniversesBtn');
+            const result = document.getElementById('universesResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Test en cours...';
+            result.style.display = 'block';
+            
+            try {
+                const universes = ['mundo', 'fruity', 'trigga', 'roaster', 'sunshine'];
+                let html = '<h4>Test des 5 univers:</h4>';
+                
+                for (const universe of universes) {
+                    try {
+                        const response = await fetch(`${API_BASE}/api/combinations/table-data/${universe}`);
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            html += `<div class="success">✅ ${universe}: ${data.total_entries} entrées trouvées</div>`;
+                        } else {
+                            html += `<div class="error">❌ ${universe}: ${data.detail}</div>`;
+                        }
+                    } catch (error) {
+                        html += `<div class="error">❌ ${universe}: Erreur de connexion</div>`;
+                    }
+                }
+                
+                result.innerHTML = html;
+                result.className = 'results info';
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur générale: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tester les Univers';
+            }
+        }
+
+        async function testTableData() {
+            const btn = document.getElementById('testTableBtn');
+            const result = document.getElementById('tableResult');
+            const universe = document.getElementById('universeSelect').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Test en cours...';
+            result.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/combinations/table-data/${universe}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `<h4>Données pour ${universe} (${data.total_entries} entrées):</h4>`;
+                    
+                    if (data.table_data && data.table_data.length > 0) {
+                        html += '<table class="data-table">';
+                        html += '<tr><th>Chip ID</th><th>Position</th><th>Forme</th><th>Granque-Name</th><th>Tome</th></tr>';
+                        
+                        data.table_data.slice(0, 10).forEach(entry => {
+                            html += `<tr>
+                                <td>${entry.chip_id}</td>
+                                <td>${entry.position.ligne}-${entry.position.colonne}</td>
+                                <td>${entry.attributes.forme || 'N/A'}</td>
+                                <td>${entry.attributes.granque_name || 'N/A'}</td>
+                                <td>${entry.attributes.tome || 'N/A'}</td>
+                            </tr>`;
+                        });
+                        
+                        html += '</table>';
+                        if (data.table_data.length > 10) {
+                            html += `<p><em>... et ${data.table_data.length - 10} autres entrées</em></p>`;
+                        }
+                    }
+                    
+                    result.innerHTML = html;
+                    result.className = 'results success';
+                } else {
+                    result.innerHTML = `<div class="error">Erreur: ${data.detail}</div>`;
+                    result.className = 'results error';
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tester Table Data';
+            }
+        }
+
+        async function testCombinations() {
+            const btn = document.getElementById('testCombinationsBtn');
+            const result = document.getElementById('combinationsResult');
+            const universe = document.getElementById('universeSelect').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Test en cours...';
+            result.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/combinations/universe/${universe}?limit=5`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `<h4>Combinaisons pour ${universe}:</h4>`;
+                    html += `<p>Total: ${data.pagination.total} combinaisons</p>`;
+                    
+                    if (data.combinations && data.combinations.length > 0) {
+                        html += '<table class="data-table">';
+                        html += '<tr><th>ID</th><th>Numéros</th><th>Granque-Name</th><th>Tome</th><th>Forme</th></tr>';
+                        
+                        data.combinations.forEach(combo => {
+                            html += `<tr>
+                                <td>${combo.combination_id}</td>
+                                <td>${combo.numbers.num1}-${combo.numbers.num2}</td>
+                                <td>${combo.attributes.granque_name || 'N/A'}</td>
+                                <td>${combo.attributes.tome || 'N/A'}</td>
+                                <td>${combo.attributes.forme || 'N/A'}</td>
+                            </tr>`;
+                        });
+                        
+                        html += '</table>';
+                    }
+                    
+                    result.innerHTML = html;
+                    result.className = 'results success';
+                } else {
+                    result.innerHTML = `<div class="error">Erreur: ${data.detail}</div>`;
+                    result.className = 'results error';
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tester Combinaisons';
+            }
+        }
+
+        async function testStats() {
+            const btn = document.getElementById('testStatsBtn');
+            const result = document.getElementById('statsResult');
+            const universe = document.getElementById('universeSelect').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Test en cours...';
+            result.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/combinations/stats/${universe}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `<h4>Statistiques pour ${universe}:</h4>`;
+                    html += `<p><strong>Total combinaisons:</strong> ${data.general_stats.total_combinations}</p>`;
+                    html += `<p><strong>Granque-names uniques:</strong> ${data.general_stats.unique_granque_names}</p>`;
+                    html += `<p><strong>Tomes uniques:</strong> ${data.general_stats.unique_tomes}</p>`;
+                    html += `<p><strong>Formes uniques:</strong> ${data.general_stats.unique_formes}</p>`;
+                    
+                    if (data.distributions.by_tome) {
+                        html += '<h5>Distribution par Tome:</h5>';
+                        for (const [tome, count] of Object.entries(data.distributions.by_tome)) {
+                            html += `<div>${tome}: ${count} entrées</div>`;
+                        }
+                    }
+                    
+                    result.innerHTML = html;
+                    result.className = 'results success';
+                } else {
+                    result.innerHTML = `<div class="error">Erreur: ${data.detail}</div>`;
+                    result.className = 'results error';
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tester Statistiques';
+            }
+        }
+
+        async function testSearch() {
+            const btn = document.getElementById('testSearchBtn');
+            const result = document.getElementById('searchResult');
+            const granque = document.getElementById('searchGranque').value;
+            const tome = document.getElementById('searchTome').value;
+            const universe = document.getElementById('universeSelect').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Recherche...';
+            result.style.display = 'block';
+            
+            try {
+                let url = `${API_BASE}/api/combinations/search?universe=${universe}`;
+                if (granque) url += `&granque_name=${granque}`;
+                if (tome) url += `&tome=${tome}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `<h4>Résultats de recherche (${data.total_found} trouvés):</h4>`;
+                    
+                    if (data.results && data.results.length > 0) {
+                        html += '<table class="data-table">';
+                        html += '<tr><th>ID</th><th>Numéros</th><th>Granque-Name</th><th>Tome</th><th>Forme</th></tr>';
+                        
+                        data.results.forEach(item => {
+                            html += `<tr>
+                                <td>${item.combination_id}</td>
+                                <td>${item.numbers}</td>
+                                <td>${item.granque_name || 'N/A'}</td>
+                                <td>${item.tome || 'N/A'}</td>
+                                <td>${item.forme || 'N/A'}</td>
+                            </tr>`;
+                        });
+                        
+                        html += '</table>';
+                    } else {
+                        html += '<p>Aucun résultat trouvé.</p>';
+                    }
+                    
+                    result.innerHTML = html;
+                    result.className = 'results success';
+                } else {
+                    result.innerHTML = `<div class="error">Erreur: ${data.detail}</div>`;
+                    result.className = 'results error';
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Rechercher';
+            }
+        }
+
+        async function testKatulaTable() {
+            const btn = document.getElementById('testKatulaBtn');
+            const result = document.getElementById('katulaResult');
+            const universe = document.getElementById('universeSelect').value;
+            
+            btn.disabled = true;
+            btn.textContent = 'Test en cours...';
+            result.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/analytics/katula/table/${universe}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = `<h4>Table de Katula pour ${universe}:</h4>`;
+                    html += `<p>Matrice ${data.dimensions.rows}x${data.dimensions.columns} = ${data.dimensions.total_chips} chips</p>`;
+                    
+                    if (data.chip_positions) {
+                        const chipCount = Object.keys(data.chip_positions).length;
+                        html += `<p>Positions définies: ${chipCount} chips</p>`;
+                        
+                        // Afficher quelques exemples
+                        html += '<h5>Exemples de positions:</h5>';
+                        const examples = Object.entries(data.chip_positions).slice(0, 5);
+                        html += '<table class="data-table">';
+                        html += '<tr><th>Chip</th><th>Position</th><th>Zone</th><th>Quadrant</th></tr>';
+                        
+                        examples.forEach(([chipId, info]) => {
+                            html += `<tr>
+                                <td>${chipId}</td>
+                                <td>${info.position}</td>
+                                <td>${info.geometric_zone}</td>
+                                <td>${info.quadrant}</td>
+                            </tr>`;
+                        });
+                        
+                        html += '</table>';
+                    }
+                    
+                    result.innerHTML = html;
+                    result.className = 'results success';
+                } else {
+                    result.innerHTML = `<div class="error">Erreur: ${data.detail}</div>`;
+                    result.className = 'results error';
+                }
+                
+            } catch (error) {
+                result.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+                result.className = 'results error';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Tester Katula Table';
+            }
+        }
+
+        // Test automatique au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page de test chargée - Prêt pour les tests');
+        });
+    </script>
+</body>
+</html>
