@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation KATOOLING Avancée - Vraie Structure</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 120px auto 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2a5298;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .katula-advanced-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            background: #1e3c72;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .katula-advanced-cell {
+            background: white;
+            border: 2px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #1e3c72;
+            min-height: 80px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .katula-advanced-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .cell-chip-number {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .cell-formes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            justify-content: center;
+            margin: 2px 0;
+        }
+
+        .forme-badge {
+            background: #007bff;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.6em;
+        }
+
+        .forme-badge.cercle { background: #28a745; }
+        .forme-badge.rectangle { background: #ffc107; color: #000; }
+        .forme-badge.triangle { background: #dc3545; }
+        .forme-badge.carre { background: #6f42c1; }
+
+        .cell-complexity {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.6em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats-advanced {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card-advanced {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #1e3c72;
+        }
+
+        .forme-analysis {
+            margin-top: 20px;
+        }
+
+        .forme-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .forme-item {
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .forme-item:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .forme-item.active {
+            background: #28a745;
+            color: white;
+        }
+
+        .specialized-tables {
+            margin-top: 20px;
+        }
+
+        .table-item {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body class="custom-background">
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🔬 Validation KATOOLING Avancée</h1>
+            <p>Exploration de la vraie structure multi-dimensionnelle</p>
+        </div>
+
+        <div class="content">
+            <div class="controls">
+                <select id="universeSelect">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+                <button class="btn" onclick="loadAdvancedKatula()">📊 Charger Table Avancée</button>
+                <button class="btn" onclick="analyzeFormes()">🔍 Analyser Formes</button>
+                <button class="btn btn-success" onclick="showComplexity()">📈 Voir Complexité</button>
+            </div>
+
+            <div class="advanced-grid">
+                <!-- Table Katula Avancée -->
+                <div class="section">
+                    <h3>📊 Table Katula Multi-Dimensionnelle</h3>
+                    <div id="advancedKatulaContainer">
+                        <div class="loading">Cliquez sur "Charger Table Avancée" pour voir la vraie structure</div>
+                    </div>
+                </div>
+
+                <!-- Analyse des Formes -->
+                <div class="section">
+                    <h3>🔍 Analyse des Formes</h3>
+                    <div id="formeAnalysisContainer">
+                        <div class="loading">Cliquez sur "Analyser Formes" pour voir la distribution</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiques Avancées -->
+            <div class="section">
+                <h3>📈 Statistiques Avancées</h3>
+                <div id="advancedStatsContainer" class="stats-advanced">
+                    <div class="stat-card-advanced">
+                        <div class="stat-number" id="totalEntries">-</div>
+                        <div class="stat-label">Entrées Totales</div>
+                    </div>
+                    <div class="stat-card-advanced">
+                        <div class="stat-number" id="uniquePositions">-</div>
+                        <div class="stat-label">Positions Uniques</div>
+                    </div>
+                    <div class="stat-card-advanced">
+                        <div class="stat-number" id="totalFormes">-</div>
+                        <div class="stat-label">Formes Différentes</div>
+                    </div>
+                    <div class="stat-card-advanced">
+                        <div class="stat-number" id="complexityScore">-</div>
+                        <div class="stat-label">Score Complexité</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Spécialisées -->
+            <div class="section">
+                <h3>🗂️ Tables Spécialisées</h3>
+                <div id="specializedTablesContainer">
+                    <div class="loading">Chargez une table pour voir les tables spécialisées</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let currentAdvancedData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'validation-advanced', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+        });
+
+        async function loadAdvancedKatula() {
+            const universe = document.getElementById('universeSelect').value;
+            const container = document.getElementById('advancedKatulaContainer');
+            
+            container.innerHTML = '<div class="loading">Chargement de la table Katula avancée...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/analytics/katula/advanced/${universe}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentAdvancedData = data;
+                    displayAdvancedKatulaTable(data);
+                    updateAdvancedStats(data);
+                    displaySpecializedTables(data.specialized_tables);
+                } else {
+                    throw new Error(data.detail || 'Erreur lors du chargement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                container.innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
+            }
+        }
+
+        function displayAdvancedKatulaTable(data) {
+            const container = document.getElementById('advancedKatulaContainer');
+            
+            let html = `
+                <div class="validation-result">
+                    <strong>📊 Table Katula Avancée - ${data.universe}</strong><br>
+                    Entrées totales: ${data.statistics.total_entries}<br>
+                    Positions uniques: ${data.statistics.unique_positions}<br>
+                    Score complexité: ${data.statistics.complexity_score.toFixed(2)}<br>
+                    Source: ${data.data_source}
+                </div>
+            `;
+
+            if (data.matrix && data.matrix.length > 0) {
+                html += '<div class="katula-advanced-grid">';
+                
+                data.matrix.forEach((row, rowIndex) => {
+                    row.forEach((cell, colIndex) => {
+                        const formeBadges = Object.keys(cell.formes || {}).map(forme => 
+                            `<span class="forme-badge ${forme}">${forme}</span>`
+                        ).join('');
+                        
+                        const complexityIndicator = cell.forme_count > 1 ? 
+                            `<div class="cell-complexity">${cell.forme_count}</div>` : '';
+                        
+                        html += `
+                            <div class="katula-advanced-cell" 
+                                 data-chip="${cell.chip_number}"
+                                 data-position="${cell.position}"
+                                 title="Chip ${cell.chip_number} - ${cell.forme_count} forme(s)">
+                                ${complexityIndicator}
+                                <div class="cell-chip-number">${cell.chip_number}</div>
+                                <div class="cell-formes">${formeBadges}</div>
+                                <div style="font-size: 0.6em; color: #666;">${cell.petique}</div>
+                            </div>
+                        `;
+                    });
+                });
+                
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function analyzeFormes() {
+            const universe = document.getElementById('universeSelect').value;
+            const container = document.getElementById('formeAnalysisContainer');
+            
+            container.innerHTML = '<div class="loading">Analyse des formes en cours...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/analytics/katula/forme-analysis/${universe}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayFormeAnalysis(data);
+                } else {
+                    throw new Error(data.detail || 'Erreur analyse formes');
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
+            }
+        }
+
+        function displayFormeAnalysis(data) {
+            const container = document.getElementById('formeAnalysisContainer');
+            
+            let html = `
+                <div class="validation-result">
+                    <strong>🔍 Analyse Formes - ${data.universe}</strong><br>
+                    Type: ${data.analysis_type}
+                </div>
+            `;
+
+            if (data.results && data.results.length > 0) {
+                html += '<div class="forme-analysis">';
+                html += '<h4>Distribution des Formes:</h4>';
+                html += '<div class="forme-list">';
+                
+                data.results.forEach(result => {
+                    const [forme, count] = result;
+                    html += `
+                        <div class="forme-item" onclick="selectForme('${forme}')">
+                            <strong>${forme}</strong><br>
+                            <span>${count} occurrences</span>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function updateAdvancedStats(data) {
+            if (data.statistics) {
+                document.getElementById('totalEntries').textContent = data.statistics.total_entries || '-';
+                document.getElementById('uniquePositions').textContent = data.statistics.unique_positions || '-';
+                document.getElementById('totalFormes').textContent = data.statistics.total_formes?.length || '-';
+                document.getElementById('complexityScore').textContent = 
+                    data.statistics.complexity_score ? data.statistics.complexity_score.toFixed(2) : '-';
+            }
+        }
+
+        function displaySpecializedTables(tables) {
+            const container = document.getElementById('specializedTablesContainer');
+            
+            if (!tables || Object.keys(tables).length === 0) {
+                container.innerHTML = '<div class="loading">Aucune table spécialisée trouvée</div>';
+                return;
+            }
+
+            let html = '<h4>Tables Spécialisées Disponibles:</h4>';
+            
+            Object.entries(tables).forEach(([tableName, tableData]) => {
+                html += `
+                    <div class="table-item">
+                        <strong>${tableName}</strong><br>
+                        Entrées: ${tableData.count}<br>
+                        Colonnes: ${tableData.columns.join(', ')}<br>
+                        <small>Exemple: ${JSON.stringify(tableData.examples[0]).substring(0, 100)}...</small>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectForme(forme) {
+            console.log(`Forme sélectionnée: ${forme}`);
+            // Ici on pourrait charger les détails de cette forme spécifique
+        }
+
+        function showComplexity() {
+            if (!currentAdvancedData) {
+                alert('Chargez d\'abord une table Katula avancée');
+                return;
+            }
+
+            // Mettre en évidence les cellules complexes
+            document.querySelectorAll('.katula-advanced-cell').forEach(cell => {
+                const complexity = cell.querySelector('.cell-complexity');
+                if (complexity) {
+                    cell.style.border = '3px solid #ff6b6b';
+                    cell.style.background = '#fff5f5';
+                }
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.katula-advanced-cell').forEach(cell => {
+                    cell.style.border = '2px solid #dee2e6';
+                    cell.style.background = 'white';
+                });
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

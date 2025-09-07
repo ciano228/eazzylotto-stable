@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Katula Direct BD</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .controls { margin-bottom: 20px; }
+        select, button { padding: 10px; margin: 5px; }
+        .katula-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+        .chip-cell { border: 1px solid #ddd; padding: 10px; text-align: center; background: #f9f9f9; }
+        .chip-cell:hover { background: #e9e9e9; cursor: pointer; }
+        .forme-icon { font-size: 1.2em; margin-right: 5px; }
+        .loading { text-align: center; padding: 20px; color: #666; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Test Katula avec Données Réelles</h1>
+        
+        <div class="controls">
+            <select id="universeSelect">
+                <option value="">Sélectionner un univers</option>
+                <option value="mundo">🌍 Mundo</option>
+                <option value="roaster">☕ Roaster</option>
+            </select>
+            <button onclick="testWithMockData()">Test avec Données Simulées</button>
+            <button onclick="testBackendConnection()">Test Connexion Backend</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="katulaContainer"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        // Données simulées basées sur l'analyse réelle de la BD
+        const MOCK_DATA = {
+            mundo: {
+                formes: ['carre', 'triangle', 'cercle', 'rectangle'],
+                chips: {
+                    1: { carre: ['A1', 'B2'], triangle: ['C3'] },
+                    2: { cercle: ['D4'], rectangle: ['E5', 'F6'] },
+                    12: { carre: ['G7'], triangle: ['H8', 'I9'] },
+                    27: { rectangle: ['J10'], cercle: ['K11'] }
+                }
+            },
+            roaster: {
+                formes: ['carre-triangle', 'carre-cercle', 'triangle-cercle'],
+                chips: {
+                    1: { 'carre-triangle': ['AB1'], 'carre-cercle': ['CD2'] },
+                    5: { 'triangle-cercle': ['EF3', 'GH4'] },
+                    19: { 'carre-triangle': ['IJ5'] }
+                }
+            }
+        };
+
+        const FORME_ICONS = {
+            'carre': '■', 'triangle': '▲', 'cercle': '●', 'rectangle': '▬',
+            'carre-triangle': '■▲', 'carre-cercle': '■●', 'triangle-cercle': '▲●'
+        };
+
+        function showResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            document.getElementById('results').appendChild(div);
+        }
+
+        async function testBackendConnection() {
+            document.getElementById('results').innerHTML = '';
+            showResult('🔄 Test de connexion backend...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult('✅ Backend accessible: ' + data.message, 'success');
+                    
+                    // Test endpoint formes réelles
+                    const formesRes = await fetch(`${API_BASE}/formes/real/mundo`);
+                    if (formesRes.ok) {
+                        const formesData = await formesRes.json();
+                        showResult('✅ Endpoint formes réelles: ' + formesData.formes?.length + ' formes', 'success');
+                    } else {
+                        showResult('⚠️ Endpoint formes réelles non accessible (404)', 'error');
+                    }
+                } else {
+                    showResult('❌ Backend non accessible', 'error');
+                }
+            } catch (error) {
+                showResult('❌ Erreur connexion: ' + error.message, 'error');
+                showResult('💡 Démarrez le backend avec: cd backend && python main.py', 'error');
+            }
+        }
+
+        function testWithMockData() {
+            const universe = document.getElementById('universeSelect').value;
+            if (!universe) {
+                alert('Sélectionnez un univers');
+                return;
+            }
+
+            document.getElementById('results').innerHTML = '';
+            showResult(`🔄 Test avec données simulées pour ${universe}...`);
+
+            const data = MOCK_DATA[universe];
+            if (!data) {
+                showResult('❌ Pas de données simulées pour ' + universe, 'error');
+                return;
+            }
+
+            showResult(`✅ Formes trouvées: ${data.formes.join(', ')}`, 'success');
+            showResult(`✅ Chips avec données: ${Object.keys(data.chips).join(', ')}`, 'success');
+
+            // Afficher la grille
+            displayMockGrid(data, universe);
+        }
+
+        function displayMockGrid(data, universe) {
+            let html = '<h3>Grille Katula - ' + universe.toUpperCase() + '</h3>';
+            html += '<div class="katula-grid">';
+
+            // Afficher les 48 chips
+            for (let i = 1; i <= 48; i++) {
+                const chipData = data.chips[i] || {};
+                const hasData = Object.keys(chipData).length > 0;
+                
+                html += `<div class="chip-cell ${hasData ? 'has-data' : ''}" onclick="showChipInfo(${i}, '${universe}')">`;
+                html += `<div><strong>chip${i}</strong></div>`;
+                
+                if (hasData) {
+                    Object.entries(chipData).forEach(([forme, denominations]) => {
+                        const icon = FORME_ICONS[forme] || '?';
+                        html += `<div>${icon} ${denominations.length}</div>`;
+                    });
+                } else {
+                    html += '<div style="color: #999;">---</div>';
+                }
+                
+                html += '</div>';
+            }
+
+            html += '</div>';
+            document.getElementById('katulaContainer').innerHTML = html;
+        }
+
+        window.showChipInfo = function(chipNumber, universe) {
+            const data = MOCK_DATA[universe];
+            const chipData = data.chips[chipNumber];
+            
+            if (!chipData) {
+                alert(`chip${chipNumber}: Aucune donnée`);
+                return;
+            }
+
+            let details = `🎯 chip${chipNumber} - ${universe.toUpperCase()}\n\n`;
+            Object.entries(chipData).forEach(([forme, denominations]) => {
+                const icon = FORME_ICONS[forme] || '?';
+                details += `${icon} ${forme}:\n`;
+                denominations.forEach(denom => details += `  • ${denom}\n`);
+                details += '\n';
+            });
+
+            alert(details);
+        };
+
+        // Test automatique au chargement
+        setTimeout(testBackendConnection, 500);
+    </script>
+</body>
+</html>

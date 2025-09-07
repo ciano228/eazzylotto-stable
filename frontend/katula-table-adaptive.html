@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Table Katula Adaptative</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: #2c3e50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        select, button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+
+        .universe-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(6, 1fr);
+            grid-template-rows: 40px repeat(8, 1fr);
+            gap: 4px;
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            align-items: stretch;
+            justify-items: stretch;
+        }
+
+        .grid-header {
+            background: #34495e;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+        }
+
+        .ligne-label {
+            background: #2c3e50;
+            color: white;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .chip-cell {
+            background: white;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chip-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .chip-header {
+            background: #34495e;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 0.8em;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .chip-drawers {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chip-drawer {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #bdc3c7;
+            padding: 6px 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.2s ease;
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+        }
+
+        .chip-drawer:last-child {
+            border-bottom: none;
+        }
+
+        .chip-drawer:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        .chip-drawer.empty {
+            background: #f5f5f5;
+            color: #999;
+            font-style: italic;
+        }
+
+        .forme-icon {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+        }
+
+        .drawer-text {
+            font-size: 0.7em;
+            word-break: break-all;
+            line-height: 1.1;
+        }
+
+        .formes-legend {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .formes-legend h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .formes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .forme-item {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.8em;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .forme-item:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .katula-grid {
+                grid-template-columns: auto repeat(3, 1fr);
+                gap: 2px;
+                padding: 10px;
+            }
+            
+            .chip-cell {
+                min-height: 100px;
+            }
+            
+            .chip-drawer {
+                font-size: 0.65em;
+                padding: 3px 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Table Katula Adaptative</h1>
+            <p>Géométrie variable selon l'univers - Formes réelles de la BD</p>
+        </div>
+
+        <div class="controls">
+            <select id="universeSelect">
+                <option value="">Sélectionner un univers</option>
+                <option value="mundo">🌍 Mundo</option>
+                <option value="fruity">🍎 Fruity</option>
+                <option value="trigga">⚡ Trigga</option>
+                <option value="roaster">☕ Roaster</option>
+                <option value="sunshine">☀️ Sunshine</option>
+            </select>
+            <button onclick="loadAdaptiveUniverse()" id="loadBtn">🔄 Charger Univers</button>
+            <button onclick="analyzeRealFormes()" id="analyzeBtn" disabled>📊 Analyser Formes</button>
+        </div>
+
+        <div id="universeInfo" class="universe-info" style="display: none;"></div>
+        <div id="formesLegend" class="formes-legend" style="display: none;"></div>
+
+        <div class="main-content">
+            <div id="katulaContainer"></div>
+            <div id="loadingIndicator" class="loading" style="display: none;">
+                🔄 Chargement des formes réelles depuis la base de données...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/analytics';
+        let currentUniverse = null;
+        let universeData = null;
+        let realFormesData = null;
+
+        // Icônes dynamiques pour toutes les formes possibles
+        const FORME_ICONS = {
+            // Formes simples
+            'carre': '■',
+            'triangle': '▲', 
+            'cercle': '●',
+            'rectangle': '▬',
+            // Formes composites
+            'carre-triangle': '■▲',
+            'carre-cercle': '■●',
+            'carre-rectangle': '■▬',
+            'triangle-carre': '▲■',
+            'triangle-cercle': '▲●',
+            'triangle-rectangle': '▲▬',
+            'cercle-carre': '●■',
+            'cercle-triangle': '●▲',
+            'cercle-rectangle': '●▬',
+            'rectangle-carre': '▬■',
+            'rectangle-triangle': '▬▲',
+            'rectangle-cercle': '▬●'
+        };
+
+        const FORME_COLORS = {
+            'carre': '#3498db',
+            'triangle': '#27ae60',
+            'cercle': '#f1c40f',
+            'rectangle': '#e74c3c'
+        };
+
+        async function loadAdaptiveUniverse() {
+            const universeSelect = document.getElementById('universeSelect');
+            const selectedUniverse = universeSelect.value;
+            
+            if (!selectedUniverse) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            const loadBtn = document.getElementById('loadBtn');
+            loadBtn.disabled = true;
+            loadBtn.textContent = '🔄 Chargement...';
+            
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('katulaContainer').innerHTML = '';
+            
+            try {
+                currentUniverse = selectedUniverse;
+                
+                // 1. Charger les formes réelles pour cet univers
+                await loadRealFormes(selectedUniverse);
+                
+                // 2. Charger les données détaillées des chips
+                await loadUniverseChipData(selectedUniverse);
+                
+                // 3. Afficher la table adaptative
+                displayAdaptiveKatulaTable();
+                displayUniverseInfo();
+                displayRealFormesLegend();
+                
+                document.getElementById('analyzeBtn').disabled = false;
+                showSuccess(`Univers ${selectedUniverse} chargé avec géométrie adaptative!`);
+                
+            } catch (error) {
+                showError('Erreur lors du chargement: ' + error.message);
+                console.error('Erreur:', error);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🔄 Charger Univers';
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+
+        async function loadRealFormes(universe) {
+            try {
+                console.log(`Chargement des formes réelles pour ${universe}...`);
+                
+                const response = await fetch(`${API_BASE}/formes/real/${universe}`);
+                if (!response.ok) {
+                    throw new Error(`Erreur formes réelles ${universe}: ${response.status}`);
+                }
+                
+                realFormesData = await response.json();
+                console.log(`Formes réelles ${universe}:`, realFormesData);
+                
+            } catch (error) {
+                console.error(`Erreur chargement formes réelles ${universe}:`, error);
+                throw error;
+            }
+        }
+
+        async function loadUniverseChipData(universe) {
+            try {
+                console.log(`Chargement des données chips pour ${universe}...`);
+                
+                const chipDetails = {};
+                for (let chipNum = 1; chipNum <= 48; chipNum++) {
+                    try {
+                        const response = await fetch(`${API_BASE}/formes/real/${universe}/chip/${chipNum}`);
+                        if (response.ok) {
+                            const chipData = await response.json();
+                            chipDetails[chipNum] = chipData;
+                        }
+                    } catch (e) {
+                        console.warn(`Chip ${chipNum} non disponible:`, e);
+                        chipDetails[chipNum] = { formes_data: {} };
+                    }
+                }
+                
+                universeData = {
+                    universe: universe,
+                    chipDetails: chipDetails,
+                    realFormes: realFormesData
+                };
+                
+                console.log(`Données chips ${universe} chargées:`, universeData);
+                
+            } catch (error) {
+                console.error(`Erreur chargement chips ${universe}:`, error);
+                throw error;
+            }
+        }
+
+        function displayAdaptiveKatulaTable() {
+            if (!universeData || !realFormesData) {
+                document.getElementById('katulaContainer').innerHTML = '<div class="error">Données non disponibles</div>';
+                return;
+            }
+
+            let html = '<div class="katula-grid">';
+            
+            // En-têtes
+            html += '<div class="grid-header">Lignes</div>';
+            for (let col = 1; col <= 6; col++) {
+                html += `<div class="grid-header">C${col}</div>`;
+            }
+            
+            // Générer les 8 lignes × 6 colonnes = 48 chips avec formes adaptatives
+            for (let ligne = 1; ligne <= 8; ligne++) {
+                html += `<div class="ligne-label">L${ligne}</div>`;
+                
+                for (let col = 1; col <= 6; col++) {
+                    const chipNumber = ((ligne - 1) * 6) + col;
+                    html += createAdaptiveChipHTML(chipNumber, ligne, col);
+                }
+            }
+            
+            html += '</div>';
+            document.getElementById('katulaContainer').innerHTML = html;
+        }
+
+        function createAdaptiveChipHTML(chipNumber, ligne, col) {
+            const chipData = universeData.chipDetails[chipNumber];
+            const formesData = chipData ? chipData.formes_data : {};
+            
+            // Utiliser les formes réelles de cet univers
+            const realFormes = realFormesData.formes || [];
+            
+            let html = `
+                <div class="chip-cell" data-chip="${chipNumber}" onclick="showAdaptiveChipDetails(${chipNumber})" title="chip${chipNumber}">
+                    <div class="chip-header">chip${chipNumber}</div>
+                    <div class="chip-drawers">
+            `;
+            
+            // Créer les tiroirs selon les formes réelles de cet univers
+            realFormes.forEach(forme => {
+                const formeItems = formesData[forme] || [];
+                const isEmpty = formeItems.length === 0;
+                
+                // Gérer les dénominations
+                let displayText = '---';
+                let allDenominations = [];
+                
+                if (formeItems.length > 0) {
+                    allDenominations = [...new Set(formeItems.map(item => item.denomination))];
+                    
+                    if (allDenominations.length === 1) {
+                        displayText = allDenominations[0];
+                    } else if (allDenominations.length > 1) {
+                        displayText = allDenominations.slice(0, 2).join('/');
+                        if (allDenominations.length > 2) {
+                            displayText += '...';
+                        }
+                    }
+                }
+                
+                const searchDenominations = allDenominations.length > 0 ? allDenominations.join('/') : displayText;
+                
+                html += `
+                    <div class="chip-drawer ${isEmpty ? 'empty' : ''}" 
+                         data-forme="${forme}" data-chip="${chipNumber}"
+                         data-denomination="${displayText}"
+                         onclick="showDenominationDetails('${searchDenominations}', '${currentUniverse}', event)">
+                        ${generateAdaptiveFormeIcon(forme)}
+                        <span class="drawer-text">${displayText}</span>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        function generateAdaptiveFormeIcon(forme) {
+            // Générer l'icône selon le type de forme
+            if (forme.includes('-')) {
+                // Forme composite
+                const parts = forme.split('-');
+                let iconHtml = '<span class="forme-icon">';
+                
+                parts.forEach((part, index) => {
+                    const icon = FORME_ICONS[part] || '?';
+                    const color = FORME_COLORS[part] || '#666';
+                    iconHtml += `<span style="color: ${color}">${icon}</span>`;
+                });
+                
+                iconHtml += '</span>';
+                return iconHtml;
+            } else {
+                // Forme simple
+                const icon = FORME_ICONS[forme] || '?';
+                const color = FORME_COLORS[forme] || '#666';
+                return `<span class="forme-icon" style="color: ${color}">${icon}</span>`;
+            }
+        }
+
+        function displayUniverseInfo() {
+            const infoDiv = document.getElementById('universeInfo');
+            
+            if (!realFormesData) {
+                infoDiv.style.display = 'none';
+                return;
+            }
+            
+            const geometryType = realFormesData.geometry_type;
+            const totalFormes = realFormesData.total_formes;
+            const simples = realFormesData.simples.length;
+            const composites = realFormesData.composites.length;
+            
+            infoDiv.innerHTML = `
+                <h3>🌍 Univers: ${currentUniverse.toUpperCase()}</h3>
+                <p><strong>Géométrie:</strong> ${geometryType} (${totalFormes} formes)</p>
+                <p><strong>Formes simples:</strong> ${simples} | <strong>Formes composites:</strong> ${composites}</p>
+                <p><strong>Adaptation:</strong> Table générée selon les formes réelles de la BD</p>
+            `;
+            infoDiv.style.display = 'block';
+        }
+
+        function displayRealFormesLegend() {
+            const legendDiv = document.getElementById('formesLegend');
+            
+            if (!realFormesData) {
+                legendDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = `
+                <h4>🎨 Formes Réelles - ${currentUniverse.toUpperCase()}</h4>
+                <div class="formes-grid">
+            `;
+            
+            realFormesData.formes_with_frequency.slice(0, 12).forEach(formeData => {
+                const forme = formeData.forme;
+                const frequency = formeData.frequency;
+                
+                html += `
+                    <div class="forme-item" onclick="highlightForme('${forme}')">
+                        ${generateAdaptiveFormeIcon(forme)}
+                        <div><strong>${forme}</strong></div>
+                        <div><small>${frequency} fois</small></div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            legendDiv.innerHTML = html;
+            legendDiv.style.display = 'block';
+        }
+
+        function showAdaptiveChipDetails(chipNumber) {
+            const chipData = universeData.chipDetails[chipNumber];
+            if (!chipData || !chipData.formes_data || Object.keys(chipData.formes_data).length === 0) {
+                alert(`chip${chipNumber}: Aucune donnée disponible`);
+                return;
+            }
+            
+            const formesData = chipData.formes_data;
+            let details = `🎯 chip${chipNumber} - ${currentUniverse.toUpperCase()}\n`;
+            details += `📐 Géométrie: ${realFormesData.geometry_type}\n\n`;
+            
+            // Organiser par forme
+            Object.entries(formesData).forEach(([forme, items]) => {
+                const icon = FORME_ICONS[forme] || '?';
+                details += `${icon} ${forme.toUpperCase()}:\n`;
+                items.slice(0, 3).forEach(item => {
+                    details += `  • ${item.denomination}\n`;
+                });
+                if (items.length > 3) {
+                    details += `  ... et ${items.length - 3} autres\n`;
+                }
+                details += '\n';
+            });
+            
+            const totalItems = Object.values(formesData).reduce((sum, items) => sum + items.length, 0);
+            details += `📊 Total: ${totalItems} éléments`;
+            alert(details);
+        }
+
+        async function showDenominationDetails(denomination, universe, event) {
+            event.stopPropagation();
+            
+            if (denomination === '---') return;
+            
+            try {
+                const denominations = denomination.split('/').map(d => d.trim());
+                let allCombinations = [];
+                
+                for (const singleDenomination of denominations) {
+                    const url = `${API_BASE}/denomination/${universe}/${encodeURIComponent(singleDenomination)}`;
+                    const response = await fetch(url);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.details && data.details.length > 0) {
+                            allCombinations.push(...data.details);
+                        }
+                    }
+                }
+                
+                if (allCombinations.length === 0) {
+                    alert(`Aucune combinaison trouvée pour "${denomination}" dans ${universe}`);
+                    return;
+                }
+                
+                // Afficher les détails
+                let details = `🎯 ${denomination.toUpperCase()} - ${universe.toUpperCase()}\n`;
+                details += `📐 Géométrie: ${realFormesData.geometry_type}\n`;
+                details += `📊 Total: ${allCombinations.length} combinaisons\n\n`;
+                
+                allCombinations.slice(0, 8).forEach((combo, i) => {
+                    details += `${i+1}. ${combo.num1}-${combo.num2} (${combo.alpha_ranking || 'N/A'})\n`;
+                });
+                
+                if (allCombinations.length > 8) {
+                    details += `\n... et ${allCombinations.length - 8} autres`;
+                }
+                
+                alert(details);
+                
+            } catch (error) {
+                showError('Erreur: ' + error.message);
+            }
+        }
+
+        function highlightForme(forme) {
+            // Surligner tous les tiroirs de cette forme
+            document.querySelectorAll(`[data-forme="${forme}"]`).forEach(drawer => {
+                if (!drawer.classList.contains('empty')) {
+                    drawer.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                    drawer.style.color = 'white';
+                    drawer.style.transform = 'scale(1.1)';
+                }
+            });
+            
+            // Reset après 3 secondes
+            setTimeout(() => {
+                document.querySelectorAll(`[data-forme="${forme}"]`).forEach(drawer => {
+                    drawer.style.background = '';
+                    drawer.style.color = '';
+                    drawer.style.transform = '';
+                });
+            }, 3000);
+        }
+
+        async function analyzeRealFormes() {
+            if (!realFormesData) {
+                showError('Chargez d\'abord un univers');
+                return;
+            }
+            
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '📊 Analyse...';
+            
+            try {
+                // Analyser la distribution des formes
+                let analysis = `🔍 ANALYSE DES FORMES RÉELLES - ${currentUniverse.toUpperCase()}\n\n`;
+                analysis += `📐 Type de géométrie: ${realFormesData.geometry_type}\n`;
+                analysis += `📊 Total formes: ${realFormesData.total_formes}\n\n`;
+                
+                analysis += `🔹 FORMES SIMPLES (${realFormesData.simples.length}):\n`;
+                realFormesData.simples.slice(0, 5).forEach(forme => {
+                    analysis += `  • ${forme}\n`;
+                });
+                
+                analysis += `\n🔸 FORMES COMPOSITES (${realFormesData.composites.length}):\n`;
+                realFormesData.composites.slice(0, 5).forEach(forme => {
+                    analysis += `  • ${forme}\n`;
+                });
+                
+                analysis += `\n📈 TOP 5 PLUS FRÉQUENTES:\n`;
+                realFormesData.formes_with_frequency.slice(0, 5).forEach((f, i) => {
+                    analysis += `  ${i+1}. ${f.forme} (${f.frequency} fois)\n`;
+                });
+                
+                alert(analysis);
+                
+            } catch (error) {
+                showError('Erreur analyse: ' + error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '📊 Analyser Formes';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.textContent = message;
+            document.querySelector('.container').appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
