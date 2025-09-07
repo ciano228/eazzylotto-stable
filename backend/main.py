@@ -203,7 +203,23 @@ try:
 except Exception as e:
     print(f"[ERROR] Katooling router: {e}")
 
-print(f"[INFO] {routers_loaded}/5 routers chargés avec succès")
+try:
+    from app.routes.combinations import router as combinations_router
+    app.include_router(combinations_router, tags=["combinations"])
+    print("[OK] Combinations router monté")
+    routers_loaded += 1
+except Exception as e:
+    print(f"[ERROR] Combinations router: {e}")
+
+try:
+    from app.routes.real_formes_router import router as real_formes_router
+    app.include_router(real_formes_router, prefix="/api", tags=["real_formes"])
+    print("[OK] Real formes router monté")
+    routers_loaded += 1
+except Exception as e:
+    print(f"[ERROR] Real formes router: {e}")
+
+print(f"[INFO] {routers_loaded}/7 routers chargés avec succès")
 
 # Routes supplémentaires pour le dashboard React
 if AUTH_AVAILABLE:

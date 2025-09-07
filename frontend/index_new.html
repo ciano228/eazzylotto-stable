@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Accueil</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1890ff, #40a9ff);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .main-btn {
+            background: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+        }
+        .main-btn:hover {
+            background: #40a9ff;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Bienvenue sur EazzyCalculator</h1>
+            <p>La plateforme intelligente pour la gestion et l'analyse de vos tirages de loterie.</p>
+        </div>
+        <div class="main-content">
+            <p style="font-size:1.2em;text-align:center;color:#555;max-width:700px;margin:0 auto;">
+                Démarrez une nouvelle session, consultez vos statistiques ou explorez les fonctionnalités avancées pour optimiser vos analyses de tirages.
+            </p>
+            <div class="action-buttons">
+                <a href="smart-input.html" class="main-btn">Saisie Intelligente</a>
+                <a href="dashboard.html" class="main-btn" style="background:#52c41a;">Tableau de Bord</a>
+                <a href="combination-generator.html" class="main-btn" style="background:#fa8c16;">Générateur de Combinaisons</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    // Injecter le header universel au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof UniversalHeader !== 'undefined') {
+            UniversalHeader.injectHeader('header-container', 'index', {
+                showNavigation: true,
+                showUserInfo: false
+            });
+        }
+    });
+    </script>
+</body>
+</html>

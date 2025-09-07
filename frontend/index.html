@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/eazzylotto-icons.css">
-    <script src="assets/js/universal-header.js"></script>
-    <script src="assets/js/app-stability.js"></script>
     <link rel="manifest" href="manifest.json">
+    <script src="assets/js/universal-header.js"></script>
     <meta name="theme-color" content="#ffd700">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,7 +19,7 @@
         * { box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 60%, #1890ff 100%);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
@@ -323,10 +322,10 @@
                 🏆 <strong>Résultats Prouvés</strong> : Rejoignez notre communauté de gagnants
             </p>
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px;">
-                <a href="katooling-workflow.html" class="cta-button primary">
+                <a href="katooling-method.html" class="cta-button primary">
                     🔬 Découvrir KATOOLING
                 </a>
-                <a href="katooling-tour.html" class="cta-button">
+                <a href="dashboard.html" class="cta-button">
                     🚀 Commencer Maintenant
                 </a>
             </div>
@@ -373,7 +372,7 @@
                     <button type="submit" class="login-submit">Suivant</button>
                 </form>
                 <div class="signup-link">
-                    Vous n'avez pas de compte ? <a href="#signup">S'inscrire maintenant</a>
+                    Vous n'avez pas de compte ? <a href="signup.html">S'inscrire maintenant</a>
                 </div>
             </div>
         </div>
@@ -448,7 +447,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             // Injecter le header universel
-            UniversalHeader.injectHeader('header-container', 'accueil', { 
+            UniversalHeader.injectHeader('header-container', 'index', { 
                 showNavigation: true,
                 showUserInfo: false 
             });

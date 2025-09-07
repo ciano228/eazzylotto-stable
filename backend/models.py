@@ -1,3 +1,24 @@
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy.orm import relationship
+from datetime import datetime
+
+Base = declarative_base()
+
+# Table Combination pour la BD Postgres
+class Combination(Base):
+    __tablename__ = "combinations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    chip = Column(Integer, index=True)
+    colonne = Column(String(10), index=True)
+    ligne = Column(String(10), index=True)
+    forme = Column(String(50), index=True)
+    denomination = Column(String(100), index=True)
+    petique = Column(String(10), index=True)
+    granque_name = Column(String(10), index=True)
+    tome = Column(String(10), index=True)
+    univers = Column(String(50), index=True)
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, DECIMAL, ARRAY, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func

@@ -17,7 +17,7 @@ CREATE INDEX IF NOT EXISTS idx_universe_forme_chip ON combinations(univers, form
 CREATE INDEX IF NOT EXISTS idx_denomination ON combinations(denomination);
 
 -- Données d'exemple pour l'univers Mundo
- (univers, forme, chip, denomination, object_name, num1, num2, alpha_ranking) VALUES
+INSERT INTO combinations (univers, forme, chip, denomination, object_name, num1, num2, alpha_ranking) VALUES
 -- Chip 1
 ('mundo', 'carre', 1, 'road 1', 'road 1', 12, 34, 'a'),
 ('mundo', 'carre', 1, 'road 1', 'road 1', 15, 28, 'b'),

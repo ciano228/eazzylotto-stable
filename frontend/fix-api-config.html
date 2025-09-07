@@ -132,9 +132,9 @@
             
             <h4>Configurations Incorrectes Détectées :</h4>
             <div class="fix-item">
-                <h5><span class="status-indicator status-error"></span>smart-input.html</h5>
-                <div class="code-block">const API_BASE = 'http://localhost:8002/api'; // ❌ INCORRECT</div>
-                <p>Devrait être : <code>http://localhost:8000/api</code></p>
+                <h5><span class="status-indicator status-success"></span>smart-input.html</h5>
+                <div class="code-block">const API_BASE = 'http://localhost:8002/api'; // ✅ CORRECT</div>
+                <p>PostgreSQL API configurée correctement</p>
             </div>
 
             <div class="fix-item">
@@ -161,7 +161,7 @@
                 Cette action va :
             </p>
             <ul>
-                <li>✅ Corriger tous les API_BASE vers <code>http://localhost:8000/api</code></li>
+                <li>✅ Vérifier la configuration PostgreSQL sur <code>http://localhost:8002/api</code></li>
                 <li>✅ Ajouter une gestion d'erreur robuste</li>
                 <li>✅ Implémenter un fallback en mode démo</li>
                 <li>✅ Créer des sauvegardes des fichiers originaux</li>
@@ -207,7 +207,7 @@
     </div>
 
     <script>
-        const CORRECT_API_BASE = 'http://localhost:8000/api';
+        const CORRECT_API_BASE = 'http://localhost:8002/api';
         
         const FILES_TO_FIX = [
             {
@@ -286,15 +286,15 @@
                 });
                 
                 if (response.ok) {
-                    addFixLog('✅ Backend accessible sur le port 8000', 'success');
+                    addFixLog('✅ Backend PostgreSQL accessible sur le port 8002', 'success');
                     
-                    // Test des sessions
-                    const sessionsResponse = await fetch(`${CORRECT_API_BASE}/session/sessions`);
-                    if (sessionsResponse.ok) {
-                        const sessions = await sessionsResponse.json();
-                        addFixLog(`✅ Sessions API fonctionnelle : ${sessions.value ? sessions.value.length : sessions.length || 0} sessions`, 'success');
+                    // Test des formes PostgreSQL
+                    const formesResponse = await fetch(`${CORRECT_API_BASE}/formes/real/mundo`);
+                    if (formesResponse.ok) {
+                        const formes = await formesResponse.json();
+                        addFixLog(`✅ PostgreSQL fonctionnel : ${formes.formes.length} formes détectées`, 'success');
                     } else {
-                        addFixLog('⚠️ Sessions API : Réponse inattendue', 'warning');
+                        addFixLog('⚠️ PostgreSQL : Réponse inattendue', 'warning');
                     }
                 } else {
                     throw new Error(`HTTP ${response.status}`);
