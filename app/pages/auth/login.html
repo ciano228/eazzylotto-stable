@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Katooling</title>
+    <script src="assets/js/universal-header.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%); min-height: 100vh; color: #222; }
+        .main-container { max-width: 420px; margin: 0 auto; padding: 120px 20px 40px 20px; }
+        .form-card { background: #fff; border-radius: 16px; box-shadow: 0 8px 32px #0002; padding: 36px 28px; }
+        h2 { text-align: center; color: #1e3c72; margin-bottom: 24px; font-size: 2rem; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 7px; color: #1e3c72; font-weight: 600; }
+        input { width: 100%; padding: 12px; border-radius: 7px; border: 1.5px solid #e1e5e9; font-size: 1rem; margin-bottom: 2px; }
+        input:focus { border-color: #ffd700; outline: none; }
+        .submit-btn { width: 100%; background: linear-gradient(90deg, #ffd700, #ffed4e); color: #1e3c72; font-weight: 900; border: none; border-radius: 8px; padding: 14px 0; font-size: 1.1rem; cursor: pointer; margin-top: 10px; transition: box-shadow 0.2s, transform 0.2s; }
+        .submit-btn:hover { box-shadow: 0 6px 24px #ffd70066; transform: translateY(-2px) scale(1.04); }
+        .signup-link { text-align: center; margin-top: 18px; font-size: 1rem; }
+        .signup-link a { color: #1e3c72; text-decoration: underline; font-weight: 600; }
+        @media (max-width: 700px) { .main-container { padding-top: 80px; } }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    <div class="main-container">
+        <form class="form-card" id="loginForm" autocomplete="off">
+            <h2>Connexion</h2>
+            <div class="form-group">
+                <label for="identity">Email ou Pseudonyme</label>
+                <input type="text" id="identity" name="identity" required placeholder="Votre email ou pseudonyme">
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required placeholder="Mot de passe">
+            </div>
+            <button type="submit" class="submit-btn">Se connecter</button>
+            <div class="signup-link" style="margin-top:10px;">
+                <a href="#" id="forgotPasswordLink" style="color:#fa541c;text-decoration:underline;font-size:0.98em;">Mot de passe oublié ?</a>
+            </div>
+            <div class="signup-link">Pas encore de compte ? <a href="signup.html">S'inscrire</a></div>
+        </form>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof UniversalHeader !== 'undefined') {
+            UniversalHeader.injectHeader('header-container', 'login', {
+                showNavigation: true,
+                showUserInfo: false
+            });
+        }
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const identity = document.getElementById('identity').value;
+            const password = document.getElementById('password').value;
+            if (!identity || !password) {
+                alert('Veuillez renseigner votre email ou pseudonyme et votre mot de passe.');
+                return;
+            }
+            alert('Connexion simulée pour : ' + identity + ' (Aucune base de données réelle)');
+            window.location.href = 'dashboard.html';
+        });
+
+        // Handler pour le lien "Mot de passe oublié ?"
+        document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Un service de réinitialisation de mot de passe sera bientôt disponible.');
+        });
+    });
+    </script>
+</body>
+</html>

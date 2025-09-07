@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sessions Simple</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        select { padding: 10px; margin: 10px; width: 300px; }
+        button { padding: 10px 20px; margin: 10px; }
+        #log { background: #f5f5f5; padding: 10px; height: 200px; overflow-y: scroll; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Test de Chargement des Sessions</h1>
+    
+    <div class="test-section">
+        <h3>1. Test API Sessions</h3>
+        <button onclick="testAPI()">Tester API</button>
+        <div id="apiResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Sessions Chargées</h3>
+        <select id="sessionSelect">
+            <option>Chargement...</option>
+        </select>
+        <button onclick="loadSessions()">Recharger</button>
+        <div id="sessionResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Log de Debug</h3>
+        <div id="log"></div>
+        <button onclick="clearLog()">Effacer</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            log('Test API démarré...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                log(`Réponse HTTP: ${response.status}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Données reçues: ${JSON.stringify(data, null, 2)}`);
+                    resultDiv.innerHTML = `<div class="success">✅ API OK - ${JSON.stringify(data).length} caractères</div>`;
+                } else {
+                    log(`Erreur HTTP: ${response.status}`);
+                    resultDiv.innerHTML = `<div class="error">❌ Erreur HTTP: ${response.status}</div>`;
+                }
+            } catch (error) {
+                log(`Erreur: ${error.message}`);
+                resultDiv.innerHTML = `<div class="error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+        
+        async function loadSessions() {
+            const select = document.getElementById('sessionSelect');
+            const resultDiv = document.getElementById('sessionResult');
+            
+            select.innerHTML = '<option>Chargement...</option>';
+            log('Chargement des sessions...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const sessions = data.value || data.sessions || data;
+                    
+                    log(`Sessions trouvées: ${sessions.length}`);
+                    
+                    select.innerHTML = '<option value="">Sélectionner...</option>';
+                    
+                    if (Array.isArray(sessions)) {
+                        sessions.forEach(session => {
+                            const option = document.createElement('option');
+                            option.value = session.id;
+                            option.textContent = `${session.name} (ID: ${session.id})`;
+                            select.appendChild(option);
+                            log(`Session ajoutée: ${session.name}`);
+                        });
+                        
+                        resultDiv.innerHTML = `<div class="success">✅ ${sessions.length} sessions chargées</div>`;
+                    } else {
+                        log('Format de données incorrect');
+                        resultDiv.innerHTML = `<div class="error">❌ Format incorrect</div>`;
+                    }
+                } else {
+                    log(`Erreur HTTP: ${response.status}`);
+                    resultDiv.innerHTML = `<div class="error">❌ Erreur HTTP: ${response.status}</div>`;
+                }
+            } catch (error) {
+                log(`Erreur: ${error.message}`);
+                resultDiv.innerHTML = `<div class="error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-test au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Page chargée, test automatique...');
+            setTimeout(() => {
+                testAPI();
+                setTimeout(() => {
+                    loadSessions();
+                }, 1000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

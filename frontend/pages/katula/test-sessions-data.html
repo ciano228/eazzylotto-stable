@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sessions et Données - EazzyLotto</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .section h3 {
+            color: #1e3c72;
+            margin: 0 0 20px 0;
+        }
+
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .session-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #1e3c72;
+        }
+
+        .session-card.active {
+            border-left-color: #ffd700;
+            background: #fffbf0;
+        }
+
+        .session-name {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .session-info {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72, #ffd700);
+            transition: width 0.3s ease;
+        }
+
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+        }
+
+        .btn.success {
+            background: #28a745;
+        }
+
+        .btn.info {
+            background: #17a2b8;
+        }
+
+        .btn.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .action-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test Sessions et Données</h1>
+            <p>Vérification des sessions de test et fonctionnalités</p>
+        </div>
+
+        <div class="content">
+            <!-- Section Sessions -->
+            <div class="section">
+                <h3>📋 Sessions Disponibles</h3>
+                <div id="sessionsContainer" class="loading">
+                    Chargement des sessions...
+                </div>
+            </div>
+
+            <!-- Section Actions de Test -->
+            <div class="section">
+                <h3>🔧 Actions de Test</h3>
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <div class="action-icon">📊</div>
+                        <h4>Journal Statistique</h4>
+                        <p>Tester l'analyse des tendances</p>
+                        <button class="btn primary" onclick="testJournalStatistique()">Tester</button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">📈</div>
+                        <h4>Analyse Temporelle</h4>
+                        <p>Comparer les périodes</p>
+                        <button class="btn info" onclick="testAnalyseTemporelle()">Tester</button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">🤖</div>
+                        <h4>Prédictions IA</h4>
+                        <p>Algorithmes LSTM</p>
+                        <button class="btn success" onclick="testPredictionsIA()">Tester</button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">🔍</div>
+                        <h4>Visualisation Patterns</h4>
+                        <p>Patterns détectés</p>
+                        <button class="btn warning" onclick="testPatterns()">Tester</button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">📊</div>
+                        <h4>Analyse Écarts</h4>
+                        <p>Étude des retards</p>
+                        <button class="btn" onclick="testAnalyseEcarts()">Tester</button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">🌌</div>
+                        <h4>Multi-Univers</h4>
+                        <p>5 univers d'analyse</p>
+                        <button class="btn primary" onclick="testMultiUnivers()">Tester</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Résultats -->
+            <div class="section">
+                <h3>📋 Résultats des Tests</h3>
+                <div id="resultsContainer">
+                    <p>Cliquez sur les boutons ci-dessus pour tester les fonctionnalités.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'test-sessions', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+
+            loadSessions();
+        });
+
+        async function loadSessions() {
+            try {
+                const response = await fetch(`${API_BASE}/api/session/sessions`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySessions(data.value || data);
+                } else {
+                    showError('Erreur lors du chargement des sessions: ' + data.detail);
+                }
+            } catch (error) {
+                showError('Erreur de connexion API: ' + error.message);
+            }
+        }
+
+        function displaySessions(sessions) {
+            const container = document.getElementById('sessionsContainer');
+            
+            if (!sessions || sessions.length === 0) {
+                container.innerHTML = '<p>Aucune session trouvée. Exécutez le générateur de données de test.</p>';
+                return;
+            }
+
+            let html = '<div class="sessions-grid">';
+            
+            sessions.forEach(session => {
+                const progress = session.current_draw && session.total_draws ? 
+                    Math.round((session.current_draw / session.total_draws) * 100) : 0;
+                
+                html += `
+                    <div class="session-card ${session.is_active ? 'active' : ''}">
+                        <div class="session-name">
+                            ${session.name} ${session.is_active ? '(Active)' : ''}
+                        </div>
+                        <div class="session-info">
+                            ID: ${session.id} | Type: ${session.lottery_type}<br>
+                            Tirages: ${session.current_draw || 0}/${session.total_draws || 0}<br>
+                            Numéros: ${session.numbers_per_draw}/${session.number_range_max}
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="btn" onclick="activateSession(${session.id})">Activer</button>
+                            <button class="btn success" onclick="viewSessionDetails(${session.id})">Détails</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        async function activateSession(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/session/activate/${sessionId}`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showSuccess(`Session ${sessionId} activée avec succès`);
+                    loadSessions(); // Recharger pour voir le changement
+                } else {
+                    showError('Erreur lors de l\'activation');
+                }
+            } catch (error) {
+                showError('Erreur: ' + error.message);
+            }
+        }
+
+        function viewSessionDetails(sessionId) {
+            window.open(`smart-input.html?session=${sessionId}`, '_blank');
+        }
+
+        // Fonctions de test des fonctionnalités
+        function testJournalStatistique() {
+            addTestResult('📊 Journal Statistique', 'Redirection vers advanced-journal.html');
+            window.open('advanced-journal.html', '_blank');
+        }
+
+        function testAnalyseTemporelle() {
+            addTestResult('📈 Analyse Temporelle', 'Redirection vers katula-temporal-analysis.html');
+            window.open('katula-temporal-analysis.html', '_blank');
+        }
+
+        function testPredictionsIA() {
+            addTestResult('🤖 Prédictions IA', 'Redirection vers lstm-neural-network.html');
+            window.open('lstm-neural-network.html', '_blank');
+        }
+
+        function testPatterns() {
+            addTestResult('🔍 Visualisation Patterns', 'Redirection vers pattern-viewer.html');
+            window.open('pattern-viewer.html', '_blank');
+        }
+
+        function testAnalyseEcarts() {
+            addTestResult('📊 Analyse Écarts', 'Redirection vers gap-analysis.html');
+            window.open('gap-analysis.html', '_blank');
+        }
+
+        function testMultiUnivers() {
+            addTestResult('🌌 Multi-Univers', 'Redirection vers katula-multi-universe.html');
+            window.open('katula-multi-universe.html', '_blank');
+        }
+
+        function addTestResult(testName, result) {
+            const container = document.getElementById('resultsContainer');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const resultHtml = `
+                <div class="success">
+                    <strong>${testName}</strong> - ${timestamp}<br>
+                    ${result}
+                </div>
+            `;
+            
+            container.innerHTML = resultHtml + container.innerHTML;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('sessionsContainer');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function showSuccess(message) {
+            const container = document.getElementById('resultsContainer');
+            const successHtml = `<div class="success">${message}</div>`;
+            container.innerHTML = successHtml + container.innerHTML;
+        }
+    </script>
+</body>
+</html>

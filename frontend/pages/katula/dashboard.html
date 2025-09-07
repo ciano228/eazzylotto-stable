@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="assets/js/universal-header.js"></script>
+    <script src="assets/js/app-stability.js"></script>
+    <script src="assets/js/dashboard-functional.js"></script>
+    <script>
+        // Vérification d'authentification au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Vous devez être connecté pour accéder au dashboard.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Vérifier la validité du token
+            fetch('http://localhost:8000/api/session/test', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user_id');
+                    alert('Session expirée. Veuillez vous reconnecter.');
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(() => {
+                alert('Erreur de connexion au serveur.');
+            });
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        /* Styles de header supprimés - gérés par universal-header.js */
+
+        /* Layout avec espace pour header universel */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            padding-top: 100px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 15px 30px;
+            color: #6c757d;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #f8f9fa;
+            color: #1e3c72;
+            border-left-color: #1e3c72;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        /* Specific Card Colors */
+        .card-research .card-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-analysis .card-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .card-prediction .card-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .card-results .card-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .card-history .card-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .card-settings .card-icon {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2c3e50;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        /* Styles spécifiques pour améliorer le contraste du header sur le dashboard */
+        .eazzylotto-header {
+            background: rgba(30, 60, 114, 0.95) !important;
+            backdrop-filter: blur(15px) !important;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
+        }
+
+        .eazzylotto-header .nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white !important;
+        }
+
+        .eazzylotto-header .nav-link:hover,
+        .eazzylotto-header .nav-link.active {
+            background: rgba(255, 215, 0, 0.2) !important;
+            color: #ffd700 !important;
+            border-color: #ffd700;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .eazzylotto-header .auth-btn {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .eazzylotto-header .login-btn {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #1e3c72 !important;
+        }
+
+        .eazzylotto-header .login-btn:hover {
+            background: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .eazzylotto-header .signup-btn {
+            background: rgba(255, 215, 0, 0.1) !important;
+            color: #ffd700 !important;
+            border-color: #ffd700 !important;
+        }
+
+        .eazzylotto-header .signup-btn:hover {
+            background: #ffd700 !important;
+            color: #1e3c72 !important;
+        }
+
+        .eazzylotto-header .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .eazzylotto-header .logout-btn {
+            background: rgba(255, 215, 0, 0.1) !important;
+            border-color: #ffd700 !important;
+            color: #ffd700 !important;
+        }
+
+        .eazzylotto-header .logout-btn:hover {
+            background: #ffd700 !important;
+            color: #1e3c72 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px 0;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        // Fonctions de navigation pour les cartes du dashboard
+        function navigateToResearch() {
+            window.location.href = 'smart-input.html';
+        }
+        
+        function navigateToTemporal() {
+            window.location.href = 'katula-temporal-analysis.html';
+        }
+        
+        function navigateToPredictions() {
+            window.location.href = 'pattern-viewer.html';
+        }
+        
+        function navigateToResults() {
+            window.location.href = 'prediction-panel.html';
+        }
+        
+        function navigateToHistory() {
+            window.location.href = 'results-history.html';
+        }
+        
+        function navigateToSettings() {
+            window.location.href = 'parametres.html';
+        }
+    </script>
+</head>
+<body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <a href="#" class="nav-item active" onclick="closeSection();">📊 Tableau de Bord</a>
+            <a href="#" class="nav-item" onclick="openSection('research-section')">🔍 Recherche & Données</a>
+            <a href="#" class="nav-item" onclick="openSection('temporal-section')">📈 Analyse Temporelle</a>
+            <a href="#" class="nav-item" onclick="openSection('predictions-section')">🎯 Prédictions IA</a>
+            <a href="#" class="nav-item" onclick="openSection('results-section')">🏆 Résultats Gagnants</a>
+            <a href="#" class="nav-item" onclick="openSection('history-section')">📅 Historique</a>
+            <a href="#" class="nav-item" onclick="openSection('katooling-section')">🚀 Workflow Katooling</a>
+            <a href="#" class="nav-item" onclick="openSection('settings-section')">⚙️ Paramètres</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1 class="page-title">Tableau de Bord</h1>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-number">127</div>
+                    <div class="stat-label">Analyses Effectuées</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Taux de Précision</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Prédictions Actives</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">€2,450</div>
+                    <div class="stat-label">Gains Potentiels</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #1e3c72;" onclick="window.location.href='katooling-workflow.html'">
+                    <div class="card-icon" style="background: #1e3c72; color: #ffd700;">🔬</div>
+                    <h3 class="card-title">Méthode KATOOLING</h3>
+                    <p class="card-description">
+                        Découvrez notre méthode révolutionnaire qui transforme les combinaisons 
+                        en coordonnées géométriques pour prédire les zones gagnantes.
+                    </p>
+                </div>
+
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #1e3c72, #2a5298); color: white;" onclick="window.location.href='katooling-workflow.html'">
+                    <div class="card-icon" style="background: #ffd700; color: #1e3c72;">🚀</div>
+                    <h3 class="card-title">Workflow KATOOLING</h3>
+                    <p class="card-description">
+                        Testez le workflow complet de prédiction avec les 5 étapes : 
+                        Collecte → Classification → Analyse → Prédiction → Validation.
+                    </p>
+                </div>
+
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;" onclick="window.location.href='katooling-tour.html'">
+                    <div class="card-icon" style="background: #ffd700; color: #1e3c72;">🎓</div>
+                    <h3 class="card-title">Tour Guidé KATOOLING</h3>
+                    <p class="card-description">
+                        Visite guidée complète pour maîtriser la méthode KATOOLING 
+                        étape par étape, de la connexion aux prédictions avancées.
+                    </p>
+                </div>
+
+                <div class="dashboard-card" style="background: linear-gradient(135deg, #28a745, #20c997); color: white;" onclick="window.location.href='test-sessions-data.html'">
+                    <div class="card-icon" style="background: #ffd700; color: #1e3c72;">🧪</div>
+                    <h3 class="card-title">Test Sessions & Données</h3>
+                    <p class="card-description">
+                        Vérifiez les sessions de test générées et testez toutes 
+                        les fonctionnalités d'analyse et de prédiction.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-research" onclick="navigateToResearch()">
+                    <div class="card-icon">🔍</div>
+                    <h3 class="card-title">Recherche & Données</h3>
+                    <p class="card-description">
+                        Explorez les bases de données historiques, analysez les patterns 
+                        et découvrez les tendances cachées dans les tirages passés.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-analysis" onclick="navigateToTemporal()">
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">Analyse Temporelle</h3>
+                    <p class="card-description">
+                        Comparez les périodes, identifiez les cycles et analysez 
+                        l'évolution des combinaisons gagnantes dans le temps.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-prediction" onclick="navigateToPredictions()">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">Patterns & Résultats</h3>
+                    <p class="card-description">
+                        Visualisez les patterns détectés, analysez les tendances 
+                        et consultez les résultats des prédictions.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-results" onclick="navigateToResults()">
+                    <div class="card-icon">🏆</div>
+                    <h3 class="card-title">Prédictions ML</h3>
+                    <p class="card-description">
+                        Consultez les prédictions générées par l'intelligence artificielle 
+                        et suivez les performances des algorithmes ML.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-history" onclick="navigateToHistory()">
+                    <div class="card-icon">📅</div>
+                    <h3 class="card-title">Résultats & Historique</h3>
+                    <p class="card-description">
+                        Consultez les performances de vos prédictions, 
+                        l'historique des résultats et les statistiques détaillées.
+                    </p>
+                </div>
+
+                <div class="dashboard-card card-settings" onclick="navigateToSettings()">
+                    <div class="card-icon">⚙️</div>
+                    <h3 class="card-title">Paramètres</h3>
+                    <p class="card-description">
+                        Personnalisez votre expérience, configurez vos préférences 
+                        et gérez votre compte utilisateur.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h3 class="activity-title">Activité Récente</h3>
+                
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #e3f2fd; color: #1976d2;">📊</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Analyse temporelle complétée pour l'univers Fruity</div>
+                        <div class="activity-time">Il y a 2 heures</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #f3e5f5; color: #7b1fa2;">🎯</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Nouvelle prédiction générée avec 92% de confiance</div>
+                        <div class="activity-time">Il y a 4 heures</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #e8f5e8; color: #388e3c;">🏆</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Résultat validé : 3 numéros corrects sur 6</div>
+                        <div class="activity-time">Hier</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon" style="background: #fff3e0; color: #f57c00;">🔍</div>
+                    <div class="activity-content">
+                        <div class="activity-text">Base de données mise à jour avec 150 nouveaux tirages</div>
+                        <div class="activity-time">Il y a 2 jours</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    </script>
+
+    <!-- Sections dynamiques pour les données -->
+    <div id="research-section" class="dashboard-section" style="display: none;">
+        <div class="section-header">
+            <h2>🔍 Recherche & Données</h2>
+            <button class="close-btn" onclick="closeSection()">×</button>
+        </div>
+        <div class="section-content">
+            <div class="search-container">
+                <form id="searchForm" class="search-form">
+                    <input type="text" id="searchInput" placeholder="Rechercher des combinaisons..." />
+                    <button type="submit">Rechercher</button>
+                </form>
+            </div>
+            <div id="search-results" class="results-container"></div>
+            <div id="combinations-list" class="combinations-container"></div>
+        </div>
+    </div>
+
+    <div id="temporal-section" class="dashboard-section" style="display: none;">
+        <div class="section-header">
+            <h2>📈 Analyse Temporelle</h2>
+            <button class="close-btn" onclick="closeSection()">×</button>
+        </div>
+        <div class="section-content">
+            <div class="analysis-controls">
+                <button class="action-btn" data-action="analyze-temporal">Lancer l'Analyse</button>
+            </div>
+            <div id="temporal-patterns" class="patterns-container"></div>
+        </div>
+    </div>
+
+    <div id="predictions-section" class="dashboard-section" style="display: none;">
+        <div class="section-header">
+            <h2>🎯 Prédictions IA</h2>
+            <button class="close-btn" onclick="closeSection()">×</button>
+        </div>
+        <div class="section-content">
+            <div class="prediction-controls">
+                <button class="action-btn" data-action="generate-predictions">Générer Prédictions</button>
+            </div>
+            <div id="predictions-list" class="predictions-container"></div>
+        </div>
+    </div>
+
+    <div id="results-section" class="dashboard-section" style="display: none;">
+        <div class="section-header">
+            <h2>🏆 Résultats Gagnants</h2>
+            <button class="close-btn" onclick="closeSection()">×</button>
+        </div>
+        <div class="section-content">
+            <div id="winners-list" class="winners-container"></div>
+        </div>
+    </div>
+
+    <div id="katooling-section" class="dashboard-section" style="display: none;">
+        <div class="section-header">
+            <h2>🚀 Workflow KATOOLING</h2>
+            <button class="close-btn" onclick="closeSection()">×</button>
+        </div>
+        <div class="section-content">
+            <div class="katooling-controls">
+                <button class="action-btn" data-action="run-katooling">Exécuter Workflow</button>
+            </div>
+            <div id="katooling-info" class="katooling-container"></div>
+        </div>
+    </div>
+
+    <!-- Overlay de chargement -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-message">Chargement...</div>
+        </div>
+    </div>
+
+    <style>
+        .dashboard-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .action-btn:hover {
+            background: #2a5298;
+        }
+
+        .results-container, .combinations-container, .patterns-container, 
+        .predictions-container, .winners-container, .katooling-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .combination-item, .pattern-item, .prediction-item, .winner-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1e3c72;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 3000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification-success {
+            background: #28a745;
+        }
+
+        .notification-error {
+            background: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+
+    <script>
+        function closeSection() {
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+
+        function openSection(sectionId) {
+            closeSection();
+            var section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Guidé KATOOLING - EazzyLotto</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .tour-container {
+            max-width: 1200px;
+            margin: 120px auto 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .tour-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .tour-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .tour-header h1 {
+            margin: 0 0 15px 0;
+            font-size: 3em;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tour-header p {
+            margin: 0;
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tour-progress {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72, #ffd700);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .tour-content {
+            padding: 40px;
+        }
+
+        .tour-step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tour-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3c72, #ffd700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-right: 20px;
+        }
+
+        .step-title {
+            flex: 1;
+        }
+
+        .step-title h2 {
+            margin: 0 0 5px 0;
+            color: #1e3c72;
+            font-size: 1.8em;
+        }
+
+        .step-title p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .step-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .action-card {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1e3c72;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .action-card h4 {
+            margin: 0 0 10px 0;
+            color: #1e3c72;
+        }
+
+        .action-card p {
+            margin: 0 0 15px 0;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .action-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .action-btn:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: #6c757d;
+        }
+
+        .action-btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(30, 60, 114, 0.95);
+            border-radius: 50px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-btn.active {
+            background: #ffd700;
+            color: #1e3c72;
+        }
+
+        .volume-control {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: #ffd700;
+            border-radius: 2px;
+            width: 70%;
+            transition: width 0.3s ease;
+        }
+
+        .tour-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .nav-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #2a5298;
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+        }
+
+        .nav-btn.next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #1e3c72;
+        }
+
+        .indicator-dot.completed {
+            background: #ffd700;
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-message h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h4 {
+            margin: 0 0 10px 0;
+            color: #1e3c72;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .tour-container {
+                margin: 100px 20px 20px;
+            }
+
+            .tour-header {
+                padding: 30px 20px;
+            }
+
+            .tour-content {
+                padding: 20px;
+            }
+
+            .step-actions {
+                flex-direction: column;
+            }
+
+            .tour-navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div class="tour-container">
+        <div class="tour-header">
+            <h1>🚀 Tour Guidé KATOOLING</h1>
+            <p>Découvrez la méthode révolutionnaire de prédiction loterie étape par étape</p>
+        </div>
+
+        <div class="tour-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-info">
+                <span id="progressText">Étape 1 sur 8</span>
+                <span id="progressPercent">12%</span>
+            </div>
+        </div>
+
+        <div class="tour-content">
+            <!-- Étape 1: Bienvenue -->
+            <div class="tour-step active" data-step="1">
+                <div class="step-header">
+                    <div class="step-icon">🎯</div>
+                    <div class="step-title">
+                        <h2>Bienvenue dans KATOOLING</h2>
+                        <p>La méthode qui transforme les combinaisons en coordonnées gagnantes</p>
+                    </div>
+                </div>
+
+                <div class="welcome-message">
+                    <h3>🌟 Prêt à découvrir le futur des prédictions loterie ?</h3>
+                    <p>Ce tour guidé vous accompagnera à travers les 5 phases du workflow KATOOLING pour maîtriser notre méthode révolutionnaire.</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔬</div>
+                        <h4>Méthode Scientifique</h4>
+                        <p>Basée sur l'analyse géométrique des combinaisons</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h4>Intelligence Artificielle</h4>
+                        <p>Algorithmes LSTM et apprentissage automatique</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4>Analyse Prédictive</h4>
+                        <p>Identification des patterns et tendances cachées</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h4>Précision Élevée</h4>
+                        <p>Taux de réussite optimisé par l'expérience</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 2: Authentification -->
+            <div class="tour-step" data-step="2">
+                <div class="step-header">
+                    <div class="step-icon">🔐</div>
+                    <div class="step-title">
+                        <h2>Authentification</h2>
+                        <p>Connectez-vous ou créez votre compte pour commencer</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="step-actions">
+                        <div class="action-card">
+                            <h4>🔑 Vous avez déjà un compte ?</h4>
+                            <p>Connectez-vous pour accéder à vos sessions et analyses sauvegardées.</p>
+                            <a href="login.html" class="action-btn">Se connecter</a>
+                        </div>
+                        <div class="action-card">
+                            <h4>✨ Nouveau sur EazzyLotto ?</h4>
+                            <p>Créez votre compte gratuit et découvrez toutes nos fonctionnalités.</p>
+                            <a href="signup.html" class="action-btn primary">S'inscrire</a>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="action-btn secondary" onclick="skipAuth()">Continuer en mode démo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 3: Création de Session -->
+            <div class="tour-step" data-step="3">
+                <div class="step-header">
+                    <div class="step-icon">📋</div>
+                    <div class="step-title">
+                        <h2>Création de Session</h2>
+                        <p>Configurez votre session d'analyse KATOOLING</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="step-actions">
+                        <div class="action-card">
+                            <h4>🎲 Définir le Type de Loto</h4>
+                            <p>Choisissez votre format : 5/90, 6/90, 6/49, 5/60, etc.</p>
+                            <button class="action-btn" onclick="showLotoConfig()">Configurer</button>
+                        </div>
+                        <div class="action-card">
+                            <h4>📅 Jour de Tirage</h4>
+                            <p>Spécifiez les jours de tirage de votre loterie.</p>
+                            <button class="action-btn" onclick="showDateConfig()">Définir</button>
+                        </div>
+                        <div class="action-card">
+                            <h4>🔄 Périodicité</h4>
+                            <p>Définissez l'intervalle d'analyse (quotidien, hebdomadaire, etc.)</p>
+                            <button class="action-btn" onclick="showPeriodConfig()">Paramétrer</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="smart-input.html" class="action-btn primary">Créer une Session</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 4: Saisie des Résultats -->
+            <div class="tour-step" data-step="4">
+                <div class="step-header">
+                    <div class="step-icon">📊</div>
+                    <div class="step-title">
+                        <h2>Saisie des Résultats</h2>
+                        <p>Entrez les résultats des 6 dernières périodes</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="welcome-message">
+                        <h3>📈 Collecte des Données Historiques</h3>
+                        <p>Pour des prédictions précises, nous avons besoin des résultats de 6 périodes minimum. La période 1 est la plus ancienne, la période 6 est la plus récente.</p>
+                    </div>
+
+                    <div class="step-actions">
+                        <div class="action-card">
+                            <h4>📝 Période 1 (Plus ancienne)</h4>
+                            <p>Commencez par la période 1, la plus ancienne des 6 périodes.</p>
+                            <button class="action-btn">Saisir P1</button>
+                        </div>
+                        <div class="action-card">
+                            <h4>📝 Périodes 2 à 6</h4>
+                            <p>Continuez jusqu'à la période 6 (la plus récente).</p>
+                            <button class="action-btn">Saisir P2-P6</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="smart-input.html" class="action-btn primary">Commencer la Saisie</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 5: Sélection d'Univers -->
+            <div class="tour-step" data-step="5">
+                <div class="step-header">
+                    <div class="step-icon">🌌</div>
+                    <div class="step-title">
+                        <h2>Sélection d'Univers</h2>
+                        <p>Choisissez l'univers d'analyse KATOOLING</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="color: #52c41a;">🌍</div>
+                            <h4>MUNDO</h4>
+                            <p>Univers principal avec formes géométriques de base</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon" style="color: #fa8c16;">🍎</div>
+                            <h4>FRUITY</h4>
+                            <p>Analyse basée sur les patterns fruités</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon" style="color: #eb2f96;">⚡</div>
+                            <h4>TRIGGA</h4>
+                            <p>Univers des déclencheurs et formes complexes</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon" style="color: #722ed1;">🔥</div>
+                            <h4>ROASTER</h4>
+                            <p>Analyse thermique des combinaisons</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon" style="color: #fadb14;">☀️</div>
+                            <h4>SUNSHINE</h4>
+                            <p>Univers solaire et patterns lumineux</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="katula-multi-universe.html" class="action-btn primary">Explorer les Univers</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 6: Journal Statistique -->
+            <div class="tour-step" data-step="6">
+                <div class="step-header">
+                    <div class="step-icon">📋</div>
+                    <div class="step-title">
+                        <h2>Journal Statistique</h2>
+                        <p>Analysez les tendances et découvrez les patterns</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="welcome-message">
+                        <h3>🔍 Découverte des Tendances</h3>
+                        <p>Le journal statistique révèle les éléments récurrents et prévisibles selon les attributs analysés.</p>
+                    </div>
+
+                    <div class="step-actions">
+                        <div class="action-card">
+                            <h4>📊 Analyse des Attributs</h4>
+                            <p>Granque, Petique, Ligne, Colonne, Parité, Unidos, Chip</p>
+                            <button class="action-btn">Analyser</button>
+                        </div>
+                        <div class="action-card">
+                            <h4>🔄 Patterns Récurrents</h4>
+                            <p>Identifiez les éléments qui se répètent régulièrement</p>
+                            <button class="action-btn">Découvrir</button>
+                        </div>
+                        <div class="action-card">
+                            <h4>📈 Tendances Prévisibles</h4>
+                            <p>Repérez les cycles et comportements prédictibles</p>
+                            <button class="action-btn">Prédire</button>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="advanced-journal.html" class="action-btn primary">Ouvrir le Journal</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 7: Outils d'Analyse -->
+            <div class="tour-step" data-step="7">
+                <div class="step-header">
+                    <div class="step-icon">🛠️</div>
+                    <div class="step-title">
+                        <h2>Outils d'Analyse Avancée</h2>
+                        <p>Explorez nos outils spécialisés pour approfondir l'analyse</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📈</div>
+                            <h4>Analyse Temporelle</h4>
+                            <p>Comparez les périodes et identifiez les cycles</p>
+                            <a href="katula-temporal-analysis.html" class="action-btn">Explorer</a>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🤖</div>
+                            <h4>Prédictions IA</h4>
+                            <p>Réseaux LSTM et algorithmes ML avancés</p>
+                            <a href="lstm-neural-network.html" class="action-btn">Tester</a>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔍</div>
+                            <h4>Visualisation Patterns</h4>
+                            <p>Analyse visuelle des patterns détectés</p>
+                            <a href="pattern-viewer.html" class="action-btn">Visualiser</a>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <h4>Analyse des Écarts</h4>
+                            <p>Étudiez les écarts et retards des attributs</p>
+                            <a href="gap-analysis.html" class="action-btn">Analyser</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 8: Finalisation -->
+            <div class="tour-step" data-step="8">
+                <div class="step-header">
+                    <div class="step-icon">🎉</div>
+                    <div class="step-title">
+                        <h2>Félicitations !</h2>
+                        <p>Vous maîtrisez maintenant le workflow KATOOLING</p>
+                    </div>
+                </div>
+
+                <div class="step-content">
+                    <div class="welcome-message">
+                        <h3>🌟 Tour Terminé avec Succès !</h3>
+                        <p>Vous êtes maintenant prêt à utiliser toute la puissance de la méthode KATOOLING pour vos prédictions loterie.</p>
+                    </div>
+
+                    <div class="step-actions">
+                        <div class="action-card">
+                            <h4>🚀 Commencer une Analyse</h4>
+                            <p>Créez votre première session et commencez à analyser</p>
+                            <a href="smart-input.html" class="action-btn primary">Démarrer</a>
+                        </div>
+                        <div class="action-card">
+                            <h4>📊 Accéder au Dashboard</h4>
+                            <p>Vue d'ensemble de tous vos outils et analyses</p>
+                            <a href="dashboard.html" class="action-btn">Dashboard</a>
+                        </div>
+                        <div class="action-card">
+                            <h4>📚 Revoir la Méthode</h4>
+                            <p>Approfondissez vos connaissances KATOOLING</p>
+                            <a href="katooling-method.html" class="action-btn secondary">Méthode</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="tour-navigation">
+                <button class="nav-btn" id="prevBtn" onclick="previousStep()" disabled>← Précédent</button>
+                
+                <div class="step-indicator" id="stepIndicator">
+                    <!-- Dots générés dynamiquement -->
+                </div>
+                
+                <button class="nav-btn next" id="nextBtn" onclick="nextStep()">Suivant →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contrôles Audio -->
+    <div class="audio-controls" id="audioControls">
+        <button class="audio-btn" id="playPauseBtn" onclick="toggleAudio()" title="Lecture/Pause">
+            🔊
+        </button>
+        <div class="volume-control" onclick="setVolume(event)">
+            <div class="volume-fill" id="volumeFill"></div>
+        </div>
+        <button class="audio-btn" id="muteBtn" onclick="toggleMute()" title="Muet">
+            🔊
+        </button>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 8;
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let isAudioEnabled = true;
+        let audioVolume = 0.7;
+        let isMuted = false;
+
+        let currentLanguage = 'fr';
+
+        // Textes audio multilingues
+        const audioTexts = {
+            fr: {
+                1: "Bienvenue dans le tour guidé KATOOLING ! Je vais vous accompagner dans la découverte de notre méthode révolutionnaire de prédiction loterie. KATOOLING transforme les combinaisons en coordonnées géométriques pour identifier les zones gagnantes.",
+                2: "Étape 2 : Authentification. Pour utiliser KATOOLING, vous devez vous connecter ou créer un compte. Si vous avez déjà un compte, cliquez sur Se connecter. Si vous êtes nouveau, cliquez sur S'inscrire.",
+                3: "Étape 3 : Création de session. Configurez votre session d'analyse en définissant le type de loto, comme 5 sur 90, 6 sur 90, ou 6 sur 49. Spécifiez les jours de tirage et définissez la périodicité.",
+                4: "Étape 4 : Saisie des résultats. Pour des prédictions fiables, nous avons besoin des résultats de 6 périodes minimum. Commencez par la période 1, la plus ancienne, puis continuez jusqu'à la période 6, la plus récente.",
+                5: "Étape 5 : Sélection d'univers. KATOOLING propose 5 univers d'analyse : Mundo, Fruity, Trigga, Roaster, et Sunshine. Chaque univers offre une perspective unique.",
+                6: "Étape 6 : Journal statistique. Analysez les tendances et découvrez les patterns récurrents. Le journal révèle les éléments prévisibles selon les attributs.",
+                7: "Étape 7 : Outils d'analyse avancée. Explorez nos outils spécialisés : l'analyse temporelle, les prédictions IA avec réseaux LSTM, et la visualisation des patterns.",
+                8: "Félicitations ! Vous maîtrisez maintenant le workflow KATOOLING complet. Vous êtes prêt à utiliser toute la puissance de notre méthode pour vos prédictions loterie."
+            },
+            en: {
+                1: "Welcome to the KATOOLING guided tour! I will accompany you in discovering our revolutionary lottery prediction method. KATOOLING transforms combinations into geometric coordinates to identify winning zones.",
+                2: "Step 2: Authentication. To use KATOOLING, you must log in or create an account. If you already have an account, click Sign In. If you're new, click Sign Up.",
+                3: "Step 3: Session creation. Configure your analysis session by defining the lottery type, like 5 out of 90, 6 out of 90, or 6 out of 49. Specify draw days and define periodicity.",
+                4: "Step 4: Results entry. For reliable predictions, we need results from at least 6 periods. Start with period 1, the oldest, then continue to period 6, the most recent.",
+                5: "Step 5: Universe selection. KATOOLING offers 5 analysis universes: Mundo, Fruity, Trigga, Roaster, and Sunshine. Each universe offers a unique perspective.",
+                6: "Step 6: Statistical journal. Analyze trends and discover recurring patterns. The journal reveals predictable elements according to attributes.",
+                7: "Step 7: Advanced analysis tools. Explore our specialized tools: temporal analysis, AI predictions with LSTM networks, and pattern visualization.",
+                8: "Congratulations! You now master the complete KATOOLING workflow. You're ready to use all the power of our method for your lottery predictions."
+            }
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'katooling-tour', {
+                    showNavigation: true,
+                    showUserInfo: false
+                });
+            }
+
+            initializeTour();
+            
+            // Détecter la langue du navigateur
+            const browserLang = navigator.language.substring(0, 2);
+            if (audioTexts[browserLang]) {
+                currentLanguage = browserLang;
+            }
+            
+            // Vérifier la compatibilité audio
+            if (!('speechSynthesis' in window)) {
+                document.getElementById('audioControls').style.display = 'none';
+            } else {
+                // Démarrer automatiquement l'audio pour la première étape
+                setTimeout(() => {
+                    if (isAudioEnabled && !isMuted) {
+                        playStepAudio(1);
+                    }
+                }, 1000);
+            }
+        });
+
+        function initializeTour() {
+            createStepIndicators();
+            updateProgress();
+        }
+
+        function createStepIndicators() {
+            const indicator = document.getElementById('stepIndicator');
+            indicator.innerHTML = '';
+            
+            for (let i = 1; i <= totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = `indicator-dot ${i === 1 ? 'active' : ''}`;
+                dot.onclick = () => goToStep(i);
+                indicator.appendChild(dot);
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const progressPercent = document.getElementById('progressPercent');
+            
+            const percentage = (currentStep / totalSteps) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Étape ${currentStep} sur ${totalSteps}`;
+            progressPercent.textContent = Math.round(percentage) + '%';
+            
+            // Mettre à jour les indicateurs
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                dot.className = 'indicator-dot';
+                if (index + 1 < currentStep) {
+                    dot.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    dot.classList.add('active');
+                }
+            });
+            
+            // Mettre à jour les boutons de navigation
+            document.getElementById('prevBtn').disabled = currentStep === 1;
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Terminer';
+                nextBtn.onclick = finishTour;
+            } else {
+                nextBtn.textContent = 'Suivant →';
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        function showStep(stepNumber) {
+            // Cacher toutes les étapes
+            document.querySelectorAll('.tour-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Afficher l'étape courante
+            const currentStepElement = document.querySelector(`[data-step="${stepNumber}"]`);
+            if (currentStepElement) {
+                currentStepElement.classList.add('active');
+            }
+            
+            updateProgress();
+            
+            // Lire le texte audio de l'étape
+            if (isAudioEnabled && !isMuted) {
+                playStepAudio(stepNumber);
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function goToStep(stepNumber) {
+            if (stepNumber >= 1 && stepNumber <= totalSteps) {
+                currentStep = stepNumber;
+                showStep(currentStep);
+            }
+        }
+
+        function finishTour() {
+            if (confirm('Félicitations ! Voulez-vous commencer votre première analyse KATOOLING ?')) {
+                window.location.href = 'smart-input.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function skipAuth() {
+            alert('Mode démo activé ! Vous pouvez explorer toutes les fonctionnalités.');
+            nextStep();
+        }
+
+        function showLotoConfig() {
+            alert('Configuration du type de loto : Cette fonctionnalité sera disponible dans la session.');
+        }
+
+        function showDateConfig() {
+            alert('Configuration des jours de tirage : Paramétrable dans la création de session.');
+        }
+
+        function showPeriodConfig() {
+            alert('Configuration de la périodicité : Définissable lors de la création de session.');
+        }
+
+        // Fonctions Audio
+        function playStepAudio(stepNumber) {
+            if (currentUtterance) {
+                speechSynthesis.cancel();
+            }
+            
+            const text = audioTexts[currentLanguage][stepNumber];
+            if (text) {
+                currentUtterance = new SpeechSynthesisUtterance(text);
+                currentUtterance.lang = currentLanguage === 'fr' ? 'fr-FR' : 'en-US';
+                currentUtterance.rate = 0.9;
+                currentUtterance.volume = audioVolume;
+                
+                currentUtterance.onstart = () => {
+                    document.getElementById('playPauseBtn').textContent = '⏸️';
+                };
+                
+                currentUtterance.onend = () => {
+                    document.getElementById('playPauseBtn').textContent = '🔊';
+                };
+                
+                speechSynthesis.speak(currentUtterance);
+            }
+        }
+        
+        function toggleAudio() {
+            if (speechSynthesis.speaking) {
+                if (speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                    document.getElementById('playPauseBtn').textContent = '⏸️';
+                } else {
+                    speechSynthesis.pause();
+                    document.getElementById('playPauseBtn').textContent = '▶️';
+                }
+            } else {
+                playStepAudio(currentStep);
+            }
+        }
+        
+        function toggleMute() {
+            isMuted = !isMuted;
+            const muteBtn = document.getElementById('muteBtn');
+            
+            if (isMuted) {
+                speechSynthesis.cancel();
+                muteBtn.textContent = '🔇';
+            } else {
+                muteBtn.textContent = '🔊';
+            }
+        }
+        
+        function setVolume(event) {
+            const volumeControl = event.currentTarget;
+            const rect = volumeControl.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            
+            audioVolume = Math.max(0, Math.min(1, percentage));
+            document.getElementById('volumeFill').style.width = (audioVolume * 100) + '%';
+        }
+    </script>
+</body>
+</html>

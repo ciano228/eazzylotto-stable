@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyLotto - Paramètres</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 120px auto 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .page-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .settings-content {
+            padding: 40px;
+        }
+
+        .settings-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .settings-section h3 {
+            color: #1e3c72;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .setting-description {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #1e3c72;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 120px;
+        }
+
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2a5298;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .development-notice {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid #1e3c72;
+        }
+
+        .development-notice h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+
+        .development-notice p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 20px 20px;
+            }
+
+            .settings-content {
+                padding: 20px;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1>⚙️ Paramètres</h1>
+            <p>Configurez votre expérience EazzyLotto selon vos préférences</p>
+        </div>
+
+        <div class="settings-content">
+            <div class="development-notice">
+                <h2>🚧 Page en Développement</h2>
+                <p>Cette page de paramètres est actuellement en cours de développement. Les fonctionnalités seront ajoutées progressivement.</p>
+            </div>
+
+            <div class="settings-section">
+                <h3>🎯 Préférences de Prédiction</h3>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Univers par défaut</div>
+                        <div class="setting-description">Sélectionnez l'univers de loterie utilisé par défaut</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="defaultUniverse">
+                            <option value="mundo">Mundo</option>
+                            <option value="fruity">Fruity</option>
+                            <option value="trigga">Trigga</option>
+                            <option value="roaster">Roaster</option>
+                            <option value="sunshine">Sunshine</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Niveau de confiance minimum</div>
+                        <div class="setting-description">Seuil minimum pour afficher les prédictions</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="confidenceLevel">
+                            <option value="60">60%</option>
+                            <option value="70">70%</option>
+                            <option value="80" selected>80%</option>
+                            <option value="90">90%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Notifications de prédictions</div>
+                        <div class="setting-description">Recevoir des alertes pour les nouvelles prédictions</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>📊 Interface et Affichage</h3>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Thème de l'interface</div>
+                        <div class="setting-description">Choisissez l'apparence de l'application</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="theme">
+                            <option value="light" selected>Clair</option>
+                            <option value="dark">Sombre</option>
+                            <option value="auto">Automatique</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Langue de l'interface</div>
+                        <div class="setting-description">Sélectionnez votre langue préférée</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="language">
+                            <option value="fr" selected>Français</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Animations</div>
+                        <div class="setting-description">Activer les animations de l'interface</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🔐 Compte et Sécurité</h3>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Connexion automatique</div>
+                        <div class="setting-description">Rester connecté automatiquement</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Sauvegarde automatique</div>
+                        <div class="setting-description">Sauvegarder automatiquement vos analyses</div>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Historique des sessions</div>
+                        <div class="setting-description">Durée de conservation de l'historique</div>
+                    </div>
+                    <div class="setting-control">
+                        <select id="historyDuration">
+                            <option value="30">30 jours</option>
+                            <option value="90" selected>90 jours</option>
+                            <option value="180">6 mois</option>
+                            <option value="365">1 an</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🔧 Actions</h3>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Sauvegarder les paramètres</div>
+                        <div class="setting-description">Enregistrer toutes les modifications</div>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn" onclick="saveSettings()">Sauvegarder</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Réinitialiser les paramètres</div>
+                        <div class="setting-description">Restaurer les paramètres par défaut</div>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-secondary" onclick="resetSettings()">Réinitialiser</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Exporter la configuration</div>
+                        <div class="setting-description">Télécharger vos paramètres</div>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-secondary" onclick="exportSettings()">Exporter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'parametres', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+
+            // Charger les paramètres sauvegardés
+            loadSettings();
+        });
+
+        function toggleSetting(element) {
+            element.classList.toggle('active');
+        }
+
+        function saveSettings() {
+            // Simuler la sauvegarde des paramètres
+            const settings = {
+                defaultUniverse: document.getElementById('defaultUniverse').value,
+                confidenceLevel: document.getElementById('confidenceLevel').value,
+                theme: document.getElementById('theme').value,
+                language: document.getElementById('language').value,
+                historyDuration: document.getElementById('historyDuration').value,
+                notifications: document.querySelector('.toggle-switch').classList.contains('active'),
+                animations: document.querySelectorAll('.toggle-switch')[2].classList.contains('active'),
+                autoLogin: document.querySelectorAll('.toggle-switch')[3].classList.contains('active'),
+                autoSave: document.querySelectorAll('.toggle-switch')[4].classList.contains('active')
+            };
+
+            localStorage.setItem('eazzylotto_settings', JSON.stringify(settings));
+            
+            // Afficher une notification de succès
+            showNotification('Paramètres sauvegardés avec succès !', 'success');
+        }
+
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('eazzylotto_settings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                // Appliquer les paramètres sauvegardés
+                document.getElementById('defaultUniverse').value = settings.defaultUniverse || 'mundo';
+                document.getElementById('confidenceLevel').value = settings.confidenceLevel || '80';
+                document.getElementById('theme').value = settings.theme || 'light';
+                document.getElementById('language').value = settings.language || 'fr';
+                document.getElementById('historyDuration').value = settings.historyDuration || '90';
+            }
+        }
+
+        function resetSettings() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
+                localStorage.removeItem('eazzylotto_settings');
+                location.reload();
+            }
+        }
+
+        function exportSettings() {
+            const settings = localStorage.getItem('eazzylotto_settings') || '{}';
+            const blob = new Blob([settings], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'eazzylotto_settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Configuration exportée !', 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                z-index: 3000;
+                animation: slideIn 0.3s ease-out;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

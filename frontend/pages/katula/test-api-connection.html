@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔌 Test Connexion API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background: #f6ffed; color: #52c41a; border: 2px solid #52c41a; }
+        .error { background: #fff2f0; color: #ff4d4f; border: 2px solid #ff4d4f; }
+        .info { background: #e6f7ff; color: #1890ff; border: 2px solid #1890ff; }
+        button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #40a9ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 Test de Connexion API</h1>
+        
+        <div id="results"></div>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="testConnection()">🔄 Tester Connexion</button>
+            <button onclick="testSessions()">📋 Tester Sessions</button>
+            <button onclick="clearResults()">🗑️ Effacer</button>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <h3>🔗 Liens Utiles</h3>
+            <a href="smart-input-complete.html" target="_blank">📝 Smart Input Complete</a> |
+            <a href="http://localhost:8006/docs" target="_blank">📚 API Docs</a> |
+            <a href="quick-test.html" target="_blank">🚀 Test Rapide</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+        
+        async function testConnection() {
+            addResult('🔌 Test de connexion backend...', 'info');
+            
+            try {
+                // Test 1: Ping du serveur
+                const response = await fetch('http://localhost:8006/docs');
+                if (response.ok) {
+                    addResult('✅ Backend accessible - Port 8006 OK', 'success');
+                } else {
+                    addResult(`❌ Backend erreur - Status: ${response.status}`, 'error');
+                    return;
+                }
+                
+                // Test 2: Test CORS
+                const corsResponse = await fetch(`${API_BASE}/session/sessions`, {
+                    method: 'OPTIONS'
+                });
+                addResult(`🌐 CORS Headers - Status: ${corsResponse.status}`, corsResponse.ok ? 'success' : 'error');
+                
+            } catch (error) {
+                addResult(`❌ Connexion impossible: ${error.message}`, 'error');
+                
+                if (error.message.includes('fetch')) {
+                    addResult('💡 Le backend n\\'est probablement pas démarré', 'info');
+                }
+            }
+        }
+        
+        async function testSessions() {
+            addResult('📋 Test de l\\'endpoint sessions...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                
+                addResult(`📡 Réponse: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const sessions = await response.json();
+                    addResult(`✅ ${sessions.length} sessions trouvées`, 'success');
+                    
+                    if (sessions.length > 0) {
+                        const activeSession = sessions.find(s => s.is_active);
+                        if (activeSession) {
+                            addResult(`🎯 Session active: ${activeSession.name}`, 'info');
+                        } else {
+                            addResult('⚠️ Aucune session active', 'info');
+                        }
+                    }
+                } else {
+                    const errorText = await response.text();
+                    addResult(`❌ Erreur API: ${errorText}`, 'error');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Erreur sessions: ${error.message}`, 'error');
+                
+                // Diagnostics supplémentaires
+                if (error.name === 'TypeError') {
+                    addResult('🔍 Erreur de type - Problème de réseau ou CORS', 'error');
+                }
+                
+                if (error.message.includes('Failed to fetch')) {
+                    addResult('🔌 "Failed to fetch" - Backend non accessible ou CORS', 'error');
+                }
+            }
+        }
+        
+        // Test automatique au chargement
+        window.addEventListener('load', () => {
+            addResult('🚀 Page de test chargée', 'success');
+            setTimeout(() => {
+                testConnection();
+                setTimeout(() => {
+                    testSessions();
+                }, 1000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

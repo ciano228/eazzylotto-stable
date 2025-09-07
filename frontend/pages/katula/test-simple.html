@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Simple</title>
+</head>
+<body>
+    <h1>Test Simple</h1>
+    <p>Si tu vois ceci, le serveur frontend fonctionne.</p>
+    
+    <script>
+        console.log('JavaScript fonctionne');
+        
+        // Test de l'API
+        fetch('http://localhost:8000/api/analytics/granque-tome/fruity')
+            .then(response => {
+                console.log('API Response Status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('API Data:', data);
+                document.body.innerHTML += '<p>API fonctionne ! Données reçues.</p>';
+            })
+            .catch(error => {
+                console.error('API Error:', error);
+                document.body.innerHTML += '<p style="color: red;">Erreur API: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

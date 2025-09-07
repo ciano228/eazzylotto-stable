@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Input Debug - EazzyCalculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .session-manager {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+        #console {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+        .message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .message.success { background: #d4edda; color: #155724; }
+        .message.error { background: #f8d7da; color: #721c24; }
+        .message.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Smart Input Debug</h1>
+    
+    <div class="session-manager">
+        <h2>Gestionnaire de Sessions</h2>
+        <div>
+            <select id="sessionSelect">
+                <option value="">Chargement des sessions...</option>
+            </select>
+            <button onclick="loadSessions()">🔄 Actualiser</button>
+            <button onclick="showCreateSessionModal()" class="btn-primary">➕ Nouvelle Session</button>
+        </div>
+        <div id="messageContainer"></div>
+    </div>
+    
+    <div class="session-manager">
+        <h2>Console de Debug</h2>
+        <div id="console"></div>
+        <button onclick="clearConsole()">🧹 Clear Console</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let currentSession = null;
+        
+        function log(message) {
+            const console = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            console.textContent += `[${timestamp}] ${message}\n`;
+            console.scrollTop = console.scrollHeight;
+            
+            // Aussi dans la console du navigateur
+            window.console.log(message);
+        }
+        
+        function clearConsole() {
+            document.getElementById('console').textContent = '';
+        }
+        
+        function showMessage(message, type = 'info') {
+            log(`Message: ${message} (${type})`);
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+        
+        async function loadSessions() {
+            log('🔄 Début loadSessions...');
+            try {
+                const select = document.getElementById('sessionSelect');
+                select.innerHTML = '<option value="">Chargement...</option>';
+                
+                log(`📡 Appel API: ${API_BASE}/session/sessions`);
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                log(`📡 Response status: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const sessions = await response.json();
+                log(`✅ Sessions reçues: ${sessions.length}`);
+                
+                select.innerHTML = '<option value="">Sélectionner une session...</option>';
+                
+                sessions.forEach(session => {
+                    log(`  - Session: ${session.name} (ID: ${session.id})`);
+                    const option = document.createElement('option');
+                    option.value = session.id;
+                    option.textContent = `${session.name} (${session.lottery_type}) - Tirage ${session.current_draw}/${session.total_draws}`;
+                    if (session.is_active) {
+                        option.selected = true;
+                        log(`  ✅ Session active: ${session.name}`);
+                    }
+                    select.appendChild(option);
+                });
+                
+                showMessage(`✅ ${sessions.length} sessions chargées`, 'success');
+                
+            } catch (error) {
+                log(`❌ Erreur loadSessions: ${error.message}`);
+                showMessage(`❌ Erreur: ${error.message}`, 'error');
+                
+                const select = document.getElementById('sessionSelect');
+                select.innerHTML = '<option value="">Erreur de chargement</option>';
+            }
+        }
+        
+        function showCreateSessionModal() {
+            log('➕ Ouverture modal création session...');
+            try {
+                // Créer une modal simple
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                `;
+                
+                modal.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%;">
+                        <h3>➕ Nouvelle Session</h3>
+                        <form id="sessionForm">
+                            <div style="margin: 10px 0;">
+                                <label>Nom de la session:</label><br>
+                                <input type="text" id="sessionName" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                            </div>
+                            <div style="margin: 10px 0;">
+                                <label>Description:</label><br>
+                                <textarea id="sessionDescription" style="width: 100%; padding: 8px; margin-top: 5px; height: 60px;"></textarea>
+                            </div>
+                            <div style="margin: 10px 0;">
+                                <label>Type de loterie:</label><br>
+                                <select id="lotteryType" style="width: 100%; padding: 8px; margin-top: 5px;">
+                                    <option value="5/90">5/90</option>
+                                    <option value="6/49">6/49</option>
+                                    <option value="7/39">7/39</option>
+                                </select>
+                            </div>
+                            <div style="margin: 10px 0;">
+                                <label>Nombre total de tirages:</label><br>
+                                <input type="number" id="totalDraws" value="10" min="1" max="100" style="width: 100%; padding: 8px; margin-top: 5px;">
+                            </div>
+                            <div style="margin-top: 20px; text-align: right;">
+                                <button type="button" onclick="this.closest('.modal').remove()" style="margin-right: 10px; padding: 8px 16px;">Annuler</button>
+                                <button type="submit" class="btn-primary" style="padding: 8px 16px;">Créer</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                
+                modal.className = 'modal';
+                document.body.appendChild(modal);
+                
+                // Gérer la soumission du formulaire
+                document.getElementById('sessionForm').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await createSession();
+                });
+                
+                log('✅ Modal créée avec succès');
+                showMessage('Modal de création ouverte', 'info');
+                
+            } catch (error) {
+                log(`❌ Erreur modal: ${error.message}`);
+                showMessage(`❌ Erreur modal: ${error.message}`, 'error');
+            }
+        }
+        
+        async function createSession() {
+            log('🆕 Création de session...');
+            try {
+                const sessionData = {
+                    name: document.getElementById('sessionName').value,
+                    description: document.getElementById('sessionDescription').value,
+                    lottery_type: document.getElementById('lotteryType').value,
+                    total_draws: parseInt(document.getElementById('totalDraws').value)
+                };
+                
+                log(`📡 Données session: ${JSON.stringify(sessionData)}`);
+                
+                const response = await fetch(`${API_BASE}/session/sessions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sessionData)
+                });
+                
+                log(`📡 Response status: ${response.status}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorData}`);
+                }
+                
+                const result = await response.json();
+                log(`✅ Session créée: ${JSON.stringify(result)}`);
+                
+                // Fermer la modal
+                document.querySelector('.modal').remove();
+                
+                // Recharger les sessions
+                await loadSessions();
+                
+                showMessage(`✅ Session "${sessionData.name}" créée avec succès`, 'success');
+                
+            } catch (error) {
+                log(`❌ Erreur création: ${error.message}`);
+                showMessage(`❌ Erreur création: ${error.message}`, 'error');
+            }
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Page chargée, initialisation...');
+            
+            // Test des fonctions
+            if (typeof loadSessions === 'function') {
+                log('✅ loadSessions disponible');
+            } else {
+                log('❌ loadSessions manquante');
+            }
+            
+            if (typeof showCreateSessionModal === 'function') {
+                log('✅ showCreateSessionModal disponible');
+            } else {
+                log('❌ showCreateSessionModal manquante');
+            }
+            
+            // Charger les sessions automatiquement
+            loadSessions();
+        });
+    </script>
+</body>
+</html>

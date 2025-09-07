@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sessions - Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .error { background: #ffebee; color: #c62828; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #e8f5e8; color: #2e7d32; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        select, button { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test Sessions - Debug</h1>
+    
+    <div id="debugInfo" class="debug">
+        <h3>Debug Info:</h3>
+        <div id="debugContent">Initialisation...</div>
+    </div>
+    
+    <div>
+        <label for="sessionSelect">Session:</label>
+        <select id="sessionSelect">
+            <option value="">Sélectionner une session...</option>
+        </select>
+        <button onclick="testAPI()">Test API</button>
+        <button onclick="loadSessions()">Recharger Sessions</button>
+    </div>
+    
+    <div id="sessionInfo" style="display: none;">
+        <h3>📋 Informations de la Session</h3>
+        <div id="sessionDetails"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8004/api';
+        let availableSessions = [];
+        let debugLog = [];
+
+        function addDebug(message) {
+            debugLog.push(`[${new Date().toLocaleTimeString()}] ${message}`);
+            document.getElementById('debugContent').innerHTML = debugLog.join('<br>');
+            console.log(message);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function () {
+            addDebug('🚀 Page chargée, initialisation...');
+            
+            // Test de connectivité API
+            testAPI();
+            
+            // Charger les sessions
+            setTimeout(() => {
+                addDebug('⏰ Chargement des sessions après 1 seconde...');
+                loadSessions();
+            }, 1000);
+            
+            // Ajouter listener
+            document.getElementById('sessionSelect').addEventListener('change', onSessionChange);
+            addDebug('👂 Event listener ajouté');
+        });
+
+        async function testAPI() {
+            addDebug('🔗 Test de connectivité API...');
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                addDebug(`📡 Réponse API: Status ${response.status}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addDebug(`✅ API OK - Données reçues: ${JSON.stringify(data).substring(0, 100)}...`);
+                } else {
+                    addDebug(`❌ API Error: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                addDebug(`💥 Erreur de connexion: ${error.message}`);
+            }
+        }
+
+        async function loadSessions() {
+            addDebug('📥 Début chargement des sessions...');
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                addDebug(`📡 Réponse reçue: ${response.status}`);
+                
+                const data = await response.json();
+                addDebug(`📊 Données brutes: ${JSON.stringify(data, null, 2).substring(0, 200)}...`);
+
+                // L'API retourne un objet avec 'value' contenant le tableau des sessions
+                const sessions = data.value || data;
+                addDebug(`🔍 Sessions extraites: ${Array.isArray(sessions) ? sessions.length : 'PAS UN TABLEAU'}`);
+                
+                if (Array.isArray(sessions)) {
+                    availableSessions = sessions;
+                    addDebug(`💾 Sessions stockées: ${availableSessions.length} éléments`);
+                    
+                    populateSessionSelect(sessions);
+                    addDebug('✅ Dropdown peuplé');
+                } else {
+                    addDebug(`❌ ERREUR: sessions n'est pas un tableau: ${typeof sessions}`);
+                }
+
+            } catch (error) {
+                addDebug(`💥 Erreur lors du chargement: ${error.message}`);
+                console.error('Erreur complète:', error);
+            }
+        }
+
+        function populateSessionSelect(sessions) {
+            addDebug(`🎯 Début population dropdown avec ${sessions.length} sessions`);
+            const select = document.getElementById('sessionSelect');
+
+            // Garder seulement l'option de sélection
+            select.innerHTML = '<option value="">Sélectionner une session...</option>';
+            addDebug('🧹 Dropdown nettoyé');
+
+            sessions.forEach((session, index) => {
+                addDebug(`➕ Ajout session ${index + 1}: ID${session.id} - ${session.name}`);
+                const option = document.createElement('option');
+                option.value = session.id;
+                const status = session.is_active ? 'Active' : 'Inactive';
+                option.textContent = `ID${session.id} - ${session.name} (${status})`;
+                select.appendChild(option);
+            });
+            
+            addDebug(`✅ Dropdown peuplé avec ${sessions.length} options`);
+            addDebug(`📊 Total options dans select: ${select.options.length}`);
+        }
+
+        function onSessionChange() {
+            const sessionId = document.getElementById('sessionSelect').value;
+            addDebug(`🔄 Session changée: ${sessionId}`);
+
+            if (sessionId) {
+                const session = availableSessions.find(s => s.id == sessionId);
+                if (session) {
+                    addDebug(`✅ Session trouvée: ${session.name}`);
+                    displaySessionInfo(session);
+                } else {
+                    addDebug(`❌ Session non trouvée dans availableSessions`);
+                }
+            } else {
+                addDebug('🚫 Aucune session sélectionnée');
+                hideSessionInfo();
+            }
+        }
+
+        function displaySessionInfo(session) {
+            addDebug(`📋 Affichage info session: ${session.name}`);
+            const sessionInfo = document.getElementById('sessionInfo');
+            const sessionDetails = document.getElementById('sessionDetails');
+
+            const status = session.is_active ? 'Active' : 'Inactive';
+
+            sessionDetails.innerHTML = `
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 4px;">
+                    <p><strong>ID:</strong> ${session.id}</p>
+                    <p><strong>Nom:</strong> ${session.name}</p>
+                    <p><strong>Statut:</strong> ${status}</p>
+                    <p><strong>Type:</strong> ${session.lottery_type}</p>
+                    <p><strong>Description:</strong> ${session.description || 'N/A'}</p>
+                    <p><strong>Tirages:</strong> ${session.current_draw} / ${session.total_draws}</p>
+                </div>
+            `;
+
+            sessionInfo.style.display = 'block';
+            addDebug('✅ Informations de session affichées');
+        }
+
+        function hideSessionInfo() {
+            document.getElementById('sessionInfo').style.display = 'none';
+            addDebug('🙈 Informations de session cachées');
+        }
+    </script>
+</body>
+</html>

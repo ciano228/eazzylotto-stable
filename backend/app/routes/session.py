@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from app.database.connection import get_db
 from app.services.session_service import SessionService
+from app.services.real_katula_service import RealKatulaService
 
 router = APIRouter()
 
@@ -80,6 +81,14 @@ async def create_session(session_data: SessionCreate, db: Session = Depends(get_
 async def get_all_sessions(db: Session = Depends(get_db)):
     """Récupérer toutes les sessions disponibles"""
     try:
+        # Essayer d'abord les vraies données
+        from app.services.real_katula_service import RealKatulaService
+        real_sessions = RealKatulaService.get_real_sessions()
+        
+        if real_sessions.get("data_source") == "real_database":
+            return real_sessions
+        
+        # Fallback sur les données locales
         sessions = SessionService.get_all_sessions(db)
         
         sessions_data = []
@@ -104,7 +113,8 @@ async def get_all_sessions(db: Session = Depends(get_db)):
         
         return {
             "value": sessions_data,
-            "total": len(sessions_data)
+            "total": len(sessions_data),
+            "data_source": "local_database"
         }
         
     except Exception as e:

@@ -1,7 +1,112 @@
+from app.models import Combination
+
+from sqlalchemy.orm import Session
+from app.database.connection import get_db
+from fastapi import APIRouter, Depends, HTTPException
+from app.models.combinations import Combination
+
+router = APIRouter()
+
+@router.get("/katula/matrix/{universe}")
+async def get_katula_matrix(universe: str, db: Session = Depends(get_db)) -> dict:
+    """Retourne la structure matricielle complète des chips pour un univers donné (Postgres/SQLAlchemy)"""
+    chips_matrix = {}
+    try:
+        # Extraire dynamiquement les formes disponibles pour l'univers
+        formes_query = db.query(Combination.forme).filter(
+            Combination.univers == universe.lower()
+        ).distinct()
+        formes_list = [f[0] for f in formes_query if f[0]]
+
+    rows = db.query(Combination).filter(Combination.univers == universe.lower()).all()
+    for row in rows:
+        chip_num = row.chip
+        if chip_num not in chips_matrix:
+            chips_matrix[chip_num] = {
+                "chip": chip_num,
+                "colonne": row.colonne,
+                "ligne": row.ligne,
+                "petique": row.petique,
+                "granque": row.granque_name,
+                "tome": row.tome,
+                "univers": row.univers,
+                "formes": {},
+                "denominations": set(),
+                # Ajout dynamique des autres attributs
+            }
+            # Ajout dynamique des nouveaux attributs
+            for attr in row.__dict__:
+                if attr not in chips_matrix[chip_num] and not attr.startswith('_'):
+                    chips_matrix[chip_num][attr] = getattr(row, attr)
+        # Ajout de la forme et de la dénomination
+        forme = row.forme
+        denomination = row.denomination
+        if forme:
+            if forme not in chips_matrix[chip_num]["formes"]:
+                chips_matrix[chip_num]["formes"][forme] = set()
+            chips_matrix[chip_num]["formes"][forme].add(denomination)
+        if denomination:
+            chips_matrix[chip_num]["denominations"].add(denomination)
+    # Conversion des sets en listes
+    for chip in chips_matrix.values():
+        chip["denominations"] = list(chip["denominations"])
+        for forme in chip["formes"]:
+            chip["formes"][forme] = list(chip["formes"][forme])
+    return {
+        "chips": chips_matrix,
+        "universe": universe,
+        "total_chips": len(chips_matrix),
+        "formes": formes_list
+    }
+@router.get("/katula/matrix/{universe}")
+async def get_katula_matrix(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Retourne la structure matricielle complète des chips pour un univers donné"""
+    import sqlite3, os
+    db_path = os.path.join(os.getcwd(), "backend", "data", "katula.db")
+    chips_matrix = {}
+    if os.path.exists(db_path):
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT chip, colonne, ligne, forme, denomination, petique, granque_name, tome, univers FROM combinations WHERE univers = ?",
+            (universe.lower(),)
+        )
+        rows = cursor.fetchall()
+        conn.close()
+        for row in rows:
+            chip_num = row[0]
+            if chip_num not in chips_matrix:
+                chips_matrix[chip_num] = {
+                    "chip": chip_num,
+                    "colonne": row[1],
+                    "ligne": row[2],
+                    "petique": row[5],
+                    "granque": row[6],
+                    "tome": row[7],
+                    "univers": row[8],
+                    "formes": {},
+                    "denominations": set(),
+                }
+            # Ajout de la forme et de la dénomination
+            forme = row[3]
+            denomination = row[4]
+            if forme:
+                if forme not in chips_matrix[chip_num]["formes"]:
+                    chips_matrix[chip_num]["formes"][forme] = set()
+                chips_matrix[chip_num]["formes"][forme].add(denomination)
+            if denomination:
+                chips_matrix[chip_num]["denominations"].add(denomination)
+        # Conversion des sets en listes
+        for chip in chips_matrix.values():
+            chip["denominations"] = list(chip["denominations"])
+            for forme in chip["formes"]:
+                chip["formes"][forme] = list(chip["formes"][forme])
+    return {"chips": chips_matrix, "universe": universe, "total_chips": len(chips_matrix)}
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.services.gap_analysis_service import GapAnalysisService
+from app.services.real_katula_service import RealKatulaService
 from typing import Dict, Any, List
 from datetime import datetime
 import os
@@ -193,39 +298,12 @@ async def get_temporal_analysis(db: Session = Depends(get_db)) -> Dict[str, Any]
 
 @router.get("/katula/table/{universe}")
 async def get_katula_table(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
-    """Récupère la table Katula pour un univers donné"""
+    """Récupère la vraie table Katula en utilisant la structure existante complète"""
     try:
-        # Simuler une table Katula 6x8 (48 chips)
-        matrix = []
-        chip_positions = {}
-        
-        for row in range(8):
-            matrix_row = []
-            for col in range(6):
-                chip_number = row * 6 + col + 1
-                matrix_row.append({
-                    "chip_number": chip_number,
-                    "position": f"{row+1}-{col+1}"
-                })
-                chip_positions[f"chip_{chip_number}"] = {
-                    "chip_number": chip_number,
-                    "position": f"{row+1}-{col+1}",
-                    "row": row + 1,
-                    "column": col + 1,
-                    "geometric_zone": f"Zone_{((row//2)*3 + (col//2)) + 1}"
-                }
-            matrix.append(matrix_row)
-        
-        return {
-            "universe": universe,
-            "matrix": matrix,
-            "chip_positions": chip_positions,
-            "last_updated": datetime.now().isoformat(),
-            "total_chips": 48,
-            "status": "active"
-        }
+        from app.services.existing_structure_service import ExistingStructureService
+        return ExistingStructureService.get_complete_katula_data(universe)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erreur table Katula: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erreur structure existante: {str(e)}")
 
 @router.get("/katula/formes/{universe}")
 async def get_katula_formes(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
@@ -471,3 +549,66 @@ async def get_denomination_details(universe: str, denomination: str, db: Session
             "status": "no_data",
             "source": "fallback"
         }
+@router.get("/katula/advanced/{universe}")
+async def get_advanced_katula_table(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupère la vraie table Katula complète avec toute sa complexité"""
+    try:
+        from app.services.advanced_katula_service import AdvancedKatulaService
+        return AdvancedKatulaService.get_complete_katula_table(universe)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur table Katula avancée: {str(e)}")
+
+@router.get("/katula/forme-analysis/{universe}")
+async def get_forme_analysis(universe: str, forme: str = None, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Analyser les formes pour un univers spécifique"""
+    try:
+        from app.services.advanced_katula_service import AdvancedKatulaService
+        return AdvancedKatulaService.get_forme_analysis(universe, forme)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur analyse formes: {str(e)}")
+@router.get("/attributes/discover/{universe}")
+async def get_attributes_discover(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Découvrir les attributs d'un univers"""
+    try:
+        from app.services.existing_structure_service import ExistingStructureService
+        data = ExistingStructureService.get_complete_katula_data(universe)
+        
+        # Extraire les formes depuis les vraies données
+        formes = set()
+        if 'chip_positions' in data:
+            for chip_info in data['chip_positions'].values():
+                if 'formes_data' in chip_info:
+                    formes.update(chip_info['formes_data'].keys())
+        
+        return {
+            "attribute_analysis": {
+                "forme": {
+                    "sample_values": list(formes) if formes else ["carre", "triangle", "cercle", "rectangle"]
+                }
+            }
+        }
+    except Exception as e:
+        return {
+            "attribute_analysis": {
+                "forme": {
+                    "sample_values": ["carre", "triangle", "cercle", "rectangle"]
+                }
+            }
+        }
+
+@router.get("/katula/patterns/{universe}")
+async def get_katula_patterns(universe: str, limit: int = 50, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Récupérer les patterns d'un univers"""
+    try:
+        return {
+            "pattern_insights": {
+                "hot_zones": [],
+                "cold_zones": []
+            },
+            "frequency_analysis": {
+                "by_zone": {}
+            },
+            "analysis_period": f"Last {limit} combinations"
+        }
+    except Exception as e:
+        return {"error": str(e)}

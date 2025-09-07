@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Temporal Simple</title>
+</head>
+<body>
+    <h1>Test Interface Temporelle</h1>
+    <div id="status">Chargement...</div>
+    <div id="result"></div>
+    
+    <script>
+        console.log('🔄 Début du test...');
+        
+        // Test 1: Vérifier si l'API temporelle fonctionne
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                statusDiv.innerHTML = '🔄 Test API temporelle...';
+                
+                const response = await fetch('http://localhost:8000/api/analytics/temporal-periods/fruity');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.innerHTML = '✅ API temporelle fonctionne !';
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    statusDiv.innerHTML = `❌ Erreur API: ${response.status}`;
+                    resultDiv.innerHTML = await response.text();
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = '💥 Erreur de connexion';
+                resultDiv.innerHTML = error.message;
+                console.error('Erreur:', error);
+            }
+        }
+        
+        // Test 2: Vérifier les fonctions de base
+        function testBasicFunctions() {
+            console.log('✅ JavaScript fonctionne');
+            console.log('✅ DOM accessible');
+            console.log('✅ Fetch disponible:', typeof fetch !== 'undefined');
+        }
+        
+        // Lancer les tests
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM chargé');
+            testBasicFunctions();
+            testAPI();
+        });
+    </script>
+</body>
+</html>

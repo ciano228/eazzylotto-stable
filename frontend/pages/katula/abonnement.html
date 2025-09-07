@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script src="https://js.stripe.com/v3/"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abonnement - Katooling</title>
+    <script src="assets/js/universal-header.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; margin: 0; background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%); min-height: 100vh; color: #222; }
+        .main-container { max-width: 600px; margin: 0 auto; padding: 120px 20px 40px 20px; }
+        .abonnement-card { background: #fff; border-radius: 16px; box-shadow: 0 8px 32px #0002; padding: 36px 28px; text-align: center; }
+        h2 { color: #1e3c72; margin-bottom: 18px; font-size: 2.2rem; }
+        .abonnement-options { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin: 32px 0; }
+        .option { background: #f8f9fa; border-radius: 12px; padding: 28px 22px; min-width: 180px; box-shadow: 0 2px 8px #0001; }
+        .option-title { font-size: 1.2rem; font-weight: 700; color: #ffd700; margin-bottom: 10px; }
+        .option-price { font-size: 1.5rem; font-weight: 900; color: #1e3c72; margin-bottom: 8px; }
+        .option-desc { color: #444; font-size: 1rem; margin-bottom: 12px; }
+        .option-btn { background: linear-gradient(90deg, #ffd700, #ffed4e); color: #1e3c72; font-weight: 900; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1.05rem; cursor: pointer; box-shadow: 0 2px 8px #ffd70044; transition: box-shadow 0.2s, transform 0.2s; }
+        .option-btn:hover { box-shadow: 0 6px 24px #ffd70066; transform: translateY(-2px) scale(1.04); }
+        @media (max-width: 700px) { .main-container { padding-top: 80px; } .abonnement-options { flex-direction: column; gap: 16px; } }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    <div class="main-container">
+        <div class="abonnement-card">
+            <h2>Choisissez votre abonnement</h2>
+            <div class="abonnement-options">
+                <div class="option">
+                    <div class="option-title">Découverte</div>
+                    <div class="option-price">Gratuit</div>
+                    <div class="option-desc">Accès limité aux fonctionnalités de base et à la communauté.</div>
+                    <button class="option-btn" disabled>Inclus</button>
+                </div>
+                <div class="option">
+                    <div class="option-title">Premium</div>
+                    <div class="option-price">9,99€ / mois</div>
+                    <div class="option-desc">Accès complet à toutes les analyses, prédictions et outils avancés.</div>
+                    <button class="option-btn">S'abonner</button>
+                </div>
+                <div class="option">
+                    <div class="option-title">Pro</div>
+                    <div class="option-price">99€ / an</div>
+                    <div class="option-desc">Pour les passionnés : support prioritaire, accès anticipé aux nouveautés.</div>
+                    <button class="option-btn">S'abonner</button>
+                </div>
+            </div>
+            <p style="color:#888;font-size:0.98em;">Tous les abonnements sont sans engagement. <br>Vous pouvez annuler à tout moment.</p>
+        </div>
+
+        <!-- Modale de paiement -->
+        <div id="paymentModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0008;z-index:1000;align-items:center;justify-content:center;">
+            <div style="background:#fff;padding:32px 24px;border-radius:14px;max-width:350px;width:90%;box-shadow:0 8px 32px #0002;text-align:center;">
+                <h3 style="color:#1e3c72;margin-bottom:18px;">Choisissez un mode de paiement</h3>
+                <button class="option-btn" style="margin-bottom:12px;width:100%;" onclick="alert('Paiement Mobile Money non connecté (démo)')">Mobile Money (Orange, MTN, Moov...)</button>
+                <button class="option-btn" id="stripeCardBtn" style="margin-bottom:12px;width:100%;background:linear-gradient(90deg,#4facfe,#00f2fe);color:#fff;">Carte bancaire (Visa, Mastercard...)</button>
+                <button class="option-btn" style="margin-bottom:12px;width:100%;background:linear-gradient(90deg,#2ed573,#1e3c72);color:#fff;" onclick="alert('Paiement PayPal non connecté (démo)')">PayPal</button>
+                <button class="option-btn" style="background:#eee;color:#1e3c72;width:100%;margin-top:10px;" onclick="document.getElementById('paymentModal').style.display='none'">Annuler</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof UniversalHeader !== 'undefined') {
+            UniversalHeader.injectHeader('header-container', 'abonnement', {
+                showNavigation: true,
+                showUserInfo: false
+            });
+        }
+        // Activer les boutons S'abonner
+        document.querySelectorAll('.option-btn').forEach(function(btn) {
+            if (btn.textContent.includes("S'abonner")) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('paymentModal').style.display = 'flex';
+                });
+            }
+        });
+
+        // Stripe Checkout integration
+        var stripeBtn = document.getElementById('stripeCardBtn');
+        if (stripeBtn) {
+            stripeBtn.onclick = function() {
+                fetch('http://localhost:8000/create-checkout-session', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.id && data.publicKey) {
+                            var stripe = Stripe(data.publicKey);
+                            stripe.redirectToCheckout({ sessionId: data.id });
+                        } else {
+                            alert('Erreur lors de la création de la session de paiement.');
+                        }
+                    });
+            };
+        }
+    });
+    </script>
+</body>
+</html>

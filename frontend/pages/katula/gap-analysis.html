@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Analyse des Écarts</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            color: #1890ff;
+            margin-bottom: 30px;
+        }
+
+        .navigation-bar {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            background: #40a9ff;
+            color: white;
+        }
+
+        .nav-button.active {
+            background: #722ed1;
+        }
+
+        .controls {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #40a9ff;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .summary-card .subvalue {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .analysis-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            background: #1890ff;
+            color: white;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .section-content {
+            border: 1px solid #1890ff;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .attribute-group {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .attribute-header {
+            background: #f0f9ff;
+            padding: 10px 15px;
+            font-weight: bold;
+            color: #1890ff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .attribute-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .attribute-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attribute-item:last-child {
+            border-bottom: none;
+        }
+
+        .attribute-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .attribute-stats {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .gap-indicator {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .gap-overdue {
+            background: #ff4d4f;
+        }
+
+        .gap-hot {
+            background: #fa8c16;
+        }
+
+        .gap-normal {
+            background: #52c41a;
+        }
+
+        .gap-cold {
+            background: #1890ff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #ff4d4f;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .refresh-btn {
+            background: #52c41a;
+            margin-left: 10px;
+        }
+
+        .refresh-btn:hover {
+            background: #73d13d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+    
+    <div class="container" style="margin-top: 100px;">
+        <div class="header">
+            <h1>📊 Analyse des Écarts</h1>
+            <p>Détection des attributs en retard et prédiction des prochaines sorties</p>
+        </div>
+
+        <!-- Barre de navigation -->
+        <div class="navigation-bar">
+            <h4 style="margin: 0 0 10px 0; color: #1890ff;">🧭 Navigation</h4>
+            <a href="test-interface.html" class="nav-button">🎲 Interface Simple</a>
+            <a href="smart-input.html" class="nav-button">🔄 Sessions Cycliques</a>
+            <a href="advanced-journal.html" class="nav-button">📋 Journal Avancé</a>
+            <a href="gap-analysis.html" class="nav-button active">📊 Analyse Écarts</a>
+        </div>
+
+        <!-- Contrôles -->
+        <div class="controls">
+            <label for="universeSelect">Univers:</label>
+            <select id="universeSelect">
+                <option value="mundo" selected>Mundo</option>
+                <option value="fruity">Fruity</option>
+                <option value="trigga">Trigga</option>
+                <option value="roaster">Roaster</option>
+                <option value="sunshine">Sunshine</option>
+            </select>
+
+            <label for="thresholdSelect">Seuil de retard:</label>
+            <select id="thresholdSelect">
+                <option value="1.2">1.2x (Sensible)</option>
+                <option value="1.5" selected>1.5x (Normal)</option>
+                <option value="2.0">2.0x (Strict)</option>
+                <option value="3.0">3.0x (Très strict)</option>
+            </select>
+
+            <button onclick="loadGapAnalysis()" id="loadBtn">Analyser</button>
+            <button onclick="refreshAnalysis()" id="refreshBtn" class="refresh-btn">Actualiser</button>
+        </div>
+
+        <!-- Résumé -->
+        <div id="summaryContainer"></div>
+
+        <!-- Attributs en retard -->
+        <div class="analysis-section">
+            <h2 class="section-title">🔥 Attributs en Retard (Prédictions Fortes)</h2>
+            <div class="section-content">
+                <div id="overdueContainer" class="attributes-grid"></div>
+            </div>
+        </div>
+
+        <!-- Attributs chauds -->
+        <div class="analysis-section">
+            <h2 class="section-title">🌡️ Attributs Chauds (Zone de Sortie)</h2>
+            <div class="section-content">
+                <div id="hotContainer" class="attributes-grid"></div>
+            </div>
+        </div>
+
+        <!-- Analyse complète -->
+        <div class="analysis-section">
+            <h2 class="section-title">📈 Analyse Complète par Attribut</h2>
+            <div class="section-content">
+                <div id="fullAnalysisContainer" class="attributes-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8005/api/analytics';
+        let currentAnalysisData = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function () {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'history', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+            
+            console.log('📥 Initialisation de l\'analyse des écarts...');
+            loadGapAnalysis();
+        });
+
+        async function loadGapAnalysis() {
+            const loadBtn = document.getElementById('loadBtn');
+            const universe = document.getElementById('universeSelect').value;
+            const threshold = document.getElementById('thresholdSelect').value;
+
+            loadBtn.disabled = true;
+            loadBtn.textContent = 'Analyse...';
+
+            try {
+                // Charger l'analyse complète
+                const response = await fetch(`${API_BASE}/gaps/${universe}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentAnalysisData = data;
+                    displaySummary(data.summary);
+                    displayOverdueAttributes(data.overdue_attributes);
+                    displayHotAttributes(data.hot_attributes);
+                    displayFullAnalysis(data.gaps_analysis);
+                } else {
+                    showError('Erreur lors du chargement: ' + data.detail);
+                }
+
+            } catch (error) {
+                showError('Erreur de connexion: ' + error.message);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = 'Analyser';
+            }
+        }
+
+        async function refreshAnalysis() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const universe = document.getElementById('universeSelect').value;
+
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = 'Actualisation...';
+
+            try {
+                const response = await fetch(`${API_BASE}/gaps/${universe}/refresh`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('✅ Analyse actualisée');
+                    loadGapAnalysis(); // Recharger les données
+                } else {
+                    showError('Erreur lors de l\'actualisation: ' + data.detail);
+                }
+
+            } catch (error) {
+                showError('Erreur: ' + error.message);
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Actualiser';
+            }
+        }
+
+        function displaySummary(summary) {
+            const container = document.getElementById('summaryContainer');
+            
+            let summaryHtml = '<div class="summary-cards">';
+            
+            for (const [attrType, stats] of Object.entries(summary)) {
+                summaryHtml += `
+                    <div class="summary-card">
+                        <h3>${attrType.toUpperCase()}</h3>
+                        <div class="value">${stats.total_values}</div>
+                        <div class="subvalue">valeurs</div>
+                        <div class="subvalue">Écart moy: ${stats.avg_current_gap}</div>
+                        <div class="subvalue">Max: ${stats.max_current_gap}</div>
+                    </div>
+                `;
+            }
+            
+            summaryHtml += '</div>';
+            container.innerHTML = summaryHtml;
+        }
+
+        function displayOverdueAttributes(overdueData) {
+            const container = document.getElementById('overdueContainer');
+            
+            if (!overdueData || Object.keys(overdueData).length === 0) {
+                container.innerHTML = '<p>Aucun attribut significativement en retard.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            for (const [attrType, attributes] of Object.entries(overdueData)) {
+                html += `
+                    <div class="attribute-group">
+                        <div class="attribute-header">${attrType.toUpperCase()}</div>
+                        <div class="attribute-list">
+                `;
+                
+                attributes.forEach(attr => {
+                    const ratio = attr.delay_ratio;
+                    const gapClass = ratio > 5 ? 'gap-overdue' : ratio > 2 ? 'gap-hot' : 'gap-normal';
+                    
+                    html += `
+                        <div class="attribute-item">
+                            <div>
+                                <div class="attribute-name">${attr.value}</div>
+                                <div class="attribute-stats">
+                                    Écart: ${attr.current_gap} | Moy: ${attr.average_gap} | Apps: ${attr.total_appearances}
+                                </div>
+                            </div>
+                            <div class="gap-indicator ${gapClass}">
+                                ${ratio.toFixed(1)}x
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function displayHotAttributes(hotData) {
+            const container = document.getElementById('hotContainer');
+            
+            if (!hotData || Object.keys(hotData).length === 0) {
+                container.innerHTML = '<p>Aucun attribut dans la zone chaude actuellement.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            for (const [attrType, attributes] of Object.entries(hotData)) {
+                html += `
+                    <div class="attribute-group">
+                        <div class="attribute-header">${attrType.toUpperCase()}</div>
+                        <div class="attribute-list">
+                `;
+                
+                attributes.forEach(attr => {
+                    html += `
+                        <div class="attribute-item">
+                            <div>
+                                <div class="attribute-name">${attr.value}</div>
+                                <div class="attribute-stats">
+                                    Écart: ${attr.current_gap} | Moy: ${attr.average_gap} | Apps: ${attr.total_appearances}
+                                </div>
+                            </div>
+                            <div class="gap-indicator gap-hot">
+                                ${attr.heat_ratio.toFixed(1)}x
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function displayFullAnalysis(gapsData) {
+            const container = document.getElementById('fullAnalysisContainer');
+            
+            let html = '';
+            
+            for (const [attrType, values] of Object.entries(gapsData)) {
+                html += `
+                    <div class="attribute-group">
+                        <div class="attribute-header">${attrType.toUpperCase()}</div>
+                        <div class="attribute-list">
+                `;
+                
+                // Trier par écart actuel décroissant
+                const sortedValues = Object.entries(values).sort((a, b) => b[1].current_gap - a[1].current_gap);
+                
+                sortedValues.slice(0, 10).forEach(([value, stats]) => {
+                    const ratio = stats.average_gap > 0 ? stats.current_gap / stats.average_gap : 0;
+                    let gapClass = 'gap-normal';
+                    
+                    if (ratio > 2) gapClass = 'gap-overdue';
+                    else if (ratio > 1.5) gapClass = 'gap-hot';
+                    else if (ratio < 0.8) gapClass = 'gap-cold';
+                    
+                    html += `
+                        <div class="attribute-item">
+                            <div>
+                                <div class="attribute-name">${value}</div>
+                                <div class="attribute-stats">
+                                    Écart: ${stats.current_gap} | Moy: ${stats.average_gap} | Max: ${stats.max_gap}
+                                    <br>Apps: ${stats.total_appearances} | Rég: ${stats.regularity_score}
+                                </div>
+                            </div>
+                            <div class="gap-indicator ${gapClass}">
+                                ${ratio.toFixed(1)}x
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function showError(message) {
+            const errorHtml = `<div class="error">${message}</div>`;
+            document.getElementById('summaryContainer').innerHTML = errorHtml;
+        }
+    </script>
+</body>
+
+</html>

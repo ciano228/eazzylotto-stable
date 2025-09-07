@@ -1,0 +1,249 @@
+/* EazzyLotto - Système d'icônes avec boules de loto 3D */
+
+.eazzylotto-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #4facfe, #1e3c72);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.eazzylotto-icon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: icon-rotate 4s linear infinite;
+}
+
+@keyframes icon-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Boules de loto 3D */
+.lotto-ball {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.lotto-ball::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+.lotto-ball:hover {
+    transform: scale(1.1) rotateY(15deg);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Couleurs des boules */
+.lotto-ball.red {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff4757, #c0392b);
+}
+
+.lotto-ball.blue {
+    background: radial-gradient(circle at 30% 30%, #74b9ff, #4facfe, #2980b9);
+}
+
+.lotto-ball.green {
+    background: radial-gradient(circle at 30% 30%, #55efc4, #2ed573, #27ae60);
+}
+
+.lotto-ball.yellow {
+    background: radial-gradient(circle at 30% 30%, #fdcb6e, #ffd700, #f39c12);
+    color: #2c3e50;
+}
+
+.lotto-ball.purple {
+    background: radial-gradient(circle at 30% 30%, #a29bfe, #a55eea, #8e44ad);
+}
+
+.lotto-ball.orange {
+    background: radial-gradient(circle at 30% 30%, #fd79a8, #e84393, #e17055);
+}
+
+/* Icônes spécifiques */
+.icon-dashboard {
+    background: radial-gradient(circle at 30% 30%, #4facfe, #1e3c72);
+}
+
+.icon-research {
+    background: radial-gradient(circle at 30% 30%, #2ed573, #27ae60);
+}
+
+.icon-analysis {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff4757);
+}
+
+.icon-prediction {
+    background: radial-gradient(circle at 30% 30%, #ffd700, #f39c12);
+    color: #2c3e50;
+}
+
+.icon-results {
+    background: radial-gradient(circle at 30% 30%, #a55eea, #8e44ad);
+}
+
+.icon-katooling {
+    background: radial-gradient(circle at 30% 30%, #ffd700, #ff6b6b, #4facfe);
+    animation: katooling-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes katooling-glow {
+    0% { 
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        filter: brightness(1);
+    }
+    100% { 
+        box-shadow: 0 12px 35px rgba(255, 215, 0, 0.8);
+        filter: brightness(1.2);
+    }
+}
+
+/* Rayons de lumière en arrière-plan */
+.icon-with-rays {
+    position: relative;
+    overflow: visible;
+}
+
+.icon-with-rays::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(255, 215, 0, 0.1) 30deg,
+        transparent 60deg,
+        rgba(255, 215, 0, 0.1) 90deg,
+        transparent 120deg,
+        rgba(255, 215, 0, 0.1) 150deg,
+        transparent 180deg,
+        rgba(255, 215, 0, 0.1) 210deg,
+        transparent 240deg,
+        rgba(255, 215, 0, 0.1) 270deg,
+        transparent 300deg,
+        rgba(255, 215, 0, 0.1) 330deg,
+        transparent 360deg
+    );
+    transform: translate(-50%, -50%);
+    animation: rays-rotate 8s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rays-rotate {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Confettis animés */
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    background: #ffd700;
+    animation: confetti-fall 3s linear infinite;
+}
+
+.confetti:nth-child(2n) { background: #ff6b6b; animation-delay: -0.5s; }
+.confetti:nth-child(3n) { background: #4facfe; animation-delay: -1s; }
+.confetti:nth-child(4n) { background: #2ed573; animation-delay: -1.5s; }
+.confetti:nth-child(5n) { background: #a55eea; animation-delay: -2s; }
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Tailles d'icônes */
+.icon-xs { width: 20px; height: 20px; font-size: 10px; }
+.icon-sm { width: 30px; height: 30px; font-size: 14px; }
+.icon-md { width: 40px; height: 40px; font-size: 16px; }
+.icon-lg { width: 60px; height: 60px; font-size: 24px; }
+.icon-xl { width: 80px; height: 80px; font-size: 32px; }
+
+/* Favicon et icônes d'application */
+.app-icon {
+    width: 64px;
+    height: 64px;
+    background: radial-gradient(circle at 30% 30%, #ffd700, #ff6b6b, #4facfe);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.app-icon .logo-mini {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 12px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lotto-ball {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .icon-lg {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+}

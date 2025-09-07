@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Katula Dynamique</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        select, button {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .loading-message {
+            text-align: center;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .universe-info {
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .grid-cell {
+            background: white;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 80px;
+        }
+
+        .grid-header {
+            background: #2196f3;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .forme-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 1200px) {
+            .katula-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .katula-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Table Katula Dynamique</h1>
+        </div>
+
+        <div class="controls">
+            <select id="universe-select" onchange="loadUniverseData(this.value)">
+                <option value="mundo">Mundo</option>
+                <option value="fruity">Fruity</option>
+                <option value="euro">Euro</option>
+            </select>
+            <button onclick="refreshData()">Rafraîchir</button>
+        </div>
+
+        <div id="loading-message" class="loading-message">
+            Chargement des données...
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+
+        <div class="universe-info" id="universe-info"></div>
+
+        <div class="katula-grid" id="katula-grid"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentData = null;
+
+        async function loadUniverseData(universe) {
+            const loadingMsg = document.getElementById('loading-message');
+            const errorMsg = document.getElementById('error-message');
+            const grid = document.getElementById('katula-grid');
+            const universeInfo = document.getElementById('universe-info');
+
+            try {
+                loadingMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                grid.innerHTML = '';
+                universeInfo.innerHTML = '';
+
+                // 1. Charger les informations de l'univers (formes disponibles)
+                const infoResponse = await fetch(`${API_BASE}/katula/universe-info/${universe}`);
+                if (!infoResponse.ok) {
+                    throw new Error(`Erreur lors du chargement des informations: ${infoResponse.status}`);
+                }
+                const universeData = await infoResponse.json();
+
+                // 2. Charger les données de la matrice
+                const matrixResponse = await fetch(`${API_BASE}/katula/matrix/${universe}`);
+                if (!matrixResponse.ok) {
+                    throw new Error(`Erreur lors du chargement de la matrice: ${matrixResponse.status}`);
+                }
+                const matrixData = await matrixResponse.json();
+
+                // Afficher les informations de l'univers
+                universeInfo.innerHTML = `
+                    <h3>🌍 Univers: ${universe.toUpperCase()}</h3>
+                    <p><strong>Formes disponibles:</strong> ${universeData.formes.join(', ')}</p>
+                    <p><strong>Nombre total de chips:</strong> ${universeData.total_chips}</p>
+                `;
+
+                // Créer l'en-tête de la grille
+                const headers = ['Chip', 'Colonne', 'Ligne', 'Pétique', 'Granque', 'Tome', 'Formes', 'Dénominations'];
+                headers.forEach(header => {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell grid-header';
+                    cell.textContent = header;
+                    grid.appendChild(cell);
+                });
+
+                // Ajouter les données
+                Object.values(matrixData.chips).forEach(chip => {
+                    // Ajouter les cellules de base
+                    [
+                        chip.chip,
+                        chip.colonne,
+                        chip.ligne,
+                        chip.petique,
+                        chip.granque,
+                        chip.tome
+                    ].forEach(value => {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.textContent = value || '-';
+                        grid.appendChild(cell);
+                    });
+
+                    // Cellule des formes
+                    const formesCell = document.createElement('div');
+                    formesCell.className = 'grid-cell';
+                    const formesContent = Object.entries(chip.formes)
+                        .map(([forme, denoms]) => {
+                            if (universeData.formes.includes(forme)) {
+                                return `
+                                    <div class="forme-tag">
+                                        <strong>${forme}</strong>:
+                                        ${Array.from(denoms).join(', ')}
+                                    </div>
+                                `;
+                            }
+                            return '';
+                        })
+                        .filter(content => content)
+                        .join('') || '-';
+                    formesCell.innerHTML = formesContent;
+                    grid.appendChild(formesCell);
+
+                    // Cellule des dénominations
+                    const denomsCell = document.createElement('div');
+                    denomsCell.className = 'grid-cell';
+                    denomsCell.textContent = Array.from(chip.denominations).join(', ') || '-';
+                    grid.appendChild(denomsCell);
+                });
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                errorMsg.textContent = `Erreur: ${error.message}`;
+                errorMsg.style.display = 'block';
+            } finally {
+                loadingMsg.style.display = 'none';
+            }
+        }
+
+        function refreshData() {
+            const universe = document.getElementById('universe-select').value;
+            loadUniverseData(universe);
+        }
+
+        // Charger les données initiales
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUniverseData('mundo');
+        });
+    </script>
+</body>
+</html>

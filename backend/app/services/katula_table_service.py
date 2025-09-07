@@ -185,9 +185,9 @@ class KatulaTableService:
         """Mappe une combinaison sur la Table de Katula"""
         
         try:
-            # Récupérer la combinaison
+            # Récupérer la combinaison avec les nouvelles colonnes
             query = """
-                SELECT combination_id, num1, num2, chip, chip_id, univers
+                SELECT combination_id, num1, num2, chip, chip_id, univers, granque_name, tome
                 FROM combinations 
                 WHERE combination_id = :combination_id 
                 AND univers = :universe
@@ -250,12 +250,14 @@ class KatulaTableService:
         """Analyse les patterns historiques sur la Table de Katula"""
         
         try:
-            # Récupérer les combinaisons récentes
+            # Récupérer les combinaisons récentes avec nouvelles colonnes
             query = """
-                SELECT combination_id, num1, num2, chip, chip_id, created_at
-                FROM combinations 
-                WHERE univers = :universe 
-                ORDER BY combination_id DESC
+                SELECT c.combination_id, c.num1, c.num2, c.chip, c.chip_id, 
+                       c.granque_name, c.tome, t.ligne, t.colonne, t.forme
+                FROM combinations c
+                LEFT JOIN table_de_katula t ON c.univers = t.univers AND c.chip = t.chip
+                WHERE c.univers = :universe 
+                ORDER BY c.combination_id DESC
                 LIMIT :limit
             """
             
@@ -297,7 +299,7 @@ class KatulaTableService:
                     edge_type = pos_info["edge_info"]["edge_type"]
                     edge_frequency[edge_type] = edge_frequency.get(edge_type, 0) + 1
                     
-                    # Historique des positions
+                    # Historique des positions avec nouvelles colonnes
                     position_history.append({
                         "combination_id": combo.combination_id,
                         "numbers": f"{combo.num1}-{combo.num2}",
@@ -305,7 +307,12 @@ class KatulaTableService:
                         "zone": zone,
                         "quadrant": quadrant,
                         "row": pos_info["row"],
-                        "column": pos_info["column"]
+                        "column": pos_info["column"],
+                        "granque_name": getattr(combo, 'granque_name', 'N/A'),
+                        "tome": getattr(combo, 'tome', 'N/A'),
+                        "ligne": getattr(combo, 'ligne', 'N/A'),
+                        "colonne": getattr(combo, 'colonne', 'N/A'),
+                        "forme": getattr(combo, 'forme', 'N/A')
                     })
             
             # Identifier les zones chaudes et froides

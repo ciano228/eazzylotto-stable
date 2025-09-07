@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Méthode KATOOLING - EazzyLotto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+
+
+        /* Main Content */
+        .main-content {
+            padding-top: 120px; /* Plus d'espace pour le header universel */
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pioneer-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            margin: 0 20px 40px;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Katula Table Demo */
+        .katula-demo {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .katula-table {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .katula-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .katula-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .katula-cell.highlighted {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1e3c72;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .katula-cell.zone-q1 { border-left: 4px solid #e74c3c; }
+        .katula-cell.zone-q2 { border-left: 4px solid #3498db; }
+        .katula-cell.zone-q3 { border-left: 4px solid #f39c12; }
+        .katula-cell.zone-q4 { border-left: 4px solid #27ae60; }
+
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Steps */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #1e3c72, #ffd700);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* Innovation Highlights */
+        .innovation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .innovation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #ffd700;
+            transition: all 0.3s ease;
+        }
+
+        .innovation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .innovation-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .innovation-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .innovation-text {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin: 40px 20px;
+            border-radius: 20px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #ffd700;
+            color: #1e3c72;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .content-section {
+                margin: 0 10px 20px;
+                padding: 30px 20px;
+            }
+
+            .katula-table {
+                gap: 4px;
+                padding: 15px;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Universel -->
+    <div id="header-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section / Accueil -->
+        <section class="hero-section" id="accueil">
+            <div class="pioneer-badge">🏆 PIONNIERS DE LA MÉTHODE KATOOLING</div>
+            <h1 class="hero-title">KATOOLING</h1>
+            <p class="hero-subtitle">
+                La méthode révolutionnaire qui transforme les combinaisons de loto en coordonnées géométriques 
+                pour prédire les zones gagnantes futures avec une précision inégalée.
+            </p>
+        </section>
+
+        <!-- Introduction -->
+        <section class="content-section">
+            <h2 class="section-title">🔬 Notre Innovation Révolutionnaire</h2>
+            <p class="section-subtitle">
+                Découvrez comment nous avons révolutionné l'analyse du loto avec la Table Katula
+            </p>
+            
+            <div class="innovation-grid">
+                <div class="innovation-card">
+                    <div class="innovation-icon">🎯</div>
+                    <h3 class="innovation-title">Géométrie des Combinaisons</h3>
+                    <p class="innovation-text">
+                        Chaque combinaison de 2 numéros est transformée en coordonnées géométriques 
+                        précises sur notre Table Katula 8x6.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">🗺️</div>
+                    <h3 class="innovation-title">Zones Prédictives</h3>
+                    <p class="innovation-text">
+                        Identification des zones géométriques qui concentrent historiquement 
+                        les combinaisons gagnantes.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">🔮</div>
+                    <h3 class="innovation-title">Prédiction Spatiale</h3>
+                    <p class="innovation-text">
+                        Prédiction des futures zones actives basée sur l'analyse temporelle 
+                        des patterns géométriques.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">🧠</div>
+                    <h3 class="innovation-title">IA Géométrique</h3>
+                    <p class="innovation-text">
+                        Intelligence artificielle spécialisée dans l'analyse des relations 
+                        spatiales entre les combinaisons.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table Katula Demo -->
+        <section class="content-section">
+            <h2 class="section-title">📊 La Table Katula en Action</h2>
+            <p class="section-subtitle">
+                Visualisez comment les combinaisons se positionnent géométriquement
+            </p>
+            
+            <div class="katula-demo">
+                <h3 class="demo-title">Table Katula 8x6 - 48 Positions Géométriques</h3>
+                <div class="katula-table" id="katulaDemo">
+                    <!-- Les cellules seront générées par JavaScript -->
+                </div>
+                <p style="text-align: center; margin-top: 20px; color: #6c757d;">
+                    <strong>Cliquez sur les cellules</strong> pour voir les combinaisons associées
+                </p>
+            </div>
+        </section>
+
+        <!-- Methodology Steps -->
+        <section class="content-section">
+            <h2 class="section-title">⚙️ Comment Fonctionne KATOOLING</h2>
+            <p class="section-subtitle">
+                Notre processus en 5 étapes pour transformer les tirages en prédictions géométriques
+            </p>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Collecte des Tirages</h3>
+                    <p class="step-description">
+                        Récupération des tirages historiques et génération de toutes les 
+                        combinaisons de 2 numéros (15 combos par tirage de 6 numéros).
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Classification par Univers</h3>
+                    <p class="step-description">
+                        Chaque combinaison est classifiée dans l'un des 5 univers 
+                        (Mundo, Fruity, Trigga, Roaster, Sunshine) selon ses attributs.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Positionnement Géométrique</h3>
+                    <p class="step-description">
+                        Chaque combinaison est positionnée sur la Table Katula 8x6, 
+                        créant une représentation géométrique unique.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Analyse Temporelle</h3>
+                    <p class="step-description">
+                        Analyse des patterns temporels et identification des zones 
+                        géométriques les plus actives sur différentes périodes.
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">Prédiction des Zones</h3>
+                    <p class="step-description">
+                        Prédiction des futures zones actives et génération des 
+                        combinaisons gagnantes probables avec taux de confiance.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages -->
+        <section class="content-section">
+            <h2 class="section-title">🏆 Avantages de KATOOLING</h2>
+            <p class="section-subtitle">
+                Pourquoi notre méthode surpasse les approches traditionnelles
+            </p>
+            
+            <div class="innovation-grid">
+                <div class="innovation-card">
+                    <div class="innovation-icon">📈</div>
+                    <h3 class="innovation-title">Précision Géométrique</h3>
+                    <p class="innovation-text">
+                        Transformation des données abstraites en coordonnées spatiales 
+                        concrètes pour une analyse plus précise.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">🎲</div>
+                    <h3 class="innovation-title">Multi-Univers</h3>
+                    <p class="innovation-text">
+                        Classification intelligente en 5 univers distincts pour 
+                        une segmentation optimale des patterns.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">⏰</div>
+                    <h3 class="innovation-title">Analyse Temporelle</h3>
+                    <p class="innovation-text">
+                        Comparaison multi-périodes pour identifier les cycles 
+                        et tendances géométriques récurrentes.
+                    </p>
+                </div>
+                
+                <div class="innovation-card">
+                    <div class="innovation-icon">🤖</div>
+                    <h3 class="innovation-title">IA Spécialisée</h3>
+                    <p class="innovation-text">
+                        Algorithmes d'apprentissage automatique optimisés 
+                        spécifiquement pour l'analyse géométrique.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-title">Prêt à Révolutionner Votre Jeu ?</h2>
+            <p class="cta-text">
+                Rejoignez les pionniers de la méthode KATOOLING et découvrez 
+                une nouvelle dimension de l'analyse du loto.
+            </p>
+            <a href="dashboard.html" class="cta-button">
+                Commencer l'Analyse KATOOLING
+            </a>
+        </section>
+    </main>
+
+    <script>
+        // Générer la table Katula de démonstration
+        function generateKatulaDemo() {
+            const table = document.getElementById('katulaDemo');
+            
+            for (let i = 1; i <= 48; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'katula-cell';
+                cell.textContent = i;
+                
+                // Ajouter les zones colorées
+                if (i <= 12) cell.classList.add('zone-q1');
+                else if (i <= 24) cell.classList.add('zone-q2');
+                else if (i <= 36) cell.classList.add('zone-q3');
+                else cell.classList.add('zone-q4');
+                
+                // Ajouter l'interaction
+                cell.addEventListener('click', () => showCellInfo(i));
+                
+                table.appendChild(cell);
+            }
+        }
+
+        // Afficher les informations d'une cellule
+        function showCellInfo(cellNumber) {
+            // Retirer les anciens highlights
+            document.querySelectorAll('.katula-cell').forEach(cell => {
+                cell.classList.remove('highlighted');
+            });
+            
+            // Highlight la cellule cliquée
+            document.querySelectorAll('.katula-cell')[cellNumber - 1].classList.add('highlighted');
+            
+            // Calculer la position
+            const row = Math.ceil(cellNumber / 6);
+            const col = ((cellNumber - 1) % 6) + 1;
+            const zone = cellNumber <= 12 ? 'Q1' : cellNumber <= 24 ? 'Q2' : cellNumber <= 36 ? 'Q3' : 'Q4';
+            
+            // Générer des exemples de combinaisons
+            const sampleCombos = generateSampleCombinations(cellNumber);
+            
+            alert(`🎯 POSITION KATULA ${cellNumber}
+
+📍 Coordonnées: Ligne ${row}, Colonne ${col}
+🗺️ Zone Géométrique: ${zone}
+🎲 Exemples de Combinaisons:
+${sampleCombos.join('\n')}
+
+💡 Cette position peut contenir des combinaisons 
+de différents univers selon leurs attributs.`);
+        }
+
+        // Générer des exemples de combinaisons pour une position
+        function generateSampleCombinations(position) {
+            const combos = [];
+            for (let i = 0; i < 3; i++) {
+                const num1 = Math.floor(Math.random() * 49) + 1;
+                const num2 = Math.floor(Math.random() * 49) + 1;
+                if (num1 !== num2) {
+                    combos.push(`• (${Math.min(num1, num2)}, ${Math.max(num1, num2)})`);
+                }
+            }
+            return combos;
+        }
+
+        // Animation d'introduction
+        function animateIntro() {
+            const cells = document.querySelectorAll('.katula-cell');
+            cells.forEach((cell, index) => {
+                setTimeout(() => {
+                    cell.style.opacity = '0';
+                    cell.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        cell.style.transition = 'all 0.3s ease';
+                        cell.style.opacity = '1';
+                        cell.style.transform = 'scale(1)';
+                    }, 50);
+                }, index * 50);
+            });
+        }
+
+        // Démonstration automatique
+        function startDemo() {
+            const cells = document.querySelectorAll('.katula-cell');
+            let currentIndex = 0;
+            
+            const highlightNext = () => {
+                // Retirer tous les highlights
+                cells.forEach(cell => cell.classList.remove('highlighted'));
+                
+                // Highlight la cellule courante
+                if (cells[currentIndex]) {
+                    cells[currentIndex].classList.add('highlighted');
+                }
+                
+                currentIndex = (currentIndex + 1) % cells.length;
+            };
+            
+            // Démarrer la démo après 3 secondes
+            setTimeout(() => {
+                setInterval(highlightNext, 800);
+            }, 3000);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Injecter le header universel
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'katooling', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+            
+            generateKatulaDemo();
+            setTimeout(animateIntro, 500);
+            startDemo();
+        });
+    </script>
+</body>
+</html>
