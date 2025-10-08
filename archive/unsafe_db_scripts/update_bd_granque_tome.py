@@ -96,7 +96,18 @@ def update_database():
         print(f"   Univers a ajouter: {univers_manquants}")
         
         # Données de base pour chaque univers
-        formes = ['triangle', 'carre', 'rectangle', 'losange', 'cercle']
+        def get_formes_for_universe(univers):
+            """Retourne les formes spécifiques selon l'univers"""
+            if univers in ['mundo', 'fruity']:
+                return ['carre', 'triangle', 'cercle', 'rectangle']
+            else:  # trigga, roaster, sunshine - formes composites
+                return [
+                    'carre', 'triangle', 'cercle', 'rectangle',
+                    'carre-triangle', 'carre-cercle', 'carre-rectangle',
+                    'triangle-cercle', 'triangle-rectangle', 'cercle-rectangle',
+                    'carre-triangle-cercle', 'triangle-rectangle-cercle'
+                ]
+        
         denominations_base = ['spoon', 'blade', 'house', 'table', 'rainbow', 'scissors', 'crown', 'star']
         tomes = ['tome1', 'tome2', 'tome3', 'tome4', 'tome5']
         granque_names = ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta']
@@ -104,25 +115,35 @@ def update_database():
         for univers in univers_manquants:
             print(f"\n   Ajout de l'univers {univers}...")
             
-            # Générer 30-40 entrées par univers
-            nb_entrees = random.randint(30, 40)
+            # Obtenir les formes spécifiques pour cet univers
+            formes_univers = get_formes_for_universe(univers)
+            print(f"     Formes pour {univers}: {formes_univers}")
             
-            for i in range(nb_entrees):
-                ligne = f"L{random.randint(1, 8)}"
-                colonne = f"C{random.randint(1, 6)}"
-                petique = f"q{random.randint(1, 4)}"
-                chip = f"chip{random.randint(1, 48)}"
-                forme = random.choice(formes)
-                denomination = f"{random.choice(denominations_base)} {random.randint(1, 9)}"
-                tome = random.choice(tomes)
-                granque_name = f"{random.choice(granque_names)}-{random.randint(1, 99)}"
+            # Générer des entrées pour chaque chip (1-48) avec les formes spécifiques
+            for chip_num in range(1, 49):  # 48 chips
+                ligne = f"L{((chip_num - 1) // 6) + 1}"  # Ligne basée sur position
+                colonne = f"C{((chip_num - 1) % 6) + 1}"  # Colonne basée sur position
+                petique = f"q{((chip_num - 1) % 4) + 1}"
+                chip = f"chip{chip_num}"
                 
-                cursor.execute("""
-                    INSERT INTO table_de_katula 
-                    (univers, ligne, colonne, petique, chip, forme, denomination, tome, granque_name)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (univers, ligne, colonne, petique, chip, forme, denomination, tome, granque_name))
+                # Générer 1-3 formes par chip selon l'univers
+                nb_formes = 1 if univers in ['mundo', 'fruity'] else random.randint(1, 3)
+                formes_chip = random.sample(formes_univers, min(nb_formes, len(formes_univers)))
+                
+                for forme in formes_chip:
+                    denomination = f"{random.choice(denominations_base)} {random.randint(1, 9)}"
+                    tome = random.choice(tomes)
+                    granque_name = f"{random.choice(granque_names)}-{chip_num}"
+                    
+                    cursor.execute("""
+                        INSERT INTO table_de_katula 
+                        (univers, ligne, colonne, petique, chip, forme, denomination, tome, granque_name)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, (univers, ligne, colonne, petique, chip, forme, denomination, tome, granque_name))
             
+            # Compter les entrées ajoutées
+            cursor.execute("SELECT COUNT(*) FROM table_de_katula WHERE univers = %s", (univers,))
+            nb_entrees = cursor.fetchone()[0]
             print(f"     [OK] {nb_entrees} entrees ajoutees pour {univers}")
         
         # 4. Mettre à jour les données existantes avec granque_name et tome
@@ -175,9 +196,11 @@ def update_database():
         
         print("\n[SUCCESS] MISE A JOUR TERMINEE AVEC SUCCES!")
         print("\nLes 5 univers sont maintenant disponibles:")
-        print("- mundo, fruity, trigga, roaster, sunshine")
+        print("- mundo, fruity: 4 formes simples (carre, triangle, cercle, rectangle)")
+        print("- trigga, roaster, sunshine: formes composites dynamiques")
         print("- Colonnes granque_name et tome ajoutées")
         print("- Table combinations mise à jour")
+        print("- Matrice 8x6 (48 chips) générée pour chaque univers")
         
     except Exception as e:
         print(f"[ERROR] Erreur: {e}")

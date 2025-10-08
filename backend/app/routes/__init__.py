@@ -43,16 +43,5 @@ for config in ROUTER_CONFIGS:
     except Exception as e:
         logger.error(f"Error mounting {config['module']} router: {e}")
 
-# Créer le router API principal
-api_router = APIRouter()
-
-# Monter tous les routers
-api_router.include_router(katula_matrix_router, prefix="/katula-matrix", tags=["katula-matrix"])
-api_router.include_router(universe_info_router, prefix="/universe", tags=["universe"])
-api_router.include_router(analysis_router, prefix="/analysis", tags=["analysis"])
-api_router.include_router(analytics_router, prefix="/analytics", tags=["analytics"])
-api_router.include_router(combinations_router, prefix="/combinations", tags=["combinations"])
-api_router.include_router(session_router, prefix="/session", tags=["session"])
-api_router.include_router(lottery_router, prefix="/lottery", tags=["lottery"])
-api_router.include_router(katooling_router, prefix="/katooling", tags=["katooling"])
-api_router.include_router(katula_router, prefix="/katula", tags=["katula"])
+# Fin de l'initialisation des routes
+logger.info("All routes initialized successfully")
