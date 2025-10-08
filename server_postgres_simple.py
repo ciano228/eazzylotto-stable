@@ -3,8 +3,43 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from collections import defaultdict
 import uvicorn
-from database import get_db_cursor
-from config import VALID_UNIVERSES
+import psycopg2
+import psycopg2.extras
+from contextlib import contextmanager
+
+# Local DB config (points to the real PostgreSQL database)
+DB_CONFIG = {
+    'host': 'localhost',
+    'database': 'katooling_main_system',
+    'user': 'postgres',
+    'password': 'Katulaa_33',
+    'port': 5432
+}
+
+# Liste des univers autorisés
+VALID_UNIVERSES = ['mundo', 'fruity', 'trigga', 'roaster', 'sunshine']
+
+
+@contextmanager
+def get_db_cursor():
+    """Context manager yielding a RealDictCursor and closing the connection after use."""
+    conn = psycopg2.connect(**DB_CONFIG)
+    try:
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        yield cur
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        try:
+            cur.close()
+        except Exception:
+            pass
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 app = FastAPI(
     title="Katula PostgreSQL API",
@@ -117,30 +152,29 @@ async def get_quintuple_shots(universe: str):
     """
     Récupérer tous les quintuple-shots d'un univers avec leurs fréquences.
     """
+    universe = validate_universe(universe)
     try:
         with get_db_cursor() as cursor:
             query = """
             SELECT DISTINCT grandeTome, COUNT(*) as frequency
-            FROM {}
-            WHERE grandeTome IS NOT NULL AND grandeTome != ''
+            FROM table_de_katula
+            WHERE univers = %s AND grandeTome IS NOT NULL AND grandeTome != ''
             GROUP BY grandeTome ORDER BY frequency DESC
-            """.format(universe)
-            
-            cursor.execute(query)
+            """
+
+            cursor.execute(query, (universe,))
             results = cursor.fetchall()
-            
-            shots_data = []
-            for record in results:
-                shot = record['grandeTome']
-                frequency = record['frequency']
-                shots_data.append({'shot': shot, 'frequency': frequency})
-                
+
+            shots_data = [
+                {'shot': record['grandeTome'], 'frequency': record['frequency']}
+                for record in results
+            ]
+
             return {
                 'universe': universe,
                 'shots': [s['shot'] for s in shots_data],
                 'shots_with_frequency': shots_data
             }
-            
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -158,20 +192,20 @@ async def get_universe_formes(universe: str):
         with get_db_cursor() as cursor:
             query = """
             SELECT DISTINCT forme, COUNT(*) as frequency
-            FROM {}
-            WHERE forme IS NOT NULL AND forme != ''
+            FROM table_de_katula
+            WHERE univers = %s AND forme IS NOT NULL AND forme != ''
             GROUP BY forme
             ORDER BY frequency DESC
-            """.format(universe)
-            
-            cursor.execute(query)
+            """
+
+            cursor.execute(query, (universe,))
             results = cursor.fetchall()
-            
+
             formes_data = [
                 {"forme": record['forme'], "frequency": record['frequency']} 
                 for record in results
             ]
-            
+
             return {
                 "status": "success",
                 "universe": universe,
@@ -191,25 +225,26 @@ async def get_universe_table(universe: str):
     universe = validate_universe(universe)
     try:
         with get_db_cursor() as cursor:
-            # Récupérer les colonnes de la table
+            # Récupérer les colonnes de la table_de_katula (schéma canonique)
             cursor.execute("""
                 SELECT column_name 
                 FROM information_schema.columns 
-                WHERE table_name = '{}'
+                WHERE table_name = 'table_de_katula'
                 ORDER BY ordinal_position
-            """.format(universe))
+            """)
             columns = [record['column_name'] for record in cursor.fetchall()]
-            
-            # Récupérer les données
+
+            # Récupérer les données pour cet univers
             query = """
-            SELECT * FROM {}
-            ORDER BY id DESC
+            SELECT * FROM table_de_katula
+            WHERE univers = %s
+            ORDER BY chip_id DESC
             LIMIT 1000
-            """.format(universe)
-            
-            cursor.execute(query)
+            """
+
+            cursor.execute(query, (universe,))
             results = cursor.fetchall()
-            
+
             return {
                 "status": "success",
                 "universe": universe,
@@ -227,32 +262,33 @@ async def get_formes(universe: str):
     """
     Récupérer toutes les formes d'un univers avec leurs fréquences, classées en formes simples et composites.
     """
+    universe = validate_universe(universe)
     try:
         with get_db_cursor() as cursor:
             query = """
             SELECT DISTINCT forme, COUNT(*) as frequency
-            FROM {} 
-            WHERE forme IS NOT NULL AND forme != ''
+            FROM table_de_katula
+            WHERE univers = %s AND forme IS NOT NULL AND forme != ''
             GROUP BY forme ORDER BY frequency DESC
-            """.format(universe)
-            
-            cursor.execute(query)
+            """
+
+            cursor.execute(query, (universe,))
             results = cursor.fetchall()
-            
+
             formes_data = []
             simples = []
             composites = []
-            
+
             for record in results:
                 forme = record['forme']
                 frequency = record['frequency']
                 formes_data.append({'forme': forme, 'frequency': frequency})
-                
-                if '-' in forme:
+
+                if '-' in (forme or ''):
                     composites.append(forme)
                 else:
                     simples.append(forme)
-            
+
             return {
                 'universe': universe,
                 'formes': [f['forme'] for f in formes_data],
@@ -260,7 +296,6 @@ async def get_formes(universe: str):
                 'simples': simples,
                 'composites': composites
             }
-            
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -268,36 +303,38 @@ async def get_formes(universe: str):
         )
 
 @app.get("/api/formes/real/{universe}/chip/{chip_number}", description="Récupérer les formes pour un chip spécifique")
-async def get_chip_formes(universe: str, chip_number: int):
+async def get_chip_formes(universe: str, chip_number: str):
     """
     Récupérer toutes les formes et leurs dénominations pour un chip spécifique dans un univers donné.
     """
     try:
+        universe = validate_universe(universe)
         with get_db_cursor() as cursor:
+            # chip_number is expected to be a label like 'chip1' or 'chip12'
+            chip_label = str(chip_number)
             query = """
             SELECT forme, denomination, COUNT(*) as frequency
-            FROM {} 
-            WHERE chip = %s AND forme IS NOT NULL AND forme != ''
+            FROM table_de_katula
+            WHERE univers = %s AND chip = %s AND forme IS NOT NULL AND forme != ''
             GROUP BY forme, denomination ORDER BY frequency DESC
-            """.format(universe)
-            
-            cursor.execute(query, (str(chip_number),))
+            """
+
+            cursor.execute(query, (universe, chip_label))
             results = cursor.fetchall()
-            
+
             formes_data = defaultdict(list)
             for record in results:
                 formes_data[record['forme']].append({
-                    'denomination': record['denomination'],
-                    'frequency': record['frequency']
+                    'denomination': record.get('denomination'),
+                    'frequency': record.get('frequency', 0)
                 })
-            
+
             return {
                 'universe': universe,
-                'chip': chip_number,
+                'chip': chip_label,
                 'formes_data': dict(formes_data),
                 'total_items': sum(len(items) for items in formes_data.values())
             }
-            
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving chip formes: {str(e)}")
 
