@@ -1,0 +1,671 @@
+{
+  "fruity": {
+    "formes_disponibles": [
+      "carre"
+    ],
+    "petiques_disponibles": [
+      "q1",
+      "q2",
+      "q3",
+      "q4"
+    ],
+    "chips": {
+      "chip1": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L1"
+        ],
+        "colonnes": [
+          "C1"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L1",
+            "colonne": "C1",
+            "forme": "carre",
+            "petique": "q1",
+            "denomination": "road 1"
+          }
+        ]
+      },
+      "chip10": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C4"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C4",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "bike 4"
+          }
+        ]
+      },
+      "chip11": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C5"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C5",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "chair 4"
+          }
+        ]
+      },
+      "chip12": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C6"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C6",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "table 2"
+          }
+        ]
+      },
+      "chip13": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C1"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C1",
+            "forme": "carre",
+            "petique": "q1",
+            "denomination": "road 6"
+          }
+        ]
+      },
+      "chip14": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C2"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C2",
+            "forme": "carre",
+            "petique": "q1",
+            "denomination": "window 1"
+          }
+        ]
+      },
+      "chip15": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C3"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C3",
+            "forme": "carre",
+            "petique": "q1",
+            "denomination": "chair 5"
+          }
+        ]
+      },
+      "chip16": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C4"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C4",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "window 2"
+          }
+        ]
+      },
+      "chip17": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C5"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C5",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "road 3"
+          }
+        ]
+      },
+      "chip18": {
+        "nb_compartiments": 1,
+        "formes": [
+          "carre"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C6"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C6",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "window 4"
+          }
+        ]
+      }
+    }
+  },
+  "mundo": {
+    "formes_disponibles": [
+      "carre",
+      "cercle",
+      "rectangle",
+      "triangle"
+    ],
+    "petiques_disponibles": [
+      "q1",
+      "q2",
+      "q3",
+      "q4"
+    ],
+    "chips": {
+      "chip1": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L1"
+        ],
+        "colonnes": [
+          "C1"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L1",
+            "colonne": "C1",
+            "forme": "triangle",
+            "petique": "q1",
+            "denomination": "forest 1"
+          },
+          {
+            "ligne": "L1",
+            "colonne": "C1",
+            "forme": "cercle",
+            "petique": "q1",
+            "denomination": "shoes 1"
+          },
+          {
+            "ligne": "L1",
+            "colonne": "C1",
+            "forme": "rectangle",
+            "petique": "q1",
+            "denomination": "gold 1"
+          }
+        ]
+      },
+      "chip10": {
+        "nb_compartiments": 4,
+        "formes": [
+          "carre",
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C4"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C4",
+            "forme": "triangle",
+            "petique": "q2",
+            "denomination": "flower 2"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C4",
+            "forme": "carre",
+            "petique": "q2",
+            "denomination": "road 2"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C4",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "fish 2"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C4",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "hotel 2"
+          }
+        ]
+      },
+      "chip11": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C5"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C5",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "rope 1"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C5",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "book 9"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C5",
+            "forme": "triangle",
+            "petique": "q2",
+            "denomination": "forest 6"
+          }
+        ]
+      },
+      "chip12": {
+        "nb_compartiments": 2,
+        "formes": [
+          "cercle",
+          "rectangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L2"
+        ],
+        "colonnes": [
+          "C6"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L2",
+            "colonne": "C6",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "spoon 3"
+          },
+          {
+            "ligne": "L2",
+            "colonne": "C6",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "fish 1"
+          }
+        ]
+      },
+      "chip13": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C1"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C1",
+            "forme": "triangle",
+            "petique": "q1",
+            "denomination": "mountain 1"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C1",
+            "forme": "rectangle",
+            "petique": "q1",
+            "denomination": "scissors 1"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C1",
+            "forme": "cercle",
+            "petique": "q1",
+            "denomination": "football 1"
+          }
+        ]
+      },
+      "chip14": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C2"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C2",
+            "forme": "triangle",
+            "petique": "q1",
+            "denomination": "mountain 2"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C2",
+            "forme": "rectangle",
+            "petique": "q1",
+            "denomination": "scissors 2"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C2",
+            "forme": "cercle",
+            "petique": "q1",
+            "denomination": "book 6"
+          }
+        ]
+      },
+      "chip15": {
+        "nb_compartiments": 4,
+        "formes": [
+          "carre",
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q1"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C3"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C3",
+            "forme": "rectangle",
+            "petique": "q1",
+            "denomination": "rope 2"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C3",
+            "forme": "carre",
+            "petique": "q1",
+            "denomination": "door 1"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C3",
+            "forme": "triangle",
+            "petique": "q1",
+            "denomination": "fire 1"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C3",
+            "forme": "cercle",
+            "petique": "q1",
+            "denomination": "football 2"
+          }
+        ]
+      },
+      "chip16": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C4"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C4",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "book 7"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C4",
+            "forme": "triangle",
+            "petique": "q2",
+            "denomination": "forest 8"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C4",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "scissors 3"
+          }
+        ]
+      },
+      "chip17": {
+        "nb_compartiments": 3,
+        "formes": [
+          "cercle",
+          "rectangle",
+          "triangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C5"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C5",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "scissors 4"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C5",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "book 8"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C5",
+            "forme": "triangle",
+            "petique": "q2",
+            "denomination": "forest 9"
+          }
+        ]
+      },
+      "chip18": {
+        "nb_compartiments": 2,
+        "formes": [
+          "cercle",
+          "rectangle"
+        ],
+        "petiques": [
+          "q2"
+        ],
+        "lignes": [
+          "L3"
+        ],
+        "colonnes": [
+          "C6"
+        ],
+        "compartiments_verticaux": [
+          {
+            "ligne": "L3",
+            "colonne": "C6",
+            "forme": "cercle",
+            "petique": "q2",
+            "denomination": "shoes 3"
+          },
+          {
+            "ligne": "L3",
+            "colonne": "C6",
+            "forme": "rectangle",
+            "petique": "q2",
+            "denomination": "gold 5"
+          }
+        ]
+      }
+    }
+  }
+}

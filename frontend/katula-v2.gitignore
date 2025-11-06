@@ -1,0 +1,13 @@
+# Fichier .gitignore
+echo "node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+dist/
+build/
+out/
+*.log
+.idea/
+.vscode/
+.DS_Store" > .gitignore

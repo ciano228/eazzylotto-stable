@@ -443,41 +443,31 @@ async def get_katula_chip_data(universe: str, chip_number: int, db: Session = De
 
 @router.get("/granque-tome/{universe}")
 async def get_granque_tome_data(universe: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
-    """Récupère les données granque et tome réelles depuis la BD"""
+    """Récupère les données granque et tome réelles depuis la base de données PostgreSQL"""
     try:
-        import sqlite3
-        db_path = os.path.join(os.getcwd(), "backend", "data", "katula.db")
+        # Récupérer les granques
+        granque_query = """
+            SELECT DISTINCT granque_name, denomination, chip 
+            FROM combinations 
+            WHERE univers = :universe AND granque_name IS NOT NULL
+        """
+        granque_results = db.execute(granque_query, {"universe": universe.lower()}).fetchall()
         
-        if os.path.exists(db_path):
-            conn = sqlite3.connect(db_path)
-            cursor = conn.cursor()
-            
-            # Récupérer les granques
-            cursor.execute(
-                "SELECT DISTINCT granque_name, denomination, chip FROM combinations WHERE univers = ? AND granque_name IS NOT NULL",
-                (universe.lower(),)
-            )
-            granque_results = cursor.fetchall()
-            
-            # Récupérer les tomes
-            cursor.execute(
-                "SELECT DISTINCT tome, denomination, chip FROM combinations WHERE univers = ? AND tome IS NOT NULL",
-                (universe.lower(),)
-            )
-            tome_results = cursor.fetchall()
-            
-            # Récupérer les petiques
-            cursor.execute(
-                "SELECT DISTINCT petique, denomination, chip FROM combinations WHERE univers = ? AND petique IS NOT NULL",
-                (universe.lower(),)
-            )
-            petique_results = cursor.fetchall()
-            
-            conn.close()
-        else:
-            granque_results = []
-            tome_results = []
-            petique_results = []
+        # Récupérer les tomes
+        tome_query = """
+            SELECT DISTINCT tome, denomination, chip 
+            FROM combinations 
+            WHERE univers = :universe AND tome IS NOT NULL
+        """
+        tome_results = db.execute(tome_query, {"universe": universe.lower()}).fetchall()
+        
+        # Récupérer les petiques
+        petique_query = """
+            SELECT DISTINCT petique, denomination, chip 
+            FROM combinations 
+            WHERE univers = :universe AND petique IS NOT NULL
+        """
+        petique_results = db.execute(petique_query, {"universe": universe.lower()}).fetchall()
         
         # Organiser les granques
         granque_data = {}

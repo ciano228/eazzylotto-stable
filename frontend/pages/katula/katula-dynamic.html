@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table Katula Dynamique - Tous Univers</title>
-    <script src="assets/js/universal-header.js"></script>
+    <script src="katula-service.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,14 +39,142 @@
 
         .controls {
             display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 20px;
             align-items: center;
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+            min-width: 50px;
+        }
+        
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 250px;
+        }
+        
+        .size-value {
+            display: inline-block;
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            margin: 10px 0;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        /* Style pour Firefox */
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2c3e50;
+            cursor: pointer;
+            border: none;
+        }
+        
+        /* Style pour IE/Edge */
+        input[type="range"]::-ms-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2c3e50;
+            cursor: pointer;
+            border: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #e74c3c;
+        }
+        
+        .slider-ticks {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.8em;
+            color: #7f8c8d;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+        
+        /* Variables CSS pour les tailles dynamiques */
+        :root {
+            --chip-size: 100px;
+            --chip-font-size: 0.9em;
+            --chip-icon-size: 1.5em;
+        }
+        
+        .controls select, 
+        .controls button {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .controls select {
+            min-width: 150px;
+        }
+        
+        .controls button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .controls button:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         select, button {
@@ -110,6 +238,9 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            font-size: 0.9em;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
         }
 
         .cell-content {
@@ -137,17 +268,112 @@
             font-size: 0.9em;
             color: #1976d2;
         }
-        }
 
         .katula-grid {
             display: grid;
-            grid-template-columns: 80px repeat(7, 1fr);
-            gap: 8px;
+            grid-template-columns: 80px repeat(6, 1fr);
+            gap: 5px;
             background: #ecf0f1;
             padding: 20px;
             border-radius: 10px;
-            overflow-x: auto;
-            max-width: 100%;
+            position: relative;
+            border: 2px solid #bdc3c7;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .grid-header, .ligne-label {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ligne-label {
+            background: #34495e;
+        }
+        
+        .chip-cell {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chip-cell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
+        
+        .chip-header {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            text-align: center;
+            font-size: 0.9em;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chip-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .chip-drawer {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 6px 8px;
+            margin-top: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chip-drawer:hover {
+            background: #e9ecef;
+            transform: translateX(2px);
+        }
+        
+        .chip-drawer .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chip-drawer .drawer-content {
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px dashed #dee2e6;
+            display: none;
+        }
+        
+        .chip-drawer.open .drawer-content {
+            display: block;
+        }
+        
+        .chip-drawer .drawer-toggle {
+            transition: transform 0.2s;
+        }
+        
+        .chip-drawer.open .drawer-toggle {
+            transform: rotate(180deg);
         }
         
         /* Axes de repère orthonormé - lignes rouges traversant toute la grille */
@@ -216,6 +442,69 @@
             z-index: 25;
         }
 
+        /* Repère Orthonormé (Lignes rouges) */
+        .katula-grid {
+            position: relative; /* Nécessaire pour positionner les lignes */
+        }
+
+        .katula-grid::before {
+            content: '';
+            position: absolute;
+            /* Ligne verticale entre C3 et C4 */
+            left: calc(14.28% + (3 * (100% - 14.28% - 15px) / 6) + (3 * 4px) - 2px);
+            top: 40px; /* Après l'en-tête */
+            bottom: 0;
+            width: 4px;
+            background: #e74c3c;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+            z-index: 30;
+        }
+
+        .katula-grid::after {
+            content: '';
+            position: absolute;
+            /* Ligne horizontale entre L4 et L5 */
+            top: calc(40px + (4 * (100% - 60px) / 8) + (4 * 4px) - 2px);
+            left: 80px; /* Après le label de ligne */
+            right: 0;
+            height: 4px;
+            background: #e74c3c;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+            z-index: 30;
+        }
+
+        /* Repère Orthonormé (Lignes rouges) */
+        .katula-grid {
+            position: relative; /* Nécessaire pour positionner les lignes */
+        }
+
+        .katula-grid::before {
+            content: '';
+            position: absolute;
+            /* Ligne verticale entre C3 et C4 */
+            left: calc(14.28% + (3 * (100% - 14.28% - 15px) / 6) + (3 * 4px) - 2px);
+            top: 40px; /* Après l'en-tête */
+            bottom: 0;
+            width: 4px;
+            background: #e74c3c;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+            z-index: 30;
+        }
+
+        .katula-grid::after {
+            content: '';
+            position: absolute;
+            /* Ligne horizontale entre L4 et L5 */
+            top: calc(40px + (4 * (100% - 60px) / 8) + (4 * 4px) - 2px);
+            left: 80px; /* Après le label de ligne */
+            right: 0;
+            height: 4px;
+            background: #e74c3c;
+        }
+
         .grid-header {
             background: #34495e;
             color: white;
@@ -240,22 +529,53 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
+        /* Style des étiquettes de ligne */
         .ligne-label {
-            background: #2c3e50;
-            color: white;
-            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            border-radius: 5px;
-            font-size: 0.9em;
+            background-color: rgba(52, 152, 219, 0.9);
+            color: white;
+            border: 2px solid #2980b9;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 50;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            font-size: 1.1em;
+            overflow: hidden;
         }
         
-        .ligne-label.clickable-header:hover {
-            background: #34495e;
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        /* Masquer les icônes de forme dans les étiquettes de ligne */
+        .ligne-label .forme-icon,
+        .ligne-label .forme-icon-simple,
+        .ligne-label .forme-icon-composite {
+            display: none !important;
+        }
+
+        .ligne-label .row-label-icon {
+            display: none;
+        }
+
+        .ligne-label:hover {
+            background-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .ligne-label:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+        
+        .row-label-icon {
+            margin-right: 5px;
+            font-size: 1.1em;
         }
 
         .chip-cell {
@@ -276,16 +596,104 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
-        /* Labels des quadrants */
+        /* Styles pour la sélection des quadrants */
+        /* Étiquettes des quadrants */
         .quadrant-label {
             position: absolute;
             font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 10px;
+            border-radius: 20px;
+            z-index: 20;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border: 2px solid transparent;
+        }
+        
+        /* Positionnement des étiquettes de quadrant */
+        .quadrant-label.q1 { top: 20px; left: 50%; transform: translateX(-50%); }
+        .quadrant-label.q2 { top: 20px; right: 20px; }
+        .quadrant-label.q3 { bottom: 20px; left: 20px; }
+        .quadrant-label.q4 { bottom: 20px; right: 20px; }
+        
+        .quadrant-label:hover {
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+        }
+        
+        .quadrant-label.active {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+            transform: scale(1.1);
+            z-index: 25;
+        }
+        
+        /* Styles pour la sélection des lignes et colonnes */
+        /* Styles des en-têtes de ligne et colonne */
+        .ligne-label, .colonne-label {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 8px 5px;
+            text-align: center;
+            font-weight: bold;
+            background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.9em;
             color: #2c3e50;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2px 6px;
-            border-radius: 3px;
-            z-index: 15;
+        }
+        
+        .ligne-label:hover, .colonne-label:hover {
+            background: linear-gradient(145deg, #e0e0e0, #d0d0d0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ligne-label.active, .colonne-label.active {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+            border-color: #2472a4;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+            transform: scale(1.02);
+            z-index: 5;
+        }
+        
+        /* Styles pour les cellules sélectionnées */
+        .selected-row > .chip-cell,
+        .selected-col > .chip-cell,
+        .selected-quadrant {
+            position: relative;
+            z-index: 5;
+        }
+        
+        .selected-row > .chip-cell::after,
+        .selected-col > .chip-cell::after,
+        .selected-quadrant::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 4;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+        
+        .selected-quadrant::after {
+            border-color: #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
         }
         
         .clickable-quadrant {
@@ -750,14 +1158,44 @@
         }
 
         .chip-header {
-            background: #34495e;
-            color: white;
-            text-align: center;
-            padding: 5px;
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 4px 4px 0 0;
             font-weight: bold;
+            font-size: 0.85em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Masquer les icônes de forme dans l'en-tête des puces */
+        .chip-header .forme-icon,
+        .chip-header .forme-icon-simple,
+        .chip-header .forme-icon-composite {
+            display: none !important;
+        }
+        
+        .chip-title {
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 5px;
+        }
+        
+        .position-badge {
+            background: #2c3e50;
+            color: white;
+            border-radius: 4px;
+            padding: 2px 6px;
             font-size: 0.8em;
-            border-radius: 5px 5px 0 0;
-            transition: all 0.3s ease;
+            margin-right: 8px;
+            white-space: nowrap;
+            z-index: 1;
+            display: inline-block;
         }
         
         .chip-cell.selected-quadrant .chip-header {
@@ -785,67 +1223,352 @@
         }
 
         .chip-drawer {
-            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .chip-drawer.open {
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chip-drawer .drawer-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-bottom: 1px solid #bdc3c7;
-            padding: 8px 4px;
+            margin-right: 10px;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .chip-drawer .drawer-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f5f7fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .chip-drawer.open .drawer-header {
+            background: #eef2f7;
+            border-bottom-color: #d0d8e4;
+        }
+        
+        .chip-drawer .drawer-title {
+            flex: 1;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .chip-drawer .drawer-toggle {
+            transition: transform 0.3s ease;
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+        
+        .chip-drawer.open .drawer-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .chip-drawer .drawer-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 15px;
+            background: white;
+        }
+        
+        .chip-drawer.open .drawer-content {
+            max-height: 500px;
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .drawer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .drawer-grid-item {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .drawer-label {
+            font-size: 0.75em;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        
+        .drawer-value {
+            font-weight: 500;
+            color: #2c3e50;
+            word-break: break-word;
+        }
+        
+        .drawer-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+            font-size: 0.85em;
+        }
+        
+        .action-btn:hover {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+        
+        .action-icon {
+            font-size: 1.2em;
+        }
+        
+        /* Styles pour les tiroirs de dénomination */
+        .drawer-denomination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        .drawer-icon-large {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .denomination-text {
+            font-weight: 500;
+            font-size: 1.1em;
+            margin: 10px 0;
+            word-break: break-word;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .position-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
             font-size: 0.8em;
             font-weight: bold;
+            margin-top: 8px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        /* Styles pour les combinaisons */
+        .drawer-combinaison {
+            padding: 10px;
+        }
+        
+        .combinaison-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .combinaison-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .combinaison-nom {
+            font-weight: 600;
+            font-size: 1.05em;
+            color: #2c3e50;
+        }
+        
+        .combinaison-details {
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .combinaison-details div {
+            margin: 5px 0;
+        }
+        
+        .combinaison-description {
+            margin-top: 10px !important;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #555;
+            border-right: 3px solid #3498db;
+        }
+        
+        .drawer-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+            color: #95a5a6;
             text-align: center;
-            transition: all 0.2s ease;
-            position: relative;
-            background: rgba(255, 255, 255, 0.9);
         }
-
-        .chip-drawer:last-child {
-            border-bottom: none;
+        
+        .empty-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            opacity: 0.5;
         }
-
+        
+        .empty-text {
+            font-size: 0.9em;
+        }
+        
+        /* Ajustements pour les tiroirs */
+        .chip-drawer {
+            margin-bottom: 5px;
+        }
+        
+        .chip-drawer .drawer-header {
+            padding: 8px 12px;
+        }
+        
+        .chip-drawer .drawer-content {
+            padding: 10px;
+        }
+        
+        .chip-drawer .forme-icon {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .chip-drawer:hover {
-            background: rgba(52, 152, 219, 0.2);
-            transform: scale(1.1);
-            cursor: pointer;
+            background: #e9ecef;
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .chip-drawer:not(.empty):hover {
-            background: rgba(52, 152, 219, 0.3);
-            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+            background: #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         
-        .chip-drawer:not(.empty) .drawer-text {
-            text-decoration: underline;
-            text-decoration-style: dotted;
-        }
-
         .chip-drawer.empty {
             background: #f5f5f5;
             color: #999;
             font-style: italic;
         }
 
-        .forme-icon, .forme-icon-composite {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            font-size: 1.4em;
-            font-weight: bold;
-            opacity: 1;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-            z-index: 5;
+        /* Styles pour les icônes de forme */
+        .forme-icon {
+            font-size: 1.2em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .forme-icon-simple {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
         
         .forme-icon-composite {
-            display: flex;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
             gap: 1px;
         }
         
         .forme-part {
             font-size: 1.2em;
             font-weight: bold;
+            display: inline-block;
+            line-height: 1;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+        }
+        
+        .forme-name {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            z-index: 1000;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            text-transform: capitalize;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .forme-icon-simple:hover .forme-name,
+        .forme-icon-composite:hover .forme-name,
+        .drawer-icon-container:hover .forme-name {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Masquer les icônes dans les en-têtes de tiroirs */
+        .drawer-header .forme-icon,
+        .drawer-header .forme-icon-simple,
+        .drawer-header .forme-icon-composite {
+            display: none !important;
         }
 
         .loading {
@@ -950,6 +1673,17 @@
             word-break: break-word;
         }
 
+        /* Styles pour les icônes des tiroirs */
+       .drawer-icon {
+           display: inline-block;
+           text-align: center;
+           min-width: 20px;
+       }
+       .drawer-icon.carre { color: #3498db; } /* Bleu */
+       .drawer-icon.triangle { color: #27ae60; } /* Vert */
+       .drawer-icon.cercle { color: #f1c40f; } /* Jaune */
+       .drawer-icon.rectangle { color: #e74c3c; } /* Rouge */
+
         /* Couleurs des icônes de formes seulement */
         .forme-icon.carre { color: #3498db; } /* Bleu */
         .forme-icon.triangle { color: #27ae60; } /* Vert */
@@ -1039,13 +1773,7 @@
             color: #3498db;
             cursor: pointer;
             font-weight: bold;
-            text-align: center;
             transition: all 0.3s ease;
-            /* Debug temporaire */
-            min-height: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         .granque-btn:hover, .tome-btn:hover {
@@ -1085,7 +1813,7 @@
             transform: translateY(-50%) scale(1.05);
             box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
-        
+
         .redundant-values {
             max-height: 300px;
             overflow-y: auto;
@@ -1257,9 +1985,10 @@
 
         @media (max-width: 768px) {
             .katula-grid {
-                grid-template-columns: auto repeat(3, 1fr);
-                gap: 2px;
+                grid-template-columns: 60px repeat(3, 1fr);
+                gap: 4px;
                 padding: 10px;
+                font-size: 0.9em;
             }
             
             .chip-cell {
@@ -1279,6 +2008,91 @@
             .main-content.panel-open {
                 margin-right: 0;
             }
+            
+            /* Styles pour les icônes dans les tiroirs */
+            .drawer-header {
+                position: relative;
+                padding-left: 40px;
+            }
+            
+            .drawer-icon-container {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 24px;
+                height: 24px;
+                display: flex !important; /* Force l'affichage en permanence */
+                align-items: center;
+                justify-content: center;
+                z-index: 1;
+                pointer-events: auto; /* Permet les interactions avec l'icône même quand le tiroir est fermé */
+                opacity: 1 !important; /* Force l'opacité à 1 */
+            }
+            
+            .drawer-denominations {
+                margin-left: 30px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 10px;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                flex-grow: 1;
+                min-width: 0; /* Permet au texte de s'adapter correctement */
+            }
+            
+            .drawer-denominations .denomination-item {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .drawer-denominations .denomination-item {
+                display: inline;
+                margin: 0 2px;
+            }
+            
+            .drawer-denominations .denomination-item:not(:last-child)::after {
+                content: "/";
+                color: #666;
+                margin: 0 4px;
+            }
+            
+            .drawer-header {
+                position: relative;
+                padding-left: 40px;
+                display: flex;
+                align-items: center;
+                min-height: 40px;
+            }
+            
+            .drawer-icon-container .forme-name {
+                display: none;
+                position: absolute;
+                left: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                white-space: nowrap;
+                z-index: 1000;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                white-space: nowrap;
+                z-index: 10;
+                margin-left: 5px;
+                font-size: 12px;
+            }
+            
+            .drawer-icon-container:hover .forme-name {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -1288,6 +2102,12 @@
             <button id="helpBtn" style="background:#ffd700;color:#2c3e50;font-weight:bold;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;box-shadow:0 2px 8px #ffd70044;" onclick="openHelpGuide()">❓ Guide & Assistance Vocale</button>
         </div>
         <div class="container">
+            <div class="controls">
+                <button id="highlightBtn" class="btn" disabled title="Mettre en surbrillance les éléments sélectionnés">Mettre en surbrillance</button>
+                <button id="resetBtn" class="btn" disabled title="Réinitialiser les sélections et les filtres">Réinitialiser</button>
+                <button id="openPanelBtn" class="btn" style="display:none;" title="Ouvrir le panneau d'analyse">Ouvrir le panneau</button>
+            </div>
+    
     <!-- Modale d'aide contextuelle -->
     <div id="helpModal" class="modal-overlay" style="display:none;">
         <div class="modal-content">
@@ -1314,7 +2134,7 @@
                                     </ul>
                                     <br>
                                     <textarea id="voiceGuideText" style="width:100%;min-height:80px;border-radius:8px;border:1px solid #ccc;padding:10px;margin-bottom:10px;">Bienvenue sur la grille Katula dynamique. Ici, chaque combinaison de tirage est représentée géométriquement pour faciliter l'analyse des cycles et des zones actives. Utilisez les quadrants et axes pour repérer les tendances, cliquez sur les cellules pour explorer les statistiques, et exploitez la collecte des résultats passés pour anticiper les zones gagnantes dans le futur. Bonne exploration !</textarea>
-                                    <button onclick="playVoiceGuideCustom()" style="background:#2196f3;color:white;padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:bold;">🔊 Écouter le texte personnalisé</button>
+                                    <button onclick="playVoiceGuideCustom()" style="background:#2196f3;color:white;padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:bold;" title="Écouter la lecture du guide personnalisé">🔊 Écouter le texte personnalisé</button>
                                 </div>
                             </div>
                         </div>
@@ -1325,7 +2145,7 @@
                             <li>La collecte des résultats passés permet de détecter les cycles et d’anticiper les zones gagnantes.</li>
                         </ul>
                         <br>
-                        <button onclick="playVoiceGuide()" style="background:#2196f3;color:white;padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:bold;">🔊 Écouter l'explication vocale</button>
+                        <button onclick="playVoiceGuide()" style="background:#2196f3;color:white;padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:bold;" title="Écouter l'explication vocale du guide">🔊 Écouter l'explication vocale</button>
                     </div>
                 </div>
             </div>
@@ -1336,6 +2156,9 @@
         // Guide contextuel et assistance vocale
         function openHelpGuide() {
             document.getElementById('helpModal').style.display = 'flex';
+        }
+        function hideQuadrantStats() {
+            document.getElementById('quadrantStats').style.display = 'none';
         }
         function closeHelpGuide() {
             document.getElementById('helpModal').style.display = 'none';
@@ -1355,32 +2178,41 @@
                 showUserInfo: false
             });
         }
+        
+        // Charger automatiquement l'univers 'mundo' au démarrage
+        const universeSelect = document.getElementById('universeSelect');
+        if (universeSelect && universeSelect.value === 'mundo') {
+            loadUniverse();
+        }
     });
     </script>
 
         <div class="controls">
-            <select id="universeSelect">
-                <option value="">Sélectionner un univers</option>
-                <option value="mundo">🌍 Mundo</option>
-                <option value="fruity">🍎 Fruity</option>
-                <option value="trigga">⚡ Trigga</option>
-                <option value="roaster">☕ Roaster</option>
-                <option value="sunshine">☀️ Sunshine</option>
-            </select>
-            <button onclick="loadUniverse()" id="loadBtn">🔄 Charger Univers</button>
-            <button onclick="highlightForme()" id="highlightBtn" disabled>🎨 Surligner Forme</button>
-            <button onclick="resetHighlight()" id="resetBtn" disabled>🔄 Reset</button>
+            <div class="control-group">
+                <label for="universeSelect">Univers :</label>
+                <select id="universeSelect" onchange="loadUniverse()">
+                    <option value="">Sélectionner un univers</option>
+                    <option value="mundo" selected>Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+            
+            <button id="loadBtn" onclick="loadUniverse()" title="Charger l'univers sélectionné">Charger</button>
+            <button onclick="clearAllFilters()" title="Réinitialiser tous les filtres">Réinitialiser</button>
         </div>
 
         <div id="universeInfo" class="universe-info" style="display: none;"></div>
         <div id="formesLegend" class="formes-legend" style="display: none;"></div>
         
         <div class="quadrant-selector" id="quadrantSelector" style="display: none;">
-            <button class="quadrant-btn q1" onclick="selectQuadrant('q1')">q1 (1-21)</button>
-            <button class="quadrant-btn q2" onclick="selectQuadrant('q2')">q2 (4-24)</button>
-            <button class="quadrant-btn q3" onclick="selectQuadrant('q3')">q3 (25-45)</button>
-            <button class="quadrant-btn q4" onclick="selectQuadrant('q4')">q4 (28-48)</button>
-            <button class="quadrant-btn btn-all" onclick="showAllTableDetails()" style="border-color: #95a5a6; color: #95a5a6;" title="Cliquer pour voir toutes les dénominations de la table complète">TOUT</button>
+            <button class="quadrant-btn q1" onclick="selectQuadrant('q1')" title="Sélectionner le quadrant Q1 (1-21)">q1 (1-21)</button>
+            <button class="quadrant-btn q2" onclick="selectQuadrant('q2')" title="Sélectionner le quadrant Q2 (4-24)">q2 (4-24)</button>
+            <button class="quadrant-btn q3" onclick="selectQuadrant('q3')" title="Sélectionner le quadrant Q3 (25-45)">q3 (25-45)</button>
+            <button class="quadrant-btn q4" onclick="selectQuadrant('q4')" title="Sélectionner le quadrant Q4 (28-48)">q4 (28-48)</button>
+            <button class="quadrant-btn btn-all" onclick="showAllTableDetails()" style="border-color: #95a5a6; color: #95a5a6;" title="Afficher toutes les dénominations de la table complète">TOUT</button>
         </div>
         
         <div class="main-content">
@@ -1394,7 +2226,7 @@
         <div id="sidePanel" class="side-panel" style="display: none;">
             <div class="panel-header">
                 <h3>Analyse Avancée</h3>
-                <button onclick="toggleSidePanel()" class="panel-toggle">×</button>
+                <button onclick="toggleSidePanel()" class="panel-toggle" title="Fermer le panneau latéral">×</button>
             </div>
             
             <div class="panel-section">
@@ -1416,28 +2248,48 @@
             
             <div class="panel-section">
                 <h4>🎛️ Contrôles</h4>
-                <button onclick="clearAllFilters()" class="clear-filters-btn">🔄 Effacer tous les filtres</button>
+                <button onclick="clearAllFilters()" class="clear-filters-btn" title="Réinitialiser tous les filtres et sélections">🔄 Effacer tous les filtres</button>
             </div>
         </div>
         
         <!-- Bouton pour ouvrir le panneau -->
-        <button id="openPanelBtn" class="open-panel-btn" onclick="toggleSidePanel()" style="display: none;">
+        <button id="openAnalysisPanelBtn" class="open-panel-btn" onclick="toggleSidePanel()" style="display: none;" title="Ouvrir le panneau d'analyse avancée">
             📊 Analyse
         </button>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8005/api';
+        // Variables globales
+        const API_BASE = 'http://localhost:8001/api/katula/complete';
         let currentUniverse = null;
         let universeData = null;
+        
+        // Configuration de la taille des chips
+        let chipSize = 100; // Taille de base en pixels
+        const minChipSize = 60;  // Taille minimale
+        const maxChipSize = 200; // Taille maximale
+        const sizeStep = 5;      // Pas d'incrémentation
         let selectedForme = null;
 
-        // Icônes pour les formes avec couleurs
+        // Définition des icônes pour chaque type de forme
         const FORME_ICONS = {
-            'carre': '■',        // Bleu
-            'triangle': '▲',     // Vert
-            'cercle': '●',       // Jaune
-            'rectangle': '▬',    // Rouge
+            'carre': '◼',
+            'cercle': '●',
+            'triangle': '▲',
+            'rectangle': '▬',
+            'losange': '◆',
+            'hexagone': '⬢',
+            'pentagone': '⬟',
+            'octogone': '⯃',
+            'ovale': '⬭',
+            'trapeze': '⏢',
+            'parallelogramme': '▰',
+            'coeur': '❤',
+            'etoile': '★',
+            'croissant': '☽',
+            'nuage': '☁',
+            'flocon': '❄',
+            // Formes composées
             'carre-triangle': '■▲',
             'carre-cercle': '■●',
             'carre-rectangle': '■▬',
@@ -1452,34 +2304,90 @@
             'rectangle-cercle': '▬●'
         };
 
-        // Couleurs des formes de base
+        // Définition des couleurs pour chaque type de forme
         const FORME_COLORS = {
-            'carre': '#3498db',      // Bleu
-            'triangle': '#27ae60',   // Vert
-            'cercle': '#f1c40f',     // Jaune
-            'rectangle': '#e74c3c'   // Rouge
+            'carre': '#3498db',        // Bleu
+            'triangle': '#2ecc71',     // Vert
+            'cercle': '#f1c40f',       // Jaune
+            'rectangle': '#e74c3c',    // Rouge
+            // Autres formes avec des couleurs par défaut
+            'losange': '#1abc9c',      // Turquoise
+            'hexagone': '#e67e22',     // Orange foncé
+            'pentagone': '#9b59b6',    // Violet
+            'ovale': '#f39c12',        // Orange
+            'trapeze': '#2ecc71',      // Vert
+            'parallelogramme': '#9b59b6', // Violet
+            'coeur': '#e91e63',        // Rose
+            'etoile': '#f1c40f',       // Jaune
+            'croissant': '#95a5a6',    // Gris
+            'nuage': '#ecf0f1',        // Gris clair
+            'flocon': '#3498db'        // Bleu
         };
 
+        // Fonction utilitaire pour générer une couleur aléatoire
+        function getRandomColor() {
+            const colors = [
+                '#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6',
+                '#1abc9c', '#d35400', '#34495e', '#16a085', '#27ae60',
+                '#2980b9', '#8e44ad', '#2c3e50', '#f1c40f', '#e67e22'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Fonction pour obtenir une couleur en fonction du type de forme
+        function getFormeColor(forme) {
+            if (!forme) return '#95a5a6';
+            
+            const formeLower = forme.toLowerCase();
+            
+            // Vérifier d'abord les correspondances exactes
+            if (FORME_COLORS[formeLower]) {
+                return FORME_COLORS[formeLower];
+            }
+            
+            // Vérifier les correspondances partielles pour les formes composées
+            for (const [key, value] of Object.entries(FORME_COLORS)) {
+                if (formeLower.includes(key)) {
+                    return value;
+                }
+            }
+            
+            // Si aucune correspondance, retourner une couleur aléatoire basée sur la chaîne
+            const hash = formeLower.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const colors = Object.values(FORME_COLORS);
+            return colors[hash % colors.length];
+        }
+        
         function generateFormeIcon(forme) {
-            if (forme.includes('-')) {
+            if (!forme) return '?';
+            
+            const formeLower = forme.toLowerCase();
+            const displayName = formeLower.split('-').map(word => 
+                word.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            ).join(' - ');
+            
+            if (formeLower.includes('-')) {
                 // Forme composée - créer deux spans colorés
-                const [forme1, forme2] = forme.split('-');
+                const [forme1, forme2] = formeLower.split('-');
                 const icon1 = FORME_ICONS[forme1] || '?';
                 const icon2 = FORME_ICONS[forme2] || '?';
                 const color1 = FORME_COLORS[forme1] || '#666';
                 const color2 = FORME_COLORS[forme2] || '#666';
                 
                 return `
-                    <span class="forme-icon-composite">
-                        <span class="forme-part" style="color: ${color1}">${icon1}</span><span class="forme-part" style="color: ${color2}">${icon2}</span>
-                    </span>
-                `;
+                    <span class="forme-icon-composite" title="${displayName}">
+                        <span class="forme-part" style="color: ${color1}">${icon1}</span>
+                        <span class="forme-part" style="color: ${color2}">${icon2}</span>
+                    </span>`;
             } else {
                 // Forme simple
-                const icon = FORME_ICONS[forme] || '?';
-                const color = FORME_COLORS[forme] || '#666';
+                const icon = FORME_ICONS[formeLower] || '❓';
+                const color = FORME_COLORS[formeLower] || '#95a5a6';
                 
-                return `<span class="forme-icon" style="color: ${color}">${icon}</span>`;
+                return `
+                    <span class="forme-icon-simple" style="color: ${color}" title="${displayName}">
+                        <span class="forme-icon">${icon}</span>
+                    </span>`;
             }
         }
 
@@ -1509,6 +2417,7 @@
 
         // Fonctions pour gérer les clics sur les en-têtes et quadrants
         function showColumnDetails(columnNumber) {
+            selectColumn(columnNumber);
             console.log(`Affichage des détails de la colonne C${columnNumber}`);
             
             // Récupérer toutes les dénominations de cette colonne
@@ -1539,6 +2448,7 @@
         }
         
         function showRowDetails(rowNumber) {
+            selectRow(rowNumber);
             console.log(`Affichage des détails de la ligne L${rowNumber}`);
             
             // Récupérer toutes les dénominations de cette ligne
@@ -1576,7 +2486,7 @@
                 'q1': { lignes: [1, 2, 3, 4], colonnes: [1, 2, 3] },
                 'q2': { lignes: [1, 2, 3, 4], colonnes: [4, 5, 6] },
                 'q3': { lignes: [5, 6, 7, 8], colonnes: [1, 2, 3] },
-                'q4': { lignes: [5, 6, 7, 8], colonnes: [4, 5, 6] }
+                'q4': { lignes: [5, 6, 7, 8], colonnes: [4, 5, 6] },
             };
             
             const range = quadrantRanges[quadrant];
@@ -1708,9 +2618,9 @@
                                 ${generateCombinationsHTML(details, isMultipleSearch)}
                             </div>
                             <div class="modal-actions">
-                                <button onclick="showAllCombinations()" class="btn-show-all">Afficher Tout</button>
-                                <button onclick="exportCombinations()" class="btn-export">Exporter</button>
-                                <button onclick="closeDenominationModal()" class="btn-close">Fermer</button>
+                                <button onclick="showAllCombinations()" class="btn-show-all" title="Afficher toutes les combinaisons">Afficher Tout</button>
+                                <button onclick="exportCombinations()" class="btn-export" title="Exporter les résultats">Exporter</button>
+                                <button onclick="closeDenominationModal()" class="btn-close" title="Fermer la fenêtre">Fermer</button>
                             </div>
                         </div>
                     </div>
@@ -1863,7 +2773,11 @@
             
             try {
                 // Récupérer les vraies données depuis la BD
-                const response = await fetch(`${API_BASE}/granque-tome/${currentUniverse}`);
+                const response = await fetch(`${API_BASE}/api/katula/complete/granque-tome/${currentUniverse}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 
                 if (!response.ok) {
                     throw new Error(`Erreur API: ${response.status}`);
@@ -2189,64 +3103,6 @@
             return null;
         }
 
-        function showTomeFilterInfo(tome) {
-            const infoDiv = document.getElementById('tomeFilterInfo');
-            
-            if (!universeData || !universeData.granqueTome) {
-                infoDiv.innerHTML = '<span style="color: red;">Données non disponibles</span>';
-                infoDiv.style.display = 'block';
-                return;
-            }
-            
-            const tomeData = universeData.granqueTome.tome_data;
-            const tomeItems = tomeData[tome] || [];
-            const tomeDenominations = tomeItems.map(item => item.denomination);
-            const tomeChips = [...new Set(tomeItems.map(item => item.chip))];
-            
-            infoDiv.innerHTML = `
-                <strong>Filtre actif: ${tome}</strong><br>
-                ${tomeChips.length} chips affichés<br>
-                ${tomeDenominations.length} dénominations<br>
-                Chips: ${tomeChips.join(', ')}
-            `;
-            infoDiv.style.display = 'block';
-        }
-        
-        function clearTomeFilter() {
-            currentTomeFilter = null;
-            
-            // Désactiver tous les boutons tome
-            document.querySelectorAll('.tome-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Restaurer tous les chips (supprimer styles tome)
-            document.querySelectorAll('.chip-cell').forEach(chip => {
-                chip.classList.remove('filtered-out', 'filtered-in', 'tome-visible', 'tome-hidden');
-            });
-            
-            // Cacher les informations du filtre
-            document.getElementById('tomeFilterInfo').style.display = 'none';
-        }
-
-        function showRedundantDetails(denomination) {
-            showDenominationDetails(denomination, currentUniverse, { stopPropagation: () => {} });
-        }
-        
-        function clearAllFilters() {
-            console.log('Effacement de tous les filtres');
-            
-            clearGranqueFilter();
-            clearTomeFilter();
-            
-            // Nettoyage complet de tous les styles de filtrage
-            document.querySelectorAll('.chip-cell').forEach(chip => {
-                chip.classList.remove('tome-visible', 'tome-hidden', 'chip-empty', 'filtered-out', 'filtered-in');
-            });
-            
-            document.querySelectorAll('.chip-drawer').forEach(drawer => {
-                drawer.classList.remove('granque-visible', 'granque-hidden', 'filtered-out', 'filtered-in');
-            });
-        }
-
         async function loadUniverse() {
             const universeSelect = document.getElementById('universeSelect');
             const selectedUniverse = universeSelect.value;
@@ -2263,10 +3119,14 @@
             document.getElementById('loadingIndicator').style.display = 'block';
             document.getElementById('katulaContainer').innerHTML = '';
             
+            // Vider les anciennes données pour éviter les conflits
+            universeData = null;
+            
             try {
                 currentUniverse = selectedUniverse;
                 
                 // Charger les données de l'univers
+                currentUniverse = selectedUniverse;                
                 await loadUniverseData(selectedUniverse);
                 
                 // Afficher l'interface
@@ -2274,15 +3134,19 @@
                 displayUniverseInfo();
                 displayFormesLegend();
                 
-                // Activer les boutons
-                document.getElementById('highlightBtn').disabled = false;
-                document.getElementById('resetBtn').disabled = false;
+                // Activer les boutons s'ils existent
+                const highlightBtn = document.getElementById('highlightBtn');
+                const resetBtn = document.getElementById('resetBtn');
+                const openPanelBtn = document.getElementById('openPanelBtn');
+                
+                if (highlightBtn) highlightBtn.disabled = false;
+                if (resetBtn) resetBtn.disabled = false;
                 
                 // Charger les données du panneau latéral
                 await loadGranqueAndTomeData();
                 
-                // Afficher le bouton d'ouverture du panneau
-                document.getElementById('openPanelBtn').style.display = 'block';
+                // Afficher le bouton d'ouverture du panneau s'il existe
+                if (openPanelBtn) openPanelBtn.style.display = 'block';
                 
                 showSuccess(`Univers ${selectedUniverse} chargé avec succès!`);
                 
@@ -2300,182 +3164,119 @@
             try {
                 console.log(`Chargement de ${universe}...`);
                 
-                // Charger la table de Katula avec les positions des chips
-                const tableResponse = await fetch(`http://localhost:8005/api/katula/table/${universe}`);
+                // 1. Charger les données de la table avec les compartiments
+                const tableResponse = await fetch(`${API_BASE}/table/${universe}`);
                 if (!tableResponse.ok) {
-                    throw new Error(`Erreur table ${universe}: ${tableResponse.status}`);
+                    throw new Error(`Erreur lors du chargement des données de la table ${universe}: ${tableResponse.status}`);
                 }
-                const tableData = await tableResponse.json();
+
+                const responseData = await tableResponse.json();
+                console.log('Réponse de l\'API:', responseData);
                 
-                // Charger les formes spécifiques à cet univers
-                const formesResponse = await fetch(`http://localhost:8005/api/formes/${universe}`);
-                let formesData = { formes: ['carre', 'triangle', 'cercle', 'rectangle'] };
-                if (formesResponse.ok) {
-                    formesData = await formesResponse.json();
+                // Vérifier si la réponse contient la clé 'table'
+                const tableData = responseData.table || responseData;
+                console.log('Données de la table chargées:', tableData);
+
+                // 2. Extraire les formes disponibles pour cet univers
+                let formes = [];
+                if (tableData.formes_disponibles && Array.isArray(tableData.formes_disponibles)) {
+                    formes = [...tableData.formes_disponibles];
+                } else if (tableData.formes && Array.isArray(tableData.formes)) {
+                    formes = [...tableData.formes];
+                } else {
+                    // Formes par défaut si non spécifiées
+                    formes = ['carre', 'triangle', 'cercle', 'rectangle'];
                 }
                 
-                // Charger les données détaillées pour chaque chip (1-48)
-                const chipDetails = {};
-                for (let chipNum = 1; chipNum <= 48; chipNum++) {
-                    try {
-                        const chipResponse = await fetch(`${API_BASE}/katula/chip/${universe}/${chipNum}`);
-                        if (chipResponse.ok) {
-                            const chipData = await chipResponse.json();
-                            chipDetails[chipNum] = chipData;
+                // 3. Traiter les chips et leurs compartiments
+                let chipDetails = {};
+                if (tableData.chips && typeof tableData.chips === 'object') {
+                    // Parcourir tous les chips
+                    Object.entries(tableData.chips).forEach(([chipId, chipData]) => {
+                        if (!chipData) return;
+                        
+                        // Extraire le numéro du chip (ex: "chip1" -> 1)
+                        const chipNumber = parseInt(chipId.replace('chip', ''), 10);
+                        if (isNaN(chipNumber)) return;
+                        
+                        // Créer un objet pour stocker les compartiments par forme
+                        const compartments = {};
+                        
+                        // Si le chip a des compartiments verticaux
+                        if (Array.isArray(chipData.compartiments_verticaux)) {
+                            chipData.compartiments_verticaux.forEach(comp => {
+                                if (comp && comp.forme) {
+                                    compartments[comp.forme] = {
+                                        denomination: comp.denomination || 'Sans dénomination',
+                                        petique: comp.petique || '',
+                                        ligne: comp.ligne || '',
+                                        colonne: comp.colonne || '',
+                                        quadrant: comp.quadrant || ''
+                                    };
+                                }
+                            });
                         }
-                    } catch (e) {
-                        console.warn(`Chip ${chipNum} non disponible:`, e);
-                        chipDetails[chipNum] = { formes_data: {} };
-                    }
+                        
+                        // S'assurer qu'il y a un compartiment pour chaque forme, même vide
+                        formes.forEach(forme => {
+                            if (!compartments[forme]) {
+                                compartments[forme] = {
+                                    denomination: 'Sans dénomination',
+                                    petique: '',
+                                    ligne: chipData.lignes ? chipData.lignes[0] : '',
+                                    colonne: chipData.colonnes ? chipData.colonnes[0] : '',
+                                    quadrant: chipData.petiques ? chipData.petiques[0] : ''
+                                };
+                            }
+                        });
+                        
+                        // Déterminer la dénomination principale (premier compartiment non vide ou premier disponible)
+                        const mainForme = Object.keys(compartments).length > 0 ? Object.keys(compartments)[0] : formes[0];
+                        const mainCompartment = compartments[mainForme] || {};
+                        
+                        // Ajouter les détails du chip
+                        chipDetails[chipNumber] = {
+                            chip_number: chipNumber,
+                            denomination: mainCompartment.denomination || 'Sans dénomination',
+                            main_denomination: mainCompartment.denomination || 'Sans dénomination',
+                            position: chipData.position || '',
+                            quadrant: chipData.quadrant || (chipData.petiques ? chipData.petiques[0] : ''),
+                            ligne: chipData.lignes ? chipData.lignes[0] : '',
+                            colonne: chipData.colonnes ? chipData.colonnes[0] : '',
+                            granque_name: chipData.granque_name || '',
+                            tome: chipData.tome || '',
+                            compartments: compartments,
+                            ...chipData
+                        };
+                    });
                 }
                 
-                // Charger les données granque et tome depuis la BD
-                const granqueTomeResponse = await fetch(`${API_BASE}/granque-tome/${universe}`);
-                let granqueTomeData = { granque_data: {}, tome_data: {}, denomination_mapping: {} };
-                if (granqueTomeResponse.ok) {
-                    granqueTomeData = await granqueTomeResponse.json();
-                    console.log('Données granque/tome chargées:', granqueTomeData);
-                }
-                
+                // 4. Mettre à jour les données globales
                 universeData = {
                     table: tableData,
-                    formes: formesData,
                     chipDetails: chipDetails,
-                    granqueTome: granqueTomeData,
-                    try {
-                        console.log(`Chargement de ${universe}...`);
-                        // Charger la structure matricielle complète des chips
-                        const matrixResponse = await fetch(`${API_BASE}/katula/matrix/${universe}`);
-                        if (!matrixResponse.ok) {
-                            throw new Error(`Erreur matrix ${universe}: ${matrixResponse.status}`);
-                        }
-                        const matrixData = await matrixResponse.json();
-                        console.log('DEBUG Katula matrix API:', matrixData);
-                        // Les chips sont dans matrixData.chips
-                        const chipDetails = matrixData.chips;
-                        // Utiliser la liste dynamique des formes retournée par l'API
-                        let formesData = { formes: matrixData.formes || [] };
-                        universeData = {
-                            table: {}, // non utilisé, mais conservé pour compatibilité
-                            formes: formesData,
-                            chipDetails: chipDetails,
-                            granqueTome: {}, // non utilisé ici
-                            universe: universe
-                        };
-                        console.log(`${universe} chargé avec succès:`, universeData);
-                    } catch (error) {
-                        console.error(`Erreur chargement ${universe}:`, error);
-                        throw error;
+                    formes: { formes: formes },
+                    granqueTome: {
+                        granque_data: {},
+                        tome_data: {},
+                        denomination_mapping: {}
+                    },
+                    universe: universe,
+                    matrix: tableData.matrix || {},
+                    dimensions: {
+                        rows: tableData.dimensions?.rows || 8,
+                        cols: tableData.dimensions?.cols || 6,
+                        total_chips: tableData.dimensions?.total_chips || 48
                     }
-                }
+                };
+
+                console.log(`${universe} chargé avec succès:`, universeData);
+                return universeData;
             } catch (error) {
                 console.error('Erreur lors du chargement des données univers:', error);
+                showError(`Erreur lors du chargement de l'univers: ${error.message}`);
                 throw error;
             }
-        }
-
-        function createChipHTML(chipNumber, ligne, col) {
-            const chipData = universeData.chipDetails[chipNumber];
-            const formesData = chipData ? chipData.formes_data : {};
-            const formes = getUniverseFormes();
-
-            // Déterminer le quadrant
-            let quadrantClass = '';
-            if (ligne <= 4 && col <= 3) {
-                quadrantClass = 'quadrant-q1';
-            } else if (ligne <= 4 && col >= 4) {
-                quadrantClass = 'quadrant-q2';
-            } else if (ligne >= 5 && col <= 3) {
-                quadrantClass = 'quadrant-q3';
-            } else if (ligne >= 5 && col >= 4) {
-                quadrantClass = 'quadrant-q4';
-            }
-
-            // Détermination de la dénomination principale (réelle uniquement)
-            let mainDenomination = '';
-            if (chipData && chipData.formes_data) {
-                for (const forme of formes) {
-                    const items = chipData.formes_data[forme] || [];
-                    if (items.length > 0 && items[0].denomination) {
-                        mainDenomination = items[0].denomination;
-                        break;
-                    }
-                }
-            }
-
-            // Si aucune dénomination réelle, marquer le chip comme vide
-            const isChipEmpty = !mainDenomination;
-
-            let html = `
-                <div class="chip-cell ${quadrantClass}${isChipEmpty ? ' empty-chip' : ''}" data-chip="${chipNumber}" onclick="${isChipEmpty ? '' : `showChipDetails(${chipNumber})`}" title="${mainDenomination}" data-quadrant="${quadrantClass.replace('quadrant-', '')}">
-                    <div class="chip-header">${isChipEmpty ? '<span style=\'color:#bbb\'>vide</span>' : mainDenomination}</div>
-                    <div class="chip-drawers">
-            `;
-
-            // Créer les tiroirs selon les formes disponibles
-            formes.forEach(forme => {
-                const formeItems = formesData[forme] || [];
-                const isEmpty = formeItems.length === 0;
-                const icon = FORME_ICONS[forme] || '?';
-                // Gérer les dénominations multiples
-                let displayText = '---';
-                let allDenominations = [];
-                if (formeItems.length > 0) {
-                    // Extraire toutes les dénominations uniques
-                    allDenominations = [...new Set(formeItems.map(item => item.denomination))];
-                    if (allDenominations.length === 1) {
-                        displayText = allDenominations[0];
-                    } else if (allDenominations.length > 1) {
-                        displayText = allDenominations.join('/');
-                    }
-                }
-                // Stocker toutes les dénominations pour la recherche
-                const searchDenominations = allDenominations.length > 0 ? allDenominations.join('/') : displayText;
-                html += `
-                    <div class="chip-drawer ${isEmpty ? 'empty' : ''}" 
-                         data-forme="${forme}" data-chip="${chipNumber}"
-                         data-denomination="${displayText}"
-                         data-all-denominations="${searchDenominations}"
-                         onclick="${isEmpty ? '' : `showDenominationDetails('${searchDenominations}', '${currentUniverse}', event)`}">
-                        ${generateFormeIcon(forme)}
-                        <span class="drawer-text">${displayText}</span>
-                    </div>
-                `;
-            });
-
-            html += `
-                    </div>
-                </div>
-            `;
-            return html;
-        }
-                    </div>
-                `;
-            });
-            
-            html += `
-                    </div>
-                </div>
-            `;
-            
-            return html;
-        }
-
-        function organizeByForme(combinations) {
-            const groups = {};
-            
-            combinations.forEach(combo => {
-                const forme = combo.forme || 'unknown';
-                if (!groups[forme]) {
-                    groups[forme] = [];
-                }
-                
-                // Extraire le nom de l'objet (ex: "road 1" -> "road 1")
-                const objectName = combo.object_name || combo.denomination || 'item';
-                groups[forme].push(objectName);
-            });
-            
-            return groups;
         }
 
         function getUniverseFormes() {
@@ -2486,6 +3287,387 @@
             
             // Formes par défaut si pas de données DB
             return ['carre', 'triangle', 'cercle', 'rectangle'];
+        }
+
+        // Configuration des tiroirs par type d'univers
+        const UNIVERSE_DRAWERS_CONFIG = {
+            'mundo': {
+                drawersCount: 4,
+                defaultFormes: ['carre', 'triangle', 'cercle', 'rectangle']
+            },
+            'fruity': {
+                drawersCount: 4,
+                defaultFormes: ['carre', 'triangle', 'cercle', 'rectangle']
+            },
+            'trigga': {
+                drawersCount: 10,
+                defaultFormes: ['carre', 'triangle', 'cercle', 'rectangle', 'losange', 'hexagone', 'pentagone', 'octogone', 'ovale', 'trapeze']
+            },
+            'roaster': {
+                drawersCount: 12,
+                defaultFormes: ['carre', 'triangle', 'cercle', 'rectangle', 'losange', 'hexagone', 'pentagone', 'octogone', 'ovale', 'trapeze', 'parallelogramme', 'coeur']
+            },
+            'sunshine': {
+                drawersCount: 16,
+                defaultFormes: ['carre', 'triangle', 'cercle', 'rectangle', 'losange', 'hexagone', 'pentagone', 'octogone', 'ovale', 'trapeze', 'parallelogramme', 'coeur', 'etoile', 'croissant', 'nuage', 'flocon']
+            }
+        };
+
+        function createChipHTML(chipNumber, ligne, col) {
+            const chipData = universeData.chipDetails[chipNumber] || {};
+            const universeType = (universeData.universe || '').toLowerCase();
+            const config = UNIVERSE_DRAWERS_CONFIG[universeType] || UNIVERSE_DRAWERS_CONFIG['mundo'];
+            
+            // Récupérer les compartiments du chip
+            const compartments = chipData.compartments || {};
+            
+            // Déterminer les formes à utiliser (celles de l'univers ou celles par défaut)
+            const chipFormes = Array.isArray(chipData.formes) ? chipData.formes : [];
+            const formesOrder = chipFormes.length > 0 ? chipFormes : 
+                              (universeData.formes.formes && universeData.formes.formes.length > 0 ? 
+                               universeData.formes.formes : 
+                               config.defaultFormes);
+            
+            // S'assurer qu'on a le bon nombre de tiroirs
+            while (formesOrder.length < config.drawersCount) {
+                formesOrder.push(`forme_${formesOrder.length + 1}`);
+            }
+            formesOrder.length = Math.min(formesOrder.length, config.drawersCount);
+            
+            // Récupérer toutes les dénominations non vides
+            const allDenominations = Object.values(compartments)
+                .filter(comp => comp.denomination && comp.denomination !== 'Sans dénomination')
+                .map(comp => comp.denomination);
+                
+            // Créer la chaîne de dénominations séparées par des barres obliques
+            const mainDenomination = allDenominations.length > 0 
+                ? allDenominations.join(' / ')
+                : (chipData.main_denomination || chipData.denomination || 'Non défini');
+                
+            const position = chipData.position || `L${ligne}C${col}`;
+            
+            // Déterminer la classe de quadrant (en minuscules)
+            const quadrant = (chipData.quadrant || '').toLowerCase();
+            const quadrantClass = quadrant ? `quadrant-${quadrant.replace('q', '')}` : '';
+            
+            // Déterminer la forme principale (première forme disponible ou première de la liste)
+            let mainForme = '';
+            if (Object.keys(compartments).length > 0) {
+                mainForme = Object.keys(compartments).find(f => compartments[f]?.denomination) || 
+                           Object.keys(compartments)[0] || 
+                           (formesOrder.length > 0 ? formesOrder[0] : '');
+            } else if (formesOrder.length > 0) {
+                mainForme = formesOrder[0];
+            }
+            
+            const formeIcon = generateFormeIcon(mainForme);
+            const positionClass = position ? `position-${position.toLowerCase()}` : '';
+            
+            // Créer les tiroirs en fonction de la configuration de l'univers
+            const drawers = [];
+            
+            // Tiroir principal avec la dénomination (supprimé comme demandé)
+            const mainCompartment = mainForme && compartments[mainForme] || chipData;
+            const mainFormeIcon = generateFormeIcon(mainForme);
+            
+            // Définir les formes spécifiques pour chaque tiroir selon l'univers
+            const drawerFormes = [];
+            const universe = (universeData.universe || '').toLowerCase();
+            
+            if (universe === 'mundo' || universe === 'fruity') {
+                // Ordre spécifique pour les univers 'mundo' et 'fruity'
+                drawerFormes[0] = 'carre';    // Premier tiroir : carré
+                drawerFormes[1] = 'triangle'; // Deuxième tiroir : triangle
+                drawerFormes[2] = 'cercle';   // Troisième tiroir : cercle
+                drawerFormes[3] = 'rectangle'; // Quatrième tiroir : rectangle
+                
+                // S'assurer qu'on ne dépasse pas le nombre de tiroirs configuré
+                for (let i = 4; i < config.drawersCount; i++) {
+                    drawerFormes[i] = formesOrder[i] || `forme_${i+1}`;
+                }
+            } else {
+                // Pour les autres univers, utiliser l'ordre par défaut
+                for (let i = 0; i < config.drawersCount; i++) {
+                    drawerFormes[i] = i < formesOrder.length ? formesOrder[i] : `forme_${i+1}`;
+                }
+            }
+            
+            // Ajouter les tiroirs avec les formes spécifiées
+            for (let i = 0; i < config.drawersCount; i++) {
+                let forme = drawerFormes[i];
+                const compartment = compartments[forme] || {};
+                
+                // Définir la forme et la couleur en fonction de la position du tiroir
+                let formeToShow = forme;
+                let formeColor = getFormeColor(forme);
+                
+                // Pour les univers 'mundo' et 'fruity', forcer les icônes spécifiques
+                if (universe === 'mundo' || universe === 'fruity') {
+                    if (i === 0) {
+                        formeToShow = 'carre';
+                        formeColor = '#3498db'; // Bleu
+                    } else if (i === 1) {
+                        formeToShow = 'triangle';
+                        formeColor = '#2ecc71'; // Vert
+                    } else if (i === 2) {
+                        formeToShow = 'cercle';
+                        formeColor = '#f1c40f'; // Jaune
+                    } else if (i === 3) {
+                        formeToShow = 'rectangle';
+                        formeColor = '#e74c3c'; // Rouge
+                    }
+                }
+                
+                const formeIcon = generateFormeIcon(formeToShow);
+                
+                // Formater le nom de la forme pour l'affichage
+                const displayForme = forme.split('_').map(word => 
+                    word.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+                ).join(' ');
+                
+                // Récupérer la dénomination pour cette forme si elle existe
+                const denomination = compartment.denomination && compartment.denomination !== 'Sans dénomination'
+                    ? compartment.denomination
+                    : displayForme;
+                
+                // Créer le contenu du tiroir
+                let drawerContent = '';
+                
+                if (compartment.denomination || forme === mainForme) {
+                    // Tiroir avec contenu
+                    drawerContent = `
+                        <div class="drawer-combinaison">
+                            <div class="combinaison-header">
+                                <span class="combinaison-icon" style="color: ${formeColor}">${formeIcon}</span>
+                                <span class="combinaison-nom">${compartment.denomination || displayForme}</span>
+                            </div>`;
+                    
+                    // Ajouter les détails uniquement s'ils existent
+                    const details = [];
+                    if (compartment.petique) details.push(`<div><strong>Pétique:</strong> ${compartment.petique}</div>`);
+                    if (compartment.tome) details.push(`<div><strong>Tome:</strong> ${compartment.tome}</div>`);
+                    if (compartment.granque_name) details.push(`<div><strong>Granqué:</strong> ${compartment.granque_name}</div>`);
+                    if (compartment.quadrant) details.push(`<div><strong>Quadrant:</strong> ${compartment.quadrant}</div>`);
+                    else if (quadrant) details.push(`<div><strong>Quadrant:</strong> ${quadrant}</div>`);
+                    if (compartment.ligne) details.push(`<div><strong>Ligne:</strong> ${compartment.ligne}</div>`);
+                    else if (ligne) details.push(`<div><strong>Ligne:</strong> L${ligne}</div>`);
+                    if (compartment.colonne) details.push(`<div><strong>Colonne:</strong> ${compartment.colonne}</div>`);
+                    else if (col) details.push(`<div><strong>Colonne:</strong> C${col}</div>`);
+                    
+                    if (details.length > 0) {
+                        drawerContent += `
+                            <div class="combinaison-details">
+                                ${details.join('\n')}
+                            </div>
+                        `;
+                    }
+                    
+                    drawerContent += `
+                        </div>
+                    `;
+                } else {
+                    // Tiroir vide
+                    drawerContent = `
+                        <div class="drawer-empty">
+                            <div class="empty-icon">📁</div>
+                            <div class="empty-text">Aucune donnée</div>
+                        </div>`;
+                }
+                
+                // Formater les dénominations pour l'affichage
+                const denominationDisplay = denomination.split(' / ').map(d => 
+                    `<span class="denomination-item">${d}</span>`
+                ).join(' / ');
+                
+                // Définir le titre du tiroir avec l'icône et la couleur appropriées
+                let formeName = displayForme;
+                
+                // Pour les univers 'mundo' et 'fruity', forcer les icônes des formes
+                if (universe === 'mundo' || universe === 'fruity') {
+                    if (i === 0) formeName = '◼';
+                    else if (i === 1) formeName = '▲';
+                    else if (i === 2) formeName = '●';
+                    else if (i === 3) formeName = '▬';
+                }
+                
+                // Ajouter une classe pour le style spécifique de l'icône
+                let iconClass = '';
+                if (universe === 'mundo' || universe === 'fruity') {
+                    if (i === 0) iconClass = 'carre';
+                    else if (i === 1) iconClass = 'triangle';
+                    else if (i === 2) iconClass = 'cercle';
+                    else if (i === 3) iconClass = 'rectangle';
+                }
+                
+                // Créer le contenu du titre du tiroir avec l'icône stylisée
+                const drawerTitle = `
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <div class="drawer-icon-container" style="color: ${formeColor}">
+                            <span class="drawer-icon ${iconClass}" style="font-size: 1.2em; margin-right: 5px;">${formeName}</span>
+                            ${denominationDisplay ? `<span class="drawer-denominations">${denominationDisplay}</span>` : ''}
+                        </div>
+                    </div>`;
+                
+                // Ajouter le tiroir à la liste
+                const drawerObj = {
+                    title: drawerTitle,
+                    content: drawerContent,
+                    icon: formeIcon,
+                    iconColor: formeColor,
+                    tooltip: denomination
+                };
+                
+                drawers.push(drawerObj);
+            }
+            
+            // Générer le HTML des tiroirs
+            let drawersHTML = drawers.map((drawer, index) => {
+                const isOpen = index === 0 ? 'open' : '';
+                
+                return `
+                    <div class="chip-drawer ${isOpen}" onclick="event.stopPropagation(); this.classList.toggle('open')" title="${drawer.tooltip}">
+                        <div class="drawer-header">
+                            ${drawer.title}
+                            <span class="drawer-toggle">▼</span>
+                        </div>
+                        <div class="drawer-content">
+                            ${drawer.content}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Créer l'élément de chip avec tiroirs
+            let html = `
+            <div class="chip-cell ${quadrantClass} ${positionClass}" data-chip="${chipNumber}" data-quadrant="${quadrant}">
+                <div class="chip-header">
+                    <span class="position-badge">${position || `L${ligne}C${col}`}</span>
+                    <span class="chip-title">Chip ${chipNumber}</span>
+                </div>
+                
+                <div class="chip-content">
+                    ${drawersHTML}
+                </div>
+            </div>`;
+            
+            return html;
+        }
+
+        function displayKatulaTable() {
+            const container = document.getElementById('katulaContainer');
+            if (!container) {
+                console.error("Conteneur Katula non trouvé");
+                return;
+            }
+            
+            if (!universeData) {
+                showError("Aucune donnée d'univers chargée.");
+                console.error("Aucune donnée d'univers disponible.");
+                return;
+            }
+            
+            console.log("Données de l'univers:", universeData);
+            
+            try {
+                let html = '<div id="katulaTableWrapper"><div class="katula-grid">';
+                
+                // En-tête de colonnes
+                html += '<div class="grid-header">Lignes/Colonnes</div>';
+                
+                // En-têtes de colonnes (C1 à C6)
+                for (let col = 1; col <= 6; col++) {
+                    html += `<div class="grid-header colonne-label" onclick="event.stopPropagation(); selectColumn(${col})">C${col}</div>`;
+                }
+                
+                // Générer les 8 lignes × 6 colonnes = 48 chips
+                for (let ligne = 1; ligne <= 8; ligne++) {
+                    // Étiquette de ligne (L1 à L8)
+                    html += `
+                    <div class="ligne-label" onclick="event.stopPropagation(); showRowDetails(${ligne})">
+                        <span class="row-label-icon">📊</span>
+                        <span class="row-label-text">L${ligne}</span>
+                    </div>`;
+                    
+                    // Cellules de la ligne
+                    for (let col = 1; col <= 6; col++) {
+                        const chipNumber = ((ligne - 1) * 6) + col;
+                        html += createChipHTML(chipNumber, ligne, col);
+                    }
+                }
+                
+                // Ajout des lignes de repère orthonormé et des quadrants
+                html += `
+                    <style>
+                        /* Lignes de séparation des quadrants */
+                        .grid-reference-line {
+                            position: absolute;
+                            background-color: #e74c3c;
+                            z-index: 10;
+                            pointer-events: none;
+                            box-shadow: 0 0 10px rgba(231, 76, 60, 0.9);
+                            transition: all 0.3s ease;
+                        }
+                        
+                        /* Ligne verticale entre les colonnes 3 et 4 */
+                        .vertical-line {
+                            width: 3px;
+                            top: 60px;
+                            bottom: 15px;
+                            left: calc(50% + 2px);
+                        }
+                        
+                        /* Ligne horizontale entre les lignes 4 et 5 */
+                        .horizontal-line {
+                            height: 3px;
+                            left: 80px;
+                            right: 15px;
+                            top: 50%;
+                        }
+                        
+                        /* Étiquettes des quadrants */
+                        .quadrant-label {
+                            position: absolute;
+                            padding: 5px 10px;
+                            background: rgba(255, 255, 255, 0.9);
+                            border-radius: 15px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            z-index: 20;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                            transition: all 0.3s ease;
+                        }
+                        
+                        .quadrant-label:hover {
+                            transform: scale(1.1);
+                            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                        }
+                        
+                        .quadrant-q1 { top: 25%; left: 25%; }
+                        .quadrant-q2 { top: 25%; right: 25%; }
+                        .quadrant-q3 { bottom: 25%; left: 25%; }
+                        .quadrant-q4 { bottom: 25%; right: 25%; }
+                    </style>
+                    
+                    <!-- Lignes de repère -->
+                    <div class="grid-reference-line vertical-line"></div>
+                    <div class="grid-reference-line horizontal-line"></div>
+                    
+                    <!-- Étiquettes des quadrants -->
+                    <div class="quadrant-label quadrant-q1" onclick="event.stopPropagation(); selectQuadrant('q1')">q1</div>
+                    <div class="quadrant-label quadrant-q2" onclick="event.stopPropagation(); selectQuadrant('q2')">q2</div>
+                    <div class="quadrant-label quadrant-q3" onclick="event.stopPropagation(); selectQuadrant('q3')">q3</div>
+                    <div class="quadrant-label quadrant-q4" onclick="event.stopPropagation(); selectQuadrant('q4')">q4</div>
+                `;
+                
+                html += '</div></div>'; // Fermeture des div katula-grid et katulaTableWrapper
+                container.innerHTML = html;
+                
+                console.log("Tableau Katula généré avec succès");
+                
+            } catch (error) {
+                console.error("Erreur lors de la génération du tableau Katula:", error);
+                showError("Une erreur est survenue lors de la génération du tableau. Veuillez réessayer.");
+            }
         }
 
         function displayUniverseInfo() {
@@ -2557,6 +3739,8 @@
                 drawer.style.background = '';
                 drawer.style.transform = '';
                 drawer.style.boxShadow = '';
+                drawer.style.color = '';
+                drawer.style.fontWeight = '';
             });
             
             // Surligner les tiroirs de la forme sélectionnée
@@ -2569,10 +3753,8 @@
                     drawer.style.fontWeight = 'bold';
                 }
             });
-            
-            showSuccess(`Forme "${selectedForme}" surlignée! ${document.querySelectorAll(`[data-forme="${selectedForme}"]:not(.empty)`).length} tiroirs trouvés.`);
         }
-
+        
         function resetHighlight() {
             // Reset tous les tiroirs
             document.querySelectorAll('.chip-drawer').forEach(drawer => {
@@ -2658,8 +3840,231 @@
             setTimeout(() => successDiv.remove(), 3000);
         }
 
-        // Variables globales pour la sélection des quadrants
+        // Variables globales pour la sélection
         let selectedQuadrant = null;
+        let selectedColumn = null;
+        let selectedRow = null;
+        
+        // Fonction pour sélectionner une colonne
+        function selectColumn(columnNumber) {
+            // Désélectionner la colonne précédente si elle existe
+            if (selectedColumn !== null) {
+                document.querySelectorAll(`.colonne-label`).forEach(el => el.classList.remove('active'));
+                document.querySelectorAll(`.selected-col`).forEach(el => el.classList.remove('selected-col'));
+                
+                // Si on clique sur la même colonne, on la désélectionne
+                if (selectedColumn === columnNumber) {
+                    selectedColumn = null;
+                    hideQuadrantStats();
+                    return;
+                }
+            }
+            
+            // Désélectionner les autres sélections
+            clearQuadrantSelection();
+            clearRowSelection();
+            
+            // Sélectionner la nouvelle colonne
+            selectedColumn = columnNumber;
+            
+            // Mettre en surbrillance l'en-tête de la colonne
+            const columnLabels = document.querySelectorAll(`.colonne-label`);
+            if (columnLabels[columnNumber - 1]) {
+                columnLabels[columnNumber - 1].classList.add('active');
+            }
+            
+            // Mettre en surbrillance toutes les cellules de la colonne
+            for (let i = 1; i <= 8; i++) {
+                const cell = document.querySelector(`.chip-cell[data-ligne="${i}"][data-col="${columnNumber}"]`);
+                if (cell) {
+                    cell.parentElement.classList.add('selected-col');
+                }
+            }
+            
+            // Afficher les statistiques de la colonne
+            showColumnStats(columnNumber);
+        }
+        
+        // Fonction pour afficher les statistiques d'une colonne
+        function showColumnStats(columnNumber) {
+            const statsDiv = document.getElementById('quadrantStats');
+            if (!statsDiv) return;
+            
+            // Compter les puces dans la colonne
+            let chipCount = 0;
+            const chips = [];
+            
+            for (let i = 1; i <= 8; i++) {
+                const chipNumber = ((i - 1) * 6) + columnNumber;
+                const chipData = universeData?.chipDetails?.[chipNumber];
+                if (chipData) {
+                    chipCount++;
+                    if (chipData.denomination) {
+                        chips.push(chipData.denomination);
+                    }
+                }
+            }
+            
+            // Mettre à jour l'interface utilisateur
+            statsDiv.innerHTML = `
+                <h3>Colonne C${columnNumber}</h3>
+                <p>Nombre de puces: ${chipCount}</p>
+                ${chips.length > 0 ? `<p>Dénominations: ${chips.join(', ')}</p>` : ''}
+                <button onclick="clearColumnSelection()" class="btn btn-sm btn-outline-secondary">Fermer</button>
+            `;
+            statsDiv.style.display = 'block';
+        }
+        
+        // Fonction pour effacer la sélection de colonne
+        function clearColumnSelection() {
+            if (selectedColumn !== null) {
+                document.querySelectorAll(`.colonne-label`).forEach(el => el.classList.remove('active'));
+                document.querySelectorAll(`.selected-col`).forEach(el => el.classList.remove('selected-col'));
+                selectedColumn = null;
+                document.getElementById('quadrantStats').style.display = 'none';
+            }
+        }
+        
+        // Fonction pour sélectionner une ligne
+        function selectRow(rowNumber) {
+            // Désélectionner la ligne précédente si elle existe
+            if (selectedRow !== null) {
+                document.querySelectorAll(`.ligne-label`).forEach(el => el.classList.remove('active'));
+                document.querySelectorAll(`.selected-row`).forEach(el => el.classList.remove('selected-row'));
+                
+                // Si on clique sur la même ligne, on la désélectionne
+                if (selectedRow === rowNumber) {
+                    selectedRow = null;
+                    hideQuadrantStats();
+                    return;
+                }
+            }
+            
+            // Désélectionner les autres sélections
+            clearQuadrantSelection();
+            clearColumnSelection();
+            
+            // Sélectionner la nouvelle ligne
+            selectedRow = rowNumber;
+            
+            // Mettre en surbrillance l'en-tête de la ligne
+            const rowLabels = document.querySelectorAll(`.ligne-label`);
+            if (rowLabels[rowNumber - 1]) {
+                rowLabels[rowNumber - 1].classList.add('active');
+            }
+            
+            // Mettre en surbrillance toutes les cellules de la ligne
+            for (let i = 1; i <= 6; i++) {
+                const cell = document.querySelector(`.chip-cell[data-ligne="${rowNumber}"][data-col="${i}"]`);
+                if (cell) {
+                    cell.parentElement.classList.add('selected-row');
+                }
+            }
+            
+            // Afficher les statistiques de la ligne
+            showRowStats(rowNumber);
+        }
+        
+        // Fonction pour afficher les statistiques d'une ligne
+        function showRowStats(rowNumber) {
+            const statsDiv = document.getElementById('quadrantStats');
+            if (!statsDiv) return;
+            
+            // Compter les puces dans la ligne
+            let chipCount = 0;
+            const chips = [];
+            
+            for (let i = 1; i <= 6; i++) {
+                const chipNumber = ((rowNumber - 1) * 6) + i;
+                const chipData = universeData?.chipDetails?.[chipNumber];
+                if (chipData) {
+                    chipCount++;
+                    if (chipData.denomination) {
+                        chips.push(chipData.denomination);
+                    }
+                }
+            }
+            
+            // Mettre à jour l'interface utilisateur
+            statsDiv.innerHTML = `
+                <h3>Ligne L${rowNumber}</h3>
+                <p>Nombre de puces: ${chipCount}</p>
+                ${chips.length > 0 ? `<p>Dénominations: ${chips.join(', ')}</p>` : ''}
+                <button onclick="clearRowSelection()" class="btn btn-sm btn-outline-secondary">Fermer</button>
+            `;
+            statsDiv.style.display = 'block';
+        }
+        
+        // Fonction pour effacer la sélection de ligne
+        function clearRowSelection() {
+            if (selectedRow !== null) {
+                document.querySelectorAll(`.ligne-label`).forEach(el => el.classList.remove('active'));
+                document.querySelectorAll(`.selected-row`).forEach(el => el.classList.remove('selected-row'));
+                selectedRow = null;
+                document.getElementById('quadrantStats').style.display = 'none';
+            }
+        }
+        
+        // Fonction pour sélectionner un quadrant
+        function selectQuadrant(quadrant) {
+            // Désélectionner le quadrant précédent si nécessaire
+            if (selectedQuadrant) {
+                document.querySelectorAll('.quadrant-label').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.selected-quadrant').forEach(el => el.classList.remove('selected-quadrant'));
+                
+                // Si on clique sur le même quadrant, on le désélectionne
+                if (selectedQuadrant === quadrant) {
+                    selectedQuadrant = null;
+                    hideQuadrantStats();
+                    return;
+                }
+            }
+            
+            // Désélectionner les autres sélections
+            clearColumnSelection();
+            clearRowSelection();
+            
+            // Sélectionner le nouveau quadrant
+            selectedQuadrant = quadrant;
+            
+            // Mettre en surbrillance l'étiquette du quadrant
+            document.querySelector(`.quadrant-${quadrant}`)?.classList.add('active');
+            
+            // Mettre en surbrillance les cellules du quadrant
+            const [startRow, endRow, startCol, endCol] = getQuadrantRange(quadrant);
+            for (let row = startRow; row <= endRow; row++) {
+                for (let col = startCol; col <= endCol; col++) {
+                    const cell = document.querySelector(`.chip-cell[data-ligne="${row}"][data-col="${col}"]`);
+                    if (cell) {
+                        cell.parentElement.classList.add('selected-quadrant');
+                    }
+                }
+            }
+            
+            // Afficher les statistiques du quadrant
+            showQuadrantStats(quadrant);
+        }
+        
+        // Fonction utilitaire pour obtenir la plage de cellules d'un quadrant
+        function getQuadrantRange(quadrant) {
+            switch(quadrant) {
+                case 'q1': return [1, 4, 1, 3]; // Lignes 1-4, Colonnes 1-3
+                case 'q2': return [1, 4, 4, 6]; // Lignes 1-4, Colonnes 4-6
+                case 'q3': return [5, 8, 1, 3]; // Lignes 5-8, Colonnes 1-3
+                case 'q4': return [5, 8, 4, 6]; // Lignes 5-8, Colonnes 4-6
+                default: return [1, 8, 1, 6];   // Toute la grille par défaut
+            }
+        }
+        
+        // Fonction pour effacer la sélection de quadrant
+        function clearQuadrantSelection() {
+            if (selectedQuadrant !== null) {
+                document.querySelectorAll('.quadrant-label').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.selected-quadrant').forEach(el => el.classList.remove('selected-quadrant'));
+                selectedQuadrant = null;
+                document.getElementById('quadrantStats').style.display = 'none';
+            }
+        }
 
         async function showDenominationDetails(denomination, universe, event) {
             // Empêcher la propagation pour éviter le clic sur le chip
@@ -2751,9 +4156,9 @@
                                 ${generateCombinationsHTML(details, isMultipleSearch)}
                             </div>
                             <div class="modal-actions">
-                                <button onclick="showAllCombinations()" class="btn-show-all">Afficher Tout</button>
-                                <button onclick="exportCombinations()" class="btn-export">Exporter</button>
-                                <button onclick="closeDenominationModal()" class="btn-close">Fermer</button>
+                                <button onclick="showAllCombinations()" class="btn-show-all" title="Afficher toutes les combinaisons">Afficher Tout</button>
+                                <button onclick="exportCombinations()" class="btn-export" title="Exporter les résultats">Exporter</button>
+                                <button onclick="closeDenominationModal()" class="btn-close" title="Fermer la fenêtre">Fermer</button>
                             </div>
                         </div>
                     </div>
@@ -2967,10 +4372,90 @@
             // Cacher les statistiques si nécessaire
         }
 
-        // Auto-charger Fruity au démarrage pour démonstration
+        window.loadUniverse = async function() {
+            const universeSelect = document.getElementById('universeSelect');
+            const selectedUniverse = universeSelect.value;
+            
+            if (!selectedUniverse) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            const loadBtn = document.getElementById('loadBtn');
+            loadBtn.disabled = true;
+            loadBtn.textContent = '🔄 Chargement...';
+            
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('katulaContainer').innerHTML = '';
+            
+            // Vider les anciennes données pour éviter les conflits
+            universeData = null;
+            
+            try {
+                currentUniverse = selectedUniverse;
+                
+                // Charger les données de l'univers
+                await loadUniverseData(selectedUniverse);
+                
+                // Afficher l'interface
+                displayKatulaTable();
+                displayUniverseInfo();
+                displayFormesLegend();
+                
+                // Activer les boutons s'ils existent
+                const highlightBtn = document.getElementById('highlightBtn');
+                const resetBtn = document.getElementById('resetBtn');
+                const openPanelBtn = document.getElementById('openPanelBtn');
+                
+                if (highlightBtn) highlightBtn.disabled = false;
+                if (resetBtn) resetBtn.disabled = false;
+                
+                // Charger les données du panneau latéral
+                await loadGranqueAndTomeData();
+                
+                // Afficher le bouton d'ouverture du panneau s'il existe
+                if (openPanelBtn) openPanelBtn.style.display = 'block';
+                
+                showSuccess(`Univers ${selectedUniverse} chargé avec succès!`);
+                
+            } catch (error) {
+                showError('Erreur lors du chargement: ' + error.message);
+                console.error('Erreur:', error);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🔄 Charger Univers';
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        };
+
+        // Charger automatiquement l'univers 'mundo' au démarrage
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('universeSelect').value = 'fruity';
-            setTimeout(() => loadUniverse(), 1000);
+            // S'assurer que la fonction loadUniverse est disponible
+            if (typeof loadUniverse === 'function') {
+                // Charger l'univers par défaut après un court délai pour s'assurer que le DOM est prêt
+                setTimeout(loadUniverse, 100);
+            } else {
+                console.error('La fonction loadUniverse n\'est pas définie');
+            }
+            
+            // Charger les données des granques et tomes
+            loadGranqueAndTomeData();
+            
+            // Initialiser le panneau latéral
+            document.getElementById('openPanelBtn').style.display = 'block';
+            
+            // Ajouter des écouteurs d'événements pour les raccourcis clavier
+            document.addEventListener('keydown', function(event) {
+                // Échapper pour fermer les modales
+                if (event.key === 'Escape') {
+                    const modals = document.querySelectorAll('.modal');
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'block') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>

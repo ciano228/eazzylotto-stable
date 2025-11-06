@@ -27,21 +27,17 @@ class CORSHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         print(f"[FRONTEND] {format % args}")
 
 if __name__ == "__main__":
-    # Changer vers le dossier frontend
-    if os.path.exists('frontend'):
-        os.chdir('frontend')
-        print("[INFO] Changement vers le dossier frontend")
-    else:
-        print("[ERREUR] Dossier frontend non trouvé")
-        exit(1)
+    # Ne pas essayer de changer de répertoire, on est déjà dans frontend
+    print(f"[INFO] Démarrage du serveur frontend sur le port {PORT}")
+    print(f"[INFO] Répertoire de travail: {os.getcwd()}")
     
     try:
         with socketserver.TCPServer(("", PORT), CORSHTTPRequestHandler) as httpd:
-            print(f"[FRONTEND] Serveur démarré sur http://localhost:{PORT}")
-            print(f"[INDEX] Principal: http://localhost:{PORT}/")
-            print(f"[KATULA] Dynamique: http://localhost:{PORT}/katula-dynamic.html")
-            print(f"[ANALYSE] Temporelle: http://localhost:{PORT}/katula-temporal-analysis.html")
-            print(f"[MULTI] Univers: http://localhost:{PORT}/")
+            print(f"[INFO] Serveur démarré sur http://localhost:{PORT}")
+            print("Appuyez sur Ctrl+C pour arrêter")
             httpd.serve_forever()
     except KeyboardInterrupt:
-        print("[FRONTEND] Serveur arrêté par l'utilisateur")
+        print("\nArrêt du serveur...")
+    except Exception as e:
+        print(f"[ERREUR] {e}")
+        raise

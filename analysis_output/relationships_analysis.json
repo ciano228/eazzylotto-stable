@@ -1,0 +1,458 @@
+[
+  {
+    "table_name": "auth_permission",
+    "column_name": "content_type_id",
+    "foreign_table_name": "django_content_type",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_group_permissions",
+    "column_name": "group_id",
+    "foreign_table_name": "auth_group",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_group_permissions",
+    "column_name": "permission_id",
+    "foreign_table_name": "auth_permission",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_user_groups",
+    "column_name": "user_id",
+    "foreign_table_name": "auth_user",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_user_groups",
+    "column_name": "group_id",
+    "foreign_table_name": "auth_group",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_user_user_permissions",
+    "column_name": "user_id",
+    "foreign_table_name": "auth_user",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "auth_user_user_permissions",
+    "column_name": "permission_id",
+    "foreign_table_name": "auth_permission",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "django_admin_log",
+    "column_name": "content_type_id",
+    "foreign_table_name": "django_content_type",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "django_admin_log",
+    "column_name": "user_id",
+    "foreign_table_name": "auth_user",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "cells",
+    "column_name": "position_id",
+    "foreign_table_name": "positions",
+    "foreign_column_name": "position_id"
+  },
+  {
+    "table_name": "cells",
+    "column_name": "col_id",
+    "foreign_table_name": "cols",
+    "foreign_column_name": "col_id"
+  },
+  {
+    "table_name": "combinaison_quartier",
+    "column_name": "quartier1",
+    "foreign_table_name": "quartier",
+    "foreign_column_name": "quartier"
+  },
+  {
+    "table_name": "combinaison_quartier",
+    "column_name": "quartier2",
+    "foreign_table_name": "quartier",
+    "foreign_column_name": "quartier"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "quartier",
+    "foreign_table_name": "combinaison_quartier",
+    "foreign_column_name": "libelle"
+  },
+  {
+    "table_name": "combinaison_region",
+    "column_name": "region1",
+    "foreign_table_name": "region",
+    "foreign_column_name": "region"
+  },
+  {
+    "table_name": "numbers",
+    "column_name": "cell_id",
+    "foreign_table_name": "cells",
+    "foreign_column_name": "cell_id"
+  },
+  {
+    "table_name": "numbers",
+    "column_name": "col_id",
+    "foreign_table_name": "cols",
+    "foreign_column_name": "col_id"
+  },
+  {
+    "table_name": "numbers",
+    "column_name": "position_id",
+    "foreign_table_name": "positions",
+    "foreign_column_name": "position_id"
+  },
+  {
+    "table_name": "numbers",
+    "column_name": "room_id",
+    "foreign_table_name": "rooms",
+    "foreign_column_name": "room_id"
+  },
+  {
+    "table_name": "positions",
+    "column_name": "room_id",
+    "foreign_table_name": "rooms",
+    "foreign_column_name": "room_id"
+  },
+  {
+    "table_name": "cols",
+    "column_name": "room_id",
+    "foreign_table_name": "rooms",
+    "foreign_column_name": "room_id"
+  },
+  {
+    "table_name": "cells",
+    "column_name": "room_id",
+    "foreign_table_name": "rooms",
+    "foreign_column_name": "room_id"
+  },
+  {
+    "table_name": "groupe_numbers",
+    "column_name": "room_id",
+    "foreign_table_name": "rooms",
+    "foreign_column_name": "room_id"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "granque_name",
+    "foreign_table_name": "granque",
+    "foreign_column_name": "granque_name"
+  },
+  {
+    "table_name": "combination_denominations",
+    "column_name": "combination_id",
+    "foreign_table_name": "combinations",
+    "foreign_column_name": "combination_id"
+  },
+  {
+    "table_name": "combination_denominations",
+    "column_name": "denomination_id",
+    "foreign_table_name": "denominations",
+    "foreign_column_name": "denomination_id"
+  },
+  {
+    "table_name": "numbered_denominations",
+    "column_name": "base_name",
+    "foreign_table_name": "base_denominations",
+    "foreign_column_name": "base_name"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "denomination_id",
+    "foreign_table_name": "numbered_denominations",
+    "foreign_column_name": "denomination_id"
+  },
+  {
+    "table_name": "denomination_rules",
+    "column_name": "denomination_id",
+    "foreign_table_name": "numbered_denominations",
+    "foreign_column_name": "denomination_id"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "parite_id",
+    "foreign_table_name": "parite",
+    "foreign_column_name": "parite_id"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "unidos_id",
+    "foreign_table_name": "unidos",
+    "foreign_column_name": "unidos_id"
+  },
+  {
+    "table_name": "combinaison_region",
+    "column_name": "region2",
+    "foreign_table_name": "region",
+    "foreign_column_name": "region"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "region",
+    "foreign_table_name": "combinaison_region",
+    "foreign_column_name": "libelle"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "gentillee",
+    "foreign_table_name": "gentillee",
+    "foreign_column_name": "gentillee_code"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "ligne",
+    "foreign_table_name": "lignes",
+    "foreign_column_name": "ligne_name"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "colonne",
+    "foreign_table_name": "colonnes",
+    "foreign_column_name": "colonne_name"
+  },
+  {
+    "table_name": "chip_emplacements",
+    "column_name": "univers_id",
+    "foreign_table_name": "univers",
+    "foreign_column_name": "univers_id"
+  },
+  {
+    "table_name": "emplacement_formes",
+    "column_name": "emplacement_id",
+    "foreign_table_name": "chip_emplacements",
+    "foreign_column_name": "chip_global_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_carre",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_carre",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "emplacement_formes",
+    "column_name": "forme_id",
+    "foreign_table_name": "formes",
+    "foreign_column_name": "forme_id"
+  },
+  {
+    "table_name": "emplacement_formes",
+    "column_name": "denomination_id",
+    "foreign_table_name": "denominations",
+    "foreign_column_name": "denomination_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle_cercle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle_cercle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "univers_formes",
+    "column_name": "univers_id",
+    "foreign_table_name": "univers",
+    "foreign_column_name": "univers_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle_rectangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_triangle_rectangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle_triangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle_triangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "univers_formes",
+    "column_name": "forme_id",
+    "foreign_table_name": "formes",
+    "foreign_column_name": "forme_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle_rectangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_cercle_rectangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle_triangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle_triangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle_cercle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_trigga_rectangle_cercle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre_triangle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre_triangle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre_cercle",
+    "column_name": "engine_id",
+    "foreign_table_name": "engines",
+    "foreign_column_name": "engine_id"
+  },
+  {
+    "table_name": "table_de_katula_roaster_carre_cercle",
+    "column_name": "beastie_id",
+    "foreign_table_name": "beasties",
+    "foreign_column_name": "beastie_id"
+  },
+  {
+    "table_name": "chips_formes",
+    "column_name": "chip_id",
+    "foreign_table_name": "chips",
+    "foreign_column_name": "chip_id"
+  },
+  {
+    "table_name": "chip_emplacements",
+    "column_name": "chip_id",
+    "foreign_table_name": "chips",
+    "foreign_column_name": "chip_id"
+  },
+  {
+    "table_name": "chip_univers_formes",
+    "column_name": "chip_id",
+    "foreign_table_name": "chips",
+    "foreign_column_name": "chip_id"
+  },
+  {
+    "table_name": "chip_univers_formes",
+    "column_name": "univers_id",
+    "foreign_table_name": "univers",
+    "foreign_column_name": "univers_id"
+  },
+  {
+    "table_name": "chip_univers_formes",
+    "column_name": "forme_id",
+    "foreign_table_name": "formes",
+    "foreign_column_name": "forme_id"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "chip",
+    "foreign_table_name": "chips_ref",
+    "foreign_column_name": "chip"
+  },
+  {
+    "table_name": "session_draws",
+    "column_name": "session_id",
+    "foreign_table_name": "work_sessions",
+    "foreign_column_name": "id"
+  },
+  {
+    "table_name": "combinations",
+    "column_name": "tome",
+    "foreign_table_name": "tomes",
+    "foreign_column_name": "tome_name"
+  }
+]

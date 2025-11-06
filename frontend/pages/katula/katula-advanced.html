@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katula Advanced - Compartiments & Filtrage</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 20px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        
+        .controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 12px; font-weight: bold; color: #666; }
+        select, input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; border: none; border-radius: 5px; background: #3498db; color: white; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        button.clear { background: #e74c3c; }
+        
+        .matrix { 
+            display: grid; 
+            grid-template-columns: 40px repeat(6, 1fr); 
+            grid-template-rows: 40px repeat(8, 1fr);
+            gap: 3px; 
+            background: #34495e;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .header-cell {
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .chip { 
+            background: white; 
+            border: 2px solid #bdc3c7; 
+            border-radius: 8px; 
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chip:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10; }
+        .chip.filtered { border-color: #e74c3c; border-width: 3px; background: #fff5f5; }
+        .chip.highlighted { border-color: #27ae60; border-width: 3px; background: #f0fff4; }
+        
+        .chip-number {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-weight: bold;
+            font-size: 10px;
+            color: #2c3e50;
+            background: rgba(255,255,255,0.8);
+            padding: 1px 3px;
+            border-radius: 3px;
+        }
+        
+        .compartments {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 5px 5px 5px;
+            gap: 2px;
+        }
+        
+        .compartment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-size: 8px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            min-height: 18px;
+            position: relative;
+        }
+        
+        .compartment.carre { background: #e74c3c; }
+        .compartment.triangle { background: #f39c12; }
+        .compartment.cercle { background: #27ae60; }
+        .compartment.rectangle { background: #9b59b6; }
+        .compartment.composite { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .compartment.empty { background: #ecf0f1; color: #95a5a6; }
+        
+        .forme-icon {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .petique-badge {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            font-size: 8px;
+            background: #3498db;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .stats { display: flex; gap: 20px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+        .stat { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; min-width: 120px; }
+        .stat-value { font-size: 1.5em; font-weight: bold; color: #2c3e50; }
+        .stat-label { font-size: 0.9em; color: #7f8c8d; }
+        
+        .loading { text-align: center; padding: 50px; color: #7f8c8d; }
+        .error { background: #e74c3c; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .success { background: #27ae60; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        
+        .filter-summary {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Katula Advanced - Compartiments & Filtrage</h1>
+            <p>Matrice 8x6 avec ordre des formes et filtrage multi-critères</p>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-group">
+                <label>Univers</label>
+                <select id="universeSelect" onchange="loadUniverse()">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Forme</label>
+                <select id="formeFilter" multiple>
+                    <option value="">Toutes</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Pétique</label>
+                <select id="petiqueFilter" multiple>
+                    <option value="">Toutes</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Tome</label>
+                <select id="tomeFilter">
+                    <option value="">Tous</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Quadrant</label>
+                <select id="quadrantFilter">
+                    <option value="">Tous</option>
+                    <option value="Q1_top_left">Q1 (Haut Gauche)</option>
+                    <option value="Q2_top_right">Q2 (Haut Droite)</option>
+                    <option value="Q3_bottom_left">Q3 (Bas Gauche)</option>
+                    <option value="Q4_bottom_right">Q4 (Bas Droite)</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Plage Chips</label>
+                <input type="number" id="chipStart" placeholder="De" min="1" max="48" style="width: 60px;">
+                <input type="number" id="chipEnd" placeholder="À" min="1" max="48" style="width: 60px;">
+            </div>
+            
+            <button onclick="applyFilters()">Filtrer</button>
+            <button onclick="clearFilters()" class="clear">Effacer</button>
+        </div>
+        
+        <div id="filterSummary" class="filter-summary" style="display: none;"></div>
+        <div id="stats" class="stats"></div>
+        <div id="messages"></div>
+        <div id="loading" class="loading" style="display: none;">Chargement...</div>
+        
+        <div id="matrix" class="matrix">
+            <!-- En-têtes -->
+            <div class="header-cell"></div>
+            <div class="header-cell">C1</div>
+            <div class="header-cell">C2</div>
+            <div class="header-cell">C3</div>
+            <div class="header-cell">C4</div>
+            <div class="header-cell">C5</div>
+            <div class="header-cell">C6</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let currentUniverse = 'mundo';
+        let currentMatrix = null;
+        let filterOptions = null;
+        
+        async function loadUniverse() {
+            const universe = document.getElementById('universeSelect').value;
+            currentUniverse = universe;
+            
+            showLoading(true);
+            clearMessages();
+            
+            try {
+                // Charger les options de filtrage
+                const filtersResponse = await fetch(`${API_BASE}/katula/filters/${universe}`);
+                filterOptions = await filtersResponse.json();
+                populateFilterOptions();
+                
+                // Charger la matrice
+                const matrixResponse = await fetch(`${API_BASE}/katula/matrix/${universe}`);
+                currentMatrix = await matrixResponse.json();
+                
+                displayMatrix(currentMatrix);
+                showStats(currentMatrix);
+                showMessage(`✅ ${universe} chargé avec succès`, 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Erreur: ${error.message}`, 'error');
+            }
+            showLoading(false);
+        }
+        
+        function populateFilterOptions() {
+            if (!filterOptions || !filterOptions.filter_options) return;
+            
+            const options = filterOptions.filter_options;
+            
+            // Formes
+            const formeSelect = document.getElementById('formeFilter');
+            formeSelect.innerHTML = '<option value="">Toutes</option>';
+            options.formes.forEach(forme => {
+                formeSelect.innerHTML += `<option value="${forme}">${forme}</option>`;
+            });
+            
+            // Pétiques
+            const petiqueSelect = document.getElementById('petiqueFilter');
+            petiqueSelect.innerHTML = '<option value="">Toutes</option>';
+            options.petiques.forEach(petique => {
+                petiqueSelect.innerHTML += `<option value="${petique}">${petique}</option>`;
+            });
+            
+            // Tomes
+            const tomeSelect = document.getElementById('tomeFilter');
+            tomeSelect.innerHTML = '<option value="">Tous</option>';
+            options.tomes.forEach(tome => {
+                tomeSelect.innerHTML += `<option value="${tome}">${tome}</option>`;
+            });
+        }
+        
+        function displayMatrix(data) {
+            const matrix = document.getElementById('matrix');
+            
+            // Supprimer les anciennes cellules
+            while (matrix.children.length > 7) {
+                matrix.removeChild(matrix.lastChild);
+            }
+            
+            // Créer la matrice 8x6
+            for (let row = 1; row <= 8; row++) {
+                // En-tête de ligne
+                const lineHeader = document.createElement('div');
+                lineHeader.className = 'header-cell';
+                lineHeader.textContent = `L${row}`;
+                matrix.appendChild(lineHeader);
+                
+                // Cellules de la ligne
+                for (let col = 1; col <= 6; col++) {
+                    const chipData = data.matrix[row] && data.matrix[row][col];
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'chip';
+                    cell.onclick = () => showChipDetails(chipData);
+                    
+                    if (chipData) {
+                        cell.innerHTML = `
+                            <div class="chip-number">${chipData.chip_number}</div>
+                            <div class="compartments">
+                                ${chipData.compartments.map(comp => `
+                                    <div class="compartment ${comp.forme || 'empty'}" 
+                                         title="${comp.forme}: ${comp.denomination}">
+                                        ${comp.forme ? comp.forme.substring(0, 4) : ''}
+                                        ${comp.forme ? `<div class="forme-icon ${comp.forme}">●</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${chipData.compartments[0] && chipData.compartments[0].petique ? 
+                                `<div class="petique-badge">${chipData.compartments[0].petique}</div>` : ''}
+                        `;
+                    } else {
+                        cell.innerHTML = `
+                            <div class="chip-number">${(row-1)*6 + col}</div>
+                            <div class="compartments">
+                                <div class="compartment empty">Vide</div>
+                            </div>
+                        `;
+                        cell.style.opacity = '0.5';
+                    }
+                    
+                    matrix.appendChild(cell);
+                }
+            }
+        }
+        
+        async function applyFilters() {
+            showLoading(true);
+            
+            try {
+                const params = new URLSearchParams();
+                
+                // Récupérer les valeurs des filtres
+                const formeValues = Array.from(document.getElementById('formeFilter').selectedOptions)
+                    .map(option => option.value).filter(v => v);
+                const petiqueValues = Array.from(document.getElementById('petiqueFilter').selectedOptions)
+                    .map(option => option.value).filter(v => v);
+                const tome = document.getElementById('tomeFilter').value;
+                const quadrant = document.getElementById('quadrantFilter').value;
+                const chipStart = document.getElementById('chipStart').value;
+                const chipEnd = document.getElementById('chipEnd').value;
+                
+                // Ajouter aux paramètres
+                formeValues.forEach(f => params.append('forme', f));
+                petiqueValues.forEach(p => params.append('petique', p));
+                if (tome) params.append('tome', tome);
+                if (quadrant) params.append('quadrant', quadrant);
+                if (chipStart) params.append('chip_start', chipStart);
+                if (chipEnd) params.append('chip_end', chipEnd);
+                
+                const response = await fetch(`${API_BASE}/katula/filter/${currentUniverse}?${params}`);
+                const filteredData = await response.json();
+                
+                highlightFilteredChips(filteredData);
+                showFilterSummary(filteredData);
+                showMessage(`✅ Filtres appliqués - ${filteredData.total_matches} résultats`, 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Erreur filtrage: ${error.message}`, 'error');
+            }
+            showLoading(false);
+        }
+        
+        function highlightFilteredChips(filteredData) {
+            // Réinitialiser tous les chips
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('filtered', 'highlighted');
+            });
+            
+            // Mettre en évidence les chips filtrés
+            Object.keys(filteredData.filtered_chips).forEach(chipId => {
+                const chipElement = document.querySelector(`[onclick*="${chipId}"]`);
+                if (chipElement) {
+                    chipElement.classList.add('highlighted');
+                }
+            });
+        }
+        
+        function showFilterSummary(filteredData) {
+            const summary = document.getElementById('filterSummary');
+            const filters = filteredData.filters_applied;
+            
+            let summaryText = 'Filtres actifs: ';
+            const activeFilters = [];
+            
+            if (filters.forme) activeFilters.push(`Formes: ${filters.forme.join(', ')}`);
+            if (filters.petique) activeFilters.push(`Pétiques: ${filters.petique.join(', ')}`);
+            if (filters.tome) activeFilters.push(`Tome: ${filters.tome}`);
+            if (filters.quadrant) activeFilters.push(`Quadrant: ${filters.quadrant}`);
+            if (filters.chip_range) activeFilters.push(`Chips: ${filters.chip_range[0]}-${filters.chip_range[1]}`);
+            
+            if (activeFilters.length > 0) {
+                summaryText += activeFilters.join(' | ');
+                summary.textContent = summaryText;
+                summary.style.display = 'block';
+            } else {
+                summary.style.display = 'none';
+            }
+        }
+        
+        function clearFilters() {
+            document.getElementById('formeFilter').selectedIndex = 0;
+            document.getElementById('petiqueFilter').selectedIndex = 0;
+            document.getElementById('tomeFilter').selectedIndex = 0;
+            document.getElementById('quadrantFilter').selectedIndex = 0;
+            document.getElementById('chipStart').value = '';
+            document.getElementById('chipEnd').value = '';
+            document.getElementById('filterSummary').style.display = 'none';
+            
+            // Réinitialiser l'affichage
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('filtered', 'highlighted');
+            });
+            
+            showMessage('🗑️ Filtres effacés', 'success');
+        }
+        
+        function showChipDetails(chipData) {
+            if (!chipData) return;
+            
+            let details = `Chip ${chipData.chip_number} (${chipData.position})\\n\\n`;
+            details += `Compartiments (${chipData.compartments.length}):\\n`;
+            
+            chipData.compartments.forEach((comp, index) => {
+                if (comp.forme) {
+                    details += `${index + 1}. ${comp.forme}: ${comp.denomination}\\n`;
+                    details += `   Pétique: ${comp.petique}, Tome: ${comp.tome}\\n`;
+                }
+            });
+            
+            alert(details);
+        }
+        
+        function showStats(data) {
+            const stats = document.getElementById('stats');
+            let totalCompartments = 0;
+            let filledCompartments = 0;
+            
+            Object.values(data.matrix).forEach(row => {
+                Object.values(row).forEach(chip => {
+                    totalCompartments += chip.compartments.length;
+                    filledCompartments += chip.compartments.filter(c => c.forme).length;
+                });
+            });
+            
+            stats.innerHTML = `
+                <div class="stat">
+                    <div class="stat-value">48</div>
+                    <div class="stat-label">Total Chips</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">${totalCompartments}</div>
+                    <div class="stat-label">Compartiments</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">${filledCompartments}</div>
+                    <div class="stat-label">Remplis</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">${data.universe}</div>
+                    <div class="stat-label">Univers</div>
+                </div>
+            `;
+        }
+        
+        function showMessage(message, type) {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            messages.appendChild(div);
+            setTimeout(() => div.remove(), 5000);
+        }
+        
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUniverse();
+        });
+    </script>
+</body>
+</html>

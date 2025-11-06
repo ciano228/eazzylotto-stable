@@ -1,0 +1,6 @@
+{
+  "model": "katula-gpt",
+  "streaming": true,
+  "language": "fr",
+  "theme": "dark"
+}

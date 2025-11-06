@@ -19,37 +19,60 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual Environment
+# Virtual environments
 venv/
 env/
 ENV/
-
-# Database
-*.db
-*.sqlite3
-
-# Environment variables
-.env
-.env.local
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+backend/data/
+backend/eazzylotto.db
 
 # Logs
 *.log
 logs/
 
-# OS
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Node modules (si utilisé)
+# Node modules
 node_modules/
 
 # Temporary files
-*.tmp
-*.temp
+tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Specific exclusions
+backend/__pycache__/
+backend/app/__pycache__/
+*.pyc

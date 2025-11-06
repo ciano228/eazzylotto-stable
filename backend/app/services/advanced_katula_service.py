@@ -38,7 +38,7 @@ class AdvancedKatulaService:
             # Récupérer toutes les données pour l'univers
             cursor.execute("""
                 SELECT chip_id, ligne, colonne, petique, chip, forme, denomination
-                FROM table_de_katula 
+                FROM combinations 
                 WHERE univers = %s
                 ORDER BY ligne, colonne, forme
             """, (universe,))
@@ -176,7 +176,7 @@ class AdvancedKatulaService:
             WHERE table_schema = 'public' 
             AND table_name LIKE %s
             ORDER BY table_name
-        """, (f'table_de_katula_{universe}_%',))
+        """, (f'combinations_{universe}_%',))
         
         tables = cursor.fetchall()
         
@@ -220,7 +220,7 @@ class AdvancedKatulaService:
             if forme:
                 cursor.execute("""
                     SELECT ligne, colonne, chip, denomination, petique
-                    FROM table_de_katula 
+                    FROM combinations 
                     WHERE univers = %s AND forme = %s
                     ORDER BY ligne, colonne
                 """, (universe, forme))
@@ -228,7 +228,7 @@ class AdvancedKatulaService:
                 cursor.execute("""
                     SELECT forme, COUNT(*) as count, 
                            array_agg(DISTINCT denomination) as denominations
-                    FROM table_de_katula 
+                    FROM combinations 
                     WHERE univers = %s 
                     GROUP BY forme
                     ORDER BY count DESC

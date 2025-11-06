@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Katula Dynamique - Tous Univers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: #2c3e50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        select, button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: auto repeat(6, 1fr);
+            gap: 12px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: auto;
+        }
+
+        .grid-cell {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 120px;
+        }
+
+        .grid-header {
+            background: #2c3e50;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            min-height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cell-title {
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .compartments-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .forme-group {
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .forme-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 4px;
+        }
+
+        .denoms-list {
+            font-size: 0.9em;
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .combinations-list {
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 10px;
+            font-style: italic;
+        }
+
+        .petique-tag {
+            color: #0d47a1;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+    </style>
+    <script>
+        class KatulaService {
+            constructor(baseUrl = 'http://localhost:8000/api/katula') {
+                this.baseUrl = baseUrl;
+            }
+
+            async getMatrix(universe) {
+                try {
+                    const response = await fetch(`${this.baseUrl}/matrix/${universe}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching matrix:', error);
+                    throw error;
+                }
+            }
+
+            async getFilterOptions(universe) {
+                try {
+                    const response = await fetch(`${this.baseUrl}/filters/${universe}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching filter options:', error);
+                    throw error;
+                }
+            }
+        }
+
+        class KatulaUI {
+            constructor() {
+                this.service = new KatulaService();
+                this.currentUniverse = 'mundo';
+                this.initializeUI();
+            }
+
+            async initializeUI() {
+                await this.loadMatrix();
+            }
+
+            async loadMatrix() {
+                try {
+                    const data = await this.service.getMatrix(this.currentUniverse);
+                    this.renderMatrix(data);
+                } catch (error) {
+                    console.error('Error loading matrix:', error);
+                }
+            }
+
+            renderMatrix(matrixData) {
+                const container = document.getElementById('katulaMatrix');
+                if (!container) return;
+
+                container.innerHTML = '';
+                const { matrix, dimensions } = matrixData;
+
+                // Créer l'en-tête des colonnes
+                const headerRow = document.createElement('div');
+                headerRow.className = 'grid-header';
+                headerRow.textContent = '';
+                container.appendChild(headerRow);
+
+                for (let col = 1; col <= dimensions.cols; col++) {
+                    const colHeader = document.createElement('div');
+                    colHeader.className = 'grid-header';
+                    colHeader.textContent = `C${col}`;
+                    container.appendChild(colHeader);
+                }
+
+                // Créer les lignes de la matrice
+                for (let row = 1; row <= dimensions.rows; row++) {
+                    // En-tête de ligne
+                    const rowHeader = document.createElement('div');
+                    rowHeader.className = 'grid-header';
+                    rowHeader.textContent = `L${row}`;
+                    container.appendChild(rowHeader);
+
+                    // Cellules de la ligne
+                    for (let col = 1; col <= dimensions.cols; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        
+                        const chipData = matrix[row][col];
+                        const cellContent = document.createElement('div');
+                        cellContent.className = 'cell-content';
+
+                        // Numéro du chip
+                        const chipTitle = document.createElement('div');
+                        chipTitle.className = 'cell-title';
+                        chipTitle.textContent = `Chip ${chipData.chip_number}`;
+                        cellContent.appendChild(chipTitle);
+
+                        // Compartiments
+                        if (chipData.compartments && chipData.compartments.length > 0) {
+                            const compartsContainer = document.createElement('div');
+                            compartsContainer.className = 'compartments-container';
+
+                            // Grouper par forme
+                            const formeGroups = this.groupByForme(chipData.compartments);
+                            
+                            for (const [forme, comparts] of Object.entries(formeGroups)) {
+                                const formeGroup = document.createElement('div');
+                                formeGroup.className = 'forme-group';
+                                
+                                // Titre forme avec petique
+                                const formeTitle = document.createElement('div');
+                                formeTitle.className = 'forme-title';
+                                const petique = comparts[0].petique.toLowerCase();
+                                formeTitle.textContent = `${forme}`;
+                                const petiqueTag = document.createElement('span');
+                                petiqueTag.className = 'petique-tag';
+                                petiqueTag.textContent = ` (${petique})`;
+                                formeTitle.appendChild(petiqueTag);
+
+                                // Dénominations
+                                const denomsList = document.createElement('div');
+                                denomsList.className = 'denoms-list';
+                                const denoms = [...new Set(comparts.map(c => c.denomination))];
+                                denomsList.textContent = denoms.join(' / ');
+                                
+                                // Combinations (si présentes)
+                                if (comparts[0].combinations) {
+                                    const combList = document.createElement('div');
+                                    combList.className = 'combinations-list';
+                                    combList.textContent = comparts[0].combinations;
+                                    formeGroup.appendChild(combList);
+                                }
+
+                                formeGroup.appendChild(formeTitle);
+                                formeGroup.appendChild(denomsList);
+                                compartsContainer.appendChild(formeGroup);
+                            }
+
+                            cellContent.appendChild(compartsContainer);
+                        }
+
+                        cell.appendChild(cellContent);
+                        container.appendChild(cell);
+                    }
+                }
+            }
+
+            groupByForme(compartments) {
+                return compartments.reduce((groups, comp) => {
+                    if (!groups[comp.forme]) {
+                        groups[comp.forme] = [];
+                    }
+                    groups[comp.forme].push(comp);
+                    return groups;
+                }, {});
+            }
+        }
+
+        // Initialiser quand le document est chargé
+        document.addEventListener('DOMContentLoaded', () => {
+            window.katulaUI = new KatulaUI();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Table Katula Dynamique</h1>
+        </div>
+
+        <div class="controls">
+            <select id="universeSelect">
+                <option value="mundo">Mundo</option>
+                <option value="fruity">Fruity</option>
+                <option value="trigga">Trigga</option>
+                <option value="roaster">Roaster</option>
+                <option value="sunshine">Sunshine</option>
+            </select>
+            <select id="formeSelect">
+                <option value="">-- Forme --</option>
+            </select>
+            <select id="petiqueSelect">
+                <option value="">-- Petique --</option>
+            </select>
+            <select id="tomeSelect">
+                <option value="">-- Tome --</option>
+            </select>
+            <select id="granqueSelect">
+                <option value="">-- Granque --</option>
+            </select>
+        </div>
+
+        <div id="katulaMatrix" class="katula-grid"></div>
+    </div>
+</body>
+</html>

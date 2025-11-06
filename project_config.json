@@ -1,0 +1,12 @@
+{
+  "backend": {
+    "url": "http://localhost:8000/api/kiro/chat"
+  },
+  "frontend": {
+    "entry": "katula-dynamic.html"
+  },
+  "project": {
+    "name": "Eazzy Calculator",
+    "description": "Système analytique et prédictif basé sur Katula"
+  }
+}

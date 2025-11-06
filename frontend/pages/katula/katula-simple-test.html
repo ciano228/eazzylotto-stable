@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple Katula</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        button { padding: 10px 20px; border: none; border-radius: 5px; background: #3498db; color: white; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .matrix { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; max-width: 600px; margin: 0 auto; }
+        .chip { 
+            background: white; 
+            border: 2px solid #bdc3c7; 
+            border-radius: 8px; 
+            padding: 10px; 
+            text-align: center; 
+            min-height: 80px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .chip:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .chip-number { font-weight: bold; font-size: 14px; color: #2c3e50; }
+        .chip-forme { font-size: 12px; color: #e74c3c; margin: 5px 0; }
+        .chip-petique { font-size: 10px; color: #3498db; }
+        .chip-position { font-size: 9px; color: #7f8c8d; }
+        .loading { text-align: center; padding: 50px; color: #7f8c8d; }
+        .error { background: #e74c3c; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .success { background: #27ae60; color: white; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .stats { display: flex; gap: 20px; justify-content: center; margin: 20px 0; }
+        .stat { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Test Simple Katula</h1>
+            <p>Vérification du chargement des données</p>
+        </div>
+        
+        <div class="controls">
+            <button onclick="testAPI()">Test API</button>
+            <button onclick="loadUniverse('mundo')">Mundo</button>
+            <button onclick="loadUniverse('fruity')">Fruity</button>
+            <button onclick="loadUniverse('trigga')">Trigga</button>
+        </div>
+        
+        <div id="stats" class="stats"></div>
+        <div id="messages"></div>
+        <div id="loading" class="loading" style="display: none;">Chargement...</div>
+        <div id="matrix" class="matrix"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8001/api';
+        
+        async function testAPI() {
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    showMessage(`✅ API OK - ${data.total_rows} lignes en base`, 'success');
+                } else {
+                    showMessage(`❌ API Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Connexion échouée: ${error.message}`, 'error');
+            }
+            showLoading(false);
+        }
+        
+        async function loadUniverse(universe) {
+            showLoading(true);
+            clearMessages();
+            
+            try {
+                const response = await fetch(`${API_BASE}/katula/matrix/${universe}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayMatrix(data);
+                    showStats(data);
+                    showMessage(`✅ ${universe} chargé - ${data.total_chips} chips`, 'success');
+                } else {
+                    showMessage(`❌ Erreur: ${data.detail || 'Erreur inconnue'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Erreur chargement: ${error.message}`, 'error');
+            }
+            showLoading(false);
+        }
+        
+        function displayMatrix(data) {
+            const matrix = document.getElementById('matrix');
+            matrix.innerHTML = '';
+            
+            // Créer 48 cellules (8x6)
+            for (let i = 1; i <= 48; i++) {
+                const chip = data.chips[i];
+                const cell = document.createElement('div');
+                cell.className = 'chip';
+                cell.onclick = () => showChipDetails(i, chip);
+                
+                if (chip) {
+                    cell.innerHTML = `
+                        <div class="chip-number">Chip ${i}</div>
+                        <div class="chip-forme">${chip.forme || 'N/A'}</div>
+                        <div class="chip-petique">${chip.petique || 'N/A'}</div>
+                        <div class="chip-position">${chip.ligne || 'L?'} ${chip.colonne || 'C?'}</div>
+                    `;
+                    
+                    // Couleur selon la forme
+                    if (chip.forme) {
+                        if (chip.forme.includes('carre')) cell.style.borderColor = '#e74c3c';
+                        else if (chip.forme.includes('triangle')) cell.style.borderColor = '#f39c12';
+                        else if (chip.forme.includes('cercle')) cell.style.borderColor = '#27ae60';
+                        else if (chip.forme.includes('rectangle')) cell.style.borderColor = '#9b59b6';
+                    }
+                } else {
+                    cell.innerHTML = `
+                        <div class="chip-number">Chip ${i}</div>
+                        <div class="chip-forme">Vide</div>
+                    `;
+                    cell.style.opacity = '0.5';
+                }
+                
+                matrix.appendChild(cell);
+            }
+        }
+        
+        function showStats(data) {
+            const stats = document.getElementById('stats');
+            const formes = {};
+            
+            Object.values(data.chips).forEach(chip => {
+                if (chip.forme) {
+                    formes[chip.forme] = (formes[chip.forme] || 0) + 1;
+                }
+            });
+            
+            stats.innerHTML = `
+                <div class="stat">
+                    <strong>${data.total_chips}</strong><br>
+                    Total Chips
+                </div>
+                <div class="stat">
+                    <strong>${Object.keys(formes).length}</strong><br>
+                    Formes Uniques
+                </div>
+                <div class="stat">
+                    <strong>${data.universe}</strong><br>
+                    Univers
+                </div>
+            `;
+        }
+        
+        function showChipDetails(chipId, chip) {
+            if (chip) {
+                alert(`Chip ${chipId}
+Forme: ${chip.forme || 'N/A'}
+Position: ${chip.ligne || 'L?'} ${chip.colonne || 'C?'}
+Pétique: ${chip.petique || 'N/A'}
+Tome: ${chip.tome || 'N/A'}
+Dénomination: ${chip.denomination || 'N/A'}`);
+            } else {
+                alert(`Chip ${chipId}: Aucune donnée`);
+            }
+        }
+        
+        function showMessage(message, type) {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            messages.appendChild(div);
+            setTimeout(() => div.remove(), 5000);
+        }
+        
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        // Test automatique au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            testAPI();
+        });
+    </script>
+</body>
+</html>

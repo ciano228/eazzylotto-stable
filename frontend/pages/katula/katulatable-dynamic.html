@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Katula Dynamique - Tous Univers</title>
+    <script src="assets/js/universal-header.js"></script>
+    <link rel="stylesheet" href="assets/css/katula-dynamic.css">
+</head>
+<body>
+    <div class="container">
+        <div id="header-container"></div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="universeSelect">Sélectionner un univers:</label>
+                <select id="universeSelect" onchange="loadUniverse()">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="roaster">Roaster</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="sunshine">Sunshine</option>
+                </select>
+            </div>
+            <button id="showAllBtn" class="btn" onclick="showAllTableDetails(event)">
+                <i class="fas fa-table"></i> Voir tout le tableau
+            </button>
+            <button id="toggleSidePanelBtn" class="btn" onclick="toggleSidePanel()">
+                <i class="fas fa-sliders-h"></i> Panneau latéral
+            </button>
+            <button id="updateStatusBtn" class="btn btn-update" onclick="showUpdatePanel()" title="Vérifier les mises à jour">
+                <i class="fas fa-sync-alt"></i> <span id="updateStatusText">Mises à jour</span>
+                <span id="updateBadge" class="update-badge" style="display: none;"></span>
+            </button>
+        </div>
+
+        <div id="universeInfo" class="universe-info" style="display: none;"></div>
+        <div id="formesLegend" class="formes-legend" style="display: none;"></div>
+        
+        <div class="main-content">
+            <div id="katulaContainer"></div>
+            <div id="loadingIndicator" class="loading" style="display: none;">
+                🔄 Chargement des données depuis la base de données...
+            </div>
+        </div>
+        
+        <!-- Panneau latéral pour Granque et Tome -->
+        <div id="sidePanel" class="side-panel">
+            <div class="side-panel-header">
+                <h3>Panneau de contrôle</h3>
+                <button class="close-btn" onclick="toggleSidePanel()">&times;</button>
+            </div>
+            <div class="side-panel-content">
+                <div class="section">
+                    <h4>Filtres</h4>
+                    <div id="granqueButtons" class="button-group">
+                        <!-- Les boutons de granque seront ajoutés ici dynamiquement -->
+                    </div>
+                    <div id="tomeButtons" class="button-group" style="margin-top: 15px;">
+                        <!-- Les boutons de tome seront ajoutés ici dynamiquement -->
+                    </div>
+                </div>
+                <div class="section">
+                    <h4 data-i18n="Légende des formes">Légende des formes</h4>
+                    <div id="sidePanel-formesLegend">
+                        <!-- La légende des formes sera ajoutée ici dynamiquement -->
+                    </div>
+                </div>
+                <div class="section">
+                    <h4 data-i18n="Informations">Informations</h4>
+                    <div id="sidePanel-universeInfo">
+                        <!-- Les informations sur l'univers seront affichées ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panneau des mises à jour -->
+        <div id="updatePanel" class="update-panel">
+            <div class="update-panel-header">
+                <h3><i class="fas fa-sync-alt"></i> Gestion des mises à jour</h3>
+                <button class="close-btn" onclick="hideUpdatePanel()">&times;</button>
+            </div>
+            <div class="update-panel-content">
+                <div id="updateStatus" class="update-status">
+                    <div class="update-status-item">
+                        <span class="update-label">Dernière vérification:</span>
+                        <span id="lastChecked">Jamais</span>
+                    </div>
+                    <div class="update-status-item">
+                        <span class="update-label">Dernière mise à jour:</span>
+                        <span id="lastUpdate">Inconnue</span>
+                    </div>
+                    <div class="update-status-item">
+                        <span class="update-label">Prochaine vérification:</span>
+                        <span id="nextCheck">-</span>
+                    </div>
+                    <div id="updateAvailable" class="update-available" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i> Mise à jour disponible !
+                    </div>
+                </div>
+                <div class="update-actions">
+                    <button id="checkUpdateBtn" class="btn" onclick="checkForUpdates()">
+                        <i class="fas fa-sync"></i> Vérifier les mises à jour
+                    </button>
+                    <button id="applyUpdateBtn" class="btn btn-primary" onclick="applyUpdate()" disabled>
+                        <i class="fas fa-download"></i> Appliquer la mise à jour
+                    </button>
+                </div>
+                <div id="updateProgress" class="update-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="progress-text">Téléchargement en cours...</div>
+                </div>
+                <div id="updateLog" class="update-log">
+                    <!-- Les logs de mise à jour seront affichés ici -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bouton pour ouvrir le panneau -->
+        <button id="openPanelBtn" class="open-panel-btn" onclick="toggleSidePanel()" style="display: none;">
+            📊 Analyse
+        </button>
+    </div>
+
+    <script>
+        // =================================================================================
+        // EAZZYCALCULATOR - KATULA DYNAMIC UI - V3.0
+        // =================================================================================
+
+        // ---------------------------------------------------------------------------------
+        // I. CONFIGURATION & VARIABLES GLOBALES
+        // ---------------------------------------------------------------------------------
+        const API_BASE = 'http://localhost:8000/api'; // Corrigé pour pointer vers le bon serveur
+        let currentUniverse = null;
+        let universeData = null;
+        let selectedForme = null;
+        let sidePanelOpen = false;
+        let currentGranqueFilter = null;
+        let currentTomeFilter = null;
+
+        const FORME_ICONS = { 'carre': '■', 'triangle': '▲', 'cercle': '●', 'rectangle': '▬' };
+        const FORME_COLORS = {
+            'carre': '#3498db', 'triangle': '#27ae60', 'cercle': '#f1c40f', 'rectangle': '#e74c3c'
+        };
+
+        // ---------------------------------------------------------------------------------
+        // II. FONCTIONS UTILITAIRES (HELPERS)
+        // ---------------------------------------------------------------------------------
+
+        function showError(message) {
+            const container = document.querySelector('.container');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            container.insertBefore(errorDiv, container.firstChild);
+            setTimeout(() => errorDiv.remove(), 5000);
+            console.error(message);
+        }
+
+        function showSuccess(message) {
+            const container = document.querySelector('.container');
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.textContent = message;
+            container.insertBefore(successDiv, container.firstChild);
+            setTimeout(() => successDiv.remove(), 3000);
+            console.log(message);
+        }
+
+        function generateFormeIcon(forme) {
+            const formeStr = String(forme || '');
+            if (formeStr.includes('-')) {
+                const [forme1, forme2] = forme.split('-');
+                const icon1 = FORME_ICONS[forme1] || '?';
+                const icon2 = FORME_ICONS[forme2] || '?';
+                const color1 = FORME_COLORS[forme1] || '#666';
+                const color2 = FORME_COLORS[forme2] || '#666';
+                return `<span class="forme-icon-composite"><span class="forme-part" style="color: ${color1}">${icon1}</span><span class="forme-part" style="color: ${color2}">${icon2}</span></span>`;
+            } else {
+                const icon = FORME_ICONS[formeStr] || '?';
+                const color = FORME_COLORS[formeStr] || '#666';
+                return `<span class="forme-icon" style="color: ${color}">${icon}</span>`;
+            }
+        }
+
+        function generateFormeLegendIcon(forme) {
+            const formeStr = String(forme || '');
+            if (formeStr.includes('-')) {
+                const [forme1, forme2] = formeStr.split('-');
+                const icon1 = FORME_ICONS[forme1] || '?';
+                const icon2 = FORME_ICONS[forme2] || '?';
+                const color1 = FORME_COLORS[forme1] || '#666';
+                const color2 = FORME_COLORS[forme2] || '#666';
+                return `<div class="forme-legend-composite"><span class="forme-legend-part" style="color: ${color1}">${icon1}</span><span class="forme-legend-part" style="color: ${color2}">${icon2}</span></div>`;
+            } else {
+                const icon = FORME_ICONS[formeStr] || '?';
+                const color = FORME_COLORS[formeStr] || '#666';
+                return `<span class="forme-legend-simple" style="color: ${color}">${icon}</span>`;
+            }
+        }
+
+        // ---------------------------------------------------------------------------------
+        // III. CHARGEMENT ET GESTION DES DONNÉES
+        // ---------------------------------------------------------------------------------
+
+        async function loadUniverse() {
+            const universeSelect = document.getElementById('universeSelect');
+            const selectedUniverse = universeSelect.value;
+            
+            if (!selectedUniverse) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            document.getElementById('showAllBtn').disabled = true;
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('katulaContainer').innerHTML = '';
+            
+            try {
+                currentUniverse = selectedUniverse;                
+                // Charger les données de l'univers.
+                // La fonction loadUniverseData met à jour la variable globale `universeData`.
+                await loadUniverseData(selectedUniverse);
+
+                // Afficher l'interface
+                displayKatulaTable();
+                displayUniverseInfo();
+                displayFormesLegend();
+                
+                // Charger les données du panneau latéral
+                const filterData = await loadFilterData(selectedUniverse);
+                universeData.filters = filterData;
+                displayFilterButtons();
+                
+                // Afficher le bouton d'ouverture du panneau
+                document.getElementById('openPanelBtn').style.display = 'block';
+                
+                showSuccess(`Univers ${selectedUniverse} chargé avec succès!`);
+                
+            } catch (error) {
+                showError(`Erreur chargement ${currentUniverse}: ${error.message}`);
+                console.error('Erreur:', error);
+            } finally {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('showAllBtn').disabled = false;
+            }
+        }
+
+        /** Charge les données principales de la grille via l'endpoint optimisé. */
+        async function loadUniverseData(universe) {
+            try {
+                console.log(`Chargement de l'univers ${universe} via /api/katula/matrix/...`);
+                const response = await fetch(`${API_BASE}/katula/matrix/${universe}`);
+                if (!response.ok) {
+                    throw new Error(`Erreur API /katula/matrix/${universe}: ${response.status}`);
+                }
+                // Stocker les données complètes dans la variable globale
+                universeData = await response.json();
+                console.log('Données de la matrice reçues:', universeData);
+            } catch (error) {
+                console.error('Erreur lors du chargement des données univers:', error);
+                throw error;
+            }
+        }
+
+        /** Charge les données pour les filtres (Granque, Tome, etc.). */
+        async function loadFilterData(universe) {
+            try {
+                console.log(`Chargement des filtres pour ${universe}...`);
+                const response = await fetch(`${API_BASE}/katula/filters/${universe}`);
+                if (!response.ok) {
+                    throw new Error(`Erreur API /katula/filters/${universe}: ${response.status}`);
+                }
+                const filterData = await response.json();
+                console.log('Données de filtres reçues:', filterData);
+                return filterData.filter_options || {};
+            } catch (error) {
+                console.warn('Erreur chargement des filtres:', error);
+                return { granques: [], tomes: [] }; // Fallback
+            }
+        }
+
+        // ---------------------------------------------------------------------------------
+        // IV. AFFICHAGE DE L'INTERFACE (RENDERING)
+        // ---------------------------------------------------------------------------------
+
+        function displayKatulaTable() {
+            const container = document.getElementById('katulaContainer');
+            if (!container || !universeData || !universeData.matrix) {
+                showError("Aucune donnée de matrice disponible pour cet univers.");
+                console.error("displayKatulaTable: universeData.matrix est manquant.", universeData);
+                return;
+            }
+
+            let html = '<div class="katula-grid">';
+
+            // Labels des petiques (q) et granques (Q)
+            ['q1', 'q2', 'q3', 'q4'].forEach(q => {
+                html += `<div class="quadrant-label quadrant-${q} clickable-quadrant petique-label" onclick="showQuadrantDetails('${q}', event)" title="Petique ${q}">p${q.substring(1)}</div>`;
+            });
+            ['Q1', 'Q2', 'Q3', 'Q4'].forEach(Q => {
+                html += `<div class="granque-label granque-${Q.toLowerCase()} clickable-granque" onclick="showGranqueDetails('${Q}', event)" title="Granque ${Q}">${Q}</div>`;
+            });
+
+            // En-têtes de colonnes et lignes
+            html += '<div class="grid-header"></div>';
+            for (let col = 1; col <= 6; col++) {
+                html += `<div class="grid-header clickable-header" onclick="showColumnDetails(${col}, event)">C${col}</div>`;
+            }
+            for (let row = 1; row <= 8; row++) {
+                html += `<div class="ligne-label clickable-header" onclick="showRowDetails(${row}, event)">L${row}</div>`;
+                for (let col = 1; col <= 6; col++) {
+                    // Utiliser la matrice pour obtenir les données du chip à la bonne position
+                    const chipData = universeData.matrix[row-1] ? universeData.matrix[row-1][col-1] : null;
+                    html += createChipHTML(chipData, row, col);
+                }
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+            // document.getElementById('quadrantSelector').style.display = 'flex'; // Cet élément n'existe pas dans ce fichier
+        }
+
+        function createChipHTML(chipNumber, ligne, col) {
+            const chipData = universeData.chips[chipNumber];
+            const formes = universeData.formes || [];
+
+            // Déterminer le quadrant
+            let quadrantClass = '';
+            if (ligne <= 4 && col <= 3) {
+                quadrantClass = 'quadrant-q1';
+            }
+            else if (ligne <= 4 && col >= 4) {
+                quadrantClass = 'quadrant-q2';
+            }
+            else if (ligne >= 5 && col <= 3) {
+                quadrantClass = 'quadrant-q3';
+            }
+            else if (ligne >= 5 && col >= 4) {
+                quadrantClass = 'quadrant-q4';
+            }
+
+            const mainDenomination = chipData?.main_denomination || `Vide`;
+            const isChipEmpty = !chipData || !chipData.main_denomination;
+
+            let html = `
+                <div class="chip-cell ${quadrantClass} ${isChipEmpty ? 'chip-empty' : ''}" data-chip="${chipData?.chip_number || ''}" onclick="showChipDetails(${chipData?.chip_number || 0})">
+                    <div class="chip-header">${chipData?.main_denomination || 'Vide'}</div>
+                    <div class="chip-drawers">
+            `;
+
+            formes.forEach(forme => {
+                const drawerData = chipData?.compartments?.[forme];
+                const isEmpty = !drawerData;
+                const denomination = drawerData?.denomination || '---';
+
+                html += `
+                    <div class="chip-drawer ${isEmpty ? 'empty' : ''}" 
+                         data-forme="${forme}"
+                         data-denomination="${denomination}"
+                         onclick="${isEmpty ? '' : `showDenominationDetails('${denomination}', event)`}">
+                        ${generateFormeIcon(forme)}
+                        <span class="drawer-text">${denomination}</span>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        function displayUniverseInfo() {
+            const infoDiv = document.getElementById('universeInfo');
+            if (!infoDiv || !universeData) return;
+
+            const totalChips = Object.keys(universeData.chips).length;
+            const activeChips = Object.values(universeData.chips).filter(c => c.main_denomination).length;
+
+            infoDiv.innerHTML = `
+                <strong>Univers: ${currentUniverse.toUpperCase()}</strong> | 
+                Formes: ${universeData.formes.length} | 
+                Chips Actifs: ${activeChips}/${totalChips}
+            `;
+            infoDiv.style.display = 'block';
+        }
+
+        function displayFormesLegend() {
+            const legendDiv = document.getElementById('formesLegend');
+            if (!legendDiv || !universeData.formes) return;
+
+            let html = `<h4>Légende des Formes</h4><div class="formes-grid">`;
+            universeData.formes.forEach(forme => {
+                html += `
+                    <div class="forme-item" onclick="selectForme('${forme}')" data-forme="${forme}">
+                        <div class="forme-legend-icon">${generateFormeLegendIcon(forme)}</div>
+                        <div class="forme-legend-text">${forme}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            legendDiv.innerHTML = html;
+            legendDiv.style.display = 'block';
+        }
+
+        function displayFilterButtons() {
+            const granqueContainer = document.getElementById('granqueButtons');
+            const tomeContainer = document.getElementById('tomeButtons');
+            if (!granqueContainer || !tomeContainer || !universeData.filters) return;
+
+            // Boutons Granque
+            let granqueHtml = '';
+            const granques = universeData.filters.granques || [];
+            if (granques.length > 0) {
+                granques.forEach(g => {
+                    granqueHtml += `<button class="granque-btn" onclick="filterByGranque('${g}')">${g}</button>`;
+                });
+            } else {
+                granqueHtml += '<p>Aucune donnée.</p>';
+            }
+            granqueContainer.innerHTML = granqueHtml;
+
+            // Boutons Tome
+            let tomeHtml = '';
+            const tomes = universeData.filters.tomes || [];
+            if (tomes.length > 0) {
+                tomes.forEach(t => {
+                    tomeHtml += `<button class="tome-btn" onclick="filterByTome('${t}')">${t}</button>`;
+                });
+            } else {
+                tomeHtml += '<p>Aucune donnée.</p>';
+            }
+            tomeContainer.innerHTML = tomeHtml;
+        }
+
+        // ---------------------------------------------------------------------------------
+        // V. INTERACTIVITÉ (MODALES, CLICS, FILTRES)
+        // ---------------------------------------------------------------------------------
+
+        function selectForme(forme) {
+            document.querySelectorAll('.forme-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`[data-forme="${forme}"]`).classList.add('selected');
+            selectedForme = forme;
+        }
+
+        function highlightForme() {
+            if (!selectedForme) {
+                alert('Veuillez d\'abord sélectionner une forme dans la légende');
+                return;
+            }
+            document.querySelectorAll('.chip-drawer').forEach(drawer => {
+                drawer.style.background = '';
+                drawer.style.transform = '';
+                drawer.style.boxShadow = '';
+            });
+            // Surligner les tiroirs de la forme sélectionnée
+            document.querySelectorAll(`[data-forme="${selectedForme}"]`).forEach(drawer => {
+                if (!drawer.classList.contains('empty')) {
+                    drawer.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+                    drawer.style.transform = 'scale(1.1)';
+                    drawer.style.boxShadow = '0 5px 15px rgba(39, 174, 96, 0.4)';
+                    drawer.style.color = 'white';
+                    drawer.style.fontWeight = 'bold';
+                }
+            });
+            showSuccess(`Forme "${selectedForme}" surlignée! ${document.querySelectorAll(`[data-forme="${selectedForme}"]:not(.empty)`).length} tiroirs trouvés.`);
+        }
+
+        function resetHighlight() {
+            document.querySelectorAll('.chip-drawer').forEach(drawer => {
+                drawer.style.background = '';
+                drawer.style.transform = '';
+                drawer.style.boxShadow = '';
+                drawer.style.color = '';
+                drawer.style.fontWeight = '';
+            });
+            document.querySelectorAll('.forme-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            selectedForme = null;
+            showSuccess('Surlignage réinitialisé');
+        }
+
+        function showChipDetails(chipNumber) {
+            if (!chipNumber || !universeData || !universeData.chips || !universeData.formes) return;
+            const chipDataFromAll = universeData.chips[chipNumber];
+            if (!chipDataFromAll || !chipDataFromAll.compartments || Object.keys(chipDataFromAll.compartments).length === 0) {
+                alert(`chip${chipNumber}: Aucune donnée disponible`);
+                return;
+            }
+            
+            const compartments = chipDataFromAll.compartments;
+            const formesOrder = universeData.formes; // Use the ordered formes
+            let details = `🎯 chip${chipNumber} - ${currentUniverse.toUpperCase()}\n\n`;
+            
+            // Organiser par forme
+            formesOrder.forEach(forme => {
+                const compartment = compartments[forme];
+                if (compartment && compartment.denomination && compartment.denomination !== '---') {
+                    const icon = FORME_ICONS[forme] || '?';
+                    details += `${icon} ${forme.toUpperCase()}: ${compartment.denomination}\n`;
+                }
+            });
+            
+            const totalItems = Object.keys(compartments).length; // Count non-empty compartments
+            details += `📊 Total: ${totalItems} éléments`;
+            alert(details);
+        }
+
+        async function showDenominationDetails(denominations, event) {
+            if (event) event.stopPropagation();
+            if (denominations === '---') return;
+
+            const modalTitle = `Détails pour: ${denominations}`;
+            const modalId = `modal-${Date.now()}`; // ID unique pour la modale
+            const modalHTML = `
+                <div id="${modalId}" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${modalTitle}</h2>
+                            <span class="modal-close" onclick="document.getElementById('${modalId}').remove()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="loading">Chargement...</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const modalBody = document.querySelector(`#${modalId} .modal-body`);
+
+            try {
+                const denominationsList = denominations.split('/').map(d => d.trim());
+                let allCombinations = [];
+
+                for (const singleDenomination of denominationsList) {
+                    const url = `${API_BASE}/denomination/${currentUniverse}/${encodeURIComponent(singleDenomination)}`;
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.details && data.details.length > 0) {
+                            allCombinations.push(...data.details);
+                        }
+                    } else {
+                        console.warn(`Aucune donnée pour "${singleDenomination}"`);
+                    }
+                }
+
+                if (allCombinations.length === 0) {
+                    modalBody.innerHTML = '<div class="error">Aucune combinaison trouvée pour cette dénomination.</div>';
+                    return;
+                }
+
+                // Trier les combinaisons
+                allCombinations.sort((a, b) => (a.alpha_ranking || 'z').localeCompare(b.alpha_ranking || 'z'));
+                
+                let combinationsHtml = `<div class="modal-info">
+                                            <span class="info-badge">UNIVERS: ${currentUniverse.toUpperCase()}</span>
+                                            <span class="info-badge count">OCCURRENCES: ${allCombinations.length}</span>
+                                        </div>
+                                        <div class="combinations-list">`;
+                allCombinations.forEach(c => {
+                    combinationsHtml += `<div class="combination-item">
+                                            <div class="combination-numbers">${c.num1}-${c.num2}</div>
+                                            <div class="combination-position position-${c.alpha_ranking || 'na'}">
+                                                Pos: ${c.alpha_ranking || 'N/A'}
+                                            </div>
+                                         </div>`;
+                });
+                combinationsHtml += '</div>';
+                modalBody.innerHTML = combinationsHtml;
+            } catch (error) {
+                console.error("Erreur lors de la récupération des détails de la dénomination:", error);
+                modalBody.innerHTML = `<div class="error">Erreur de chargement des détails.</div>`;
+            }
+        }
+
+        function getDenominationsFromChips(chipNumbers) {
+            if (!universeData || !universeData.chips) return '';
+            const denominations = new Set();
+            chipNumbers.forEach(chipNum => {
+                const chipData = universeData.chips[chipNum];
+                if (chipData && chipData.compartments) {
+                    Object.values(chipData.compartments).forEach(comp => {
+                        if (comp.denomination) denominations.add(comp.denomination);
+                    });
+                }
+            });
+            return Array.from(denominations).join('/');
+        }
+
+        function showColumnDetails(col, event) {
+            const chipNumbers = Array.from({ length: 8 }, (_, i) => i * 6 + col);
+            const denoms = getDenominationsFromChips(chipNumbers);
+            if (denoms) showDenominationDetails(denoms, event);
+        }
+
+        function showRowDetails(row, event) {
+            const chipNumbers = Array.from({ length: 6 }, (_, i) => (row - 1) * 6 + i + 1);
+            const denoms = getDenominationsFromChips(chipNumbers);
+            if (denoms) showDenominationDetails(denoms, event);
+        }
+
+        function showQuadrantDetails(quadrant, event) {
+            const ranges = {
+                'q1': { rows: [1, 4], cols: [1, 3] }, 'q2': { rows: [1, 4], cols: [4, 6] },
+                'q3': { rows: [5, 8], cols: [1, 3] }, 'q4': { rows: [5, 8], cols: [4, 6] }
+            };
+            const range = ranges[quadrant];
+            const chipNumbers = [];
+            for (let r = range.rows[0]; r <= range.rows[1]; r++) {
+                for (let c = range.cols[0]; c <= range.cols[1]; c++) {
+                    chipNumbers.push((r - 1) * 6 + c);
+                }
+            }
+            const denoms = getDenominationsFromChips(chipNumbers);
+            if (denoms) showDenominationDetails(denoms, event);
+        }
+
+        function showGranqueDetails(granque, event) {
+            showQuadrantDetails(granque.toLowerCase(), event);
+        }
+
+        function showAllTableDetails(event) {
+            if (!universeData || !universeData.chips) {
+                alert("Les données ne sont pas encore chargées.");
+                return;
+            }
+            const chipNumbers = Array.from({ length: 48 }, (_, i) => i + 1);
+            const denoms = getDenominationsFromChips(chipNumbers);
+            if (denoms) showDenominationDetails(denoms, event);
+        }
+
+        function toggleSidePanel() {
+            sidePanelOpen = !sidePanelOpen;
+            document.getElementById('sidePanel').classList.toggle('open', sidePanelOpen);
+            document.querySelector('.main-content').classList.toggle('panel-open', sidePanelOpen);
+        }
+
+        function filterByGranque(granque) {
+            alert(`Filtrage par Granque: ${granque}. Logique à implémenter.`);
+            // Logique de filtrage à ajouter ici
+        }
+
+        function filterByTome(tome) {
+            alert(`Filtrage par Tome: ${tome}. Logique à implémenter.`);
+            // Logique de filtrage à ajouter ici
+        }
+
+        function clearAllFilters() {
+            alert('Réinitialisation des filtres. Logique à implémenter.');
+        }
+
+        // ---------------------------------------------------------------------------------
+        // VI. INITIALISATION
+        // ---------------------------------------------------------------------------------
+
+        // Auto-charger un univers au démarrage
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultUniverse = 'mundo';
+            document.getElementById('universeSelect').value = defaultUniverse;
+            loadUniverse();
+        });
+
+
+        // Fonctions de l'ancienne version qui ne sont plus nécessaires ou qui sont à réévaluer
+        /*
+        function selectQuadrant(quadrant) {
+            clearQuadrantSelection();
+            selectedQuadrant = quadrant;
+            document.querySelectorAll('.quadrant-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.quadrant-btn.${quadrant}`).classList.add('active');
+            document.querySelectorAll(`.chip-cell.quadrant-${quadrant}`).forEach(chip => {
+                chip.classList.add('selected-quadrant');
+            });
+            showQuadrantStats(quadrant);
+        }
+
+        function clearQuadrantSelection() {
+            selectedQuadrant = null;
+            document.querySelectorAll('.quadrant-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.chip-cell').forEach(chip => {
+                chip.classList.remove('selected-quadrant');
+            });
+            hideQuadrantStats();
+        }
+
+        function showQuadrantStats(quadrant) {
+            const chips = document.querySelectorAll(`.chip-cell.quadrant-${quadrant}`);
+            const chipNumbers = Array.from(chips).map(chip => {
+            });
+            
+            const stats = {
+                quadrant: quadrant,
+                total_chips: chips.length,
+                chip_numbers: chipNumbers.sort((a, b) => a - b),
+                universe: currentUniverse
+            };
+            
+            console.log(`Quadrant ${quadrant} sélectionné:`, stats);
+            showSuccess(`Quadrant ${quadrant} sélectionné: ${stats.total_chips} chips (chip${chipNumbers.slice(0, 6).join(', chip')}...)`);
+        }*/
+
+    </script>
+</body>
+</html>

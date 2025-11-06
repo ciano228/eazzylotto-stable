@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katula Dynamic Interface</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --border-radius: 10px;
+            --spacing: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+        }
+
+        .universe-selector {
+            margin-bottom: var(--spacing);
+            text-align: center;
+        }
+
+        .universe-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing);
+            border-left: 5px solid #2196f3;
+        }
+
+        .filters-container {
+            display: flex;
+            gap: var(--spacing);
+            margin-bottom: var(--spacing);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            background: var(--background-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-item {
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+            padding: 5px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .katula-grid {
+            display: grid;
+            gap: 10px;
+            background: var(--background-color);
+            padding: var(--spacing);
+            border-radius: var(--border-radius);
+        }
+
+        .chip-cell {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chip-header {
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chip-compartments {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .compartment-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forme-indicator {
+            font-size: 1.2em;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .denomination-list {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .forme-filter {
+            font-size: 1.2em;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="universe-selector">
+            <select id="universeSelect">
+                <option value="fruity">Fruity</option>
+                <option value="mundo">Mundo</option>
+                <option value="roaster">Roaster</option>
+                <option value="sunshine">Sunshine</option>
+                <option value="trigga">Trigga</option>
+            </select>
+            <button id="loadUniverseBtn">Charger Univers</button>
+        </div>
+        <div id="katulaContainer"></div>
+    </div>
+
+    <script type="module">
+        import { KatulaRenderer } from './modules/katula/KatulaRenderer.js';
+
+        const renderer = new KatulaRenderer('katulaContainer');
+        const universeSelect = document.getElementById('universeSelect');
+        const loadButton = document.getElementById('loadUniverseBtn');
+
+        async function loadUniverse() {
+            const universe = universeSelect.value;
+            try {
+                const response = await fetch(`/api/katula/${universe}`);
+                if (!response.ok) throw new Error('Failed to fetch data');
+                
+                const data = await response.json();
+                renderer.setUniverse(data);
+            } catch (error) {
+                console.error('Error loading universe:', error);
+                alert('Erreur lors du chargement de l\'univers');
+            }
+        }
+
+        loadButton.addEventListener('click', loadUniverse);
+        document.addEventListener('DOMContentLoaded', loadUniverse);
+    </script>
+</body>
+</html>

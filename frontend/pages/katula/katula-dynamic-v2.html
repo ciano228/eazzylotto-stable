@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katula Dynamic UI</title>
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h3 {
+            margin: 0 0 10px;
+            color: #ecf0f1;
+        }
+
+        .filter-group {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+        }
+
+        /* Katula Grid */
+        .katula-container {
+            position: relative;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            position: relative;
+        }
+
+        /* Quadrant Lines */
+        .quadrant-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .horizontal-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 4px;
+            background: rgba(231, 76, 60, 0.8);
+            z-index: 1000;
+        }
+
+        .vertical-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: rgba(231, 76, 60, 0.8);
+            z-index: 1000;
+        }
+
+        /* Chip styles */
+        .chip {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .chip-header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .compartment {
+            background: #f8f9fa;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+
+        .forme-icon {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        .denomination {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .petique {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Controls */
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Side Panel -->
+        <div class="side-panel">
+            <div class="filter-section">
+                <h3>Filtres</h3>
+                <div class="filter-group">
+                    <h4>Petique</h4>
+                    <div id="petiqueFilters"></div>
+                </div>
+                <div class="filter-group">
+                    <h4>Granque</h4>
+                    <div id="granqueFilters"></div>
+                </div>
+                <div class="filter-group">
+                    <h4>Quadrants</h4>
+                    <div id="quadrantFilters"></div>
+                </div>
+                <div class="filter-group">
+                    <h4>Formes</h4>
+                    <div id="formeFilters"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="controls">
+                <select id="universeSelect">
+                    <option value="mundo">Mundo</option>
+                    <option value="fruity">Fruity</option>
+                    <option value="trigga">Trigga</option>
+                    <option value="roaster">Roaster</option>
+                </select>
+                <button onclick="loadKatulaData()">Charger</button>
+            </div>
+
+            <div class="katula-container">
+                <!-- Quadrant Lines -->
+                <div class="quadrant-lines">
+                    <div class="horizontal-line"></div>
+                    <div class="vertical-line"></div>
+                </div>
+
+                <!-- Katula Grid -->
+                <div id="katulaGrid" class="katula-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/katula-dynamic.js"></script>
+</body>
+</html>
