@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chargement Sessions</title>
+</head>
+<body>
+    <h1>Test Chargement Sessions</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testSessions() {
+            const results = document.getElementById('results');
+            
+            // Test sessions mémoire
+            try {
+                const response = await fetch('http://localhost:8881/api/sessions');
+                const data = await response.json();
+                
+                results.innerHTML += `<h2>Sessions Mémoire: ${data.status}</h2>`;
+                if (data.sessions) {
+                    data.sessions.forEach(session => {
+                        results.innerHTML += `<p>- ${session.name}: ${session.completed_draws}/${session.total_draws} tirages</p>`;
+                    });
+                }
+            } catch (error) {
+                results.innerHTML += `<p>Erreur sessions mémoire: ${error}</p>`;
+            }
+            
+            // Test session_test_001 détails
+            try {
+                const response = await fetch('http://localhost:8881/api/sessions/session_test_001');
+                const data = await response.json();
+                
+                results.innerHTML += `<h2>Session Test 001: ${data.status}</h2>`;
+                if (data.session) {
+                    results.innerHTML += `<p>Tirages: ${data.session.draws ? data.session.draws.length : 0}</p>`;
+                    results.innerHTML += `<p>Périodes: ${data.session.periods}</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p>Erreur session détails: ${error}</p>`;
+            }
+            
+            // Test katooling (peut échouer)
+            try {
+                const response = await fetch('http://localhost:8881/api/katooling/algeria');
+                const data = await response.json();
+                
+                results.innerHTML += `<h2>Katooling Algeria: ${data.status || 'Not Found'}</h2>`;
+                if (data.algeria_sessions) {
+                    data.algeria_sessions.forEach(session => {
+                        results.innerHTML += `<p>- ${session.name}: ${session.actual_draws} tirages</p>`;
+                    });
+                }
+            } catch (error) {
+                results.innerHTML += `<p>Katooling non disponible (normal)</p>`;
+            }
+        }
+        
+        testSessions();
+    </script>
+</body>
+</html>

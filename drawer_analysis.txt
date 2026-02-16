@@ -1,0 +1,141 @@
+﻿================================================================================
+V╔RIFICATION DRAWERS MUNDO
+================================================================================
+
+Drawers UNIQUES dans Mundo: 158
+Total d'entrees avec drawer_name: 544
+
+================================================================================
+ARRANGEMENT NATUREL DES DRAWERS (Premiers chips)
+================================================================================
+
+============================================================
+CHIP 1: 16 drawers
+============================================================
+  drawer1      | forme: carre      | denom: table 2              | alpha: a   | drawer: 1
+  drawer1      | forme: carre      | denom: table 2              | alpha: b   | drawer: 1
+  drawer1      | forme: carre      | denom: table 2              | alpha: c   | drawer: 1
+  drawer1      | forme: carre      | denom: table 2              | alpha: d   | drawer: 1
+  drawer1      | forme: carre      | denom: table 2              | alpha: e   | drawer: 1
+  drawer1      | forme: carre      | denom: table 2              | alpha: f   | drawer: 1
+  drawer2      | forme: triangle   | denom: forest 1             | alpha: a   | drawer: 2
+  drawer2      | forme: triangle   | denom: forest 1             | alpha: b   | drawer: 2
+  drawer3      | forme: cercle     | denom: shoes 1              | alpha: a   | drawer: 3
+  drawer3      | forme: cercle     | denom: shoes 1              | alpha: b   | drawer: 3
+  drawer3      | forme: cercle     | denom: shoes 1              | alpha: c   | drawer: 3
+  drawer3      | forme: cercle     | denom: shoes 1              | alpha: d   | drawer: 3
+  drawer4      | forme: rectangle  | denom: gold 1               | alpha: a   | drawer: 4
+  drawer4      | forme: rectangle  | denom: gold 1               | alpha: b   | drawer: 4
+  drawer4      | forme: rectangle  | denom: gold 1               | alpha: c   | drawer: 4
+  drawer4      | forme: rectangle  | denom: gold 1               | alpha: d   | drawer: 4
+
+============================================================
+CHIP 2: 16 drawers
+============================================================
+  drawer5      | forme: carre      | denom: house 1              | alpha: a   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: b   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: c   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: d   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: e   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: f   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: g   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: h   | drawer: 5
+  drawer5      | forme: carre      | denom: house 1              | alpha: i   | drawer: 5
+  drawer6      | forme: triangle   | denom: forest 2             | alpha: a   | drawer: 6
+  drawer6      | forme: triangle   | denom: forest 2             | alpha: b   | drawer: 6
+  drawer7      | forme: cercle     | denom: book 1               | alpha: a   | drawer: 7
+  drawer8      | forme: rectangle  | denom: gold 2               | alpha: a   | drawer: 8
+  drawer8      | forme: rectangle  | denom: gold 2               | alpha: b   | drawer: 8
+  drawer8      | forme: rectangle  | denom: gold 2               | alpha: c   | drawer: 8
+  drawer8      | forme: rectangle  | denom: gold 2               | alpha: d   | drawer: 8
+
+============================================================
+CHIP 3: 10 drawers
+============================================================
+  drawer10     | forme: triangle   | denom: forest 3             | alpha: a   | drawer: 10
+  drawer11     | forme: cercle     | denom: shoes 2              | alpha: a   | drawer: 11
+  drawer11     | forme: cercle     | denom: shoes 2              | alpha: b   | drawer: 11
+  drawer11     | forme: cercle     | denom: shoes 2              | alpha: c   | drawer: 11
+  drawer11     | forme: cercle     | denom: shoes 2              | alpha: d   | drawer: 11
+  drawer12     | forme: rectangle  | denom: bottle 3             | alpha: a   | drawer: 12
+  drawer12     | forme: rectangle  | denom: bottle 3             | alpha: b   | drawer: 12
+  drawer9      | forme: carre      | denom: chair 1              | alpha: a   | drawer: 9
+  drawer9      | forme: carre      | denom: chair 1              | alpha: b   | drawer: 9
+  drawer9      | forme: carre      | denom: chair 1              | alpha: c   | drawer: 9
+
+============================================================
+CHIP 10: 22 drawers
+============================================================
+  drawer34     | forme: carre      | denom: road 2               | alpha: a   | drawer: 34
+  drawer34     | forme: carre      | denom: road 2               | alpha: b   | drawer: 34
+  drawer34     | forme: carre      | denom: road 2               | alpha: c   | drawer: 34
+  drawer34     | forme: carre      | denom: road 2               | alpha: d   | drawer: 34
+  drawer35     | forme: triangle   | denom: flower 2             | alpha: a   | drawer: 35
+  drawer35     | forme: triangle   | denom: flower 2             | alpha: b   | drawer: 35
+  drawer35     | forme: triangle   | denom: flower 2             | alpha: c   | drawer: 35
+  drawer35     | forme: triangle   | denom: flower 2             | alpha: d   | drawer: 35
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: a   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: b   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: c   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: d   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: e   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: f   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: g   | drawer: 36
+  drawer36     | forme: cercle     | denom: fish 2               | alpha: h   | drawer: 36
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: a   | drawer: 37
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: b   | drawer: 37
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: c   | drawer: 37
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: d   | drawer: 37
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: e   | drawer: 37
+  drawer37     | forme: rectangle  | denom: hotel 2              | alpha: f   | drawer: 37
+
+============================================================
+CHIP 15: 28 drawers
+============================================================
+  drawer51     | forme: carre      | denom: door 1               | alpha: a   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: b   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: c   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: d   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: e   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: f   | drawer: 51
+  drawer51     | forme: carre      | denom: door 1               | alpha: g   | drawer: 51
+  drawer52     | forme: triangle   | denom: fire 1               | alpha: a   | drawer: 52
+  drawer52     | forme: triangle   | denom: fire 1               | alpha: b   | drawer: 52
+  drawer52     | forme: triangle   | denom: fire 1               | alpha: c   | drawer: 52
+  drawer52     | forme: triangle   | denom: fire 1               | alpha: d   | drawer: 52
+  drawer52     | forme: triangle   | denom: fire 1               | alpha: e   | drawer: 52
+  drawer53     | forme: cercle     | denom: football 2           | alpha: a   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: b   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: c   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: d   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: e   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: f   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: g   | drawer: 53
+  drawer53     | forme: cercle     | denom: football 2           | alpha: h   | drawer: 53
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: a   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: b   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: c   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: d   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: e   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: f   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: g   | drawer: 54
+  drawer54     | forme: rectangle  | denom: rope 2               | alpha: h   | drawer: 54
+
+================================================================================
+ANALYSE DE L'ORDRE (alpha_ranking)
+================================================================================
+
+chip1:
+python : Traceback (most recent call last):
+At line:1 char:1
++ python verify_drawer_arrangement.py 2>&1 | Out-File -FilePath drawer_ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\User\eazzycalculator\verify_drawer_arrangement.py", line 93, in <module>
+    print(f"  alpha={alpha_ranking or 'N/A':3} \u2192 {drawer_name:12} ({forme})")
+  File "C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 12: character maps to <undefined>

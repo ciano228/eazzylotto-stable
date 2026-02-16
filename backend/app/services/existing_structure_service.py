@@ -344,3 +344,68 @@ class ExistingStructureService:
             
         except Exception as e:
             return {"error": str(e), "data_source": "error"}
+
+    @staticmethod
+    def get_real_session_draws(session_id: int) -> Dict[str, Any]:
+        """Récupère les tirages d'une session réelle, en comblant les manquants."""
+        try:
+            conn = ExistingStructureService.get_db_connection()
+            cursor = conn.cursor()
+
+            # 1. Récupérer les détails de la session
+            cursor.execute("SELECT total_draws, lottery_type FROM work_sessions WHERE id = %s", (session_id,))
+            session_details = cursor.fetchone()
+            if not session_details:
+                return {"error": "Session not found", "value": []}
+            
+            total_draws, lottery_type = session_details
+
+            # 2. Récupérer les tirages existants
+            cursor.execute("""
+                SELECT id, draw_number, lottery_name, draw_date, winning_numbers, is_completed, is_no_draw
+                FROM session_draws 
+                WHERE session_id = %s
+            """, (session_id,))
+            
+            existing_draws_data = cursor.fetchall()
+            existing_draws = {row[1]: row for row in existing_draws_data}
+
+            # 3. Construire la liste complète des tirages
+            all_draws = []
+            for draw_num in range(1, total_draws + 1):
+                if draw_num in existing_draws:
+                    draw_data = existing_draws[draw_num]
+                    all_draws.append({
+                        "id": draw_data[0],
+                        "draw_number": draw_data[1],
+                        "lottery_name": draw_data[2],
+                        "draw_date": draw_data[3].strftime("%d/%m/%Y") if draw_data[3] else "N/A",
+                        "winning_numbers": draw_data[4] or [],
+                        "is_completed": draw_data[5],
+                        "is_no_draw": draw_data[6] or False,
+                        "status": "completed" # ou un autre statut basé sur la logique métier
+                    })
+                else:
+                    # Créer un tirage manquant (no draw)
+                    all_draws.append({
+                        "id": f"missing_{session_id}_{draw_num}", # ID synthétique
+                        "draw_number": draw_num,
+                        "lottery_name": f"{lottery_type} - Tirage {draw_num}",
+                        "draw_date": "N/A",
+                        "winning_numbers": [],
+                        "is_completed": False,
+                        "is_no_draw": True,
+                        "status": "no_draw"
+                    })
+
+            cursor.close()
+            conn.close()
+            
+            return {
+                "value": all_draws,
+                "total": len(all_draws),
+                "data_source": "existing_complete_structure_with_gaps"
+            }
+
+        except Exception as e:
+            return {"error": str(e), "value": [], "total": 0}

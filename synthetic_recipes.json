@@ -1,0 +1,208 @@
+[
+  {
+    "name": "forme",
+    "type": "concatenation",
+    "components": [
+      "forme"
+    ],
+    "formula": "{forme}",
+    "discovered_frequency": 148.85,
+    "num_attributes": 1,
+    "category": "geometric",
+    "description": "Type moléculaire basé sur forme"
+  },
+  {
+    "name": "tome",
+    "type": "concatenation",
+    "components": [
+      "tome"
+    ],
+    "formula": "{tome}",
+    "discovered_frequency": 119.04,
+    "num_attributes": 1,
+    "category": "other",
+    "description": "Type moléculaire basé sur tome"
+  },
+  {
+    "name": "granque",
+    "type": "concatenation",
+    "components": [
+      "granque"
+    ],
+    "formula": "{granque}",
+    "discovered_frequency": 85.0,
+    "num_attributes": 1,
+    "category": "spatial",
+    "description": "Type moléculaire basé sur granque"
+  },
+  {
+    "name": "forme_tome",
+    "type": "concatenation",
+    "components": [
+      "forme",
+      "tome"
+    ],
+    "formula": "{forme}_{tome}",
+    "discovered_frequency": 75.38,
+    "num_attributes": 2,
+    "category": "geometric",
+    "description": "Type moléculaire basé sur forme_tome"
+  },
+  {
+    "name": "petique",
+    "type": "concatenation",
+    "components": [
+      "petique"
+    ],
+    "formula": "{petique}",
+    "discovered_frequency": 74.62,
+    "num_attributes": 1,
+    "category": "other",
+    "description": "Type moléculaire basé sur petique"
+  },
+  {
+    "name": "granque_petique",
+    "type": "concatenation",
+    "components": [
+      "granque",
+      "petique"
+    ],
+    "formula": "{granque}_{petique}",
+    "discovered_frequency": 58.27,
+    "num_attributes": 2,
+    "category": "spatial",
+    "description": "Type moléculaire basé sur granque_petique"
+  },
+  {
+    "name": "petique_tome",
+    "type": "concatenation",
+    "components": [
+      "petique",
+      "tome"
+    ],
+    "formula": "{petique}_{tome}",
+    "discovered_frequency": 48.08,
+    "num_attributes": 2,
+    "category": "other",
+    "description": "Type moléculaire basé sur petique_tome"
+  },
+  {
+    "name": "forme_granque",
+    "type": "concatenation",
+    "components": [
+      "forme",
+      "granque"
+    ],
+    "formula": "{forme}_{granque}",
+    "discovered_frequency": 47.12,
+    "num_attributes": 2,
+    "category": "spatial",
+    "description": "Type moléculaire basé sur forme_granque"
+  },
+  {
+    "name": "granque_tome",
+    "type": "concatenation",
+    "components": [
+      "granque",
+      "tome"
+    ],
+    "formula": "{granque}_{tome}",
+    "discovered_frequency": 45.0,
+    "num_attributes": 2,
+    "category": "temporal_spatial",
+    "description": "Type moléculaire basé sur granque_tome"
+  },
+  {
+    "name": "forme_petique",
+    "type": "concatenation",
+    "components": [
+      "forme",
+      "petique"
+    ],
+    "formula": "{forme}_{petique}",
+    "discovered_frequency": 44.42,
+    "num_attributes": 2,
+    "category": "geometric",
+    "description": "Type moléculaire basé sur forme_petique"
+  },
+  {
+    "name": "engine",
+    "type": "concatenation",
+    "components": [
+      "engine"
+    ],
+    "formula": "{engine}",
+    "discovered_frequency": 44.23,
+    "num_attributes": 1,
+    "category": "mobility",
+    "description": "Type moléculaire basé sur engine"
+  },
+  {
+    "name": "forme_granque_petique",
+    "type": "concatenation",
+    "components": [
+      "forme",
+      "granque",
+      "petique"
+    ],
+    "formula": "{forme}_{granque}_{petique}",
+    "discovered_frequency": 40.38,
+    "num_attributes": 3,
+    "category": "spatial",
+    "description": "Type moléculaire basé sur forme_granque_petique"
+  },
+  {
+    "name": "granque_petique_tome",
+    "type": "concatenation",
+    "components": [
+      "granque",
+      "petique",
+      "tome"
+    ],
+    "formula": "{granque}_{petique}_{tome}",
+    "discovered_frequency": 32.69,
+    "num_attributes": 3,
+    "category": "temporal_spatial",
+    "description": "Type moléculaire basé sur granque_petique_tome"
+  },
+  {
+    "name": "forme_petique_tome",
+    "type": "concatenation",
+    "components": [
+      "forme",
+      "petique",
+      "tome"
+    ],
+    "formula": "{forme}_{petique}_{tome}",
+    "discovered_frequency": 31.54,
+    "num_attributes": 3,
+    "category": "geometric",
+    "description": "Type moléculaire basé sur forme_petique_tome"
+  },
+  {
+    "name": "engine_petique",
+    "type": "concatenation",
+    "components": [
+      "engine",
+      "petique"
+    ],
+    "formula": "{engine}_{petique}",
+    "discovered_frequency": 30.0,
+    "num_attributes": 2,
+    "category": "mobility",
+    "description": "Type moléculaire basé sur engine_petique"
+  },
+  {
+    "name": "engine_forme",
+    "type": "concatenation",
+    "components": [
+      "engine",
+      "forme"
+    ],
+    "formula": "{engine}_{forme}",
+    "discovered_frequency": 28.27,
+    "num_attributes": 2,
+    "category": "geometric_mobility",
+    "description": "Type moléculaire basé sur engine_forme"
+  }
+]

@@ -6,9 +6,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EazzyCalculator - Journal Statistique Avancé</title>
     <script src="assets/js/universal-header.js"></script>
+    <script>
+        const API_BASE = '/api';
+    </script>
     <script src="assets/js/draw-selector-simple.js"></script>
     <link rel="stylesheet" href="assets/css/draw-selector.css">
+    <link rel="stylesheet" href="assets/css/katula-advanced-stats.css">
     <style>
+        /* --- Neuro-Katula Chat Assistant --- */
+        @keyframes chat-pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+            }
+        }
+
+        .chat-attention-seeker {
+            animation: chat-pulse 2s infinite;
+            border: 2px solid #1890ff !important;
+        }
+
+        .chat-assistant-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 10001;
+            overflow: hidden;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: bottom right;
+        }
+
+        .chat-assistant-container.collapsed {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .message.ai {
+            background: #e6f7ff;
+            color: #1e3c72;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid #bae7ff;
+        }
+
+        .message.user {
+            background: #1890ff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            background: white;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .chat-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .action-chip {
+            background: white;
+            border: 1px solid #1890ff;
+            color: #1890ff;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-chip:hover {
+            background: #1890ff;
+            color: white;
+        }
+
+        .collapsed .chat-header h3 span,
+        .collapsed .chat-header .close-btn,
+        .collapsed .chat-messages,
+        .collapsed .chat-input-area {
+            display: none;
+        }
+
+        .collapsed .chat-header {
+            height: 100%;
+            width: 100%;
+            border-radius: 30px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .chat-toggle-icon {
+            font-size: 1.5rem;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -39,14 +225,14 @@
             border-radius: 12px 12px 0 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .header h1 {
             margin: 0 0 10px 0;
             font-size: 2.5rem;
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .header p {
             margin: 0;
             opacity: 0.9;
@@ -96,9 +282,190 @@
             background-color: #40a9ff;
         }
 
+        /* --- Navigation Onglets --- */
+        .tabs-nav {
+            display: flex;
+            gap: 15px;
+            margin: 20px -20px 20px -20px;
+            padding: 0 20px 15px 20px;
+            border-bottom: 2px solid #e8e8e8;
+            background: #fff;
+        }
+
+        .tab-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #d9d9d9;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            background: #1890ff;
+            color: white;
+            border-color: #1890ff;
+            box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #e6f7ff;
+            color: #1890ff;
+            border-color: #91d5ff;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Partial Journal Panel Styles (Side-by-Side) --- */
+        #partialJournalPanel {
+            border: 1px solid #e8e8e8 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .partial-journal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .partial-journal-table th {
+            position: sticky;
+            top: 0;
+            background: #fafafa;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid #ccc;
+            font-weight: 600;
+            color: #333;
+            z-index: 10;
+        }
+
+        .partial-journal-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            vertical-align: middle;
+        }
+
+        .partial-journal-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .period-separator-row td {
+            border-top: 2px solid #ffa39e !important;
+            border-bottom: 2px solid #ffa39e !important;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .row-no-draw {
+            background-color: #fafafa !important;
+            color: #bfbfbf !important;
+            font-style: italic;
+        }
+
+        .row-no-hold {
+            background-color: #fffbe6 !important;
+        }
+
+        /* Badges for Partial Journal */
+        .partial-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .partial-badge-granque {
+            background: #e6f7ff;
+            color: #1890ff;
+            border: 1px solid #91d5ff;
+        }
+
+        .partial-badge-petique {
+            background: #f9f0ff;
+            color: #722ed1;
+            border: 1px solid #d3adf7;
+        }
+
+        .partial-badge-ligne {
+            background: #f0f5ff;
+            color: #2f54eb;
+            border: 1px solid #adc6ff;
+        }
+
+        .partial-badge-colonne {
+            background: #e6fffb;
+            color: #13c2c2;
+            border: 1px solid #87e8de;
+        }
+
+        .partial-badge-chip {
+            background: #fff7e6;
+            color: #fa8c16;
+            border: 1px solid #ffd591;
+        }
+
+        .partial-badge-drawer {
+            background: #fcffe6;
+            color: #a0d911;
+            border: 1px solid #eaff8f;
+        }
+
+        .icon-btn {
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            color: #555;
+            padding: 6px 10px;
+            margin-left: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: #e6f7ff;
+            color: #1890ff;
+            border-color: #1890ff;
+        }
+
         button:disabled {
-            background-color: #ccc;
+            background-color: #f5f5f5 !important;
+            color: #bfbfbf !important;
             cursor: not-allowed;
+            border-color: #d9d9d9 !important;
         }
 
         .journal-table {
@@ -156,12 +523,11 @@
             background-color: #e6f7ff;
         }
 
-        .period-separator {
+        .period-separator td {
             border-top: 3px solid #ff4d4f !important;
-            font-weight: bold;
         }
 
-        .date-separator {
+        .date-separator td {
             border-top: 3px solid #595959 !important;
         }
 
@@ -443,23 +809,18 @@
             opacity: 0.5;
         }
 
-        /* Indicateurs No Draw/No Hold */
-        .no-draw-indicator {
-            font-weight: bold;
-            color: #ff4d4f;
-            background: #fff2f0;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 11px;
-        }
-
+        /* Indicateurs No Draw/No Hold (Standardisés : Blanc sur Fond Rouge) */
+        .no-draw-indicator,
         .no-hold-indicator {
             font-weight: bold;
-            color: #fa8c16;
-            background: #fff7e6;
-            padding: 2px 6px;
-            border-radius: 3px;
+            color: white !important;
+            background: #ff4d4f !important;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-size: 11px;
+            display: inline-block;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(255, 77, 79, 0.3);
         }
 
         .universe-tag {
@@ -490,11 +851,11 @@
             background-color: #fadb14;
             color: #333;
         }
-        
+
         .filter-indicator {
             background: linear-gradient(135deg, #1890ff, #40a9ff);
             color: white;
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: flex;
@@ -502,12 +863,69 @@
             align-items: center;
             box-shadow: 0 4px 15px rgba(24, 144, 255, 0.3);
         }
-        
+
+        /* Styles des Onglets */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1890ff;
+        }
+
+        .tab-btn.active {
+            background: #1890ff;
+            color: white;
+            box-shadow: 0 4px 10px rgba(24, 144, 255, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Styles pour Statistiques Avancées sont maintenant dans assets/css/katula-advanced-stats.css */
+
         .filter-text {
             font-weight: 600;
             font-size: 1.1rem;
         }
-        
+
         .clear-filter-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -518,12 +936,12 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
-        
+
         .clear-filter-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-1px);
         }
-        
+
         .draw-mode-toggle {
             background: rgba(255, 255, 255, 0.95);
             border: 2px solid #1890ff;
@@ -532,14 +950,14 @@
             margin: 20px 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .toggle-label {
             display: flex;
             flex-direction: column;
             gap: 8px;
             cursor: pointer;
         }
-        
+
         .toggle-text {
             display: flex;
             align-items: center;
@@ -548,20 +966,20 @@
             color: #1890ff;
             font-size: 1.1rem;
         }
-        
+
         .toggle-hint {
             color: #666;
             font-style: italic;
             margin-left: 30px;
         }
-        
+
         .toggle-label input[type="checkbox"] {
             width: 20px;
             height: 20px;
             accent-color: #1890ff;
             cursor: pointer;
         }
-        
+
         /* Modal Historique des Tirages */
         .draw-history-modal {
             position: fixed;
@@ -574,7 +992,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal-overlay {
             position: absolute;
             top: 0;
@@ -584,7 +1002,7 @@
             background: rgba(0, 0, 0, 0.7);
             cursor: pointer;
         }
-        
+
         .modal-content {
             background: white;
             border-radius: 15px;
@@ -596,7 +1014,7 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .modal-header {
             background: linear-gradient(135deg, #1890ff, #40a9ff);
             color: white;
@@ -605,12 +1023,12 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .modal-header h3 {
             margin: 0;
             font-size: 1.5rem;
         }
-        
+
         .modal-close {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -620,13 +1038,13 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        
+
         .modal-body {
             padding: 20px;
             max-height: 60vh;
             overflow-y: auto;
         }
-        
+
         .draws-summary {
             background: #f0f9ff;
             border: 1px solid #1890ff;
@@ -637,28 +1055,28 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-        
+
         .summary-item {
             display: flex;
             justify-content: space-between;
         }
-        
+
         .summary-label {
             font-weight: 600;
             color: #1890ff;
         }
-        
+
         .summary-value {
             font-weight: 700;
             color: #333;
         }
-        
+
         .draws-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        
+
         .draw-item {
             border: 2px solid #e6f7ff;
             border-radius: 10px;
@@ -666,12 +1084,12 @@
             background: #fafafa;
             transition: all 0.3s ease;
         }
-        
+
         .draw-item:hover {
             border-color: #1890ff;
             box-shadow: 0 4px 15px rgba(24, 144, 255, 0.1);
         }
-        
+
         .draw-header {
             display: flex;
             justify-content: space-between;
@@ -680,13 +1098,13 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #e6f7ff;
         }
-        
+
         .draw-date {
             font-weight: 700;
             color: #1890ff;
             font-size: 1.1rem;
         }
-        
+
         .draw-period {
             background: #722ed1;
             color: white;
@@ -694,30 +1112,30 @@
             border-radius: 4px;
             font-size: 0.9rem;
         }
-        
+
         .draw-details {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 10px;
         }
-        
+
         .draw-info {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-        
+
         .info-label {
             font-size: 0.9rem;
             color: #666;
             font-weight: 500;
         }
-        
+
         .info-value {
             font-weight: 600;
             color: #333;
         }
-        
+
         .winning-numbers {
             background: linear-gradient(135deg, #ffd700, #ffed4e);
             color: #333;
@@ -726,7 +1144,7 @@
             font-family: 'Orbitron', monospace;
             letter-spacing: 1px;
         }
-        
+
         .modal-footer {
             background: #f8f9fa;
             padding: 15px 20px;
@@ -735,7 +1153,7 @@
             gap: 10px;
             border-top: 1px solid #e9ecef;
         }
-        
+
         .modal-btn {
             background: #1890ff;
             color: white;
@@ -746,12 +1164,12 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .modal-btn:hover {
             background: #40a9ff;
             transform: translateY(-1px);
         }
-        
+
         .history-btn {
             background: linear-gradient(135deg, #722ed1, #9c88ff);
             color: white;
@@ -770,31 +1188,133 @@
             text-align: center;
             line-height: 1.2;
         }
-        
+
         .history-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(114, 46, 209, 0.4);
         }
-        
+
         .history-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-        
+
+        /* Styles de pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-info {
+            font-weight: 600;
+            color: #1890ff;
+            margin: 0 15px;
+            font-size: 0.95rem;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            background: white;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #e6f7ff;
+            border-color: #1890ff;
+            color: #1890ff;
+            transform: translateY(-1px);
+        }
+
+        .pagination-btn.active {
+            background: #1890ff;
+            color: white;
+            border-color: #1890ff;
+            font-weight: 700;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-ellipsis {
+            padding: 8px 4px;
+            color: #999;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .modal-content {
                 width: 95%;
                 max-height: 90vh;
             }
-            
+
             .draws-summary {
                 grid-template-columns: 1fr;
             }
-            
+
             .draw-details {
                 grid-template-columns: 1fr;
+            }
+
+            .pagination-container {
+                flex-wrap: wrap;
+            }
+
+            .pagination-btn {
+                padding: 6px 10px;
+                min-width: 35px;
+                font-size: 13px;
+            }
+        }
+
+        /* Déjà géré par les classes unifiées plus haut */
+
+        .placeholder-indicator {
+            background-color: #faad14;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 10px;
+            display: inline-block;
+            animation: pulse-placeholder 2s infinite;
+        }
+
+        @keyframes pulse-placeholder {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 1;
             }
         }
     </style>
@@ -807,7 +1327,7 @@
             <h1>📋 Journal Statistique Avancé</h1>
             <p>Analyse des redondances avec périodicité et filtres avancés</p>
         </div>
-        
+
         <!-- Activation sélecteur de tirage -->
         <div class="draw-mode-toggle">
             <label class="toggle-label">
@@ -816,17 +1336,15 @@
                 <small class="toggle-hint">Cochez pour analyser des tirages précis au lieu de toute la session</small>
             </label>
         </div>
-        
+
         <!-- Sélecteur de tirage -->
         <div id="draw-selector-container" style="display: none;"></div>
 
         <!-- Barre de navigation -->
         <div class="navigation-bar">
             <h4 style="margin: 0 0 10px 0; color: #1890ff;">🧭 Navigation</h4>
-            <a href="test-interface.html" class="nav-button">🎲 Interface Simple</a>
-            <a href="smart-input.html" class="nav-button">🔄 Sessions Cycliques</a>
-            <a href="advanced-journal.html" class="nav-button active">📋 Journal Avancé</a>
-            <button onclick="showDrawHistory()" style="background: #722ed1; color: white; border: none; padding: 12px 20px; margin: 0 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">📅 HISTORIQUE TIRAGES</button>
+            <!-- Journal Avancé est la page actuelle -->
+            <span class="nav-button active" style="cursor: default;">📋 Journal Avancé</span>
         </div>
 
         <div class="filters">
@@ -838,57 +1356,71 @@
             </div>
 
             <div class="filter-group">
-                <label for="universe">Univers:</label>
-                <select id="universe">
+                <label for="universe">🌍 Sélection Univers:</label>
+                <select id="universe" style="display: none;">
                     <option value="mundo" selected>Mundo</option>
                     <option value="fruity">Fruity</option>
                     <option value="trigga">Trigga</option>
                     <option value="roaster">Roaster</option>
                     <option value="sunshine">Sunshine</option>
                 </select>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button onclick="forceUniverse('mundo')"
+                        style="padding: 10px 16px; font-size: 13px; font-weight: bold; background: #52c41a; border-radius: 6px; box-shadow: 0 2px 8px rgba(82,196,26,0.3);">🌎
+                        Mundo</button>
+                    <button onclick="forceUniverse('fruity')"
+                        style="padding: 10px 16px; font-size: 13px; font-weight: bold; background: #fa8c16; border-radius: 6px; box-shadow: 0 2px 8px rgba(250,140,22,0.3);">🍊
+                        Fruity</button>
+                    <button onclick="forceUniverse('trigga')"
+                        style="padding: 10px 16px; font-size: 13px; font-weight: bold; background: #eb2f96; border-radius: 6px; box-shadow: 0 2px 8px rgba(235,47,150,0.3);">⚡
+                        Trigga</button>
+                    <button onclick="forceUniverse('roaster')"
+                        style="padding: 10px 16px; font-size: 13px; font-weight: bold; background: #722ed1; border-radius: 6px; box-shadow: 0 2px 8px rgba(114,46,209,0.3);">🔥
+                        Roaster</button>
+                    <button onclick="forceUniverse('sunshine')"
+                        style="padding: 10px 16px; font-size: 13px; font-weight: bold; background: #fadb14; color: #333; border-radius: 6px; box-shadow: 0 2px 8px rgba(250,219,20,0.3);">☀️
+                        Sunshine</button>
+                </div>
             </div>
 
             <div class="filter-group">
                 <label for="periodicity">Périodicité (tirages/période):</label>
-                <select id="periodicity">
-                    <option value="1">1 tirage</option>
-                    <option value="2">2 tirages</option>
-                    <option value="3" selected>3 tirages</option>
-                    <option value="4">4 tirages</option>
-                    <option value="5">5 tirages</option>
-                    <option value="6">6 tirages</option>
-                    <option value="10">10 tirages</option>
-                </select>
+                <input type="number" id="periodicity" min="1" value="7" style="width: 80px;">
             </div>
 
             <div class="filter-group">
-                <label for="startDate">Date début:</label>
-                <input type="date" id="startDate">
+                <label for="startDate">📅 Date début: <small style="color: #52c41a; font-weight: bold;">✓
+                        Auto-rempli</small></label>
+                <input type="date" id="startDate" onchange="onDateRangeChange()" style="border: 2px solid #52c41a;">
             </div>
 
             <div class="filter-group">
-                <label for="endDate">Date fin:</label>
-                <input type="date" id="endDate">
+                <label for="endDate">📅 Date fin: <small style="color: #52c41a; font-weight: bold;">✓
+                        Auto-rempli</small></label>
+                <input type="date" id="endDate" onchange="onDateRangeChange()" style="border: 2px solid #52c41a;">
             </div>
 
             <div class="filter-group">
-                <label for="periodStart">Période début:</label>
-                <input type="number" id="periodStart" min="1" placeholder="Ex: 1">
+                <label for="periodStart">🔢 Période début: <small style="color: #52c41a; font-weight: bold;">✓
+                        Auto-rempli</small></label>
+                <input type="number" id="periodStart" min="1" placeholder="Ex: 1" style="border: 2px solid #52c41a;">
             </div>
 
             <div class="filter-group">
-                <label for="periodEnd">Période fin:</label>
-                <input type="number" id="periodEnd" min="1" placeholder="Ex: 10">
+                <label for="periodEnd">🔢 Période fin: <small style="color: #52c41a; font-weight: bold;">✓
+                        Auto-rempli</small></label>
+                <input type="number" id="periodEnd" min="1" placeholder="Ex: 10" style="border: 2px solid #52c41a;">
             </div>
 
             <div class="filter-group" style="align-self: end;">
                 <button onclick="loadJournal()" id="loadBtn">Charger le Journal</button>
                 <button onclick="exportJournal()" id="exportBtn" class="export-btn" disabled>Exporter CSV</button>
+                <button onclick="syncSessionSchedule()" id="syncSessionBtn"
+                    style="background: #722ed1; color: white; border-color: #722ed1;" disabled>🔄 Synchroniser
+                    Tirages</button>
             </div>
-            
-            <div class="filter-group" style="align-self: end;">
-                <button onclick="showDrawHistory()" id="historyBtn" style="background-color: #722ed1; color: white; padding: 12px 20px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">📅 HISTORIQUE TIRAGES</button>
-            </div>
+
+
         </div>
 
         <div id="sessionInfo" class="session-info" style="display: none;">
@@ -896,19 +1428,141 @@
             <div id="sessionDetails"></div>
         </div>
 
-        <div id="statsContainer"></div>
-        <div id="journalContainer"></div>
+        <!-- Navigation Onglets -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('journal')">📝 Journal Détaillé</button>
+            <button class="tab-btn" onclick="switchTab('stats')">📊 Statistiques Avancées</button>
+        </div>
+
+        <!-- Contenu Onglet Journal -->
+        <div id="tab-journal" class="tab-content active">
+            <div id="statsContainer" style="display:none;"></div> <!-- Hide old container -->
+            <div id="journalContainer"></div>
+        </div>
+
+        <!-- Contenu Onglet Stats -->
+        <div id="tab-stats" class="tab-content">
+            <div class="filters" style="grid-template-columns: 1fr 3fr;">
+                <div class="filter-group">
+                    <label for="statsAttribute">Analyser l'attribut :</label>
+                    <div style="display: flex; align-items: center;">
+                        <select id="statsAttribute" onchange="onAttributeChange(this.value)" style="flex: 1;">
+                            <option value="">Choisir un attribut...</option>
+                            <option value="denomination">Dénomination</option>
+                            <option value="alpha_ranking">Alpha Ranking</option>
+                            <option value="granque">Granque</option>
+                            <option value="petique">Petique</option>
+                            <option value="ligne">Ligne</option>
+                            <option value="colonne">Colonne</option>
+                            <option value="parite">Parité</option>
+                            <option value="unidos">Unidos</option>
+                            <option value="region">Région</option>
+                            <option value="quartier">Quartier</option>
+                            <option value="gentile">Gentilé</option>
+                            <option value="chip">Chip</option>
+                            <option value="drawer">Drawer</option>
+                            <option value="forme">Forme</option>
+                            <option value="engine">Engine</option>
+                            <option value="beastie">Beastie</option>
+                            <option value="tome">Tome</option>
+                        </select>
+                        <select id="statsValue" onchange="onValueChange(this.value)"
+                            style="flex: 1; margin: 0 10px; display: none;">
+                            <option value="">Toutes les valeurs</option>
+                        </select>
+                        <button class="icon-btn" title="Voir le Journal Partiel"
+                            onclick="showPartialJournal(document.getElementById('statsAttribute').value)">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-layout" style="display: flex; gap: 20px; align-items: flex-start;">
+                <div id="advancedStatsContainer" style="flex: 1; min-width: 0;">
+                    <!-- Advanced Overdue Stats Section -->
+
+                    <!-- Old stats container (existing functionality) -->
+                    <div class="empty-state">
+                        <p>Sélectionnez une session et un attribut pour voir les statistiques.</p>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side Partial Journal Panel -->
+                <div id="partialJournalPanel"
+                    style="flex: 1; display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); min-width: 0; position: sticky; top: 20px; max-height: 85vh; display: flex; flex-direction: column;">
+                    <div class="panel-header"
+                        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee;">
+                        <h3 id="partialJournalTitle"
+                            style="margin:0; font-size:1.1rem; color:#1e3c72; display:flex; align-items:center; gap:8px;">
+                            <span>📋 Journal Partiel</span>
+                        </h3>
+                        <button onclick="closePartialJournal()"
+                            style="background:none; border:none; color:#999; cursor:pointer; font-size:1.5rem; line-height:1; padding:0 5px;">×</button>
+                    </div>
+                    <div class="panel-body" style="flex: 1; overflow-y: auto;">
+                        <table class="partial-journal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">Pér.</th>
+                                    <th style="width: 80px;">Date</th>
+                                    <th>Loterie</th>
+                                    <th id="partialAttrHeader">Valeur</th>
+                                    <th style="width: 60px; text-align: center;">Évol.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="partialJournalBody">
+                                <!-- Content loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api';
-        let currentJournalData = null;
+
+        window.currentJournalData = null;
         let availableSessions = [];
+        let pariteMapping = {};
+        let unidosMapping = {};
+
+        // --- UTILS : Gestion des dates robustes (Fix Regression) ---
+        function safeParseDate(dateStr) {
+            if (!dateStr) return new Date(0);
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? new Date(0) : d;
+        }
+
+        function formatDateForComparison(date) {
+            if (!date) return '';
+            const d = new Date(date);
+            return d.toISOString().split('T')[0];
+        }
+
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('fr-FR');
+        }
+
+        // Variables de pagination
+        window.paginationState = {
+            currentPage: 1,
+            itemsPerPage: 100,
+            totalItems: 0,
+            totalPages: 0
+        };
+
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function () {
             console.log('📥 Initialisation du journal avancé...');
-            
+            console.log('API_BASE:', API_BASE);
+            console.log('sessionSelect element:', document.getElementById('sessionSelect'));
+
             // Injecter le header universel
             if (typeof UniversalHeader !== 'undefined') {
                 UniversalHeader.injectHeader('header-container', 'advanced-journal', {
@@ -928,67 +1582,171 @@
             const urlParams = new URLSearchParams(window.location.search);
             const sessionParam = urlParams.get('session');
             const universeParam = urlParams.get('universe');
-            
-            if (universeParam) {
-                document.getElementById('universe').value = universeParam;
+            const analysisParam = urlParams.get('analysis');
+
+            // Handle analysis=true by switching to stats tab
+            if (analysisParam === 'true') {
+                console.log('📊 Analyse demandée via URL, basculement vers onglet statistiques');
+                setTimeout(() => {
+                    switchTab('stats');
+                }, 1000); // Petit délai pour laisser le temps au chargement initial
             }
 
+            // NE PAS réinitialiser universe depuis l'URL - laisser l'utilisateur choisir
+            // if (universeParam) {
+            //     document.getElementById('universe').value = universeParam;
+            // }
+
+            // Si analysis=true, le chargement sera déclenché après loadSessions()
+            if (analysisParam === 'true' && sessionParam) {
+                console.log('⌛ Chargement auto planifié après population des sessions');
+            }
+
+            // Charger les mappings parite/unidos
+            fetch(`${API_BASE}/journal/mappings`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        pariteMapping = data.parite;
+                        unidosMapping = data.unidos;
+                        console.log('✅ Mappings chargés:', {
+                            parite: Object.keys(pariteMapping).length,
+                            unidos: Object.keys(unidosMapping).length
+                        });
+                    }
+                })
+                .catch(err => console.error('❌ Erreur chargement mappings:', err));
+
             // Charger les sessions disponibles
-            loadSessions().then(() => {
+            console.log('Appel de loadSessions()...');
+            loadSessions().then((sessions) => {
+                console.log('loadSessions() terminé, sessions:', sessions);
+
+                const sessionSelect = document.getElementById('sessionSelect');
+
                 // Si une session est spécifiée dans l'URL, la sélectionner
                 if (sessionParam) {
-                    const sessionSelect = document.getElementById('sessionSelect');
                     sessionSelect.value = sessionParam;
-                    onSessionChange();
-                    
-                    // Charger automatiquement le journal
-                    setTimeout(() => {
-                        loadJournal();
-                    }, 1000);
+                    console.log(`📌 Session chargée depuis URL: ${sessionParam}`);
+                    loadJournal();
                 }
+                // Suppression de la sélection automatique de la dernière session
+
+                // S'assurer que les infos de session sont mises à jour
+                onSessionChange();
+
+            }).catch(error => {
+                console.error('Erreur lors du chargement des sessions:', error);
             });
 
             // Ajouter un listener pour le changement de session
             document.getElementById('sessionSelect').addEventListener('change', onSessionChange);
-            
+
             // Injecter le sélecteur de tirage (masqué par défaut)
             initDrawSelector('draw-selector-container');
-            
+
             // Stocker les informations de session pour validation
             window.sessionDateRange = null;
-            
+
             // Écouter les changements de sélection de tirage
-            document.addEventListener('drawSelectionChanged', function(event) {
+            document.addEventListener('drawSelectionChanged', function (event) {
                 console.log('🎯 Sélection de tirage changée:', event.detail);
                 // Stocker la sélection pour utilisation dans loadJournal
                 window.currentDrawSelection = event.detail;
                 // Mettre à jour les filtres selon la sélection
-                if (event.detail.universe) {
-                    document.getElementById('universe').value = event.detail.universe;
-                }
+                // DÉSACTIVÉ: Ne pas réinitialiser le select universe depuis l'événement
+                // if (event.detail.universe) {
+                //     document.getElementById('universe').value = event.detail.universe;
+                // }
                 // Recharger automatiquement le journal
                 setTimeout(() => loadJournal(), 500);
             });
+
+            // GESTION AGRESSIVE DU PARAMETRE ANALYSIS
+            if (analysisParam === 'true') {
+                console.log('🚀 MODE ANALYSE ACTIF (URL Param)');
+
+                // 1. Forcer l'onglet stats tout de suite
+                switchTab('stats');
+
+                // 2. Attendre que le chargement initial des sessions soit fait
+                const checkReady = setInterval(() => {
+                    const sessionSelect = document.getElementById('sessionSelect');
+                    if (sessionSelect && sessionSelect.options.length > 1) {
+                        clearInterval(checkReady);
+                        console.log('✅ Sessions prêtes, démarrage analyse...');
+                        if (sessionParam) sessionSelect.value = sessionParam;
+                        loadJournal();
+                    }
+                }, 500);
+
+                // Sécurité
+                setTimeout(() => clearInterval(checkReady), 10000);
+            }
         });
 
         async function loadSessions() {
             const sessionSelect = document.getElementById('sessionSelect');
-            
-            // Utiliser directement des sessions de test
-            const testSessions = [
-                { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français', universe: 'mundo', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 5, total_draws: 21 },
-                { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions', universe: 'fruity', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 12, total_draws: 21 },
-                { id: 12, name: 'Session Test - Loto US', is_active: false, lottery_type: 'Loto US', universe: 'trigga', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 8, total_draws: 21 }
-            ];
-            
-            availableSessions = testSessions;
-            populateSessionSelect(testSessions);
-            
-            // Sélectionner la première session active
-            const activeSession = testSessions.find(s => s.is_active);
-            if (activeSession) {
-                document.getElementById('sessionSelect').value = activeSession.id;
-                onSessionChange();
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'block';
+                loadingIndicator.textContent = 'Chargement des sessions...';
+            }
+
+            try {
+                console.log('🔄 Chargement sessions depuis work_sessions...');
+                const response = await fetch(`${API_BASE}/unified/session/sessions`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Données work_sessions:', data);
+
+                const sessions = data.sessions || data.value || [];
+
+                if (!Array.isArray(sessions)) {
+                    throw new Error('Format invalide: pas de tableau de sessions');
+                }
+
+                console.log(`✅ ${sessions.length} sessions work_sessions récupérées`);
+
+                availableSessions = sessions;
+                populateSessionSelect(sessions);
+
+                // Suppression de l'auto-sélection de la session active
+
+                return sessions;
+
+            } catch (error) {
+                console.error('❌ Erreur chargement work_sessions:', error);
+
+                // Fallback vers données de test
+                console.log('⚠️ Utilisation données de test');
+                const testSessions = [
+                    { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français', universe: 'mundo', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 5, total_draws: 21 },
+                    { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions', universe: 'fruity', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 12, total_draws: 21 },
+                    { id: 12, name: 'Session Test - Loto US', is_active: false, lottery_type: 'Loto US', universe: 'trigga', start_date: '2024-01-01', end_date: '2024-12-31', current_draw: 8, total_draws: 21 }
+                ];
+
+                availableSessions = testSessions;
+                populateSessionSelect(testSessions);
+
+                if (testSessions.length > 0) {
+                    sessionSelect.value = testSessions[0].id;
+                    onSessionChange();
+                }
+
+                return testSessions;
+            } finally {
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
             }
         }
 
@@ -1001,20 +1759,18 @@
             console.log('🧹 Dropdown nettoyé');
 
             sessions.forEach((session, index) => {
-                console.log(`➕ Ajout session ${index + 1}: ID${session.id} - ${session.name}`);
+                const sId = session.uuid || session.id;
+                console.log(`➕ Ajout session ${index + 1}: ID/UUID ${sId} - ${session.name}`);
                 const option = document.createElement('option');
-                option.value = session.id;
-                
+                option.value = sId;
+
                 // Utiliser is_active au lieu de status
                 const status = session.is_active ? 'Active' : 'Inactive';
                 const displayText = `${session.name} (${session.lottery_type || 'N/A'}) - ${status}`;
                 option.textContent = displayText;
-                
-                // Marquer comme sélectionné si c'est la session active
-                if (session.is_active) {
-                    option.selected = true;
-                }
-                
+
+                // Suppression de l'option selected automatique
+
                 select.appendChild(option);
             });
 
@@ -1022,7 +1778,85 @@
             console.log(`📊 Total options dans select: ${select.options.length}`);
         }
 
-        function onSessionChange() {
+        window.switchTab = function (tabId) {
+            console.log(`📑 [SWITCH-TAB] Basculement vers: ${tabId}`);
+            try {
+                // Masquer tous les contenus
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                // Désactiver tous les boutons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+                // Activer cible
+                const target = document.getElementById(`tab-${tabId}`);
+                if (target) {
+                    target.classList.add('active');
+                } else {
+                    console.error(`❌ [SWITCH-TAB] Contenu tab-${tabId} non trouvé`);
+                }
+
+                // Activer bouton (index-based pour robustesse)
+                const btns = document.querySelectorAll('.tab-btn');
+                if (tabId === 'journal' && btns[0]) btns[0].classList.add('active');
+                if (tabId === 'stats' && btns[1]) btns[1].classList.add('active');
+
+                console.log(`✅ [SWITCH-TAB] Basculement vers ${tabId} terminé`);
+            } catch (e) {
+                console.error(`❌ [SWITCH-TAB] Erreur:`, e);
+            }
+        };
+
+        // Synchroniser le planning de la session (générer les tirages manquants)
+        async function syncSessionSchedule() {
+            const sessionSelect = document.getElementById('sessionSelect');
+            const sessionId = sessionSelect ? sessionSelect.value : null;
+
+            if (!sessionId) {
+                showToast('Veuillez sélectionner une session d\'abord');
+                return;
+            }
+
+            try {
+                const syncBtn = document.getElementById('syncSessionBtn');
+                if (syncBtn) {
+                    syncBtn.disabled = true;
+                    syncBtn.textContent = '⏳ Synchronisation...';
+                }
+
+                const response = await fetch(`${API_BASE}/unified/session/sessions/${sessionId}/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const message = result.created > 0
+                        ? `✅ ${result.created} nouveau(x) tirage(s) créé(s) (Total: ${result.total})`
+                        : `ℹ️ Planning déjà à jour (${result.existing} tirages existants)`;
+
+                    showToast(message, 5000);
+
+                    // Optionnel: recharger le journal si des tirages ont été créés
+                    if (result.created > 0) {
+                        console.log('🔄 Nouveaux tirages créés, rechargement recommandé');
+                        showToast('💡 Cliquez sur "Charger le Journal" pour voir les nouveaux tirages', 6000);
+                    }
+                } else {
+                    const error = await response.json();
+                    showToast('❌ Erreur synchronisation: ' + (error.detail || 'Erreur inconnue'), 5000);
+                }
+            } catch (error) {
+                console.error('❌ Erreur synchronisation:', error);
+                showToast('❌ Erreur de connexion: ' + error.message, 5000);
+            } finally {
+                const syncBtn = document.getElementById('syncSessionBtn');
+                if (syncBtn) {
+                    syncBtn.disabled = false;
+                    syncBtn.textContent = '🔄 Synchroniser Tirages';
+                }
+            }
+        }
+
+        async function onSessionChange() {
             const sessionId = document.getElementById('sessionSelect').value;
             console.log(`🔄 Session changée: ${sessionId}`);
 
@@ -1030,13 +1864,207 @@
                 const session = availableSessions.find(s => s.id == sessionId);
                 if (session) {
                     console.log(`✅ Session trouvée: ${session.name}`);
+                    // Charger la session complète pour avoir tous les champs (cycle_length, etc.)
+                    try {
+                        const fullResponse = await fetch(`${API_BASE}/unified/sessions/${sessionId}`);
+                        if (fullResponse.ok) {
+                            const fullData = await fullResponse.json();
+                            const fullSession = fullData.session || fullData;
+                            Object.assign(session, fullSession); // Fusionner les détails
+                            console.log(`📡 Session complète récupérée (Périodicité: ${session.cycle_length})`);
+                        }
+                    } catch (e) {
+                        console.warn('⚠️ Impossible de récupérer les détails complets, utilisation du cache', e);
+                    }
+
                     displaySessionInfo(session);
+                    loadSessionDrawHistory(sessionId);
+
+                    // Auto-remplir dates, périodicité et autres détails
+                    await autoFillSessionDetails(sessionId, session);
+
+                    // Activer le bouton de synchronisation
+                    const syncBtn = document.getElementById('syncSessionBtn');
+                    if (syncBtn) syncBtn.disabled = false;
                 } else {
                     console.log(`❌ Session non trouvée dans availableSessions`);
                 }
             } else {
                 console.log('🚫 Aucune session sélectionnée');
                 hideSessionInfo();
+                // Désactiver le bouton de synchronisation
+                const syncBtn = document.getElementById('syncSessionBtn');
+                if (syncBtn) syncBtn.disabled = true;
+            }
+        }
+
+        async function autoFillSessionDetails(sessionId, session) {
+            try {
+                // Préparer helper pour formater en YYYY-MM-DD pour les inputs
+                function formatToInput(dateStr) {
+                    if (!dateStr) return '';
+                    try {
+                        const d = new Date(dateStr);
+                        if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+                    } catch (e) { }
+                    // essayer de parser DD/MM/YYYY ou DD-MM-YYYY
+                    const m1 = dateStr.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                    if (m1) return `${m1[3]}-${m1[2].padStart(2, '0')}-${m1[1].padStart(2, '0')}`;
+                    const m2 = dateStr.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+                    if (m2) return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
+                    return dateStr;
+                }
+
+                // Si la session contient déjà des dates (stockées en base), les utiliser en priorité
+                const useSessionDates = !!(session && session.start_date && session.end_date);
+                if (useSessionDates) {
+                    const startDateInput = document.getElementById('startDate');
+                    const endDateInput = document.getElementById('endDate');
+                    const startVal = formatToInput(session.start_date);
+                    const endVal = formatToInput(session.end_date);
+                    if (startDateInput) startDateInput.value = startVal;
+                    if (endDateInput) endDateInput.value = endVal;
+
+                    // Mettre à jour la plage de session stockée
+                    window.sessionDateRange = {
+                        start: startVal,
+                        end: endVal,
+                        name: session.name
+                    };
+                    console.log(`📅 Dates session (BD) utilisées: ${startVal} → ${endVal}`);
+                }
+
+                // Récupérer les tirages de la session (pour comptages et périodicité)
+                const response = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                if (!response.ok) {
+                    console.log('⚠️ Impossible de récupérer les tirages');
+                    return;
+                }
+
+                const draws = await response.json();
+
+                // Trier par date décroissante (plus récent en haut)
+                draws.sort((a, b) => new Date(b.draw_date) - new Date(a.draw_date));
+
+                if (draws.length > 0) {
+                    // Date la plus récente = premier élément
+                    const latestDate = draws[0].draw_date;
+                    // Date la plus ancienne = dernier élément
+                    const oldestDate = draws[draws.length - 1].draw_date;
+
+                    // Extraire uniquement YYYY-MM-DD (sans l'heure)
+                    const oldestDateOnly = oldestDate.split('T')[0];
+                    const latestDateOnly = latestDate.split('T')[0];
+
+                    // Auto-remplir les dates (format YYYY-MM-DD pour input type="date")
+                    const startDateInput = document.getElementById('startDate');
+                    const endDateInput = document.getElementById('endDate');
+
+                    // Si les dates ont déjà été définies depuis la session (BD), ne pas écraser
+                    if (!useSessionDates) {
+                        // Forcer la mise à jour avec un délai pour éviter les problèmes de cache
+                        setTimeout(() => {
+                            if (startDateInput) {
+                                startDateInput.value = oldestDateOnly;
+                                console.log(`📅 Date début remplie depuis tirages: ${oldestDateOnly} (valeur actuelle: ${startDateInput.value})`);
+                            }
+                            if (endDateInput) {
+                                endDateInput.value = latestDateOnly;
+                                console.log(`📅 Date fin remplie depuis tirages: ${latestDateOnly} (valeur actuelle: ${endDateInput.value})`);
+                            }
+                        }, 100);
+
+                        // Mettre à jour aussi la plage de session stockée
+                        window.sessionDateRange = {
+                            start: oldestDateOnly,
+                            end: latestDateOnly,
+                            name: session.name
+                        };
+                    } else {
+                        console.log('ℹ️ Dates session déjà définies depuis la BD, tirages non utilisés pour remplir les inputs');
+                    }
+
+                    // Auto-remplir la périodicité depuis la configuration de session (cycle_length)
+                    // Priorité absolue selon feedback utilisateur
+                    let periodicite = session.cycle_length || session.total_draws || 7;
+
+                    if (!session.cycle_length && session.lottery_schedule) {
+                        try {
+                            const schedule = typeof session.lottery_schedule === 'string' ?
+                                JSON.parse(session.lottery_schedule) : session.lottery_schedule;
+                            periodicite = schedule.length > 0 ? schedule.length : 7;
+                        } catch (e) {
+                            periodicite = 7;
+                        }
+                    }
+
+                    const periodicityInput = document.getElementById('periodicity');
+                    if (periodicityInput) {
+                        periodicityInput.value = periodicite.toString();
+                        console.log(`🔢 Périodicité auto-remplie depuis session (cycle_length): ${periodicite}`);
+                    }
+
+                    // Calculer et remplir les périodes
+                    const totalPeriods = Math.ceil(draws.length / periodicite);
+                    const periodStartInput = document.getElementById('periodStart');
+                    const periodEndInput = document.getElementById('periodEnd');
+
+                    if (periodStartInput) {
+                        periodStartInput.value = '1';
+                        console.log(`📊 Période début remplie: 1`);
+                    }
+                    if (periodEndInput) {
+                        periodEndInput.value = totalPeriods.toString();
+                        console.log(`📊 Période fin remplie: ${totalPeriods}`);
+                    }
+
+                    console.log(`✅ Détails auto-remplis: ${oldestDate} → ${latestDate}, périodicité: ${periodicite}, périodes: 1-${totalPeriods}`);
+
+                    // Mettre à jour l'affichage dans la section info
+                    const workPeriodRange = document.getElementById('workPeriodRange');
+                    if (workPeriodRange) {
+                        workPeriodRange.textContent = `P1 → P${totalPeriods} (${totalPeriods} périodes)`;
+                    }
+
+                    const sessionDateRangeDisplay = document.getElementById('sessionDateRangeDisplay');
+                    if (sessionDateRangeDisplay) {
+                        sessionDateRangeDisplay.textContent = `${formatDateDisplay(oldestDateOnly)} → ${formatDateDisplay(latestDateOnly)}`;
+                    }
+
+                    const sessionDrawCountDisplay = document.getElementById('sessionDrawCountDisplay');
+                    if (sessionDrawCountDisplay) {
+                        sessionDrawCountDisplay.textContent = `${draws.length} tirages enregistrés`;
+                    }
+
+                    showNotification(`📅 ${draws.length} tirages trouvés (${formatDateDisplay(oldestDateOnly)} → ${formatDateDisplay(latestDateOnly)}) - ${totalPeriods} périodes`, 'success');
+                } else {
+                    console.log('⚠️ Aucun tirage dans cette session');
+                    // Réinitialiser les champs
+                    document.getElementById('startDate').value = '';
+                    document.getElementById('endDate').value = '';
+                    document.getElementById('periodStart').value = '';
+                    document.getElementById('periodEnd').value = '';
+                    showNotification('⚠️ Aucun tirage trouvé dans cette session', 'info');
+                }
+            } catch (error) {
+                console.error('❌ Erreur auto-remplissage détails:', error);
+                showNotification('❌ Erreur lors du chargement des détails', 'error');
+            }
+        }
+
+        function updateWorkPeriodRange(totalDraws) {
+            const periodicity = window.currentSessionPeriodicity || 3;
+            const totalPeriods = Math.ceil(totalDraws / periodicity);
+
+            const workPeriodElement = document.getElementById('workPeriodRange');
+            if (workPeriodElement) {
+                if (totalPeriods > 0) {
+                    workPeriodElement.textContent = `P1 → P${totalPeriods} (${totalPeriods} périodes)`;
+                    workPeriodElement.style.color = '#1890ff';
+                } else {
+                    workPeriodElement.textContent = 'Aucune période';
+                    workPeriodElement.style.color = '#999';
+                }
             }
         }
 
@@ -1045,12 +2073,43 @@
             const sessionInfo = document.getElementById('sessionInfo');
             const sessionDetails = document.getElementById('sessionDetails');
 
-            const status = session.status === 'active' ? 'Active' : 'Inactive';
-            
-            // Définir la plage de dates de la session (exemple)
-            const sessionStartDate = session.start_date || '2024-01-01';
-            const sessionEndDate = session.end_date || '2024-12-31';
-            
+            // Statut intelligent basé sur le concept d'intermittence
+            let statusText = '🟢 En cours';
+            let statusColor = '#52c41a';
+            if (session.is_active) {
+                statusText = '🟢 Sélectionnée (En cours d\'analyse)';
+                statusColor = '#52c41a';
+            } else {
+                statusText = '🟡 Disponible (Peut être reprise)';
+                statusColor = '#faad14';
+            }
+            const status = statusText;
+
+            // Calculer la périodicité (Priorité totale à cycle_length)
+            const periodicite = Number(session.cycle_length) || session.total_draws || (session.lottery_schedule ? (typeof session.lottery_schedule === 'string' ? JSON.parse(session.lottery_schedule).length : session.lottery_schedule.length) : 7);
+            const periodiciteText = `${periodicite} tirages/période`;
+            let schedule = [];
+            if (session.lottery_schedule) {
+                try {
+                    schedule = typeof session.lottery_schedule === 'string' ? JSON.parse(session.lottery_schedule) : session.lottery_schedule;
+                } catch (e) { }
+            }
+            const planningText = schedule.map(s => s.name).join(', ') || 'Aucun planning';
+
+            // Stocker la périodicité pour calculs ultérieurs
+            window.currentSessionPeriodicity = periodicite;
+
+            // Auto-remplir le champ de périodicité dans les filtres
+            const periodicityInput = document.getElementById('periodicity');
+            if (periodicityInput) {
+                periodicityInput.value = periodicite.toString();
+                console.log(`✅ Périodicité auto-remplie dans filtres: ${periodicite}`);
+            }
+
+            // Dates de session
+            const sessionStartDate = session.start_date || 'Non définie';
+            const sessionEndDate = session.end_date || 'Non définie';
+
             // Stocker pour validation
             window.sessionDateRange = {
                 start: sessionStartDate,
@@ -1061,7 +2120,7 @@
             sessionDetails.innerHTML = `
                 <div class="session-details">
                     <div class="session-detail-item">
-                        <div class="session-detail-label">ID</div>
+                        <div class="session-detail-label">ID Session</div>
                         <div class="session-detail-value">${session.id}</div>
                     </div>
                     <div class="session-detail-item">
@@ -1073,16 +2132,32 @@
                         <div class="session-detail-value">${status}</div>
                     </div>
                     <div class="session-detail-item">
-                        <div class="session-detail-label">Période</div>
-                        <div class="session-detail-value">${formatDateDisplay(sessionStartDate)} - ${formatDateDisplay(sessionEndDate)}</div>
+                        <div class="session-detail-label">Type de Loterie</div>
+                        <div class="session-detail-value">${session.lottery_type || 'Non défini'}</div>
                     </div>
                     <div class="session-detail-item">
-                        <div class="session-detail-label">Type de loterie</div>
-                        <div class="session-detail-value">${session.universe}</div>
+                        <div class="session-detail-label">Périodicité</div>
+                        <div class="session-detail-value">${periodiciteText}</div>
                     </div>
                     <div class="session-detail-item">
-                        <div class="session-detail-label">Tirages</div>
-                        <div class="session-detail-value">${session.current_draw} / ${session.total_draws}</div>
+                        <div class="session-detail-label">Période de Travail</div>
+                        <div class="session-detail-value" id="workPeriodRange" style="color: #1890ff; font-weight: bold;">Calcul en cours...</div>
+                    </div>
+                    <div class="session-detail-item">
+                        <div class="session-detail-label">Plage de Dates</div>
+                        <div class="session-detail-value" id="sessionDateRangeDisplay" style="color: #52c41a; font-weight: bold;">Calcul en cours...</div>
+                    </div>
+                    <div class="session-detail-item">
+                        <div class="session-detail-label">Nombre de Tirages</div>
+                        <div class="session-detail-value" id="sessionDrawCountDisplay" style="color: #722ed1; font-weight: bold;">Calcul en cours...</div>
+                    </div>
+                    <div class="session-detail-item">
+                        <div class="session-detail-label">Planning Hebdomadaire</div>
+                        <div class="session-detail-value" style="font-size: 12px;">${planningText}</div>
+                    </div>
+                    <div class="session-detail-item">
+                        <div class="session-detail-label">Numéros par Tirage</div>
+                        <div class="session-detail-value">${session.numbers_per_draw || 'Non défini'}</div>
                     </div>
                 </div>
             `;
@@ -1096,57 +2171,359 @@
             console.log('🙈 Informations de session cachées');
         }
 
+        let lastLoadTime = 0;
         async function loadJournal() {
+            function safeParseDate(dateStr) {
+                if (!dateStr) return 0;
+                const d = new Date(dateStr);
+                return isNaN(d.getTime()) ? 0 : d.getTime();
+            }
+
+            const now = Date.now();
+            if (now - lastLoadTime < 1000) {
+                console.log('🛑 Chargement ignoré (anti-spam)');
+                return;
+            }
+            lastLoadTime = now;
+
             const loadBtn = document.getElementById('loadBtn');
             const exportBtn = document.getElementById('exportBtn');
 
             const sessionId = document.getElementById('sessionSelect').value;
+
+            const universe = document.getElementById('universe').value;
+            console.log('\n=== CHARGEMENT JOURNAL ===');
+            console.log(`Session: ${sessionId}, Univers: ${universe}`);
+
             if (!sessionId) {
                 showError('Veuillez sélectionner une session pour analyser le journal.');
                 return;
             }
 
+            // EFFACER LE CACHE: Nettoyer complètement le journal précédent
+            document.getElementById('journalContainer').innerHTML = '<div class="loading">Chargement du journal pour <strong>' + universe.toUpperCase() + '</strong>...</div>';
+            document.getElementById('statsContainer').innerHTML = '';
+            window.currentJournalData = null;
+
+            console.log('✅ Cache effacé, chargement pour univers:', universe);
+
             loadBtn.disabled = true;
-            loadBtn.textContent = 'Chargement...';
+            loadBtn.textContent = 'Analyse Katula...';
             exportBtn.disabled = true;
 
-            // Utiliser directement des données de test
-            const testData = {
-                journal: [
-                    {
-                        period: 1, date: '15/01/2025', lottery_name: 'EuroMillions Test', winning_numbers: [9, 11, 16, 28, 29],
-                        combination: 'A1-B2-C3-D4-E5', denomination: 'Test Combo', alpha_ranking: 'Alpha-1',
-                        granque: 'G1', petique: 'P1', ligne: 'L1', colonne: 'C1', parite: 'Pair', unidos: 'U1', chip: 'CH1',
-                        univers: document.getElementById('universe').value, forme: 'carre', engine: 'car', beastie: 'lion', tome: 'tome1'
-                    },
-                    {
-                        period: 1, date: '14/01/2025', lottery_name: 'Loto Français Test', winning_numbers: [3, 12, 19, 26, 33],
-                        combination: 'F6-G7-H8-I9-J10', denomination: 'Test Combo 2', alpha_ranking: 'Alpha-2',
-                        granque: 'G2', petique: 'P2', ligne: 'L2', colonne: 'C2', parite: 'Impair', unidos: 'U2', chip: 'CH2',
-                        univers: document.getElementById('universe').value, forme: 'triangle', engine: 'train', beastie: 'tiger', tome: 'tome2'
-                    },
-                    {
-                        period: 2, date: '13/01/2025', lottery_name: 'EuroMillions Test', winning_numbers: [7, 14, 21, 35, 42],
-                        combination: 'K11-L12-M13-N14-O15', denomination: 'Test Combo 3', alpha_ranking: 'Alpha-3',
-                        granque: 'G3', petique: 'P3', ligne: 'L3', colonne: 'C3', parite: 'Pair', unidos: 'U3', chip: 'CH3',
-                        univers: document.getElementById('universe').value, forme: 'cercle', engine: 'bus', beastie: 'cow', tome: 'tome3'
+            try {
+                // Charger les tirages de la session
+                const drawsResponse = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                if (!drawsResponse.ok) {
+                    throw new Error('Impossible de charger les tirages');
+                }
+
+                const draws = await drawsResponse.json();
+                const periodicity = parseInt(document.getElementById('periodicity').value) || 7;
+
+                // --- CALCUL DES PÉRIODES GLOBALES ---
+                // On inclut TOUS les tirages (placeholders compris) pour le journal
+                const allDraws = [...draws];
+
+                // TRI CHRONOLOGIQUE STRICT
+                allDraws.sort((a, b) => safeParseDate(a.draw_date) - safeParseDate(b.draw_date));
+
+                allDraws.forEach((d, index) => {
+                    const seqNumber = d.draw_number || (index + 1);
+                    d.period = Math.ceil(seqNumber / periodicity);
+                });
+
+                let validDraws = [...allDraws];
+                console.log(`📊 Calcul global des périodes terminé pour ${validDraws.length} tirages.`);
+
+                // --- OPTIMISATION : Filtrer AVANT l'analyse Katula ---
+                if (window.currentDrawSelection) {
+                    const selection = window.currentDrawSelection;
+                    console.log('🚀 Optimisation active: Filtrage des tirages avant analyse', selection);
+
+                    if (selection.mode === 'single') {
+                        const targetDate = formatDateForComparison(selection.draw);
+                        validDraws = validDraws.filter(d => formatDateForComparison(d.draw_date) === targetDate);
+                    } else if (selection.mode === 'multiple') {
+                        const targetDates = selection.draws.map(date => formatDateForComparison(date));
+                        validDraws = validDraws.filter(d => targetDates.includes(formatDateForComparison(d.draw_date)));
+                    } else if (selection.mode === 'range') {
+                        const startDate = new Date(selection.startDate);
+                        const endDate = new Date(selection.endDate);
+                        validDraws = validDraws.filter(d => {
+                            const dDate = new Date(d.draw_date);
+                            return dDate >= startDate && dDate <= endDate;
+                        });
                     }
-                ],
-                total_periods: 2,
-                periodicity: parseInt(document.getElementById('periodicity').value),
-                universe_filter: document.getElementById('universe').value
+                } else {
+                    // La pagination gère maintenant l'affichage des sessions denses
+                    console.log(`📊 Chargement de ${validDraws.length} tirages pour analyse complète.`);
+                }
+
+                if (validDraws.length === 0) {
+                    showError('Aucun tirage correspondant aux critères pour l\'analyse Katula');
+                    return;
+                }
+                // --- FIN OPTIMISATION ---
+
+                // Tri par Date Décroissant (plus récent d'abord pour le journal)
+                validDraws.sort((a, b) => safeParseDate(b.draw_date) - safeParseDate(a.draw_date));
+                console.log('🔄 Tirages triés par date décroissante (Journal descendant)');
+
+                // Analyser avec Katula (seulement les tirages filtrés)
+                const universeSelect = document.getElementById('universe');
+                const finalUniverse = window.selectedUniverse || (universeSelect ? universeSelect.value : 'mundo');
+
+                console.log('[PERF] Envoi de', validDraws.length, 'tirages à l\'analyse Katula');
+
+                const analysisResponse = await fetch(`${API_BASE}/unified/katula/analyze-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        draws: validDraws,
+                        universe: finalUniverse
+                    })
+                });
+
+                if (analysisResponse.ok) {
+                    const analysisData = await analysisResponse.json();
+                    const journalData = convertKatulaAnalysisToJournal(analysisData);
+
+                    // Note: filterJournalByDrawSelection est encore utile si on veut être sûr, 
+                    // mais l'essentiel du boulot est fait en amont maintenant.
+                    const filteredData = filterJournalByDrawSelection(journalData);
+                    window.currentJournalData = filteredData;
+                    displayJournal(filteredData);
+                    exportBtn.disabled = false;
+                } else {
+                    const errorData = await analysisResponse.json().catch(() => ({}));
+                    throw new Error(errorData.detail || 'Erreur analyse Katula');
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur chargement journal:', error);
+                showError('Erreur lors du chargement: ' + error.message);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = 'Charger le Journal';
+            }
+
+        }
+
+        // Toast helper for user notifications
+        function showToast(message, duration = 4000) {
+            try {
+                let container = document.getElementById('toastContainer');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'toastContainer';
+                    Object.assign(container.style, {
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        zIndex: 2000,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                        alignItems: 'flex-end',
+                        pointerEvents: 'none'
+                    });
+                    document.body.appendChild(container);
+                }
+
+                const toast = document.createElement('div');
+                Object.assign(toast.style, {
+                    background: 'rgba(50, 50, 50, 0.9)',
+                    color: '#fff',
+                    padding: '12px 20px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    transition: 'opacity 0.3s ease, transform 0.3s ease',
+                    opacity: '0',
+                    transform: 'translateX(20px)',
+                    marginBottom: '8px',
+                    maxWidth: '300px',
+                    pointerEvents: 'auto'
+                });
+                toast.textContent = message;
+                container.appendChild(toast);
+
+                // Trigger animation
+                setTimeout(() => {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateX(0)';
+                }, 10);
+
+                // Remove after duration
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(20px)';
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            } catch (e) {
+                console.warn('Toast display failed', e);
+            }
+        }
+
+        function convertKatulaAnalysisToJournal(analysisData) {
+            const journal = [];
+            const periodicity = parseInt(document.getElementById('periodicity').value) || 7;
+
+            console.log('🔄 Conversion analyse Katula en journal...', analysisData);
+
+            if (!analysisData.analyzed_draws || analysisData.analyzed_draws.length === 0) {
+                console.log('⚠️ Aucun tirage analysé');
+                return {
+                    journal: [],
+                    total_periods: 0,
+                    periodicity: periodicity,
+                    universe_filter: document.getElementById('universe').value,
+                    source: 'katula_analysis'
+                };
+            }
+
+            analysisData.analyzed_draws.forEach((draw, index) => {
+                // FALLBACK: Calcul de période basé sur draw_number ou index après tri
+                const seqNumber = draw.draw_number || (index + 1);
+                const period = draw.period || Math.ceil(seqNumber / periodicity);
+                const katula = draw.katula_analysis;
+
+                console.log(`Tirage ${index + 1}:`, {
+                    date: draw.draw_date,
+                    numbers: draw.winning_numbers,
+                    has_katula: !!katula,
+                    has_entries: !!(katula && katula.journal_entries)
+                });
+
+                if (katula && katula.journal_entries) {
+                    katula.journal_entries.forEach((entry, entryIndex) => {
+                        // Extraire les données des deux numéros
+                        const num1 = entry.num1_analysis || {};
+                        const num2 = entry.num2_analysis || {};
+
+                        // Utiliser UNIQUEMENT les vraies données PostgreSQL
+                        // Utiliser les mappings chargés depuis la BD
+
+                        journal.push({
+                            period: period,
+                            date: draw.draw_date,
+                            lottery_name: draw.lottery_name,
+                            winning_numbers: draw.winning_numbers,
+                            combination: entry.combination_str || `${num1.number}-${num2.number}`,  // Colonne 'combination' BD
+                            denomination: entry.denomination || 'N/A',  // Colonne 'denomination' BD
+                            status: entry.status || 'normal',  // Pour détecter NO-HOLD
+                            alpha_ranking: num1.alpha_ranking || 'N/A',
+                            granque: num1.granque_name || 'N/A',
+                            petique: num1.petique || 'N/A',
+                            ligne: num1.position?.ligne || 'N/A',
+                            colonne: num1.position?.colonne || 'N/A',
+                            parite: pariteMapping[entry.parite_id] || entry.parite_id || 'N/A',
+                            unidos: unidosMapping[entry.unidos_id] || entry.unidos_id || 'N/A',
+                            region: entry.region || 'N/A',
+                            quartier: entry.quartier || 'N/A',
+                            gentile: entry.gentile || 'N/A',
+                            chip: num1.chip || 'N/A',
+                            univers: entry.univers || katula.universe || 'N/A',
+                            forme: num1.forme || 'N/A',
+                            engine: num1.engine || 'N/A',
+                            beastie: num1.beastie || 'N/A',
+                            tome: num1.tome || 'N/A'
+                        });
+                    });
+                }
+            });
+
+            console.log(`✅ Journal généré: ${journal.length} entrées`);
+            return {
+                journal: journal,
+                total_periods: analysisData.total_periods || 0,
+                periodicity: periodicity,
+                universe_filter: analysisData.universe || analysisData.univers || document.getElementById('universe').value,
+                source: 'katula_analysis'
             };
+        }
 
-            const filteredData = filterJournalByDrawSelection(testData);
-            currentJournalData = filteredData;
-            displayJournal(filteredData);
-            exportBtn.disabled = false;
+        // --- FONCTIONS DE PAGINATION ---
+        function goToPage(page) {
+            if (page < 1 || page > window.paginationState.totalPages) return;
 
-            loadBtn.disabled = false;
-            loadBtn.textContent = 'Charger le Journal';
+            window.paginationState.currentPage = page;
+            console.log(`📄 Passage à la page ${page}`);
+
+            // Re-afficher le journal avec les données de la page sélectionnée
+            if (window.currentJournalData) {
+                displayJournalTable(window.currentJournalData.journal);
+            }
+
+            // Scroll en haut du conteneur
+            const container = document.getElementById('journalContainer');
+            if (container) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function renderPaginationControls() {
+            const state = window.paginationState;
+            if (state.totalPages <= 1) return '';
+
+            let buttonsHtml = '';
+
+            // Bouton Précédent
+            buttonsHtml += `<button class="pagination-btn" onclick="goToPage(${state.currentPage - 1})" ${state.currentPage === 1 ? 'disabled' : ''}>&laquo; Précédent</button>`;
+
+            // Génération des numéros de page avec ellipses si nécessaire
+            const delta = 2; // Nombre de pages à afficher autour de la page courante
+            const range = [];
+            for (let i = Math.max(2, state.currentPage - delta); i <= Math.min(state.totalPages - 1, state.currentPage + delta); i++) {
+                range.push(i);
+            }
+
+            if (state.currentPage > delta + 2) {
+                range.unshift('...');
+            }
+            range.unshift(1);
+
+            if (state.currentPage < state.totalPages - delta - 1) {
+                range.push('...');
+            }
+            if (state.totalPages > 1) {
+                range.push(state.totalPages);
+            }
+
+            range.forEach(p => {
+                if (p === '...') {
+                    buttonsHtml += `<span class="pagination-ellipsis">...</span>`;
+                } else {
+                    buttonsHtml += `<button class="pagination-btn ${p === state.currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+                }
+            });
+
+            // Bouton Suivant
+            buttonsHtml += `<button class="pagination-btn" onclick="goToPage(${state.currentPage + 1})" ${state.currentPage === state.totalPages ? 'disabled' : ''}>Suivant &raquo;</button>`;
+
+            const startItem = (state.currentPage - 1) * state.itemsPerPage + 1;
+            const endItem = Math.min(state.currentPage * state.itemsPerPage, state.totalItems);
+
+            return `
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Affichage de ${startItem} à ${endItem} sur ${state.totalItems} résultats
+                    </div>
+                    <div class="pagination-buttons">
+                        ${buttonsHtml}
+                    </div>
+                </div>
+            `;
         }
 
         function displayJournal(data) {
+            // Initialiser le state de pagination
+            window.paginationState.totalItems = data.journal.length;
+            window.paginationState.totalPages = Math.ceil(data.journal.length / window.paginationState.itemsPerPage);
+            window.paginationState.currentPage = 1;
+
             displayStats(data);
             displayJournalTable(data.journal);
         }
@@ -1155,17 +2532,17 @@
             // Ajouter des informations sur la sélection de tirage
             let selectionInfo = '';
             let filterInfo = '';
-            
+
             if (data.filtered && data.filter_info) {
                 filterInfo = `<div class="stat-item">
                     <div class="stat-value">${data.filter_info.filtered_count}/${data.filter_info.original_count}</div>
                     <div class="stat-label">Entrées Filtrées</div>
                 </div>`;
             }
-            
+
             if (window.currentDrawSelection) {
                 const selection = window.currentDrawSelection;
-                switch(selection.mode) {
+                switch (selection.mode) {
                     case 'single':
                         selectionInfo = `<div class="stat-item">
                             <div class="stat-value">1</div>
@@ -1187,7 +2564,7 @@
                         break;
                 }
             }
-            
+
             const statsHtml = `
                 <div class="stats-summary">
                     <div class="stat-item">
@@ -1223,7 +2600,7 @@
                 let errorMessage = 'Aucune donnée trouvée pour les critères sélectionnées.';
                 if (window.currentDrawSelection) {
                     const selection = window.currentDrawSelection;
-                    switch(selection.mode) {
+                    switch (selection.mode) {
                         case 'single':
                             errorMessage = `Aucune donnée trouvée pour le tirage du ${selection.draw}.`;
                             break;
@@ -1239,37 +2616,51 @@
                     `<div class="error">${errorMessage}</div>`;
                 return;
             }
-            
+
+            console.log('Journal à afficher:', journal.length, 'entrées');
+
+            // Trier par date décroissante (plus récent en haut)
+            journal.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // --- LOGIQUE DE PAGINATION ---
+            const state = window.paginationState;
+            const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+            const endIndex = startIndex + state.itemsPerPage;
+            const journalToRender = journal.slice(startIndex, endIndex);
+
+            const paginationHtml = renderPaginationControls();
+
             // Ajouter un indicateur de filtrage
             let filterIndicator = '';
+            let filterText = '';
+
             if (window.currentDrawSelection) {
                 const selection = window.currentDrawSelection;
-                let filterText = '';
-                switch(selection.mode) {
-                    case 'single':
-                        filterText = `🎯 Analyse filtrée pour le tirage du ${selection.draw}`;
-                        break;
-                    case 'multiple':
-                        filterText = `🎯 Analyse filtrée pour ${selection.draws.length} tirages sélectionnés`;
-                        break;
-                    case 'range':
-                        filterText = `🎯 Analyse filtrée du ${selection.startDate} au ${selection.endDate}`;
-                        break;
+                switch (selection.mode) {
+                    case 'single': filterText = `🎯 Analyse pour le tirage du ${selection.draw}`; break;
+                    case 'multiple': filterText = `🎯 Analyse pour ${selection.draws.length} tirages sélectionnés`; break;
+                    case 'range': filterText = `🎯 Analyse du ${selection.startDate} au ${selection.endDate}`; break;
                 }
-                filterIndicator = `
-                    <div class="filter-indicator">
-                        <div class="filter-text">${filterText}</div>
-                        <div>
-                            <button class="clear-filter-btn" onclick="showDrawHistory()" style="background: #722ed1; margin-right: 10px;">📅 Historique Tirages</button>
-                            <button class="clear-filter-btn" onclick="clearDrawFilter()">❌ Effacer le filtre</button>
-                            <button class="clear-filter-btn" onclick="generateTestDataForSelectedDate()" style="background: #52c41a; margin-left: 10px;">🧪 Test Data</button>
-                        </div>
-                    </div>
-                `;
+            } else {
+                filterText = `📊 Mode complet (${journal.length} entrées)`;
             }
+
+            filterIndicator = `
+                <div class="filter-indicator">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <div class="filter-text">${filterText}</div>
+                        <div style="font-size: 0.85rem; opacity:0.9;">Page <strong>${state.currentPage}</strong> sur <strong>${state.totalPages}</strong></div>
+                    </div>
+                    <div>
+                        <button class="clear-filter-btn" onclick="showDrawHistory()" style="background: #722ed1; margin-right: 10px;">📅 Historique Tirages</button>
+                        ${window.currentDrawSelection ? `<button class="clear-filter-btn" onclick="clearDrawFilter()">❌ Effacer le filtre</button>` : ''}
+                    </div>
+                </div>
+            `;
 
             let tableHtml = `
                 ${filterIndicator}
+                ${paginationHtml}
                 <div class="table-container">
                     <table class="journal-table">
                         <thead>
@@ -1287,7 +2678,11 @@
                                 <th style="background-color: #1890ff; color: white;">Colonne</th>
                                 <th style="background-color: #1890ff; color: white;">Parité</th>
                                 <th style="background-color: #1890ff; color: white;">Unidos</th>
+                                <th style="background-color: #52c41a; color: white;">Région</th>
+                                <th style="background-color: #52c41a; color: white;">Quartier</th>
+                                <th style="background-color: #52c41a; color: white;">Gentilé</th>
                                 <th style="background-color: #1890ff; color: white;">Chip</th>
+                                <th style="background-color: #1890ff; color: white;">Drawer</th>
                                 <th>Univers</th>
                                 <th style="background-color: #1890ff; color: white;">Forme</th>
                                 <th style="background-color: #1890ff; color: white;">Engine</th>
@@ -1302,155 +2697,155 @@
 
             // Grouper les entrées par date pour gérer les rowspan
             const groupedByDate = {};
-            journal.forEach(entry => {
+            // 1. Groupement des données par date (avec dédoublonnage pour No-Hold/No-Draw)
+            journalToRender.forEach(entry => {
                 if (!groupedByDate[entry.date]) {
                     groupedByDate[entry.date] = [];
                 }
+
+                // Détecter si l'entrée est un No-Hold ou No-Draw
+                const isNoDraw = !entry.winning_numbers || entry.winning_numbers.length === 0 || entry.status === 'no_draw';
+                const isNoHold = entry.status === 'no_hold' || entry.univers === 'no_hold' || entry.combination === 'NO-HOLD';
+
+                // Si c'est un No-Draw ou No-Hold, on vérifie si on en a déjà un pour cette date
+                if (isNoDraw || isNoHold) {
+                    const alreadyHasMatch = groupedByDate[entry.date].some(existing => {
+                        const existingNoDraw = !existing.winning_numbers || existing.winning_numbers.length === 0 || existing.status === 'no_draw';
+                        const existingNoHold = existing.status === 'no_hold' || existing.univers === 'no_hold' || existing.combination === 'NO-HOLD';
+                        return (isNoDraw && existingNoDraw) || (isNoHold && existingNoHold);
+                    });
+
+                    if (alreadyHasMatch) return; // Ignorer les doublons de placeholders
+                }
+
                 groupedByDate[entry.date].push(entry);
             });
 
-            Object.keys(groupedByDate).forEach((date, dateIndex) => {
+            // 2. Tri des dates par ordre décroissant
+            const sortedDates = Object.keys(groupedByDate).sort((a, b) => safeParseDate(b) - safeParseDate(a));
+
+            // 3. Boucle de rendu unique
+            sortedDates.forEach((date, dateIndex) => {
                 const entriesForDate = groupedByDate[date];
 
                 entriesForDate.forEach((entry, entryIndex) => {
                     let rowClass = '';
+                    const periodicite = parseInt(document.getElementById('periodicity').value) || 7;
+                    const entryPeriod = entry.period || (entry.draw_number ? Math.ceil(entry.draw_number / periodicite) : null);
 
-                    // Détecter les "No Draw" (pas de numéros gagnants ou liste vide)
-                    const isNoDraw = !entry.winning_numbers || entry.winning_numbers.length === 0;
+                    // Détecter les "No Draw" and "No Hold"
+                    const isNoDraw = !entry.winning_numbers || entry.winning_numbers.length === 0 || entry.status === 'no_draw';
+                    const isNoHold = entry.status === 'no_hold' || entry.univers === 'no_hold' || entry.combination === 'NO-HOLD';
 
-                    // Détecter les "No Hold" (basé sur un indicateur spécifique ou statut)
-                    const isNoHold = entry.status === 'no_hold' || entry.combination === 'NO_HOLD' || entry.lottery_name?.toLowerCase().includes('no hold');
-
-                    // Séparateur de période (ligne rouge)
-                    if (currentPeriod !== null && currentPeriod !== entry.period) {
-                        rowClass += ' period-separator';
+                    // Séparateur de période (Trait rouge gras - Règle Métier)
+                    if (currentPeriod !== null && entryPeriod !== null && currentPeriod !== entryPeriod) {
+                        tableHtml += `
+                            <tr class="period-separator-row" style="background-color: transparent; height: 10px;">
+                                <td colspan="25" style="padding: 0; border-top: 4px solid #ff4d4f; border-bottom: 2px solid #ff4d4f; height: 10px;">
+                                     <div style="text-align: center; color: #ff4d4f; font-weight: bold; font-size: 0.85em; background: white; width: max-content; margin: -12px auto 0; padding: 0 10px; position: relative; z-index: 10;">
+                                        ⬆️ FIN DE PÉRIODE ${entryPeriod} / DÉBUT PÉRIODE ${currentPeriod} ⬆️
+                                     </div>
+                                </td>
+                            </tr>
+                        `;
                     }
-
-                    // Séparateur de date (ligne grise moyenne)
+                    // Séparateur de date (ligne grise)
                     else if (entryIndex === 0 && dateIndex > 0) {
                         rowClass += ' date-separator';
                     }
 
-                    // Contenu des cellules selon le type (No Draw, No Hold, ou Normal)
+                    // Contenu des cellules selon le type
                     let numbersContent, combinationContent, universeContent;
+                    const isPlaceholder = !entry.winning_numbers || entry.winning_numbers.length === 0;
+                    const isRealNoDraw = entry.status === 'no_draw' || entry.is_no_draw === true;
 
-                    if (isNoDraw) {
-                        // No Draw : tout est grisé avec N-D
+                    if (isRealNoDraw) {
                         numbersContent = '<span class="no-draw-indicator">N-D</span>';
                         combinationContent = '<span class="no-draw-indicator">N-D</span>';
                         universeContent = '<span class="no-draw-indicator">N-D</span>';
+                    } else if (isPlaceholder) {
+                        numbersContent = '<span class="placeholder-indicator">À SAISIR</span>';
+                        combinationContent = '<span class="placeholder-indicator">À SAISIR</span>';
+                        universeContent = '<span class="placeholder-indicator">À SAISIR</span>';
                     } else if (isNoHold) {
-                        // No Hold : univers reste visible, le reste est grisé avec N-H
-                        numbersContent = '<span class="no-hold-indicator">N-H</span>';
+                        numbersContent = (entry.winning_numbers || []).join(', ');
                         combinationContent = '<span class="no-hold-indicator">N-H</span>';
-                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers.toUpperCase()}</span>`;
+                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers ? entry.univers.toUpperCase() : 'N/A'}</span>`;
                     } else {
-                        // Normal : affichage standard
-                        numbersContent = entry.winning_numbers.join(', ');
-                        combinationContent = entry.combination;
-                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers.toUpperCase()}</span>`;
+                        numbersContent = (entry.winning_numbers || []).join(', ');
+                        combinationContent = entry.combination || '-';
+                        universeContent = `<span class="universe-tag universe-${entry.univers}">${entry.univers ? entry.univers.toUpperCase() : 'N/A'}</span>`;
                     }
 
-                    // Génération de la ligne
                     tableHtml += `<tr class="${rowClass}">`;
-                    tableHtml += `<td><strong>P${entry.period}</strong></td>`;
 
-                    // Cellules fusionnées (rowspan) seulement pour la première entrée de chaque date
+                    // Cellules fusionnées (rowspan) au début de chaque tirage
                     if (entryIndex === 0) {
-                        tableHtml += `<td class="date-cell" rowspan="${entriesForDate.length}">${entry.date}</td>`;
-
-                        // Cellule nom loto fusionnée (rowspan) - identique pour toutes les combinaisons du même tirage
-                        tableHtml += `<td class="lottery-name-cell" rowspan="${entriesForDate.length}">${entry.lottery_name}</td>`;
-
-                        // Cellule numéros tirés fusionnée (rowspan) - identique pour toutes les combinaisons du même tirage
-                        tableHtml += `<td class="numbers-list lottery-numbers-cell" rowspan="${entriesForDate.length}">${numbersContent}</td>`;
+                        const rowSpan = entriesForDate.length;
+                        const periodVal = entryPeriod || '?';
+                        tableHtml += `<td style="vertical-align: middle; text-align: center; font-weight: bold; background: #fafafa;" rowspan="${rowSpan}">P${periodVal}</td>`;
+                        tableHtml += `<td class="date-cell" style="vertical-align: middle; text-align: center;" rowspan="${rowSpan}">${entry.date}</td>`;
+                        tableHtml += `<td class="lottery-name-cell" style="vertical-align: middle; text-align: center;" rowspan="${rowSpan}">${entry.lottery_name || '-'}</td>`;
+                        tableHtml += `<td class="numbers-list lottery-numbers-cell" style="vertical-align: middle; text-align: center;" rowspan="${rowSpan}">${numbersContent}</td>`;
                     }
 
-                    // Combinaison - unique pour chaque ligne
                     tableHtml += `<td class="combination-cell">${combinationContent}</td>`;
 
-                    // Nouvelles colonnes - uniques pour chaque ligne
-                    const denominationContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.denomination || 'N/A');
+                    // Attributs individuels
+                    const attrs = ['denomination', 'alpha_ranking', 'granque', 'petique', 'ligne', 'colonne', 'parite', 'unidos', 'region', 'quartier', 'gentile', 'chip'];
+                    attrs.forEach(attr => {
+                        let rawVal = isRealNoDraw ? 'N-D' : (isPlaceholder ? 'À-S' : (isNoHold ? 'N-H' : (entry[attr] || 'N/A')));
+                        let val = rawVal;
 
-                    const alphaRankingContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.alpha_ranking || 'N/A');
+                        // Appliquer le style global N-D / N-H
+                        if (rawVal === 'N-D') val = '<span class="no-draw-indicator">N-D</span>';
+                        else if (rawVal === 'N-H') val = '<span class="no-hold-indicator">N-H</span>';
 
-                    const granqueContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.granque || 'N/A');
+                        let style = '';
+                        if (['granque', 'chip'].includes(attr)) style = 'background-color: #fff7e6;';
+                        else if (attr === 'petique') style = 'background-color: #f9f0ff;';
+                        else if (attr === 'ligne') style = 'background-color: #e6f7ff;';
+                        else if (attr === 'colonne') style = 'background-color: #f6ffed;';
+                        else if (attr === 'parite') style = 'background-color: #fff2f0;';
+                        else if (attr === 'unidos') style = 'background-color: #f0f9ff;';
+                        else if (['region', 'quartier', 'gentile'].includes(attr)) style = 'background-color: #f6ffed;';
+                        tableHtml += `<td style="${style}">${val}</td>`;
+                    });
 
-                    const petiqueContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.petique || 'N/A');
+                    // Drawer
+                    let drawerRaw = isRealNoDraw ? 'N-D' : (isPlaceholder ? 'À-S' : (isNoHold ? 'N-H' : (entry.drawer_name || entry.drawer || '-')));
+                    let drawerVal = drawerRaw;
+                    if (drawerRaw === 'N-D') drawerVal = '<span class="no-draw-indicator">N-D</span>';
+                    else if (drawerRaw === 'N-H') drawerVal = '<span class="no-hold-indicator">N-H</span>';
 
-                    const ligneContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.ligne || 'N/A');
-
-                    const colonneContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.colonne || 'N/A');
-
-                    const pariteContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.parite || 'N/A');
-
-                    const unidosContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.unidos || 'N/A');
-
-                    const chipContent = isNoDraw ? '<span class="no-draw-indicator">N-D</span>' :
-                        isNoHold ? '<span class="no-hold-indicator">N-H</span>' :
-                            (entry.chip || 'N/A');
-
-                    tableHtml += `<td class="denomination-cell">${denominationContent}</td>`;
-                    tableHtml += `<td class="alpha-ranking-cell">${alphaRankingContent}</td>`;
-                    tableHtml += `<td class="granque-cell" style="background-color: #fff7e6;">${granqueContent}</td>`;
-                    tableHtml += `<td class="petique-cell" style="background-color: #f9f0ff;">${petiqueContent}</td>`;
-                    tableHtml += `<td class="ligne-cell" style="background-color: #e6f7ff;">${ligneContent}</td>`;
-                    tableHtml += `<td class="colonne-cell" style="background-color: #f6ffed;">${colonneContent}</td>`;
-                    tableHtml += `<td class="parite-cell" style="background-color: #fff2f0;">${pariteContent}</td>`;
-                    tableHtml += `<td class="unidos-cell" style="background-color: #f0f9ff;">${unidosContent}</td>`;
-                    tableHtml += `<td class="chip-cell" style="background-color: #fff7e6;">${chipContent}</td>`;
+                    tableHtml += `<td class="drawer-cell">${drawerVal}</td>`;
 
                     // Cellule univers fusionnée (rowspan) seulement pour la première entrée de chaque date
                     if (entryIndex === 0) {
-                        tableHtml += `<td class="universe-cell" rowspan="${entriesForDate.length}">${universeContent}</td>`;
+                        tableHtml += `<td class="universe-cell" style="vertical-align: middle; text-align: center;" rowspan="${entriesForDate.length}">${universeContent}</td>`;
                     }
 
-                    // Colonnes avec icônes selon le type
-                    if (isNoDraw) {
-                        tableHtml += `<td class="forme-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td class="engine-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td class="beastie-icon"><span class="no-draw-indicator">N-D</span></td>`;
-                        tableHtml += `<td><span class="no-draw-indicator">N-D</span></td>`;
+                    // Colonnes avec icônes Katula selon le type
+                    if (isRealNoDraw) {
+                        tableHtml += `<td class="forme-icon"><span class="no-draw-indicator">N-D</span></td><td class="engine-icon"><span class="no-draw-indicator">N-D</span></td><td class="beastie-icon"><span class="no-draw-indicator">N-D</span></td><td><span class="no-draw-indicator">N-D</span></td>`;
+                    } else if (isPlaceholder) {
+                        tableHtml += `<td class="forme-icon">À-S</td><td class="engine-icon">À-S</td><td class="beastie-icon">À-S</td><td>À-S</td>`;
                     } else if (isNoHold) {
-                        tableHtml += `<td class="forme-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td class="engine-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td class="beastie-icon"><span class="no-hold-indicator">N-H</span></td>`;
-                        tableHtml += `<td><span class="no-hold-indicator">N-H</span></td>`;
+                        tableHtml += `<td class="forme-icon"><span class="no-hold-indicator">N-H</span></td><td class="engine-icon"><span class="no-hold-indicator">N-H</span></td><td class="beastie-icon"><span class="no-hold-indicator">N-H</span></td><td><span class="no-hold-indicator">N-H</span></td>`;
                     } else {
-                        tableHtml += `<td class="forme-icon">${getFormeIcon(entry.forme)} ${entry.forme}</td>`;
-                        tableHtml += `<td class="engine-icon">${getEngineIcon(entry.engine)}</td>`;
-                        tableHtml += `<td class="beastie-icon">${getBeastieIcon(entry.beastie)}</td>`;
-                        tableHtml += `<td>${getTomeIcon(entry.tome)}</td>`;
+                        tableHtml += `<td class="forme-icon">${typeof getFormeIcon !== 'undefined' ? getFormeIcon(entry.forme) : ''} ${entry.forme || ''}</td>`;
+                        tableHtml += `<td class="engine-icon">${typeof getEngineIcon !== 'undefined' ? getEngineIcon(entry.engine) : ''}</td>`;
+                        tableHtml += `<td class="beastie-icon">${typeof getBeastieIcon !== 'undefined' ? getBeastieIcon(entry.beastie) : ''}</td>`;
+                        tableHtml += `<td>${typeof getTomeIcon !== 'undefined' ? getTomeIcon(entry.tome) : ''}</td>`;
                     }
 
                     tableHtml += `</tr>`;
-
-                    currentPeriod = entry.period;
+                    currentPeriod = entryPeriod;
                 });
             });
 
-            tableHtml += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
+            tableHtml += `</tbody></table></div>`;
+            tableHtml += paginationHtml; // Bottom pagination
             document.getElementById('journalContainer').innerHTML = tableHtml;
         }
 
@@ -1580,33 +2975,41 @@
         }
 
         function exportJournal() {
-            if (!currentJournalData || !currentJournalData.journal) {
+            if (!window.currentJournalData || !window.currentJournalData.journal) {
                 alert('Aucune donnée à exporter');
                 return;
             }
 
             const csvContent = [
-                ['Période', 'Date', 'Nom Loto', 'Numéros Tirés', 'Combinaison', 'Dénomination', 'Alpha Ranking', 'Granque', 'Petique', 'Ligne', 'Colonne', 'Parité', 'Unidos', 'Univers', 'Forme', 'Engine', 'Beastie', 'Tome'],
-                ...currentJournalData.journal.map(entry => [
-                    `P${entry.period}`,
-                    entry.date,
-                    entry.lottery_name,
-                    entry.winning_numbers.join(', '),
-                    entry.combination,
-                    entry.denomination || 'N/A',
-                    entry.alpha_ranking || 'N/A',
-                    entry.granque || 'N/A',
-                    entry.petique || 'N/A',
-                    entry.ligne || 'N/A',
-                    entry.colonne || 'N/A',
-                    entry.parite || 'N/A',
-                    entry.unidos || 'N/A',
-                    entry.univers,
-                    entry.forme,
-                    entry.engine,
-                    entry.beastie,
-                    entry.tome
-                ])
+                ['Période', 'Date', 'Nom Loto', 'Numéros Tirés', 'Combinaison', 'Dénomination', 'Alpha Ranking', 'Granque', 'Petique', 'Ligne', 'Colonne', 'Parité', 'Unidos', 'Région', 'Quartier', 'Gentilé', 'Chip', 'Drawer', 'Univers', 'Forme', 'Engine', 'Beastie', 'Tome'],
+                ...window.currentJournalData.journal.map(entry => {
+                    const drawerVal = entry.drawer_name || entry.drawer || ('drawer_' + (entry.chip || entry.chip_number || 'unknown') + '_' + (entry.forme || 'carre'));
+                    return [
+                        `P${entry.period}`,
+                        entry.date,
+                        entry.lottery_name,
+                        entry.winning_numbers.join(', '),
+                        entry.combination,
+                        entry.denomination || 'N/A',
+                        entry.alpha_ranking || 'N/A',
+                        entry.granque || 'N/A',
+                        entry.petique || 'N/A',
+                        entry.ligne || 'N/A',
+                        entry.colonne || 'N/A',
+                        entry.parite || 'N/A',
+                        entry.unidos || 'N/A',
+                        entry.region || 'N/A',
+                        entry.quartier || 'N/A',
+                        entry.gentile || 'N/A',
+                        entry.chip || 'N/A',
+                        drawerVal,
+                        entry.univers,
+                        entry.forme,
+                        entry.engine,
+                        entry.beastie,
+                        entry.tome
+                    ];
+                })
             ].map(row => row.join(',')).join('\n');
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1619,25 +3022,42 @@
         }
 
         function showError(message) {
-            // Ne plus afficher les erreurs, juste les logger
-            console.log('Info:', message);
+            console.error('❌ Error Message:', message);
+            const container = document.getElementById('journalContainer');
+            if (container) {
+                container.innerHTML = `<div class="error" style="background:#fff2f0; border:1px solid #ffccc7; color:#ff4d4f; padding:20px; border-radius:8px; margin:20px 0; text-align:center;">
+                    <h3 style="margin-top:0;">⚠️ Erreur</h3>
+                    <p>${message}</p>
+                </div>`;
+            }
         }
-        
+
+        function forceUniverse(universe) {
+            console.log('FORCE Universe:', universe);
+            document.getElementById('universe').value = universe;
+            window.selectedUniverse = universe;
+            showNotification('Univers change a ' + universe.toUpperCase(), 'success');
+            const sessionId = document.getElementById('sessionSelect').value;
+            if (sessionId) {
+                setTimeout(() => loadJournal(), 500);
+            }
+        }
+
         function clearDrawFilter() {
             // Effacer la sélection de tirage
             window.currentDrawSelection = null;
-            
+
             // Recharger le journal sans filtre
             loadJournal();
-            
+
             // Notification
             showNotification('✅ Filtre de tirage effacé !', 'success');
         }
-        
+
         function toggleDrawSelection() {
             const checkbox = document.getElementById('enableDrawSelection');
             const container = document.getElementById('draw-selector-container');
-            
+
             if (checkbox.checked) {
                 container.style.display = 'block';
                 showNotification('🎯 Mode sélection de tirage activé', 'info');
@@ -1648,97 +3068,130 @@
                 showNotification('📋 Mode session standard activé', 'info');
             }
         }
-        
+
         function validateDateInSession(selectedDate) {
             if (!window.sessionDateRange || !selectedDate) {
                 return { valid: true, message: '' };
             }
-            
+
             const selected = new Date(selectedDate);
             const sessionStart = new Date(window.sessionDateRange.start);
             const sessionEnd = new Date(window.sessionDateRange.end);
-            
+
             if (selected < sessionStart || selected > sessionEnd) {
                 return {
                     valid: false,
                     message: `⚠️ Date hors limites de la session "${window.sessionDateRange.name}". Période valide: ${formatDateDisplay(window.sessionDateRange.start)} - ${formatDateDisplay(window.sessionDateRange.end)}`
                 };
             }
-            
+
             return { valid: true, message: '' };
         }
-        
+
         function generateTestDataForSelectedDate() {
             if (!window.currentDrawSelection || !window.currentDrawSelection.draw) {
                 showNotification('❌ Veuillez d\'abord sélectionner une date', 'error');
                 return;
             }
-            
+
             // Valider la date par rapport à la session
             const validation = validateDateInSession(window.currentDrawSelection.draw);
             if (!validation.valid) {
                 showNotification(validation.message, 'error');
                 return;
             }
-            
+
             const testData = generateTestDataForDate(window.currentDrawSelection.draw);
-            currentJournalData = testData;
+            window.currentJournalData = testData;
             displayJournal(testData);
-            
+
             showNotification(`🧪 Données de test générées pour le ${formatDateDisplay(window.currentDrawSelection.draw)}`, 'success');
         }
-        
-        function showDrawHistory() {
-            // Si pas de données chargées, utiliser des données de test
-            if (!currentJournalData || !currentJournalData.journal || currentJournalData.journal.length === 0) {
-                const testDraws = [
-                    { date: '15/01/2025', lottery_name: 'EuroMillions', winning_numbers: [9, 11, 16, 28, 29], combinations_count: 5, universe: 'mundo', period: 1 },
-                    { date: '14/01/2025', lottery_name: 'Loto Français', winning_numbers: [3, 12, 19, 26, 33], combinations_count: 8, universe: 'fruity', period: 1 },
-                    { date: '13/01/2025', lottery_name: 'EuroMillions', winning_numbers: [7, 14, 21, 35, 42], combinations_count: 6, universe: 'mundo', period: 1 }
-                ];
-                displayDrawHistoryModal(testDraws);
+
+        async function showDrawHistory() {
+            const sessionId = document.getElementById('sessionSelect').value;
+            if (!sessionId) {
+                showNotification('❌ Veuillez sélectionner une session', 'error');
                 return;
             }
-            
-            console.log('📅 Ouverture historique pour:', currentJournalData.journal.length, 'entrées');
-            
-            // Extraire les tirages uniques du journal
-            const uniqueDraws = extractUniqueDraws(currentJournalData.journal);
-            
-            // Créer et afficher la modal d'historique
-            displayDrawHistoryModal(uniqueDraws);
+
+            const session = availableSessions.find(s => s.id == sessionId);
+            const sessionUniverse = (session && session.universe) ? session.universe : document.getElementById('universe').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                if (response.ok) {
+                    const draws = await response.json();
+                    const formattedDraws = draws
+                        .map(draw => {
+                            const nums = draw.winning_numbers || [];
+                            const n = Array.isArray(nums) ? nums.length : 0;
+                            const combos = n >= 2 ? (n * (n - 1)) / 2 : 0;
+                            return {
+                                draw_number: draw.draw_number,
+                                date: draw.draw_date,
+                                lottery_name: draw.lottery_name,
+                                winning_numbers: nums,
+                                combinations_count: combos,
+                                universe: sessionUniverse,
+                                period: Math.ceil((draw.draw_number || 0) / (session && session.cycle_length ? session.cycle_length : 7))
+                            };
+                        })
+                        .sort((a, b) => new Date(b.date) - new Date(a.date));
+                    displayDrawHistoryModal(formattedDraws, session && session.name ? session.name : '');
+                } else {
+                    // Fallback vers données de test
+                    const testDrawsRaw = [
+                        { draw_number: 101, date: '15/01/2025', lottery_name: 'EuroMillions', winning_numbers: [9, 11, 16, 28, 29], universe: sessionUniverse, period: 1 },
+                        { draw_number: 100, date: '14/01/2025', lottery_name: 'Loto Français', winning_numbers: [3, 12, 19, 26, 33], universe: 'fruity', period: 1 }
+                    ];
+                    const testDraws = testDrawsRaw.map(d => {
+                        const n = Array.isArray(d.winning_numbers) ? d.winning_numbers.length : 0;
+                        return { ...d, combinations_count: n >= 2 ? (n * (n - 1)) / 2 : 0 };
+                    });
+                    displayDrawHistoryModal(testDraws, session && session.name ? session.name : '');
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement historique:', error);
+                showNotification('❌ Erreur chargement historique', 'error');
+            }
         }
-        
+
         function extractUniqueDraws(journal) {
             const drawsMap = new Map();
-            
+
             journal.forEach(entry => {
                 const key = entry.date;
                 if (!drawsMap.has(key)) {
+                    const nums = entry.winning_numbers || [];
+                    const n = Array.isArray(nums) ? nums.length : 0;
+                    const combos = n >= 2 ? (n * (n - 1)) / 2 : 0;
                     drawsMap.set(key, {
+                        draw_number: entry.draw_number,
                         date: entry.date,
                         lottery_name: entry.lottery_name,
-                        winning_numbers: entry.winning_numbers,
-                        combinations_count: 1,
+                        winning_numbers: nums,
+                        combinations_count: combos,
                         universe: entry.univers,
                         period: entry.period
                     });
-                } else {
-                    drawsMap.get(key).combinations_count++;
                 }
+                // if already present, keep the precomputed combinations_count (do not increment)
             });
-            
+
             return Array.from(drawsMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
         }
-        
-        function displayDrawHistoryModal(draws) {
+
+        function displayDrawHistoryModal(draws, sessionName) {
+            // Trier par date décroissante (plus récent en haut) - Tri fait en amont
+
             const modal = document.createElement('div');
             modal.className = 'draw-history-modal';
             modal.innerHTML = `
                 <div class="modal-overlay" onclick="closeDrawHistoryModal()"></div>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>📅 Historique des Tirages Analysés</h3>
+                        <h3>📅 Historique des Tirages ${sessionName ? '- Session: ' + sessionName : ''} (Plus récent → Plus ancien)</h3>
                         <button class="modal-close" onclick="closeDrawHistoryModal()">❌</button>
                     </div>
                     <div class="modal-body">
@@ -1749,28 +3202,38 @@
                             </div>
                             <div class="summary-item">
                                 <span class="summary-label">Période :</span>
-                                <span class="summary-value">${draws.length > 0 ? draws[draws.length - 1].date : 'N/A'} - ${draws.length > 0 ? draws[0].date : 'N/A'}</span>
+                                <span class="summary-value">${draws.length > 0 ? draws[draws.length - 1].date : 'N/A'} → ${draws.length > 0 ? draws[0].date : 'N/A'}</span>
                             </div>
                         </div>
                         <div class="draws-list">
-                            ${draws.map(draw => `
+                            ${draws.map(draw => {
+                const isMultiUnivers = draw.universe === '5/90';
+                const universText = isMultiUnivers ? 'MULTI-UNIVERS' : draw.universe.toUpperCase();
+                const universClass = isMultiUnivers ? 'mundo' : draw.universe.toLowerCase();
+
+                const isNoDraw = draw.is_no_draw || (draw.winning_numbers && draw.winning_numbers.length === 0);
+                const statusBadge = isNoDraw ? `<span style="background: #ff4d4f; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">NO DRAW</span>` : '';
+
+                return `
                                 <div class="draw-item">
                                     <div class="draw-header">
-                                        <div class="draw-date">📅 ${draw.date}</div>
+                                        <div class="draw-date">📅 Tirage <span style="color: #1890ff;">#${draw.draw_number || '?'}</span> - ${draw.date}</div>
                                         <div class="draw-period">Période ${draw.period}</div>
                                     </div>
                                     <div class="draw-details">
                                         <div class="draw-info">
                                             <span class="info-label">Loterie :</span>
-                                            <span class="info-value">${draw.lottery_name}</span>
+                                            <span class="info-value">${draw.lottery_name} ${statusBadge}</span>
                                         </div>
                                         <div class="draw-info">
-                                            <span class="info-label">Numéros :</span>
-                                            <span class="info-value winning-numbers">${draw.winning_numbers.join(' - ')}</span>
+                                            <span class="info-label">${isNoDraw ? 'Raison' : 'Numéros'} :</span>
+                                            <span class="info-value ${isNoDraw ? '' : 'winning-numbers'}" style="${isNoDraw ? 'color: #ff4d4f; font-weight: bold;' : ''}">
+                                                ${isNoDraw ? (draw.no_draw_reason || 'Annulé / Pas de tirage') : draw.winning_numbers.join(' - ')}
+                                            </span>
                                         </div>
                                         <div class="draw-info">
                                             <span class="info-label">Univers :</span>
-                                            <span class="info-value universe-${draw.universe}">${draw.universe.toUpperCase()}</span>
+                                            <span class="info-value universe-${universClass}">${universText}</span>
                                         </div>
                                         <div class="draw-info">
                                             <span class="info-label">Combinaisons analysées :</span>
@@ -1778,7 +3241,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            `).join('')}
+                            `}).join('')}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1787,26 +3250,26 @@
                     </div>
                 </div>
             `;
-            
+
             document.body.appendChild(modal);
-            
+
             // Stocker les données pour l'export
             window.currentDrawHistory = draws;
         }
-        
+
         function closeDrawHistoryModal() {
             const modal = document.querySelector('.draw-history-modal');
             if (modal) {
                 modal.remove();
             }
         }
-        
+
         function exportDrawHistory() {
             if (!window.currentDrawHistory) {
                 showNotification('❌ Aucun historique à exporter', 'error');
                 return;
             }
-            
+
             const csvContent = [
                 ['Date', 'Loterie', 'Numéros Gagnants', 'Univers', 'Période', 'Combinaisons Analysées'],
                 ...window.currentDrawHistory.map(draw => [
@@ -1818,7 +3281,7 @@
                     draw.combinations_count
                 ])
             ].map(row => row.join(',')).join('\n');
-            
+
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1826,71 +3289,71 @@
             a.download = `historique_tirages_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             window.URL.revokeObjectURL(url);
-            
+
             showNotification('✅ Historique exporté avec succès !', 'success');
         }
-        
+
         function filterJournalByDrawSelection(data) {
             if (!window.currentDrawSelection || !data.journal) {
                 return data; // Pas de filtre, retourner toutes les données
             }
-            
+
             const selection = window.currentDrawSelection;
             let filteredJournal = [];
-            
+
             console.log('🔍 Filtrage des données:', {
                 mode: selection.mode,
                 selection: selection,
                 totalEntries: data.journal.length
             });
-            
-            switch(selection.mode) {
+
+            switch (selection.mode) {
                 case 'single':
                     // Convertir la date sélectionnée au format attendu
                     const targetDate = formatDateForComparison(selection.draw);
                     console.log('🎯 Date cible:', targetDate);
-                    
+
                     filteredJournal = data.journal.filter(entry => {
                         const entryDate = formatDateForComparison(entry.date);
                         console.log('📅 Comparaison:', entryDate, 'vs', targetDate);
                         return entryDate === targetDate;
                     });
                     break;
-                    
+
                 case 'multiple':
                     if (selection.draws && selection.draws.length > 0) {
                         const targetDates = selection.draws.map(date => formatDateForComparison(date));
                         console.log('🎯 Dates cibles:', targetDates);
-                        
+
                         filteredJournal = data.journal.filter(entry => {
                             const entryDate = formatDateForComparison(entry.date);
                             return targetDates.includes(entryDate);
                         });
                     }
                     break;
-                    
+
                 case 'range':
                     if (selection.startDate && selection.endDate) {
                         const startDate = new Date(selection.startDate);
                         const endDate = new Date(selection.endDate);
-                        
+
                         filteredJournal = data.journal.filter(entry => {
                             const entryDate = parseEntryDate(entry.date);
                             return entryDate >= startDate && entryDate <= endDate;
                         });
                     }
                     break;
-                    
+
                 default:
                     filteredJournal = data.journal;
             }
-            
+
             console.log('✅ Résultat filtrage:', {
                 original: data.journal.length,
                 filtered: filteredJournal.length,
                 entries: filteredJournal.map(e => ({ date: e.date, combination: e.combination }))
             });
-            
+
             // Retourner les données avec le journal filtré
             return {
                 ...data,
@@ -1904,27 +3367,27 @@
                 }
             };
         }
-        
+
         function formatDateForComparison(dateString) {
             if (!dateString) return '';
-            
+
             // Si c'est déjà au format YYYY-MM-DD
             if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return dateString;
             }
-            
+
             // Si c'est au format DD/MM/YYYY
             if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
                 const [day, month, year] = dateString.split('/');
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
             }
-            
+
             // Si c'est au format DD-MM-YYYY
             if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) {
                 const [day, month, year] = dateString.split('-');
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
             }
-            
+
             // Essayer de parser comme Date
             try {
                 const date = new Date(dateString);
@@ -1934,20 +3397,20 @@
             } catch (e) {
                 console.warn('⚠️ Impossible de parser la date:', dateString);
             }
-            
+
             return dateString;
         }
-        
+
         function parseEntryDate(dateString) {
             if (!dateString) return new Date(0);
-            
+
             // Essayer différents formats
             const formats = [
                 /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
                 /^(\d{2})\/(\d{2})\/(\d{4})$/, // DD/MM/YYYY
                 /^(\d{2})-(\d{2})-(\d{4})$/ // DD-MM-YYYY
             ];
-            
+
             for (let format of formats) {
                 const match = dateString.match(format);
                 if (match) {
@@ -1958,17 +3421,17 @@
                     }
                 }
             }
-            
+
             // Fallback
             return new Date(dateString);
         }
-        
+
         function generateTestDataForDate(selectedDate) {
             console.log('🧪 Génération de données de test pour:', selectedDate);
-            
+
             // Convertir la date au format d'affichage
             const displayDate = formatDateDisplay(selectedDate);
-            
+
             // Générer des données de test pour cette date spécifique
             const testJournal = [
                 {
@@ -1986,7 +3449,7 @@
                     parite: 'Pair',
                     unidos: 'U1',
                     chip: 'CH1',
-                    univers: window.currentDrawSelection.universe || 'mundo',
+                    univers: document.getElementById('universe').value,
                     forme: 'carre',
                     engine: 'car',
                     beastie: 'lion',
@@ -2007,19 +3470,19 @@
                     parite: 'Impair',
                     unidos: 'U2',
                     chip: 'CH2',
-                    univers: window.currentDrawSelection.universe || 'mundo',
+                    univers: document.getElementById('universe').value,
                     forme: 'triangle',
                     engine: 'train',
                     beastie: 'tiger',
                     tome: 'tome2'
                 }
             ];
-            
+
             return {
                 journal: testJournal,
                 total_periods: 1,
                 periodicity: 3,
-                universe_filter: window.currentDrawSelection.universe || 'mundo',
+                universe_filter: document.getElementById('universe').value,
                 filtered: true,
                 filter_info: {
                     mode: 'single',
@@ -2028,23 +3491,43 @@
                 }
             };
         }
-        
+
         function formatDateDisplay(dateString) {
             if (!dateString) return '';
             const date = new Date(dateString);
             return date.toLocaleDateString('fr-FR');
         }
-        
+
+        async function loadSessionDrawHistory(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                if (response.ok) {
+                    const draws = await response.json();
+                    console.log(`📋 Historique session ${sessionId}:`, draws.length, 'tirages');
+
+                    // Mettre à jour le bouton historique avec le nombre de tirages
+                    const historyBtn = document.getElementById('historyBtn');
+                    if (historyBtn) {
+                        historyBtn.textContent = `📅 HISTORIQUE (${draws.length} tirages)`;
+                    }
+                } else {
+                    console.log('⚠️ Pas d\'historique pour cette session');
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement historique session:', error);
+            }
+        }
+
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.textContent = message;
-            
+
             const colors = {
                 success: 'linear-gradient(135deg, #2ed573, #26d0ce)',
                 error: 'linear-gradient(135deg, #ff4757, #ff3742)',
                 info: 'linear-gradient(135deg, #1890ff, #40a9ff)'
             };
-            
+
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -2057,14 +3540,122 @@
                 z-index: 10000;
                 animation: slideIn 0.3s ease;
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 3000);
         }
+
+        async function onDateRangeChange() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const sessionId = document.getElementById('sessionSelect').value;
+
+            if (!startDate || !endDate || !sessionId) return;
+
+            // Recalculer la période de travail basée sur les nouvelles dates
+            try {
+                const response = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                if (response.ok) {
+                    const draws = await response.json();
+
+                    // Filtrer les tirages dans la plage de dates
+                    const filteredDraws = draws.filter(draw => {
+                        const drawDate = new Date(draw.draw_date);
+                        const start = new Date(startDate);
+                        const end = new Date(endDate);
+                        return drawDate >= start && drawDate <= end;
+                    });
+
+                    updateWorkPeriodRange(filteredDraws.length);
+                    console.log(`📅 Période mise à jour: ${filteredDraws.length} tirages entre ${startDate} et ${endDate}`);
+                }
+            } catch (error) {
+                console.error('❌ Erreur calcul période:', error);
+            }
+        }
     </script>
+    <!-- Neuro-Katula Chat Assistant -->
+    <div id="neuroKatulaChat" class="chat-assistant-container collapsed">
+        <div class="chat-header" onclick="toggleChat()">
+            <h3><span class="chat-toggle-icon">🤖</span> <span>Neuro-Katula AI</span></h3>
+            <select id="aiProviderSelect" onclick="event.stopPropagation()"
+                style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 4px; padding: 2px 5px; font-size: 0.8rem; margin-left: auto; margin-right: 10px; cursor: pointer;">
+                <option value="deepseek" style="color: black;">DeepSeek</option>
+                <option value="openai" style="color: black;">OpenAI</option>
+                <option value="anthropic" style="color: black;">Claude</option>
+                <option value="groq" style="color: black; font-weight: bold;">Groq (Gratuit/Rapide)</option>
+                <option value="ollama" style="color: black;">Ollama (Local)</option>
+            </select>
+            <span class="close-btn">−</span>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+            <div class="message ai">
+                Bonjour ! Je suis Neuro-Katula, votre assistant analytique. Je peux vous aider à interpréter ces
+                statistiques ou à trouver des patterns spécifiques.
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Posez une question..." onkeypress="handleChatKey(event)">
+            <button onclick="sendChatMessage()">➜</button>
+        </div>
+    </div>
+
+    <script src="assets/js/katula-advanced-stats.js"></script>
+    <script src="assets/js/katula-chat.js"></script>
+
+
+    <script>
+        // Use the function from katula-advanced-stats.js
+        console.log("Partial Journal Ready (External Version)");
+
+        // --- SESSION MANAGEMENT ---
+        async function loadSessions() {
+            try {
+                const response = await fetch(`${API_BASE}/unified/session/sessions`);
+                if (!response.ok) throw new Error('Failed to load sessions');
+                const data = await response.json();
+                const sessions = data.sessions || [];
+
+                const select = document.getElementById('sessionSelect');
+                select.innerHTML = '<option value="">Sélectionner une session...</option>';
+
+                // Sort by date desc
+                sessions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                sessions.forEach(session => {
+                    const option = document.createElement('option');
+                    option.value = session.id;
+                    option.textContent = `${session.name} (${new Date(session.created_at).toLocaleDateString()})`;
+                    select.appendChild(option);
+                });
+
+                // Check URL params for auto-select
+                const urlParams = new URLSearchParams(window.location.search);
+                const sessionId = urlParams.get('session_id');
+                if (sessionId) {
+                    select.value = sessionId;
+                    // Trigger load if value exists (valid session)
+                    if (select.value) {
+                        // Small delay to ensure other scripts are ready
+                        setTimeout(() => loadJournal(), 500);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                showToast('Erreur chargement sessions', 3000);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSessions();
+        });
+    </script>
+
 </body>
 
 </html>

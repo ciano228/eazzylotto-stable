@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Debug - Clics Formes</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { border: 2px solid #333; padding: 15px; margin: 10px 0; }
+        .forme-icon { 
+            display: inline-block; 
+            padding: 10px; 
+            margin: 5px; 
+            border: 2px solid #ddd; 
+            cursor: pointer; 
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .forme-icon:hover { background: #e0e0e0; }
+        #logs { 
+            background: #000; 
+            color: #0f0; 
+            padding: 10px; 
+            height: 200px; 
+            overflow-y: auto; 
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Debug - Problème Clics Formes</h1>
+    
+    <div class="test-container">
+        <h3>Test 1: Onclick Inline</h3>
+        <div class="forme-icon" onclick="logMessage('CLIC INLINE: carré')">■ Carré (onclick)</div>
+        <div class="forme-icon" onclick="logMessage('CLIC INLINE: triangle')">▲ Triangle (onclick)</div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Test 2: Event Listeners</h3>
+        <div class="forme-icon" data-forme="carre" id="test-carre">■ Carré (listener)</div>
+        <div class="forme-icon" data-forme="triangle" id="test-triangle">▲ Triangle (listener)</div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Test 3: Simulation HTML Généré</h3>
+        <div id="generated-content"></div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Console Logs</h3>
+        <div id="logs"></div>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <script>
+        // Fonction de logging
+        function logMessage(msg) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.getElementById('logs');
+            logDiv.textContent += `[${timestamp}] ${msg}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(msg);
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').textContent = '';
+        }
+        
+        // Test 2: Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            logMessage('DOM chargé - Ajout des event listeners');
+            
+            document.getElementById('test-carre').addEventListener('click', function(e) {
+                logMessage('CLIC LISTENER: carré');
+                e.stopPropagation();
+            });
+            
+            document.getElementById('test-triangle').addEventListener('click', function(e) {
+                logMessage('CLIC LISTENER: triangle');
+                e.stopPropagation();
+            });
+            
+            // Test 3: Simulation du HTML généré comme dans l'app
+            generateTestHTML();
+        });
+        
+        // Simulation de la génération HTML comme dans l'application
+        function generateTestHTML() {
+            logMessage('Génération HTML simulée...');
+            
+            const container = document.getElementById('generated-content');
+            let html = '';
+            
+            const formes = [
+                { name: 'carre', icon: '■' },
+                { name: 'triangle', icon: '▲' }
+            ];
+            
+            formes.forEach(forme => {
+                html += `<div class="drawer clickable-forme forme-${forme.name}" 
+                            data-forme="${forme.name}" 
+                            title="Test ${forme.name}" 
+                            style="display: inline-block; padding: 10px; margin: 5px; border: 2px solid #ddd; cursor: pointer; background: rgba(255,255,255,0.1); border-radius: 4px;">
+                            ${forme.icon} ${forme.name}
+                         </div>`;
+            });
+            
+            container.innerHTML = html;
+            
+            // Ajouter les event listeners après génération
+            setTimeout(() => {
+                const elements = container.querySelectorAll('.clickable-forme');
+                logMessage(`Ajout listeners pour ${elements.length} éléments générés`);
+                
+                elements.forEach(element => {
+                    element.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const forme = this.dataset.forme;
+                        logMessage(`CLIC GÉNÉRÉ: ${forme}`);
+                        testFilter(forme);
+                    });
+                });
+            }, 100);
+        }
+        
+        function testFilter(forme) {
+            logMessage(`Fonction testFilter appelée avec: ${forme}`);
+            alert(`Test filtrage: ${forme}`);
+        }
+        
+        // Capturer toutes les erreurs
+        window.addEventListener('error', function(e) {
+            logMessage(`ERREUR: ${e.message} - ${e.filename}:${e.lineno}`);
+        });
+        
+        logMessage('Script de test chargé');
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "backend": {
-    "url": "http://localhost:8000/api/kiro/chat"
+    "url": "http://localhost:8881/api/kiro/chat"
   },
   "frontend": {
     "entry": "katula-dynamic.html"
@@ -8,5 +8,11 @@
   "project": {
     "name": "Eazzy Calculator",
     "description": "Système analytique et prédictif basé sur Katula"
+  }
+  ,
+  "models": {
+    "available": ["claude-haiku-4.5", "openai-gpt", "mistral", "deepseek", "groq", "ollama"],
+    "enabled_for_all_clients": true,
+    "default": "claude-haiku-4.5"
   }
 }

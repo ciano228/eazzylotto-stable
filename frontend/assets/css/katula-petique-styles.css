@@ -1,0 +1,45 @@
+/* Marquage visuel des petiques (quadrants) sur les matrices Katula */
+
+.mini-chip-cell.petique-q1 {
+    border-left: 4px solid #3498db !important; /* Bleu - Haut-Gauche (L1-4, C1-3) */
+}
+
+.mini-chip-cell.petique-q2 {
+    border-left: 4px solid #27ae60 !important; /* Vert - Haut-Droite (L1-4, C4-6) */
+}
+
+.mini-chip-cell.petique-q3 {
+    border-left: 4px solid #e67e22 !important; /* Orange - Bas-Gauche (L5-8, C1-3) */
+}
+
+.mini-chip-cell.petique-q4 {
+    border-left: 4px solid #9b59b6 !important; /* Violet - Bas-Droite (L5-8, C4-6) */
+}
+
+/* Légende des petiques */
+.petique-legend {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 15px 0;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.petique-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: white;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+.petique-legend-color {
+    width: 25px;
+    height: 15px;
+    border-radius: 3px;
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Marquage Visuel des Petiques</title>
+    <script src="assets/js/katula-geometric-helpers.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .katula-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 3px;
+            aspect-ratio: 6/8;
+            max-width: 400px;
+            margin: 20px auto;
+            border: 2px solid #2c3e50;
+            background: #2c3e50;
+            padding: 3px;
+        }
+
+        .chip-cell {
+            background: white;
+            border: 1px solid #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chip-cell:hover {
+            background: #ecf0f1;
+            transform: scale(1.05);
+        }
+
+        /* Marquage visuel des petiques */
+        .chip-cell.petique-q1 {
+            border-left: 5px solid #3498db !important;
+            /* Bleu - Haut-Gauche */
+        }
+
+        .chip-cell.petique-q2 {
+            border-left: 5px solid #27ae60 !important;
+            /* Vert - Haut-Droite */
+        }
+
+        .chip-cell.petique-q3 {
+            border-left: 5px solid #e67e22 !important;
+            /* Orange - Bas-Gauche */
+        }
+
+        .chip-cell.petique-q4 {
+            border-left: 5px solid #9b59b6 !important;
+            /* Violet - Bas-Droite */
+        }
+
+        .info-panel {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-panel h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        #chipInfo {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎯 Test - Marquage Visuel des Petiques Katula</h1>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3498db;"></div>
+                <span><strong>Petique 1</strong> (Haut-Gauche)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #27ae60;"></div>
+                <span><strong>Petique 2</strong> (Haut-Droite)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e67e22;"></div>
+                <span><strong>Petique 3</strong> (Bas-Gauche)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #9b59b6;"></div>
+                <span><strong>Petique 4</strong> (Bas-Droite)</span>
+            </div>
+        </div>
+
+        <div class="katula-grid" id="katulaGrid">
+            <!-- Les chips seront générés ici -->
+        </div>
+
+        <div class="info-panel">
+            <h3>📊 Informations du Chip</h3>
+            <div id="chipInfo">Cliquez sur un chip pour voir ses informations...</div>
+        </div>
+    </div>
+
+    <script>
+        // Générer la grille Katula avec marquage des petiques
+        function generateKatulaGrid() {
+            const grid = document.getElementById('katulaGrid');
+            let html = '';
+
+            for (let chipNumber = 1; chipNumber <= 48; chipNumber++) {
+                // Obtenir le petique du chip
+                const petique = window.KatulaGeometric.getPetiqueFromChip(chipNumber);
+                const position = window.KatulaGeometric.getChipPosition(chipNumber);
+
+                html += `
+                    <div class="chip-cell petique-${petique}" 
+                         data-chip="${chipNumber}"
+                         data-petique="${petique}"
+                         data-ligne="${position.ligne}"
+                         data-colonne="${position.colonne}"
+                         onclick="showChipInfo(${chipNumber})">
+                        ${chipNumber}
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // Afficher les informations d'un chip
+        function showChipInfo(chipNumber) {
+            const position = window.KatulaGeometric.getChipPosition(chipNumber);
+            const petiqueLabel = window.KatulaGeometric.PETIQUE_LABELS[position.petique];
+            const petiqueColor = window.KatulaGeometric.PETIQUE_COLORS[position.petique];
+            const tome = window.KatulaGeometric.getTomeFromChip(chipNumber);
+            const granque = window.KatulaGeometric.getGranqueFromChip(chipNumber);
+
+            const infoDiv = document.getElementById('chipInfo');
+            infoDiv.innerHTML = `
+                <strong>🎯 Chip ${chipNumber}</strong><br>
+                <strong>Position:</strong> ${position.ligne} / ${position.colonne}<br>
+                <strong>Petique:</strong> <span style="color: ${petiqueColor}; font-weight: bold;">${petiqueLabel}</span><br>
+                <strong>Tome:</strong> ${tome.toUpperCase()}<br>
+                <strong>Granque:</strong> ${granque.toUpperCase()}<br>
+                <br>
+                <em>La bordure gauche colorée indique le petique du chip.</em>
+            `;
+        }
+
+        // Générer la grille au chargement
+        window.addEventListener('DOMContentLoaded', function () {
+            if (window.KatulaGeometric) {
+                generateKatulaGrid();
+                console.log('✅ Grille Katula générée avec marquage des petiques');
+            } else {
+                console.error('❌ Module KatulaGeometric non chargé');
+                document.getElementById('katulaGrid').innerHTML =
+                    '<div style="padding: 20px; text-align: center; color: red;">Erreur: Module géométrique non chargé</div>';
+            }
+        });
+    </script>
+</body>
+
+</html>

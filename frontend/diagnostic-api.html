@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnostic API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .test { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { border-left: 4px solid #52c41a; }
+        .error { border-left: 4px solid #ff4d4f; }
+        button { background: #1890ff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        pre { background: #f0f0f0; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic API EazzyCalculator</h1>
+    
+    <div class="test">
+        <h3>Test 1: Nouveau Service Journal V2</h3>
+        <button onclick="testJournalV2()">Tester /api/journal/combination/34/38</button>
+        <pre id="result1">En attente...</pre>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Ancien Service Katula</h3>
+        <button onclick="testKatula()">Tester /api/katula/analyze-session</button>
+        <pre id="result2">En attente...</pre>
+    </div>
+    
+    <div class="test">
+        <h3>Test 3: Sessions</h3>
+        <button onclick="testSessions()">Tester /api/unified/session/sessions</button>
+        <pre id="result3">En attente...</pre>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function testJournalV2() {
+            const result = document.getElementById('result1');
+            result.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/journal/combination/34/38`);
+                const data = await response.json();
+                
+                result.textContent = JSON.stringify(data, null, 2);
+                result.parentElement.className = response.ok ? 'test success' : 'test error';
+            } catch (error) {
+                result.textContent = 'ERREUR: ' + error.message;
+                result.parentElement.className = 'test error';
+            }
+        }
+
+        async function testKatula() {
+            const result = document.getElementById('result2');
+            result.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/katula/analyze-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: 11,
+                        universe: 'mundo',
+                        draws: [{
+                            draw_number: 1,
+                            draw_date: '2025-01-15',
+                            lottery_name: 'Test',
+                            winning_numbers: [1, 2, 3, 4, 5]
+                        }]
+                    })
+                });
+                const data = await response.json();
+                
+                result.textContent = JSON.stringify(data, null, 2);
+                result.parentElement.className = response.ok ? 'test success' : 'test error';
+            } catch (error) {
+                result.textContent = 'ERREUR: ' + error.message;
+                result.parentElement.className = 'test error';
+            }
+        }
+
+        async function testSessions() {
+            const result = document.getElementById('result3');
+            result.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/unified/session/sessions`);
+                const data = await response.json();
+                
+                result.textContent = JSON.stringify(data, null, 2);
+                result.parentElement.className = response.ok ? 'test success' : 'test error';
+            } catch (error) {
+                result.textContent = 'ERREUR: ' + error.message;
+                result.parentElement.className = 'test error';
+            }
+        }
+    </script>
+</body>
+</html>

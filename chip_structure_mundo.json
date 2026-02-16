@@ -1,0 +1,3913 @@
+{
+  "universe": "mundo",
+  "chip_structure": {
+    "chip1": [
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer1",
+        "drawer": 1,
+        "forme": "carre",
+        "denomination": "table 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer2",
+        "drawer": 2,
+        "forme": "triangle",
+        "denomination": "forest 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer2",
+        "drawer": 2,
+        "forme": "triangle",
+        "denomination": "forest 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer3",
+        "drawer": 3,
+        "forme": "cercle",
+        "denomination": "shoes 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer3",
+        "drawer": 3,
+        "forme": "cercle",
+        "denomination": "shoes 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer3",
+        "drawer": 3,
+        "forme": "cercle",
+        "denomination": "shoes 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer3",
+        "drawer": 3,
+        "forme": "cercle",
+        "denomination": "shoes 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer4",
+        "drawer": 4,
+        "forme": "rectangle",
+        "denomination": "gold 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer4",
+        "drawer": 4,
+        "forme": "rectangle",
+        "denomination": "gold 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer4",
+        "drawer": 4,
+        "forme": "rectangle",
+        "denomination": "gold 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer4",
+        "drawer": 4,
+        "forme": "rectangle",
+        "denomination": "gold 1",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip10": [
+      {
+        "drawer_name": "drawer34",
+        "drawer": 34,
+        "forme": "carre",
+        "denomination": "road 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer34",
+        "drawer": 34,
+        "forme": "carre",
+        "denomination": "road 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer34",
+        "drawer": 34,
+        "forme": "carre",
+        "denomination": "road 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer34",
+        "drawer": 34,
+        "forme": "carre",
+        "denomination": "road 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer35",
+        "drawer": 35,
+        "forme": "triangle",
+        "denomination": "flower 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer35",
+        "drawer": 35,
+        "forme": "triangle",
+        "denomination": "flower 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer35",
+        "drawer": 35,
+        "forme": "triangle",
+        "denomination": "flower 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer35",
+        "drawer": 35,
+        "forme": "triangle",
+        "denomination": "flower 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer36",
+        "drawer": 36,
+        "forme": "cercle",
+        "denomination": "fish 2",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer37",
+        "drawer": 37,
+        "forme": "rectangle",
+        "denomination": "hotel 2",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip11": [
+      {
+        "drawer_name": "drawer38",
+        "drawer": 38,
+        "forme": "triangle",
+        "denomination": "forest 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer38",
+        "drawer": 38,
+        "forme": "triangle",
+        "denomination": "forest 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer39",
+        "drawer": 39,
+        "forme": "cercle",
+        "denomination": "book 9",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer40",
+        "drawer": 40,
+        "forme": "rectangle",
+        "denomination": "rope 1",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip12": [
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer41",
+        "drawer": 41,
+        "forme": "cercle",
+        "denomination": "fish 1",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer42",
+        "drawer": 42,
+        "forme": "rectangle",
+        "denomination": "spoon 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer42",
+        "drawer": 42,
+        "forme": "rectangle",
+        "denomination": "spoon 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer42",
+        "drawer": 42,
+        "forme": "rectangle",
+        "denomination": "spoon 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer42",
+        "drawer": 42,
+        "forme": "rectangle",
+        "denomination": "spoon 3",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip13": [
+      {
+        "drawer_name": "drawer43",
+        "drawer": 43,
+        "forme": "carre",
+        "denomination": "chair 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer43",
+        "drawer": 43,
+        "forme": "carre",
+        "denomination": "chair 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer44",
+        "drawer": 44,
+        "forme": "triangle",
+        "denomination": "mountain 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer45",
+        "drawer": 45,
+        "forme": "cercle",
+        "denomination": "football 1",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer46",
+        "drawer": 46,
+        "forme": "rectangle",
+        "denomination": "scissors 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer46",
+        "drawer": 46,
+        "forme": "rectangle",
+        "denomination": "scissors 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer46",
+        "drawer": 46,
+        "forme": "rectangle",
+        "denomination": "scissors 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer46",
+        "drawer": 46,
+        "forme": "rectangle",
+        "denomination": "scissors 1",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip14": [
+      {
+        "drawer_name": "drawer47",
+        "drawer": 47,
+        "forme": "carre",
+        "denomination": "river 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer47",
+        "drawer": 47,
+        "forme": "carre",
+        "denomination": "river 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer47",
+        "drawer": 47,
+        "forme": "carre",
+        "denomination": "river 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer47",
+        "drawer": 47,
+        "forme": "carre",
+        "denomination": "river 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer48",
+        "drawer": 48,
+        "forme": "triangle",
+        "denomination": "mountain 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer49",
+        "drawer": 49,
+        "forme": "cercle",
+        "denomination": "book 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer49",
+        "drawer": 49,
+        "forme": "cercle",
+        "denomination": "book 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer50",
+        "drawer": 50,
+        "forme": "rectangle",
+        "denomination": "scissors 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer50",
+        "drawer": 50,
+        "forme": "rectangle",
+        "denomination": "scissors 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer50",
+        "drawer": 50,
+        "forme": "rectangle",
+        "denomination": "scissors 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer50",
+        "drawer": 50,
+        "forme": "rectangle",
+        "denomination": "scissors 2",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip15": [
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer51",
+        "drawer": 51,
+        "forme": "carre",
+        "denomination": "door 1",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer52",
+        "drawer": 52,
+        "forme": "triangle",
+        "denomination": "fire 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer52",
+        "drawer": 52,
+        "forme": "triangle",
+        "denomination": "fire 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer52",
+        "drawer": 52,
+        "forme": "triangle",
+        "denomination": "fire 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer52",
+        "drawer": 52,
+        "forme": "triangle",
+        "denomination": "fire 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer52",
+        "drawer": 52,
+        "forme": "triangle",
+        "denomination": "fire 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer53",
+        "drawer": 53,
+        "forme": "cercle",
+        "denomination": "football 2",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer54",
+        "drawer": 54,
+        "forme": "rectangle",
+        "denomination": "rope 2",
+        "alpha_ranking": "h"
+      }
+    ],
+    "chip16": [
+      {
+        "drawer_name": "drawer55",
+        "drawer": 55,
+        "forme": "carre",
+        "denomination": "chair 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer55",
+        "drawer": 55,
+        "forme": "carre",
+        "denomination": "chair 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer55",
+        "drawer": 55,
+        "forme": "carre",
+        "denomination": "chair 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer56",
+        "drawer": 56,
+        "forme": "triangle",
+        "denomination": "forest 8",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer56",
+        "drawer": 56,
+        "forme": "triangle",
+        "denomination": "forest 8",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer57",
+        "drawer": 57,
+        "forme": "cercle",
+        "denomination": "book 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer57",
+        "drawer": 57,
+        "forme": "cercle",
+        "denomination": "book 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer58",
+        "drawer": 58,
+        "forme": "rectangle",
+        "denomination": "scissors 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer58",
+        "drawer": 58,
+        "forme": "rectangle",
+        "denomination": "scissors 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer58",
+        "drawer": 58,
+        "forme": "rectangle",
+        "denomination": "scissors 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer58",
+        "drawer": 58,
+        "forme": "rectangle",
+        "denomination": "scissors 3",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip17": [
+      {
+        "drawer_name": "drawer59",
+        "drawer": 59,
+        "forme": "triangle",
+        "denomination": "forest 9",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer59",
+        "drawer": 59,
+        "forme": "triangle",
+        "denomination": "forest 9",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer60",
+        "drawer": 60,
+        "forme": "cercle",
+        "denomination": "book 8",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer60",
+        "drawer": 60,
+        "forme": "cercle",
+        "denomination": "book 8",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer61",
+        "drawer": 61,
+        "forme": "rectangle",
+        "denomination": "scissors 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer61",
+        "drawer": 61,
+        "forme": "rectangle",
+        "denomination": "scissors 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer61",
+        "drawer": 61,
+        "forme": "rectangle",
+        "denomination": "scissors 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer61",
+        "drawer": 61,
+        "forme": "rectangle",
+        "denomination": "scissors 4",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip18": [
+      {
+        "drawer_name": "drawer62",
+        "drawer": 62,
+        "forme": "cercle",
+        "denomination": "shoes 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer62",
+        "drawer": 62,
+        "forme": "cercle",
+        "denomination": "shoes 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer62",
+        "drawer": 62,
+        "forme": "cercle",
+        "denomination": "shoes 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer62",
+        "drawer": 62,
+        "forme": "cercle",
+        "denomination": "shoes 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer63",
+        "drawer": 63,
+        "forme": "rectangle",
+        "denomination": "gold 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer63",
+        "drawer": 63,
+        "forme": "rectangle",
+        "denomination": "gold 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer63",
+        "drawer": 63,
+        "forme": "rectangle",
+        "denomination": "gold 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer63",
+        "drawer": 63,
+        "forme": "rectangle",
+        "denomination": "gold 5",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip19": [
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer64",
+        "drawer": 64,
+        "forme": "carre",
+        "denomination": "table 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer65",
+        "drawer": 65,
+        "forme": "triangle",
+        "denomination": "forest 11",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer65",
+        "drawer": 65,
+        "forme": "triangle",
+        "denomination": "forest 11",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer66",
+        "drawer": 66,
+        "forme": "cercle",
+        "denomination": "book 10",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer66",
+        "drawer": 66,
+        "forme": "cercle",
+        "denomination": "book 10",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer67",
+        "drawer": 67,
+        "forme": "rectangle",
+        "denomination": "scissors 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer67",
+        "drawer": 67,
+        "forme": "rectangle",
+        "denomination": "scissors 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer67",
+        "drawer": 67,
+        "forme": "rectangle",
+        "denomination": "scissors 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer67",
+        "drawer": 67,
+        "forme": "rectangle",
+        "denomination": "scissors 5",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip2": [
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer5",
+        "drawer": 5,
+        "forme": "carre",
+        "denomination": "house 1",
+        "alpha_ranking": "i"
+      },
+      {
+        "drawer_name": "drawer6",
+        "drawer": 6,
+        "forme": "triangle",
+        "denomination": "forest 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer6",
+        "drawer": 6,
+        "forme": "triangle",
+        "denomination": "forest 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer7",
+        "drawer": 7,
+        "forme": "cercle",
+        "denomination": "book 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer8",
+        "drawer": 8,
+        "forme": "rectangle",
+        "denomination": "gold 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer8",
+        "drawer": 8,
+        "forme": "rectangle",
+        "denomination": "gold 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer8",
+        "drawer": 8,
+        "forme": "rectangle",
+        "denomination": "gold 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer8",
+        "drawer": 8,
+        "forme": "rectangle",
+        "denomination": "gold 2",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip20": [
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer68",
+        "drawer": 68,
+        "forme": "carre",
+        "denomination": "window 3",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer69",
+        "drawer": 69,
+        "forme": "triangle",
+        "denomination": "forest 12",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer70",
+        "drawer": 70,
+        "forme": "cercle",
+        "denomination": "book 11",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer70",
+        "drawer": 70,
+        "forme": "cercle",
+        "denomination": "book 11",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer71",
+        "drawer": 71,
+        "forme": "rectangle",
+        "denomination": "scissors 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer71",
+        "drawer": 71,
+        "forme": "rectangle",
+        "denomination": "scissors 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer71",
+        "drawer": 71,
+        "forme": "rectangle",
+        "denomination": "scissors 6",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer71",
+        "drawer": 71,
+        "forme": "rectangle",
+        "denomination": "scissors 6",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip21": [
+      {
+        "drawer_name": "drawer72",
+        "drawer": 72,
+        "forme": "carre",
+        "denomination": "chair 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer72",
+        "drawer": 72,
+        "forme": "carre",
+        "denomination": "chair 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer73",
+        "drawer": 73,
+        "forme": "triangle",
+        "denomination": "flower 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer73",
+        "drawer": 73,
+        "forme": "triangle",
+        "denomination": "flower 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer73",
+        "drawer": 73,
+        "forme": "triangle",
+        "denomination": "flower 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer73",
+        "drawer": 73,
+        "forme": "triangle",
+        "denomination": "flower 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer74",
+        "drawer": 74,
+        "forme": "cercle",
+        "denomination": "book 12",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer74",
+        "drawer": 74,
+        "forme": "cercle",
+        "denomination": "book 12",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer75",
+        "drawer": 75,
+        "forme": "rectangle",
+        "denomination": "bottle 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer75",
+        "drawer": 75,
+        "forme": "rectangle",
+        "denomination": "bottle 1",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip22": [
+      {
+        "drawer_name": "drawer76",
+        "drawer": 76,
+        "forme": "carre",
+        "denomination": "chair 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer76",
+        "drawer": 76,
+        "forme": "carre",
+        "denomination": "chair 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer77",
+        "drawer": 77,
+        "forme": "triangle",
+        "denomination": "forest 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer78",
+        "drawer": 78,
+        "forme": "cercle",
+        "denomination": "shoes 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer78",
+        "drawer": 78,
+        "forme": "cercle",
+        "denomination": "shoes 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer78",
+        "drawer": 78,
+        "forme": "cercle",
+        "denomination": "shoes 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer78",
+        "drawer": 78,
+        "forme": "cercle",
+        "denomination": "shoes 4",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer79",
+        "drawer": 79,
+        "forme": "rectangle",
+        "denomination": "umbrella 1",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip23": [
+      {
+        "drawer_name": "drawer80",
+        "drawer": 80,
+        "forme": "triangle",
+        "denomination": "rainbow 9",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer81",
+        "drawer": 81,
+        "forme": "cercle",
+        "denomination": "book 13",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer81",
+        "drawer": 81,
+        "forme": "cercle",
+        "denomination": "book 13",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer82",
+        "drawer": 82,
+        "forme": "rectangle",
+        "denomination": "umbrella 2",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip24": [
+      {
+        "drawer_name": "drawer83",
+        "drawer": 83,
+        "forme": "cercle",
+        "denomination": "shoes 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer83",
+        "drawer": 83,
+        "forme": "cercle",
+        "denomination": "shoes 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer83",
+        "drawer": 83,
+        "forme": "cercle",
+        "denomination": "shoes 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer83",
+        "drawer": 83,
+        "forme": "cercle",
+        "denomination": "shoes 5",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer84",
+        "drawer": 84,
+        "forme": "rectangle",
+        "denomination": "bottle 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer84",
+        "drawer": 84,
+        "forme": "rectangle",
+        "denomination": "bottle 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer84",
+        "drawer": 84,
+        "forme": "rectangle",
+        "denomination": "bottle 2",
+        "alpha_ranking": "c"
+      }
+    ],
+    "chip25": [
+      {
+        "drawer_name": "drawer85",
+        "drawer": 85,
+        "forme": "carre",
+        "denomination": "chair 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer85",
+        "drawer": 85,
+        "forme": "carre",
+        "denomination": "chair 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer85",
+        "drawer": 85,
+        "forme": "carre",
+        "denomination": "chair 7",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer86",
+        "drawer": 86,
+        "forme": "triangle",
+        "denomination": "rainbow 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer87",
+        "drawer": 87,
+        "forme": "cercle",
+        "denomination": "star 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer87",
+        "drawer": 87,
+        "forme": "cercle",
+        "denomination": "star 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer88",
+        "drawer": 88,
+        "forme": "rectangle",
+        "denomination": "radio 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer88",
+        "drawer": 88,
+        "forme": "rectangle",
+        "denomination": "radio 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer88",
+        "drawer": 88,
+        "forme": "rectangle",
+        "denomination": "radio 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer88",
+        "drawer": 88,
+        "forme": "rectangle",
+        "denomination": "radio 1",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip26": [
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer89",
+        "drawer": 89,
+        "forme": "carre",
+        "denomination": "table 3",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer90",
+        "drawer": 90,
+        "forme": "triangle",
+        "denomination": "rainbow 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer90",
+        "drawer": 90,
+        "forme": "triangle",
+        "denomination": "rainbow 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer90",
+        "drawer": 90,
+        "forme": "triangle",
+        "denomination": "rainbow 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer91",
+        "drawer": 91,
+        "forme": "cercle",
+        "denomination": "star 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer91",
+        "drawer": 91,
+        "forme": "cercle",
+        "denomination": "star 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer92",
+        "drawer": 92,
+        "forme": "rectangle",
+        "denomination": "radio 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer92",
+        "drawer": 92,
+        "forme": "rectangle",
+        "denomination": "radio 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer92",
+        "drawer": 92,
+        "forme": "rectangle",
+        "denomination": "radio 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer92",
+        "drawer": 92,
+        "forme": "rectangle",
+        "denomination": "radio 2",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip27": [
+      {
+        "drawer_name": "drawer93",
+        "drawer": 93,
+        "forme": "carre",
+        "denomination": "bed 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer93",
+        "drawer": 93,
+        "forme": "carre",
+        "denomination": "bed 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer93",
+        "drawer": 93,
+        "forme": "carre",
+        "denomination": "bed 7",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer94",
+        "drawer": 94,
+        "forme": "triangle",
+        "denomination": "mountain 3",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer95",
+        "drawer": 95,
+        "forme": "cercle",
+        "denomination": "star 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer95",
+        "drawer": 95,
+        "forme": "cercle",
+        "denomination": "star 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer96",
+        "drawer": 96,
+        "forme": "rectangle",
+        "denomination": "bottle 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer96",
+        "drawer": 96,
+        "forme": "rectangle",
+        "denomination": "bottle 6",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip28": [
+      {
+        "drawer_name": "drawer100",
+        "drawer": 100,
+        "forme": "rectangle",
+        "denomination": "radio 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer100",
+        "drawer": 100,
+        "forme": "rectangle",
+        "denomination": "radio 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer100",
+        "drawer": 100,
+        "forme": "rectangle",
+        "denomination": "radio 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer100",
+        "drawer": 100,
+        "forme": "rectangle",
+        "denomination": "radio 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer97",
+        "drawer": 97,
+        "forme": "carre",
+        "denomination": "bed 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer97",
+        "drawer": 97,
+        "forme": "carre",
+        "denomination": "bed 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer97",
+        "drawer": 97,
+        "forme": "carre",
+        "denomination": "bed 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer98",
+        "drawer": 98,
+        "forme": "triangle",
+        "denomination": "forest 10",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer99",
+        "drawer": 99,
+        "forme": "cercle",
+        "denomination": "canoe 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer99",
+        "drawer": 99,
+        "forme": "cercle",
+        "denomination": "canoe 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer99",
+        "drawer": 99,
+        "forme": "cercle",
+        "denomination": "canoe 7",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer99",
+        "drawer": 99,
+        "forme": "cercle",
+        "denomination": "canoe 7",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer99",
+        "drawer": 99,
+        "forme": "cercle",
+        "denomination": "canoe 7",
+        "alpha_ranking": "e"
+      }
+    ],
+    "chip29": [
+      {
+        "drawer_name": "drawer101",
+        "drawer": 101,
+        "forme": "triangle",
+        "denomination": "rainbow 8",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer102",
+        "drawer": 102,
+        "forme": "cercle",
+        "denomination": "star 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer102",
+        "drawer": 102,
+        "forme": "cercle",
+        "denomination": "star 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer103",
+        "drawer": 103,
+        "forme": "rectangle",
+        "denomination": "bottle 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer103",
+        "drawer": 103,
+        "forme": "rectangle",
+        "denomination": "bottle 7",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip3": [
+      {
+        "drawer_name": "drawer10",
+        "drawer": 10,
+        "forme": "triangle",
+        "denomination": "forest 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer11",
+        "drawer": 11,
+        "forme": "cercle",
+        "denomination": "shoes 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer11",
+        "drawer": 11,
+        "forme": "cercle",
+        "denomination": "shoes 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer11",
+        "drawer": 11,
+        "forme": "cercle",
+        "denomination": "shoes 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer11",
+        "drawer": 11,
+        "forme": "cercle",
+        "denomination": "shoes 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer12",
+        "drawer": 12,
+        "forme": "rectangle",
+        "denomination": "bottle 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer12",
+        "drawer": 12,
+        "forme": "rectangle",
+        "denomination": "bottle 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer9",
+        "drawer": 9,
+        "forme": "carre",
+        "denomination": "chair 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer9",
+        "drawer": 9,
+        "forme": "carre",
+        "denomination": "chair 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer9",
+        "drawer": 9,
+        "forme": "carre",
+        "denomination": "chair 1",
+        "alpha_ranking": "c"
+      }
+    ],
+    "chip30": [
+      {
+        "drawer_name": "drawer104",
+        "drawer": 104,
+        "forme": "cercle",
+        "denomination": "canoe 8",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer104",
+        "drawer": 104,
+        "forme": "cercle",
+        "denomination": "canoe 8",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer104",
+        "drawer": 104,
+        "forme": "cercle",
+        "denomination": "canoe 8",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer104",
+        "drawer": 104,
+        "forme": "cercle",
+        "denomination": "canoe 8",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer105",
+        "drawer": 105,
+        "forme": "rectangle",
+        "denomination": "radio 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer105",
+        "drawer": 105,
+        "forme": "rectangle",
+        "denomination": "radio 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer105",
+        "drawer": 105,
+        "forme": "rectangle",
+        "denomination": "radio 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer105",
+        "drawer": 105,
+        "forme": "rectangle",
+        "denomination": "radio 4",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip31": [
+      {
+        "drawer_name": "drawer106",
+        "drawer": 106,
+        "forme": "carre",
+        "denomination": "bed 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer106",
+        "drawer": 106,
+        "forme": "carre",
+        "denomination": "bed 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer107",
+        "drawer": 107,
+        "forme": "triangle",
+        "denomination": "mountain 4",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer108",
+        "drawer": 108,
+        "forme": "cercle",
+        "denomination": "canoe 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer108",
+        "drawer": 108,
+        "forme": "cercle",
+        "denomination": "canoe 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer108",
+        "drawer": 108,
+        "forme": "cercle",
+        "denomination": "canoe 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer108",
+        "drawer": 108,
+        "forme": "cercle",
+        "denomination": "canoe 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer109",
+        "drawer": 109,
+        "forme": "rectangle",
+        "denomination": "radio 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer109",
+        "drawer": 109,
+        "forme": "rectangle",
+        "denomination": "radio 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer109",
+        "drawer": 109,
+        "forme": "rectangle",
+        "denomination": "radio 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer109",
+        "drawer": 109,
+        "forme": "rectangle",
+        "denomination": "radio 5",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip32": [
+      {
+        "drawer_name": "drawer110",
+        "drawer": 110,
+        "forme": "carre",
+        "denomination": "river 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer110",
+        "drawer": 110,
+        "forme": "carre",
+        "denomination": "river 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer110",
+        "drawer": 110,
+        "forme": "carre",
+        "denomination": "river 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer110",
+        "drawer": 110,
+        "forme": "carre",
+        "denomination": "river 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer111",
+        "drawer": 111,
+        "forme": "triangle",
+        "denomination": "rainbow 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer111",
+        "drawer": 111,
+        "forme": "triangle",
+        "denomination": "rainbow 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer111",
+        "drawer": 111,
+        "forme": "triangle",
+        "denomination": "rainbow 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer112",
+        "drawer": 112,
+        "forme": "cercle",
+        "denomination": "canoe 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer112",
+        "drawer": 112,
+        "forme": "cercle",
+        "denomination": "canoe 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer112",
+        "drawer": 112,
+        "forme": "cercle",
+        "denomination": "canoe 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer112",
+        "drawer": 112,
+        "forme": "cercle",
+        "denomination": "canoe 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer113",
+        "drawer": 113,
+        "forme": "rectangle",
+        "denomination": "radio 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer113",
+        "drawer": 113,
+        "forme": "rectangle",
+        "denomination": "radio 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer113",
+        "drawer": 113,
+        "forme": "rectangle",
+        "denomination": "radio 6",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer113",
+        "drawer": 113,
+        "forme": "rectangle",
+        "denomination": "radio 6",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip33": [
+      {
+        "drawer_name": "drawer114",
+        "drawer": 114,
+        "forme": "carre",
+        "denomination": "river 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer114",
+        "drawer": 114,
+        "forme": "carre",
+        "denomination": "river 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer114",
+        "drawer": 114,
+        "forme": "carre",
+        "denomination": "river 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer114",
+        "drawer": 114,
+        "forme": "carre",
+        "denomination": "river 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer115",
+        "drawer": 115,
+        "forme": "triangle",
+        "denomination": "rainbow 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer115",
+        "drawer": 115,
+        "forme": "triangle",
+        "denomination": "rainbow 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer116",
+        "drawer": 116,
+        "forme": "cercle",
+        "denomination": "canoe 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer116",
+        "drawer": 116,
+        "forme": "cercle",
+        "denomination": "canoe 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer116",
+        "drawer": 116,
+        "forme": "cercle",
+        "denomination": "canoe 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer116",
+        "drawer": 116,
+        "forme": "cercle",
+        "denomination": "canoe 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer117",
+        "drawer": 117,
+        "forme": "rectangle",
+        "denomination": "king 1",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip34": [
+      {
+        "drawer_name": "drawer118",
+        "drawer": 118,
+        "forme": "carre",
+        "denomination": "bed 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer118",
+        "drawer": 118,
+        "forme": "carre",
+        "denomination": "bed 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer119",
+        "drawer": 119,
+        "forme": "triangle",
+        "denomination": "rainbow 11",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer120",
+        "drawer": 120,
+        "forme": "cercle",
+        "denomination": "canoe 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer120",
+        "drawer": 120,
+        "forme": "cercle",
+        "denomination": "canoe 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer120",
+        "drawer": 120,
+        "forme": "cercle",
+        "denomination": "canoe 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer120",
+        "drawer": 120,
+        "forme": "cercle",
+        "denomination": "canoe 4",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer121",
+        "drawer": 121,
+        "forme": "rectangle",
+        "denomination": "king 2",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip35": [
+      {
+        "drawer_name": "drawer122",
+        "drawer": 122,
+        "forme": "triangle",
+        "denomination": "rainbow 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer122",
+        "drawer": 122,
+        "forme": "triangle",
+        "denomination": "rainbow 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer123",
+        "drawer": 123,
+        "forme": "cercle",
+        "denomination": "banana 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer124",
+        "drawer": 124,
+        "forme": "rectangle",
+        "denomination": "bottle 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer124",
+        "drawer": 124,
+        "forme": "rectangle",
+        "denomination": "bottle 5",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip36": [
+      {
+        "drawer_name": "drawer125",
+        "drawer": 125,
+        "forme": "cercle",
+        "denomination": "canoe 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer125",
+        "drawer": 125,
+        "forme": "cercle",
+        "denomination": "canoe 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer125",
+        "drawer": 125,
+        "forme": "cercle",
+        "denomination": "canoe 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer125",
+        "drawer": 125,
+        "forme": "cercle",
+        "denomination": "canoe 5",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer126",
+        "drawer": 126,
+        "forme": "rectangle",
+        "denomination": "gold 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer126",
+        "drawer": 126,
+        "forme": "rectangle",
+        "denomination": "gold 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer126",
+        "drawer": 126,
+        "forme": "rectangle",
+        "denomination": "gold 6",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer126",
+        "drawer": 126,
+        "forme": "rectangle",
+        "denomination": "gold 6",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip37": [
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer127",
+        "drawer": 127,
+        "forme": "carre",
+        "denomination": "door 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer128",
+        "drawer": 128,
+        "forme": "triangle",
+        "denomination": "fire 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer128",
+        "drawer": 128,
+        "forme": "triangle",
+        "denomination": "fire 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer128",
+        "drawer": 128,
+        "forme": "triangle",
+        "denomination": "fire 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer128",
+        "drawer": 128,
+        "forme": "triangle",
+        "denomination": "fire 3",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer129",
+        "drawer": 129,
+        "forme": "cercle",
+        "denomination": "canoe 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer129",
+        "drawer": 129,
+        "forme": "cercle",
+        "denomination": "canoe 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer129",
+        "drawer": 129,
+        "forme": "cercle",
+        "denomination": "canoe 6",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer129",
+        "drawer": 129,
+        "forme": "cercle",
+        "denomination": "canoe 6",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer130",
+        "drawer": 130,
+        "forme": "rectangle",
+        "denomination": "spoon 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer130",
+        "drawer": 130,
+        "forme": "rectangle",
+        "denomination": "spoon 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer130",
+        "drawer": 130,
+        "forme": "rectangle",
+        "denomination": "spoon 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer130",
+        "drawer": 130,
+        "forme": "rectangle",
+        "denomination": "spoon 4",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip38": [
+      {
+        "drawer_name": "drawer131",
+        "drawer": 131,
+        "forme": "carre",
+        "denomination": "bed 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer131",
+        "drawer": 131,
+        "forme": "carre",
+        "denomination": "bed 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer132",
+        "drawer": 132,
+        "forme": "triangle",
+        "denomination": "fire 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer132",
+        "drawer": 132,
+        "forme": "triangle",
+        "denomination": "fire 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer132",
+        "drawer": 132,
+        "forme": "triangle",
+        "denomination": "fire 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer132",
+        "drawer": 132,
+        "forme": "triangle",
+        "denomination": "fire 4",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer133",
+        "drawer": 133,
+        "forme": "cercle",
+        "denomination": "banana 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer134",
+        "drawer": 134,
+        "forme": "rectangle",
+        "denomination": "spoon 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer134",
+        "drawer": 134,
+        "forme": "rectangle",
+        "denomination": "spoon 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer134",
+        "drawer": 134,
+        "forme": "rectangle",
+        "denomination": "spoon 5",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer134",
+        "drawer": 134,
+        "forme": "rectangle",
+        "denomination": "spoon 5",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip39": [
+      {
+        "drawer_name": "drawer135",
+        "drawer": 135,
+        "forme": "carre",
+        "denomination": "bed 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer135",
+        "drawer": 135,
+        "forme": "carre",
+        "denomination": "bed 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer135",
+        "drawer": 135,
+        "forme": "carre",
+        "denomination": "bed 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer136",
+        "drawer": 136,
+        "forme": "triangle",
+        "denomination": "rainbow 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer136",
+        "drawer": 136,
+        "forme": "triangle",
+        "denomination": "rainbow 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer137",
+        "drawer": 137,
+        "forme": "cercle",
+        "denomination": "star 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer137",
+        "drawer": 137,
+        "forme": "cercle",
+        "denomination": "star 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer138",
+        "drawer": 138,
+        "forme": "rectangle",
+        "denomination": "spoon 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer138",
+        "drawer": 138,
+        "forme": "rectangle",
+        "denomination": "spoon 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer138",
+        "drawer": 138,
+        "forme": "rectangle",
+        "denomination": "spoon 6",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer138",
+        "drawer": 138,
+        "forme": "rectangle",
+        "denomination": "spoon 6",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip4": [
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer13",
+        "drawer": 13,
+        "forme": "carre",
+        "denomination": "window 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer14",
+        "drawer": 14,
+        "forme": "triangle",
+        "denomination": "forest 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer14",
+        "drawer": 14,
+        "forme": "triangle",
+        "denomination": "forest 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer15",
+        "drawer": 15,
+        "forme": "cercle",
+        "denomination": "mango 1",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer16",
+        "drawer": 16,
+        "forme": "rectangle",
+        "denomination": "gold 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer16",
+        "drawer": 16,
+        "forme": "rectangle",
+        "denomination": "gold 3",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer16",
+        "drawer": 16,
+        "forme": "rectangle",
+        "denomination": "gold 3",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer16",
+        "drawer": 16,
+        "forme": "rectangle",
+        "denomination": "gold 3",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip40": [
+      {
+        "drawer_name": "drawer139",
+        "drawer": 139,
+        "forme": "carre",
+        "denomination": "bed 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer140",
+        "drawer": 140,
+        "forme": "triangle",
+        "denomination": "flower 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer140",
+        "drawer": 140,
+        "forme": "triangle",
+        "denomination": "flower 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer140",
+        "drawer": 140,
+        "forme": "triangle",
+        "denomination": "flower 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer140",
+        "drawer": 140,
+        "forme": "triangle",
+        "denomination": "flower 4",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer141",
+        "drawer": 141,
+        "forme": "cercle",
+        "denomination": "canoe 9",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer141",
+        "drawer": 141,
+        "forme": "cercle",
+        "denomination": "canoe 9",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer141",
+        "drawer": 141,
+        "forme": "cercle",
+        "denomination": "canoe 9",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer141",
+        "drawer": 141,
+        "forme": "cercle",
+        "denomination": "canoe 9",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer142",
+        "drawer": 142,
+        "forme": "rectangle",
+        "denomination": "drum 1",
+        "alpha_ranking": "a"
+      }
+    ],
+    "chip41": [
+      {
+        "drawer_name": "drawer143",
+        "drawer": 143,
+        "forme": "triangle",
+        "denomination": "rainbow 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer143",
+        "drawer": 143,
+        "forme": "triangle",
+        "denomination": "rainbow 6",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer144",
+        "drawer": 144,
+        "forme": "cercle",
+        "denomination": "star 6",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer145",
+        "drawer": 145,
+        "forme": "rectangle",
+        "denomination": "drum 2",
+        "alpha_ranking": "a"
+      }
+    ],
+    "chip42": [
+      {
+        "drawer_name": "drawer146",
+        "drawer": 146,
+        "forme": "cercle",
+        "denomination": "star 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer146",
+        "drawer": 146,
+        "forme": "cercle",
+        "denomination": "star 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer147",
+        "drawer": 147,
+        "forme": "rectangle",
+        "denomination": "drum 3",
+        "alpha_ranking": "a"
+      }
+    ],
+    "chip43": [
+      {
+        "drawer_name": "drawer148",
+        "drawer": 148,
+        "forme": "cercle",
+        "denomination": "star 10",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer149",
+        "drawer": 149,
+        "forme": "rectangle",
+        "denomination": "spoon 7",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer149",
+        "drawer": 149,
+        "forme": "rectangle",
+        "denomination": "spoon 7",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer149",
+        "drawer": 149,
+        "forme": "rectangle",
+        "denomination": "spoon 7",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer149",
+        "drawer": 149,
+        "forme": "rectangle",
+        "denomination": "spoon 7",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip44": [
+      {
+        "drawer_name": "drawer150",
+        "drawer": 150,
+        "forme": "cercle",
+        "denomination": "star 11",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer150",
+        "drawer": 150,
+        "forme": "cercle",
+        "denomination": "star 11",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer151",
+        "drawer": 151,
+        "forme": "rectangle",
+        "denomination": "drum 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer151",
+        "drawer": 151,
+        "forme": "rectangle",
+        "denomination": "drum 4",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip45": [
+      {
+        "drawer_name": "drawer152",
+        "drawer": 152,
+        "forme": "cercle",
+        "denomination": "star 12",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer152",
+        "drawer": 152,
+        "forme": "cercle",
+        "denomination": "star 12",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer153",
+        "drawer": 153,
+        "forme": "rectangle",
+        "denomination": "drum 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer153",
+        "drawer": 153,
+        "forme": "rectangle",
+        "denomination": "drum 5",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip46": [
+      {
+        "drawer_name": "drawer154",
+        "drawer": 154,
+        "forme": "cercle",
+        "denomination": "star 13",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer155",
+        "drawer": 155,
+        "forme": "rectangle",
+        "denomination": "drum 6",
+        "alpha_ranking": "a"
+      }
+    ],
+    "chip47": [
+      {
+        "drawer_name": "drawer156",
+        "drawer": 156,
+        "forme": "cercle",
+        "denomination": "star 8",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer156",
+        "drawer": 156,
+        "forme": "cercle",
+        "denomination": "star 8",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer157",
+        "drawer": 157,
+        "forme": "rectangle",
+        "denomination": "drum 7",
+        "alpha_ranking": "a"
+      }
+    ],
+    "chip48": [
+      {
+        "drawer_name": "drawer158",
+        "drawer": 158,
+        "forme": "cercle",
+        "denomination": "star 9",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer158",
+        "drawer": 158,
+        "forme": "cercle",
+        "denomination": "star 9",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip5": [
+      {
+        "drawer_name": "drawer17",
+        "drawer": 17,
+        "forme": "triangle",
+        "denomination": "rainbow 10",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer18",
+        "drawer": 18,
+        "forme": "cercle",
+        "denomination": "book 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer18",
+        "drawer": 18,
+        "forme": "cercle",
+        "denomination": "book 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer19",
+        "drawer": 19,
+        "forme": "rectangle",
+        "denomination": "gold 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer19",
+        "drawer": 19,
+        "forme": "rectangle",
+        "denomination": "gold 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer19",
+        "drawer": 19,
+        "forme": "rectangle",
+        "denomination": "gold 4",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer19",
+        "drawer": 19,
+        "forme": "rectangle",
+        "denomination": "gold 4",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip6": [
+      {
+        "drawer_name": "drawer20",
+        "drawer": 20,
+        "forme": "cercle",
+        "denomination": "book 3",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer21",
+        "drawer": 21,
+        "forme": "rectangle",
+        "denomination": "bottle 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer21",
+        "drawer": 21,
+        "forme": "rectangle",
+        "denomination": "bottle 4",
+        "alpha_ranking": "b"
+      }
+    ],
+    "chip7": [
+      {
+        "drawer_name": "drawer22",
+        "drawer": 22,
+        "forme": "carre",
+        "denomination": "road 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer22",
+        "drawer": 22,
+        "forme": "carre",
+        "denomination": "road 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer22",
+        "drawer": 22,
+        "forme": "carre",
+        "denomination": "road 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer22",
+        "drawer": 22,
+        "forme": "carre",
+        "denomination": "road 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer23",
+        "drawer": 23,
+        "forme": "triangle",
+        "denomination": "fire 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer23",
+        "drawer": 23,
+        "forme": "triangle",
+        "denomination": "fire 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer23",
+        "drawer": 23,
+        "forme": "triangle",
+        "denomination": "fire 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer23",
+        "drawer": 23,
+        "forme": "triangle",
+        "denomination": "fire 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer24",
+        "drawer": 24,
+        "forme": "cercle",
+        "denomination": "book 4",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer24",
+        "drawer": 24,
+        "forme": "cercle",
+        "denomination": "book 4",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer25",
+        "drawer": 25,
+        "forme": "rectangle",
+        "denomination": "spoon 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer25",
+        "drawer": 25,
+        "forme": "rectangle",
+        "denomination": "spoon 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer25",
+        "drawer": 25,
+        "forme": "rectangle",
+        "denomination": "spoon 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer25",
+        "drawer": 25,
+        "forme": "rectangle",
+        "denomination": "spoon 1",
+        "alpha_ranking": "d"
+      }
+    ],
+    "chip8": [
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer26",
+        "drawer": 26,
+        "forme": "carre",
+        "denomination": "window 1",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer27",
+        "drawer": 27,
+        "forme": "triangle",
+        "denomination": "forest 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer27",
+        "drawer": 27,
+        "forme": "triangle",
+        "denomination": "forest 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "f"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "g"
+      },
+      {
+        "drawer_name": "drawer28",
+        "drawer": 28,
+        "forme": "cercle",
+        "denomination": "mango 2",
+        "alpha_ranking": "h"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "e"
+      },
+      {
+        "drawer_name": "drawer29",
+        "drawer": 29,
+        "forme": "rectangle",
+        "denomination": "hotel 1",
+        "alpha_ranking": "f"
+      }
+    ],
+    "chip9": [
+      {
+        "drawer_name": "drawer30",
+        "drawer": 30,
+        "forme": "carre",
+        "denomination": "chair 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer30",
+        "drawer": 30,
+        "forme": "carre",
+        "denomination": "chair 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer31",
+        "drawer": 31,
+        "forme": "triangle",
+        "denomination": "flower 1",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer31",
+        "drawer": 31,
+        "forme": "triangle",
+        "denomination": "flower 1",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer31",
+        "drawer": 31,
+        "forme": "triangle",
+        "denomination": "flower 1",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer31",
+        "drawer": 31,
+        "forme": "triangle",
+        "denomination": "flower 1",
+        "alpha_ranking": "d"
+      },
+      {
+        "drawer_name": "drawer32",
+        "drawer": 32,
+        "forme": "cercle",
+        "denomination": "book 5",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer32",
+        "drawer": 32,
+        "forme": "cercle",
+        "denomination": "book 5",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer33",
+        "drawer": 33,
+        "forme": "rectangle",
+        "denomination": "spoon 2",
+        "alpha_ranking": "a"
+      },
+      {
+        "drawer_name": "drawer33",
+        "drawer": 33,
+        "forme": "rectangle",
+        "denomination": "spoon 2",
+        "alpha_ranking": "b"
+      },
+      {
+        "drawer_name": "drawer33",
+        "drawer": 33,
+        "forme": "rectangle",
+        "denomination": "spoon 2",
+        "alpha_ranking": "c"
+      },
+      {
+        "drawer_name": "drawer33",
+        "drawer": 33,
+        "forme": "rectangle",
+        "denomination": "spoon 2",
+        "alpha_ranking": "d"
+      }
+    ]
+  },
+  "statistics": {
+    "total_chips": 48,
+    "total_drawers": 544
+  }
+}

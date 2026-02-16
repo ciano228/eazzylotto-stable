@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katooling Tracking Hub | EazzyCalculator</title>
+    <!-- Modern Typography -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/katula-petique-styles.css">
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #f59e0b;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .hub-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+        }
+
+        header.tracker-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Dashboard Grid */
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-title i {
+            color: var(--primary);
+        }
+
+        /* Opportunity Scanner */
+        .opportunity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .opportunity-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .opportunity-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .opp-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .opp-type {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .opp-confidence {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Tracking Workspace */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        select,
+        input,
+        button {
+            background: #1e293b;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        button.primary-btn {
+            background: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        button.primary-btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Analysis Visualization */
+        .viz-container {
+            flex-grow: 1;
+            min-height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .split-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .split-box {
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .box-played {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .box-potential {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .combo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+        }
+
+        .combo-chip {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid transparent;
+        }
+
+        .box-potential .combo-chip {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            cursor: pointer;
+        }
+
+        .box-potential .combo-chip:hover {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* Micro-animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .tracking-active {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body data-page="katooling-tracker">
+    <div id="header-container"></div>
+
+    <div class="hub-container">
+        <header class="tracker-header">
+            <div class="subtitle">Katooling Methodology</div>
+            <h1>Tracking & Split Hub</h1>
+        </header>
+
+        <main class="tracking-grid">
+            <!-- Opportunity Scanner Side -->
+            <section class="panel">
+                <h2 class="panel-title">⭐ Scanner d'Opportunités</h2>
+                <div id="opportunityScanner" class="opportunity-list">
+                    <!-- Will be populated by JS -->
+                    <div class="opportunity-card loading-shimmer" style="height: 100px;"></div>
+                    <div class="opportunity-card loading-shimmer" style="height: 100px;"></div>
+                    <div class="opportunity-card loading-shimmer" style="height: 100px;"></div>
+                </div>
+            </section>
+
+            <!-- Tracking Workspace -->
+            <section class="panel">
+                <div class="workspace">
+                    <h2 class="panel-title">🎯 Workspace de Chasse</h2>
+
+                    <div class="controls-row">
+                        <div style="flex-grow: 1;">
+                            <label style="display:block; font-size: 0.8rem; margin-bottom: 5px;">Univers</label>
+                            <select id="universeSelect" style="width: 100%;">
+                                <option value="mundo">Mundo</option>
+                                <option value="fruity" selected>Fruity</option>
+                                <option value="trigga">Trigga</option>
+                                <option value="roaster">Roaster</option>
+                                <option value="sunshine">Sunshine</option>
+                            </select>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <label style="display:block; font-size: 0.8rem; margin-bottom: 5px;">Session</label>
+                            <select id="sessionSelect" style="width: 100%;">
+                                <option>Chargement des sessions...</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; align-items:flex-end;">
+                            <button id="scanBtn" class="primary-btn">Lancer l'Analyse</button>
+                        </div>
+                    </div>
+
+                    <div id="refinementViz" class="viz-container">
+                        <div style="text-align:center; padding-top: 100px; color: var(--text-dim);">
+                            Selectionnez une opportunité ou lancez un scan pour raffiner votre investissement.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="assets/js/katooling-tracker.js"></script>
+</body>
+
+</html>

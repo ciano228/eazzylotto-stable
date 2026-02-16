@@ -1,5 +1,5 @@
 {
-  "model": "katula-gpt",
+  "model": "kiro-agent",
   "streaming": true,
   "language": "fr",
   "theme": "dark"

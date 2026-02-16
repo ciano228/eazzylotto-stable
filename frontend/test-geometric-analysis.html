@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Analyse Géométrique</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        /* Panneau indicateur */
+        .marking-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .indicator-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .indicator-icon {
+            font-size: 1.5em;
+        }
+
+        .indicator-header h4 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .legend-content {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .legend-label {
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .legend-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        /* Panneau de statistiques */
+        .stats-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #3498db;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .stats-header h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+
+        .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #c0392b;
+            transform: rotate(90deg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin: 5px 0;
+        }
+
+        .stat-percentage {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .stat-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎯 Test - Analyse Géométrique Temporelle</h1>
+
+        <div class="controls">
+            <h3>Tester les Fonctionnalités</h3>
+            <button onclick="testQuadrants()">Test Quadrants (Petiques)</button>
+            <button onclick="testTomes()">Test Tomes</button>
+            <button onclick="testGranques()">Test Granques</button>
+            <button onclick="toggleStats()">Toggle Statistiques</button>
+        </div>
+
+        <!-- Indicateur du Type de Marquage Actif -->
+        <div id="markingIndicator" class="marking-indicator" style="display: none;">
+            <div class="indicator-header">
+                <span class="indicator-icon">🎯</span>
+                <h4>Analyse Active : <span id="currentMarkingTypeLabel">Par Chip</span></h4>
+            </div>
+            <div id="markingLegendContent" class="legend-content">
+                <!-- Légende dynamique -->
+            </div>
+        </div>
+
+        <!-- Panneau de Statistiques par Attribut -->
+        <div id="attributeStatsPanel" class="stats-panel" style="display: none;">
+            <div class="stats-header">
+                <h4>📊 Statistiques : <span id="statsTypeLabel"></span></h4>
+                <button onclick="window.GeometricStats.toggleStatsPanel()" class="close-btn">✕</button>
+            </div>
+            <div id="statsContent" class="stats-content">
+                <!-- Contenu statistiques généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/katula-geometric-stats.js"></script>
+    <script>
+        // Données de test simulées
+        const testDrawsData = [
+            { combinations: [[1, 5], [10, 15], [25, 30], [40, 45]] },
+            { combinations: [[2, 8], [13, 20], [28, 35], [41, 47]] },
+            { combinations: [[3, 7], [14, 22], [29, 33], [42, 46]] },
+            { combinations: [[4, 9], [16, 24], [27, 36], [38, 48]] },
+            { combinations: [[6, 11], [17, 21], [31, 34], [39, 44]] }
+        ];
+
+        function testQuadrants() {
+            console.log('Test des Quadrants...');
+            const stats = window.GeometricStats.calculateAttributeStatistics(testDrawsData, 'quadrant');
+            window.GeometricStats.displayAttributeStatistics(stats, 'quadrant');
+            window.GeometricStats.displayMarkingLegend('quadrant', stats);
+            console.log('Statistiques Quadrants:', stats);
+        }
+
+        function testTomes() {
+            console.log('Test des Tomes...');
+            const stats = window.GeometricStats.calculateAttributeStatistics(testDrawsData, 'tome');
+            window.GeometricStats.displayAttributeStatistics(stats, 'tome');
+            window.GeometricStats.displayMarkingLegend('tome', stats);
+            console.log('Statistiques Tomes:', stats);
+        }
+
+        function testGranques() {
+            console.log('Test des Granques...');
+            const stats = window.GeometricStats.calculateAttributeStatistics(testDrawsData, 'granque');
+            window.GeometricStats.displayAttributeStatistics(stats, 'granque');
+            window.GeometricStats.displayMarkingLegend('granque', stats);
+            console.log('Statistiques Granques:', stats);
+        }
+
+        function toggleStats() {
+            window.GeometricStats.toggleStatsPanel();
+        }
+
+        // Auto-test au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('GeometricStats module loaded:', window.GeometricStats);
+            console.log('Lancement du test automatique des quadrants...');
+            testQuadrants();
+        });
+    </script>
+</body>
+
+</html>

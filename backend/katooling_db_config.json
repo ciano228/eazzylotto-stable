@@ -1,0 +1,7 @@
+{
+  "database": "katooling_main_system",
+  "host": "localhost",
+  "user": "postgres",
+  "password": "Katulaa_33",
+  "port": 5432
+}

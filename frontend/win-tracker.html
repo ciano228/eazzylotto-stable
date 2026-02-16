@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win-Tracker - Système de Prédiction Rentable</title>
+    <script src="assets/js/universal-header.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        select,
+        button,
+        input {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .opportunities-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .opportunity-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            transition: all 0.3s ease;
+        }
+
+        .opportunity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .opportunity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .zone-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .recommendation {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .recommendation.BUY {
+            background: #27ae60;
+            color: white;
+        }
+
+        .recommendation.HOLD {
+            background: #f39c12;
+            color: white;
+        }
+
+        .recommendation.AVOID {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .portfolio-section {
+            grid-column: 1 / -1;
+            margin-top: 30px;
+        }
+
+        .portfolio-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .portfolio-result {
+            background: #e8f5e8;
+            border: 1px solid #27ae60;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-container"></div>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Win-Tracker</h1>
+            <p>Système de Prédiction et Analyse de Rentabilité</p>
+        </div>
+
+        <div class="controls">
+            <select id="sessionSelect">
+                <option value="">Chargement des sessions...</option>
+            </select>
+            <select id="universeSelect">
+                <option value="">Sélectionner un univers</option>
+                <option value="mundo">🌍 Mundo</option>
+                <option value="fruity">🍎 Fruity</option>
+                <option value="trigga">⚡ Trigga</option>
+                <option value="roaster">☕ Roaster</option>
+                <option value="sunshine">☀️ Sunshine</option>
+            </select>
+            <button onclick="loadOpportunities()">📊 Analyser Opportunités</button>
+            <button onclick="loadStatistics()">📈 Statistiques</button>
+            <button onclick="analyzeAllZones()">🔍 Analyse Complète</button>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h3>🏆 Meilleures Opportunités</h3>
+                <div id="opportunitiesContainer">
+                    <div class="loading">Sélectionnez un univers pour voir les opportunités</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Statistiques Générales</h3>
+                <div id="statisticsContainer">
+                    <div class="loading">Chargez les statistiques</div>
+                </div>
+            </div>
+
+            <div class="card portfolio-section">
+                <h3>💼 Stratégie de Portefeuille</h3>
+                <div class="portfolio-controls">
+                    <label>Budget disponible:</label>
+                    <input type="number" id="budgetInput" placeholder="Ex: 500" min="1" max="10000" value="500">
+                    <button onclick="calculatePortfolio()">💰 Calculer Stratégie</button>
+                </div>
+                <div id="portfolioContainer">
+                    <div class="loading">Entrez un budget pour calculer la stratégie optimale</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎲 Stratégie de Mises Multi-Tirages</h3>
+                <div style="margin-bottom:12px;">
+                    <label>Period draws (JSON array):</label>
+                    <textarea id="periodDrawsInput" placeholder='Ex: [[1,2,3,4,5],[6,7,8,9,10]]'
+                        style="width:100%;height:90px;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #ddd;"></textarea>
+                </div>
+                <div class="portfolio-controls">
+                    <label>Multiplier:</label>
+                    <input type="number" id="multiplierInput" value="10" min="2">
+                    <label>Rounds:</label>
+                    <input type="number" id="roundsInput" value="4" min="1">
+                    <label>Starting stake:</label>
+                    <input type="number" id="startingStakeInput" value="1" min="1">
+                    <label>Reward per win:</label>
+                    <input type="number" id="rewardInput" value="200" min="1">
+                    <label>Top N:</label>
+                    <input type="number" id="topNInput" value="10" min="1">
+                    <button onclick="generateStakingStrategy()">🧠 Générer stratégie</button>
+                </div>
+                <div id="stakingContainer">
+                    <div class="loading">Collez ici plusieurs tirages pour analyser les caractères récurrents</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🤖 Test Multi-Provider LLM</h3>
+                <div style="margin-bottom:8px;">
+                    <label>Message:</label>
+                    <textarea id="llmMessageInput" placeholder="Message pour le modèle..."
+                        style="width:100%;height:80px;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px;"></textarea>
+                </div>
+                <div class="portfolio-controls">
+                    <label>Provider:</label>
+                    <select id="providerSelect" style="min-width:150px;">
+                        <option value="simulate">🧪 Simulate (test)</option>
+                        <option value="anthropic">🔮 Anthropic</option>
+                        <option value="openai">🚀 OpenAI</option>
+                        <option value="mistral">⚡ Mistral</option>
+                        <option value="deepseek">🌊 Deepseek</option>
+                        <option value="groq">⚡ Groq</option>
+                        <option value="ollama">🏠 Ollama (local)</option>
+                    </select>
+                    <label>API Key:</label>
+                    <input type="password" id="apiKeyInput" placeholder="votre clé API" style="min-width:200px;" />
+                    <button onclick="testMultiProvider()">📤 Send</button>
+                </div>
+                <div id="llmResponseContainer">
+                    <div class="loading">Résultat du modèle apparaîtra ici</div>
+                </div>
+            </div>
+
+            <div class="card" id="splitAnalysisSection">
+                <h3>⚖️ Analyse Split (Gestion du Risque)</h3>
+                <div class="portfolio-controls">
+                    <label>Zone Type:</label>
+                    <select id="splitZoneType" style="min-width:130px;">
+                        <option value="granque">Granque</option>
+                        <option value="forme">Forme</option>
+                        <option value="tome">Tome</option>
+                        <option value="petique">Petique</option>
+                        <option value="engine">Engine</option>
+                        <option value="forme_tome">Forme+Tome (Molécule)</option>
+                        <option value="petique_tome">Petique+Tome</option>
+                        <option value="forme_petique">Forme+Petique</option>
+                    </select>
+                    <label>Valeur:</label>
+                    <input type="text" id="splitZoneValue" placeholder="Ex: rectangle_tome1" style="min-width:180px;">
+                    <label>Période:</label>
+                    <select id="splitPeriod" style="min-width:130px;">
+                        <option value="30">30 jours (Ultra Court)</option>
+                        <option value="90">90 jours (Court terme)</option>
+                        <option value="180" selected>180 jours (Standard)</option>
+                        <option value="365">365 jours (Long terme)</option>
+                        <option value="1000">1000 jours (Audit)</option>
+                    </select>
+                    <button onclick="runSplitAnalysis()">⚖️ Lancer Split</button>
+                </div>
+                <div id="splitResultContainer">
+                    <div class="loading">Choisissez une zone pour analyser le split temporel</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let currentUniverse = null;
+        let currentSession = null;
+
+        // Charger les sessions au démarrage
+        async function loadSessions() {
+            const select = document.getElementById('sessionSelect');
+            try {
+                const response = await fetch(`${API_BASE}/api/unified/session/sessions`);
+                const data = await response.json();
+
+                console.log('Sessions reçues:', data);
+
+                if (data.status === 'success' && data.sessions && data.sessions.length > 0) {
+                    select.innerHTML = '<option value="">Sélectionner une session</option>';
+                    data.sessions.forEach(session => {
+                        const option = document.createElement('option');
+                        option.value = session.id;
+                        option.textContent = `${session.name} (${session.lottery_type})${session.is_active ? ' ✅' : ''}`;
+                        select.appendChild(option);
+                    });
+
+                    // Sélectionner la session active par défaut
+                    const activeSession = data.sessions.find(s => s.is_active);
+                    if (activeSession) {
+                        select.value = activeSession.id;
+                        currentSession = activeSession.id;
+                    }
+                } else {
+                    select.innerHTML = '<option value="">Aucune session disponible</option>';
+                    console.warn('Aucune session trouvée:', data);
+                }
+            } catch (error) {
+                select.innerHTML = '<option value="">Erreur de chargement</option>';
+                console.error('Erreur chargement sessions:', error);
+            }
+        }
+
+        // Mettre à jour la session courante
+        document.addEventListener('DOMContentLoaded', function () {
+            loadSessions();
+
+            document.getElementById('sessionSelect').addEventListener('change', function () {
+                currentSession = this.value;
+                if (currentSession) {
+                    console.log('Session sélectionnée:', currentSession);
+                }
+            });
+
+            // Injecter l'entête universel pour navigation
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'win-tracker', {
+                    showNavigation: true,
+                    showUserInfo: true
+                });
+            }
+
+            document.getElementById('universeSelect').value = 'mundo';
+        });
+
+        async function loadOpportunities() {
+            const universe = document.getElementById('universeSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+
+            if (!universe) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            if (!session) {
+                alert('Veuillez sélectionner une session de travail');
+                return;
+            }
+
+            currentUniverse = universe;
+            currentSession = session;
+            const container = document.getElementById('opportunitiesContainer');
+            container.innerHTML = '<div class="loading">Chargement des opportunités...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/win-tracker/opportunities/${universe}?session_id=${session}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displayOpportunities(data.opportunities);
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error}</div>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+            }
+        }
+
+        function displayOpportunities(opportunities) {
+            const container = document.getElementById('opportunitiesContainer');
+
+            if (opportunities.length === 0) {
+                container.innerHTML = '<div class="loading">Aucune opportunité rentable trouvée</div>';
+                return;
+            }
+
+            let html = '<div class="opportunities-grid">';
+
+            opportunities.forEach(opp => {
+                html += `
+                    <div class="opportunity-item">
+                        <div class="opportunity-header">
+                            <span class="zone-name">${opp.zone_type.toUpperCase()}: ${opp.zone_value}</span>
+                            <span class="recommendation ${opp.recommendation}">${opp.recommendation}</span>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-value">${opp.total_combinations}</div>
+                                <div class="metric-label">Combinaisons</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${opp.investment_cost}</div>
+                                <div class="metric-label">Coût</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">+${opp.net_profit}</div>
+                                <div class="metric-label">Profit</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${opp.roi_percentage.toFixed(1)}%</div>
+                                <div class="metric-label">ROI</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        async function loadStatistics() {
+            const universe = document.getElementById('universeSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+
+            if (!universe) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            if (!session) {
+                alert('Veuillez sélectionner une session de travail');
+                return;
+            }
+
+            const container = document.getElementById('statisticsContainer');
+            container.innerHTML = '<div class="loading">Chargement des statistiques...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/win-tracker/statistics/${universe}?session_id=${session}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displayStatistics(data.statistics);
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error}</div>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+            }
+        }
+
+        function displayStatistics(stats) {
+            const container = document.getElementById('statisticsContainer');
+
+            const html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total_zones}</div>
+                        <div class="stat-label">Zones Totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.profitable_zones}</div>
+                        <div class="stat-label">Zones Rentables</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.buy_recommendations}</div>
+                        <div class="stat-label">Recommandations BUY</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.average_roi.toFixed(1)}%</div>
+                        <div class="stat-label">ROI Moyen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.best_roi.toFixed(1)}%</div>
+                        <div class="stat-label">Meilleur ROI</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total_combinations}</div>
+                        <div class="stat-label">Combinaisons Totales</div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        async function calculatePortfolio() {
+            const universe = document.getElementById('universeSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+            const budget = parseInt(document.getElementById('budgetInput').value);
+
+            if (!universe) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            if (!session) {
+                alert('Veuillez sélectionner une session de travail');
+                return;
+            }
+
+            if (!budget || budget <= 0) {
+                alert('Veuillez entrer un budget valide');
+                return;
+            }
+
+            const container = document.getElementById('portfolioContainer');
+            container.innerHTML = '<div class="loading">Calcul de la stratégie optimale...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/win-tracker/portfolio/${universe}?budget=${budget}&session_id=${session}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displayPortfolio(data.strategy);
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error}</div>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+            }
+        }
+
+        function displayPortfolio(strategy) {
+            const container = document.getElementById('portfolioContainer');
+
+            const html = `
+                <div class="portfolio-result">
+                    <h4>📊 Stratégie Optimale</h4>
+                    <div class="stats-grid" style="margin-top: 15px;">
+                        <div class="stat-card">
+                            <div class="stat-value">${strategy.budget}</div>
+                            <div class="stat-label">Budget Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${strategy.total_investment}</div>
+                            <div class="stat-label">Investissement</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">+${strategy.expected_profit}</div>
+                            <div class="stat-label">Profit Attendu</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${strategy.portfolio_roi.toFixed(1)}%</div>
+                            <div class="stat-label">ROI Portfolio</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${strategy.budget_utilization.toFixed(1)}%</div>
+                            <div class="stat-label">Utilisation Budget</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${strategy.selected_zones.length}</div>
+                            <div class="stat-label">Zones Sélectionnées</div>
+                        </div>
+                    </div>
+                    
+                    <h5 style="margin-top: 20px;">🎯 Zones Recommandées:</h5>
+                    <div class="opportunities-grid" style="margin-top: 10px;">
+                        ${strategy.selected_zones.map(zone => `
+                            <div class="opportunity-item">
+                                <div class="opportunity-header">
+                                    <span class="zone-name">${zone.zone_type.toUpperCase()}: ${zone.zone_value}</span>
+                                    <span class="recommendation ${zone.recommendation}">${zone.recommendation}</span>
+                                </div>
+                                <div class="metrics">
+                                    <div class="metric">
+                                        <div class="metric-value">${zone.investment_cost}</div>
+                                        <div class="metric-label">Coût</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-value">+${zone.net_profit}</div>
+                                        <div class="metric-label">Profit</div>
+                                    </div>
+                                    <div class="metric">
+                                        <div class="metric-value">${zone.roi_percentage.toFixed(1)}%</div>
+                                        <div class="metric-label">ROI</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        async function analyzeAllZones() {
+            const universe = document.getElementById('universeSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+
+            if (!universe) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            if (!session) {
+                alert('Veuillez sélectionner une session de travail');
+                return;
+            }
+
+            // Charger toutes les analyses
+            await Promise.all([
+                loadOpportunities(),
+                loadStatistics()
+            ]);
+
+            showSuccess('Analyse complète terminée !');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.textContent = message;
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.dashboard'));
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        // Auto-charger Mundo au démarrage
+        // (Déjà géré dans DOMContentLoaded ci-dessus)
+
+        async function testMultiProvider() {
+            const msg = document.getElementById('llmMessageInput').value.trim();
+            const provider = document.getElementById('providerSelect').value;
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+
+            if (!msg) { alert('Entrez un message'); return; }
+
+            const container = document.getElementById('llmResponseContainer');
+            container.innerHTML = '<div class="loading">Appel en cours...</div>';
+
+            try {
+                if (provider === 'simulate') {
+                    // Call simulate endpoint
+                    const res = await fetch(`${API_BASE}/api/kiro/claude-simulate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: msg, model: 'claude-haiku-4.5' })
+                    });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        container.innerHTML = `<div class="card"><pre style="white-space:pre-wrap;">${data.response}</pre><p style="font-size:0.9em;color:#999;">Simulated by ${data.model}</p></div>`;
+                    } else {
+                        container.innerHTML = `<div class="error">Erreur: ${data.error || JSON.stringify(data)}</div>`;
+                    }
+                } else {
+                    // Call multi-provider forward endpoint
+                    if (provider !== 'ollama' && !apiKey) { alert('Entrez votre clé API pour ' + provider); return; }
+
+                    const res = await fetch(`${API_BASE}/api/kiro/forward`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            provider: provider,
+                            message: msg,
+                            model: provider === 'openai' ? 'gpt-4o-mini' : (provider === 'anthropic' ? 'claude-haiku-4.5' : (provider === 'mistral' ? 'mistral-small' : 'deepseek-chat')),
+                            api_key: apiKey
+                        })
+                    });
+                    const data = await res.json();
+
+                    if (data.status === 'success') {
+                        container.innerHTML = `<div class="card"><pre style="white-space:pre-wrap;">${JSON.stringify(data.result, null, 2)}</pre><p style="font-size:0.9em;color:#999;">Provider: ${data.provider} | HTTP: ${data.http_status}</p></div>`;
+                    } else {
+                        container.innerHTML = `<div class="error">Erreur: ${data.error || JSON.stringify(data)}</div>`;
+                    }
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${e.message}</div>`;
+            }
+        }
+
+        async function testClaudeSimulate() {
+            const msg = document.getElementById('claudeMessageInput').value.trim();
+            if (!msg) { alert('Entrez un message'); return; }
+            const container = document.getElementById('claudeResponseContainer');
+            container.innerHTML = '<div class="loading">Appel simulateur Claude...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/kiro/claude-simulate`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, model: 'claude-haiku-4.5' })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    container.innerHTML = `<div class="card"><pre style="white-space:pre-wrap;">${data.response}</pre></div>`;
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error || JSON.stringify(data)}</div>`;
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${e.message}</div>`;
+            }
+        }
+
+        async function testClaudeReal() {
+            const msg = document.getElementById('claudeMessageInput').value.trim();
+            if (!msg) { alert('Entrez un message'); return; }
+            const container = document.getElementById('claudeResponseContainer');
+            container.innerHTML = '<div class="loading">Appel réel Claude (proxy)...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/kiro/claude`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg, model: 'claude-haiku-4.5' })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    container.innerHTML = `<div class="card"><pre style="white-space:pre-wrap;">${JSON.stringify(data.result, null, 2)}</pre></div>`;
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error || JSON.stringify(data)}</div>`;
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${e.message}</div>`;
+            }
+        }
+
+        async function generateStakingStrategy() {
+            const universe = document.getElementById('universeSelect').value;
+            if (!universe) {
+                alert('Veuillez sélectionner un univers');
+                return;
+            }
+
+            const raw = document.getElementById('periodDrawsInput').value.trim();
+            if (!raw) {
+                alert('Collez la liste des tirages (format JSON)');
+                return;
+            }
+
+            let period_draws = [];
+            try {
+                period_draws = JSON.parse(raw);
+                if (!Array.isArray(period_draws)) throw new Error('Doit être un tableau');
+            } catch (e) {
+                alert('JSON invalide pour les tirages: ' + e.message);
+                return;
+            }
+
+            const multiplier = parseInt(document.getElementById('multiplierInput').value) || 10;
+            const max_rounds = parseInt(document.getElementById('roundsInput').value) || 4;
+            const starting_stake = parseInt(document.getElementById('startingStakeInput').value) || 1;
+            const reward_per_win = parseInt(document.getElementById('rewardInput').value) || 200;
+            const top_n = parseInt(document.getElementById('topNInput').value) || 10;
+
+            const container = document.getElementById('stakingContainer');
+            container.innerHTML = '<div class="loading">Génération de la stratégie...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/win-tracker/staking/${universe}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        period_draws,
+                        multiplier,
+                        max_rounds,
+                        starting_stake,
+                        reward_per_win,
+                        top_n
+                    })
+                });
+
+                const data = await res.json();
+                if (data.status === 'success') {
+                    displayStakingStrategies(data.strategies || data.strategies);
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error || data.message}</div>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${err.message}</div>`;
+            }
+        }
+
+        function displayStakingStrategies(strategies) {
+            const container = document.getElementById('stakingContainer');
+            if (!strategies || strategies.length === 0) {
+                container.innerHTML = '<div class="loading">Aucune stratégie générée</div>';
+                return;
+            }
+
+            let html = '<div class="opportunities-grid">';
+            strategies.forEach(s => {
+                html += `
+                    <div class="opportunity-item">
+                        <div class="opportunity-header">
+                            <span class="zone-name">${s.character_type.toUpperCase()}: ${s.character}</span>
+                        </div>
+                        <div class="metrics" style="margin-top:10px;">
+                            <div class="metric">
+                                <div class="metric-value">${s.appearances}/${s.period_draws}</div>
+                                <div class="metric-label">Apparitions</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${s.empirical_probability_per_draw}</div>
+                                <div class="metric-label">P(tirage)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${s.total_investment_if_full}</div>
+                                <div class="metric-label">Investissement (max)</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${s.probability_no_win_after_rounds}</div>
+                                <div class="metric-label">Prob. échec</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <strong>Stakes:</strong> ${s.stakes_sequence.join(', ')}
+                        </div>
+                        <div style="margin-top:8px;">
+                            <strong>Espérance:</strong> ${s.expected_profit}  •  <strong>ROI:</strong> ${s.expected_roi_percent}%
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
+        async function runSplitAnalysis() {
+            const universe = document.getElementById('universeSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+            const zoneType = document.getElementById('splitZoneType').value;
+            const zoneValue = document.getElementById('splitZoneValue').value;
+            const lookback = document.getElementById('splitPeriod').value;
+
+            if (!universe || !session || !zoneValue) {
+                alert('Veuillez remplir tous les champs (Univers, Session, Valeur de zone)');
+                return;
+            }
+
+            const container = document.getElementById('splitResultContainer');
+            container.innerHTML = '<div class="loading">Analyse du flux temporel en cours...</div>';
+
+            try {
+                const url = `${API_BASE}/api/win-tracker/split-analysis/${universe}/${zoneType}/${zoneValue}?session_id=${session}&lookback_days=${lookback}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    displaySplitResult(data);
+                } else {
+                    container.innerHTML = `<div class="error">Erreur: ${data.error || data.message}</div>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Erreur de connexion: ${error.message}</div>`;
+            }
+        }
+
+        function displaySplitResult(data) {
+            const container = document.getElementById('splitResultContainer');
+
+            // Déterminer le label de période
+            let periodLabel = "Standard";
+            if (data.period_days <= 30) periodLabel = "Ultra Court";
+            else if (data.period_days <= 90) periodLabel = "Court terme";
+            else if (data.period_days >= 365) periodLabel = "Long terme";
+
+            const renderCombos = (combos) => {
+                if (!combos || combos.length === 0) return "Aucune";
+                return combos.map(c => {
+                    const datesList = (c.apparition_dates || []).join('\n');
+                    const performanceBadge = c.apparition_count > 0
+                        ? `<span title="${datesList}" style="cursor:help; background:#e8f5e8; color:#27ae60; padding:2px 6px; border-radius:10px; font-size:0.8em; font-weight:bold;">${c.apparition_count} sorties</span>`
+                        : '';
+
+                    return `
+                    <div style="border-bottom:1px solid #eee; padding:10px 0; display:flex; flex-direction:column; gap:5px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:bold; color:#2c3e50; font-size:1.1em;">${c.combination}</span>
+                            ${performanceBadge}
+                        </div>
+                        <div style="font-size:0.9em; color:#34495e; font-weight:bold;">
+                            ${c.denomination || 'Unknown'} <span style="color:#7f8c8d; font-weight:normal; font-size:0.85em;">(${c.alpha_ranking || 'N/A'})</span>
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:5px; font-size:0.8em; color:#7f8c8d;">
+                            <span style="background:#f8f9fa; padding:2px 5px; border-radius:3px;">${c.chip} | ${c.engine} | ${c.beastie}</span>
+                            <span style="background:#f8f9fa; padding:2px 5px; border-radius:3px;">${c.gentile || '-'} / ${c.region || '-'}</span>
+                            <span style="background:#f0f2f5; padding:2px 5px; border-radius:3px; color:#3498db; font-weight:bold;">${c.ligne}-${c.colonne}</span>
+                        </div>
+                        <div style="font-size:0.75em; color:#bdc3c7;">
+                            Granque: ${c.granque_name || '-'} | Tome: ${c.tome || '-'}
+                        </div>
+                    </div>
+                `}).join('');
+            };
+
+            const html = `
+                <div class="portfolio-result">
+                    <!-- Bandeau Metadata -->
+                    <div style="background: #2c3e50; color: white; padding: 12px 15px; border-radius: 8px 8px 0 0; margin: -20px -20px 20px -20px; font-size: 0.9em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <div><span style="color: #3498db; font-weight:bold;">SESSION:</span> <span style="font-size:1.1em;">${data.session_name}</span></div>
+                        <div style="display:flex; gap:15px;">
+                            <div><span style="color: #3498db; font-weight:bold;">UNIVERS:</span> ${data.universe.toUpperCase()}</div>
+                            <div><span style="color: #3498db; font-weight:bold;">TIRAGES:</span> <span style="background:#3498db; padding:2px 6px; border-radius:4px;">${data.analysis_bounds.draw_count}</span></div>
+                        </div>
+                        <div><span style="color: #3498db; font-weight:bold;">PÉRIODE:</span> ${data.analysis_bounds.start ? data.analysis_bounds.start.split('T')[0] : '?'} ➔ ${data.analysis_bounds.end ? data.analysis_bounds.end.split('T')[0] : '?'}</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px; flex-wrap:wrap; gap:10px; color:#7f8c8d; font-size:0.9em;">
+                        <div><strong>Zone:</strong> <span style="color:#2c3e50;">${data.attribute}</span></div>
+                        <div><strong>Lookback:</strong> <span style="color:#2c3e50;">${data.period_days} jours</span> (${periodLabel})</div>
+                        <div><strong>Total Combos:</strong> <span style="color:#2c3e50;">${data.total_count}</span></div>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap:20px;">
+                        <div style="background: white; padding:15px; border-radius:8px; border-left:5px solid #27ae60; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top:1px solid #eee; border-right:1px solid #eee; border-bottom:1px solid #eee;">
+                            <h4 style="color:#27ae60; margin-bottom:10px; display:flex; justify-content:space-between; border-bottom:1px solid #e8f5e8; padding-bottom:5px;">
+                                <span>✅ YA-PLAYED (Flux Chaud)</span>
+                                <span style="font-size:0.7em; background:#e8f5e8; padding:2px 8px; border-radius:10px; align-self:center;">Dernières Sorties</span>
+                            </h4>
+                            <div style="font-size:1.8em; font-weight:bold; color:#2c3e50;">${data.ya_played.count} <span style="font-size:0.5em; color:#7f8c8d; font-weight:normal;">pièces actives</span></div>
+                            <div style="margin-top:5px; color:#2c3e50; font-size:1.1em;">Profit potentiel: <strong style="color:#27ae60;">+${data.ya_played.profit_potential}</strong></div>
+                            
+                            <div style="margin-top:15px;">
+                                <div style="font-size:0.8em; font-weight:bold; color:#7f8c8d; margin-bottom:8px; display:flex; justify-content:space-between;">
+                                    <span>Identité & Performance</span>
+                                    <span>Matrix</span>
+                                </div>
+                                <div style="font-size:0.9em; max-height:400px; overflow-y:auto; background:#fcfcfc; padding:10px; border:1px solid #f0f0f0; border-radius:6px; line-height:1.4;">
+                                    ${renderCombos(data.ya_played.combinations)}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding:15px; border-radius:8px; border-left:5px solid #bdc3c7; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top:1px solid #eee; border-right:1px solid #eee; border-bottom:1px solid #eee;">
+                            <h4 style="color:#7f8c8d; margin-bottom:10px; display:flex; justify-content:space-between; border-bottom:1px solid #f0f0f0; padding-bottom:5px;">
+                                <span>💤 NOT-YET-PLAYED (Sommeil)</span>
+                                <span style="font-size:0.7em; background:#f0f0f0; padding:2px 8px; border-radius:10px; align-self:center;">En Retrait</span>
+                            </h4>
+                            <div style="font-size:1.8em; font-weight:bold; color:#2c3e50;">${data.not_yet_played.count} <span style="font-size:0.5em; color:#7f8c8d; font-weight:normal;">pièces en attente</span></div>
+                            <div style="margin-top:5px; color:#2c3e50; font-size:1.1em;">Profit potentiel: <strong>+${data.not_yet_played.profit_potential}</strong></div>
+                            
+                            <div style="margin-top:15px;">
+                                <div style="font-size:0.8em; font-weight:bold; color:#7f8c8d; margin-bottom:8px; display:flex; justify-content:space-between;">
+                                    <span>Identité & Profil</span>
+                                    <span>Matrix</span>
+                                </div>
+                                <div style="font-size:0.9em; max-height:400px; overflow-y:auto; background:#fcfcfc; padding:10px; border:1px solid #f0f0f0; border-radius:6px; line-height:1.4;">
+                                    ${renderCombos(data.not_yet_played.combinations)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="success" style="margin-top:25px; text-align:center; padding:15px; border-radius:10px; border:1px solid #27ae60; background:rgba(39, 174, 96, 0.1); color:#1e8449;">
+                        <span style="font-size:1.2em;">💡</span> <strong>Conseil Stratégique:</strong> En ne jouant que les <strong>${data.ya_played.count}</strong> pièces YA-PLAYED, vous réduisez votre exposition de 
+                        <strong style="font-size:1.2em;">${((1 - data.ya_played.count / data.total_count) * 100).toFixed(0)}%</strong> tout en restant concentré sur le flux de sortie actuel.
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

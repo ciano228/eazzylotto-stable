@@ -39,14 +39,14 @@
             border-radius: 12px 12px 0 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .header h1 {
             margin: 0 0 10px 0;
             font-size: 2.5rem;
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .header p {
             margin: 0;
             opacity: 0.9;
@@ -130,6 +130,11 @@
             min-width: 80px;
         }
 
+        .drawer-cell {
+            background-color: #fffbe6;
+            max-width: 160px;
+        }
+
         .journal-table td.forme-icon {
             background-color: #f0f9ff;
             border-right: 2px solid #1890ff;
@@ -157,8 +162,12 @@
         }
 
         .period-separator {
-            border-top: 3px solid #ff4d4f !important;
+            border-top: 4px solid #ff4d4f !important;
             font-weight: bold;
+        }
+
+        .period-separator td {
+            padding-top: 40px !important;
         }
 
         .date-separator {
@@ -362,23 +371,17 @@
             border-radius: 2px;
         }
 
-        /* Indicateurs No Draw/No Hold */
-        .no-draw-indicator {
-            font-weight: bold;
-            color: #ff4d4f;
-            background: #fff2f0;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 11px;
-        }
-
+        /* Indicateurs No Draw/No Hold (Standardisés : Blanc sur Fond Rouge) */
+        .no-draw-indicator,
         .no-hold-indicator {
-            font-weight: bold;
-            color: #fa8c16;
-            background: #fff7e6;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 11px;
+            font-weight: bold !important;
+            color: white !important;
+            background: #ff4d4f !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            font-size: 11px !important;
+            display: inline-block !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .universe-tag {
@@ -409,7 +412,7 @@
             background-color: #fadb14;
             color: #333;
         }
-        
+
         .draw-mode-toggle {
             background: rgba(255, 255, 255, 0.95);
             border: 2px solid #1890ff;
@@ -418,14 +421,14 @@
             margin: 20px 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .toggle-label {
             display: flex;
             flex-direction: column;
             gap: 8px;
             cursor: pointer;
         }
-        
+
         .toggle-text {
             display: flex;
             align-items: center;
@@ -434,18 +437,90 @@
             color: #1890ff;
             font-size: 1.1rem;
         }
-        
+
         .toggle-hint {
             color: #666;
             font-style: italic;
             margin-left: 30px;
         }
-        
+
         .toggle-label input[type="checkbox"] {
             width: 20px;
             height: 20px;
             accent-color: #1890ff;
             cursor: pointer;
+        }
+
+        /* Styles for Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #1890ff;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #1890ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Légende Poids Structurels */
+        .structural-legend {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+            border: 2px solid #1890ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .structural-legend h4 {
+            margin: 0 0 10px 0;
+            color: #1890ff;
+            font-size: 1rem;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-icon {
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -457,7 +532,7 @@
             <h1>📋 Journal Statistique Avancé</h1>
             <p>Analyse des redondances avec périodicité et filtres avancés</p>
         </div>
-        
+
         <!-- Activation sélecteur de tirage -->
         <div class="draw-mode-toggle">
             <label class="toggle-label">
@@ -466,7 +541,7 @@
                 <small class="toggle-hint">Cochez pour analyser des tirages précis au lieu de toute la session</small>
             </label>
         </div>
-        
+
         <!-- Sélecteur de tirage -->
         <div id="draw-selector-container" style="display: none;"></div>
 
@@ -553,7 +628,7 @@
         // Initialisation
         document.addEventListener('DOMContentLoaded', function () {
             console.log('📥 Initialisation du journal avancé...');
-            
+
             // Injecter le header universel
             if (typeof UniversalHeader !== 'undefined') {
                 UniversalHeader.injectHeader('header-container', 'advanced-journal', {
@@ -569,11 +644,55 @@
             document.getElementById('endDate').value = today.toISOString().split('T')[0];
             document.getElementById('startDate').value = thirtyDaysAgo.toISOString().split('T')[0];
 
+            // Vérifier les paramètres URL (session / universe / analysis)
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionParam = urlParams.get('session');
+            // Accept both 'universe' and 'univers' from incoming URLs (compat)
+            const universeParam = urlParams.get('universe') || urlParams.get('univers');
+            const analysisParam = urlParams.get('analysis');
+
+            if (universeParam) {
+                const u = document.getElementById('universe');
+                if (u) u.value = universeParam;
+            }
+
+            // Lorsque l'utilisateur change l'univers sur cette page, relancer le chargement
+            const universeSelect = document.getElementById('universe');
+            if (universeSelect) {
+                universeSelect.addEventListener('change', function () {
+                    const val = universeSelect.value;
+                    console.log('🔁 Univers modifié localement ->', val);
+                    // Mettre à jour l'URL pour refléter la sélection sans recharger la page
+                    try {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('univers', val);
+                        url.searchParams.delete('universe'); // normaliser vers 'univers'
+                        window.history.replaceState({}, '', url.toString());
+                    } catch (e) {
+                        console.warn('History update failed', e);
+                    }
+
+                    // Poster via BroadcastChannel pour les autres onglets (déja géré plus haut)
+                    // Relancer le chargement du journal pour appliquer la nouvelle sélection
+                    setTimeout(() => loadJournal(), 80);
+                });
+            }
+
             // Charger les sessions disponibles
             loadSessions().then(() => {
                 // Sélectionner automatiquement la session active
                 const activeSession = availableSessions.find(s => s.is_active);
-                if (activeSession) {
+                if (sessionParam) {
+                    // Si une session est fournie en paramètre, la sélectionner
+                    const sessionSelect = document.getElementById('sessionSelect');
+                    sessionSelect.value = sessionParam;
+                    onSessionChange();
+
+                    // Si analysis=true, lancer automatiquement le chargement
+                    if (analysisParam === 'true' || analysisParam === '1') {
+                        setTimeout(() => loadJournal(), 800);
+                    }
+                } else if (activeSession) {
                     document.getElementById('sessionSelect').value = activeSession.id;
                     onSessionChange();
                 }
@@ -581,12 +700,12 @@
 
             // Ajouter un listener pour le changement de session
             document.getElementById('sessionSelect').addEventListener('change', onSessionChange);
-            
+
             // Injecter le sélecteur de tirage (masqué par défaut)
             initDrawSelector('draw-selector-container');
-            
+
             // Écouter les changements de sélection de tirage
-            document.addEventListener('drawSelectionChanged', function(event) {
+            document.addEventListener('drawSelectionChanged', function (event) {
                 console.log('🎯 Sélection de tirage changée:', event.detail);
                 // Stocker la sélection pour utilisation dans loadJournal
                 window.currentDrawSelection = event.detail;
@@ -597,16 +716,55 @@
                 // Recharger automatiquement le journal
                 setTimeout(() => loadJournal(), 500);
             });
+
+            // Synchronisation de l'univers entre onglets/pages via BroadcastChannel
+            try {
+                const universeChannel = new BroadcastChannel('katula-universe');
+                const universeSelect = document.getElementById('universe');
+                if (universeSelect) {
+                    universeSelect.addEventListener('change', function () {
+                        const val = universeSelect.value;
+                        console.log('[BC] universe changed ->', val);
+                        // Poster le message pour autres pages
+                        universeChannel.postMessage({ univers: val });
+                        // Mettre à jour window.selectedUniverse pour usage local
+                        window.selectedUniverse = val;
+                    });
+                }
+            } catch (e) {
+                console.warn('BroadcastChannel not available:', e);
+            }
+
+            // Debounce helper to avoid multiple rapid reloads
+            function debounce(fn, wait) {
+                let t = null;
+                return function (...args) {
+                    if (t) clearTimeout(t);
+                    t = setTimeout(() => fn.apply(this, args), wait || 150);
+                };
+            }
+
+            // Auto-reload journal when relevant filters change (session handled separately)
+            const autoReloadIds = ['periodicity', 'startDate', 'endDate', 'periodStart', 'periodEnd'];
+            autoReloadIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', debounce(() => {
+                        console.log('🔁 Filter changed ->', id, el.value);
+                        loadJournal();
+                    }, 180));
+                }
+            });
         });
 
         async function loadSessions() {
             console.log('📥 Début chargement des sessions...');
             const sessionSelect = document.getElementById('sessionSelect');
             sessionSelect.innerHTML = '<option value="">Chargement...</option>';
-            
+
             try {
                 const response = await fetch(`${API_BASE}/session/sessions`);
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     const sessions = data.value || data.sessions || data;
@@ -624,13 +782,13 @@
 
             } catch (error) {
                 console.error('❌ Erreur chargement sessions:', error);
-                
+
                 // Créer des sessions de test en cas d'erreur
                 const testSessions = [
                     { id: 10, name: 'Session Test - Loto Français', is_active: true, lottery_type: 'Loto Français' },
                     { id: 11, name: 'Session Test - EuroMillions', is_active: false, lottery_type: 'EuroMillions' }
                 ];
-                
+
                 availableSessions = testSessions;
                 populateSessionSelect(testSessions);
                 showError('Mode test activé - Sessions simulées chargées.');
@@ -647,25 +805,50 @@
                 const status = session.is_active ? 'Active' : 'Inactive';
                 const displayText = `${session.name} (${session.lottery_type || 'N/A'}) - ${status}`;
                 option.textContent = displayText;
-                
+
                 if (session.is_active) {
                     option.selected = true;
                 }
-                
+
                 select.appendChild(option);
             });
         }
 
-        function onSessionChange() {
+        async function onSessionChange() {
             const sessionId = document.getElementById('sessionSelect').value;
 
             if (sessionId) {
                 const session = availableSessions.find(s => s.id == sessionId);
                 if (session) {
                     displaySessionInfo(session);
+
+                    // Fetch full session details to get cycle_length
+                    try {
+                        const response = await fetch(`${API_BASE}/sessions/${sessionId}`);
+                        if (response.ok) {
+                            const fullData = await response.json();
+                            if (fullData.session && fullData.session.cycle_length) {
+                                // Update periodicity selector with actual session cycle_length
+                                const periodicitySelect = document.getElementById('periodicity');
+                                periodicitySelect.value = fullData.session.cycle_length;
+                                console.log('✅ Périodicité mise à jour:', fullData.session.cycle_length);
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Could not fetch full session details', e);
+                    }
+
+                    // Charger automatiquement le journal pour la session sélectionnée
+                    try {
+                        loadJournal();
+                    } catch (e) {
+                        console.warn('loadJournal not available yet', e);
+                    }
                 }
             } else {
                 hideSessionInfo();
+                // Si aucune session, nettoyer l'affichage
+                try { document.getElementById('journalContainer').innerHTML = ''; } catch (e) { }
             }
         }
 
@@ -719,7 +902,9 @@
 
             try {
                 const params = new URLSearchParams({
+                    // inclure les deux clés pour compatibilité backend/DB
                     universe: document.getElementById('universe').value,
+                    univers: document.getElementById('universe').value,
                     periodicity: document.getElementById('periodicity').value,
                     session_id: sessionId
                 });
@@ -727,8 +912,8 @@
                 // Utiliser les paramètres de sélection de tirage si disponibles
                 if (window.currentDrawSelection) {
                     const selection = window.currentDrawSelection;
-                    
-                    switch(selection.mode) {
+
+                    switch (selection.mode) {
                         case 'single':
                             params.append('draw_date', selection.draw);
                             params.append('analysis_mode', 'single_draw');
@@ -766,7 +951,7 @@
                 }
 
                 const response = await fetch(`${API_BASE}/analysis/journal?${params}`);
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     currentJournalData = data;
@@ -779,7 +964,7 @@
 
             } catch (error) {
                 console.error('❌ Erreur lors du chargement:', error);
-                
+
                 // En cas d'erreur, utiliser des données de test
                 if (window.currentDrawSelection && window.currentDrawSelection.mode === 'single') {
                     const testData = generateTestDataForDate(window.currentDrawSelection.draw);
@@ -825,7 +1010,10 @@
         }
 
         function displayJournalTable(journal) {
+            console.log('📊 displayJournalTable appelée avec', journal?.length || 0, 'entrées');
+
             if (!journal || journal.length === 0) {
+                console.warn('⚠️ Aucune donnée de journal à afficher');
                 document.getElementById('journalContainer').innerHTML =
                     '<div class="error">Aucune donnée trouvée pour les critères sélectionnées.</div>';
                 return;
@@ -850,6 +1038,7 @@
                                 <th style="background-color: #1890ff; color: white;">Parité</th>
                                 <th style="background-color: #1890ff; color: white;">Unidos</th>
                                 <th style="background-color: #1890ff; color: white;">Chip</th>
+                                <th style="background-color: #1890ff; color: white;">Drawer</th>
                                 <th>Univers</th>
                                 <th style="background-color: #1890ff; color: white;">Forme</th>
                                 <th style="background-color: #1890ff; color: white;">Engine</th>
@@ -861,6 +1050,8 @@
             `;
 
             let currentPeriod = null;
+            const periodicity = currentJournalData?.periodicity || parseInt(document.getElementById('periodicity').value) || 7;
+            console.log('📊 Périodicité utilisée pour les séparateurs:', periodicity);
 
             // Grouper les entrées par date pour gérer les rowspan
             const groupedByDate = {};
@@ -875,10 +1066,12 @@
                 const entriesForDate = groupedByDate[date];
 
                 entriesForDate.forEach((entry, entryIndex) => {
+                    console.log(`🔍 Ligne: Date=${entry.date}, Period=${entry.period}, CurrentPeriod=${currentPeriod}`);
                     let rowClass = '';
 
-                    // Séparateur de période (ligne rouge)
+                    // Séparateur de période (ligne rouge) - basé sur la périodicité réelle
                     if (currentPeriod !== null && currentPeriod !== entry.period) {
+                        console.log(`🔴 SÉPARATEUR DE PÉRIODE: ${currentPeriod} → ${entry.period}`);
                         rowClass += ' period-separator';
                     }
                     // Séparateur de date (ligne grise moyenne)
@@ -900,16 +1093,26 @@
                     // Combinaison - unique pour chaque ligne
                     tableHtml += `<td class="combination-cell">${entry.combination}</td>`;
 
-                    // Nouvelles colonnes - uniques pour chaque ligne
-                    tableHtml += `<td class="denomination-cell">${entry.denomination || 'N/A'}</td>`;
-                    tableHtml += `<td class="alpha-ranking-cell">${entry.alpha_ranking || 'N/A'}</td>`;
-                    tableHtml += `<td class="granque-cell" style="background-color: #fff7e6;">${entry.granque || 'N/A'}</td>`;
-                    tableHtml += `<td class="petique-cell" style="background-color: #f9f0ff;">${entry.petique || 'N/A'}</td>`;
-                    tableHtml += `<td class="ligne-cell" style="background-color: #e6f7ff;">${entry.ligne || 'N/A'}</td>`;
-                    tableHtml += `<td class="colonne-cell" style="background-color: #f6ffed;">${entry.colonne || 'N/A'}</td>`;
-                    tableHtml += `<td class="parite-cell" style="background-color: #fff2f0;">${entry.parite || 'N/A'}</td>`;
-                    tableHtml += `<td class="unidos-cell" style="background-color: #f0f9ff;">${entry.unidos || 'N/A'}</td>`;
-                    tableHtml += `<td class="chip-cell" style="background-color: #fff7e6;">${entry.chip || 'N/A'}</td>`;
+                    // Nouvelles colonnes - uniques pour chaque ligne avec style N-D/N-H
+                    const formatCell = (value) => {
+                        if (value === 'N-D') return '<span class="no-draw-indicator">N-D</span>';
+                        if (value === 'N-H') return '<span class="no-hold-indicator">N-H</span>';
+                        if (value === 'NO-HOLD') return '<span class="no-hold-indicator">N-H</span>';
+                        return value || 'N/A';
+                    };
+
+                    tableHtml += `<td class="denomination-cell">${formatCell(entry.denomination)}</td>`;
+                    tableHtml += `<td class="alpha-ranking-cell">${formatCell(entry.alpha_ranking)}</td>`;
+                    tableHtml += `<td class="granque-cell" style="background-color: #fff7e6;">${formatCell(entry.granque)}</td>`;
+                    tableHtml += `<td class="petique-cell" style="background-color: #f9f0ff;">${formatCell(entry.petique)}</td>`;
+                    tableHtml += `<td class="ligne-cell" style="background-color: #e6f7ff;">${formatCell(entry.ligne)}</td>`;
+                    tableHtml += `<td class="colonne-cell" style="background-color: #f6ffed;">${formatCell(entry.colonne)}</td>`;
+                    tableHtml += `<td class="parite-cell" style="background-color: #fff2f0;">${formatCell(entry.parite)}</td>`;
+                    tableHtml += `<td class="unidos-cell" style="background-color: #f0f9ff;">${formatCell(entry.unidos)}</td>`;
+                    tableHtml += `<td class="chip-cell" style="background-color: #fff7e6;">${formatCell(entry.chip)}</td>`;
+
+                    const drawerVal = entry.drawer_name || entry.drawer || ('drawer_' + (entry.chip || entry.chip_number || 'unknown') + '_' + (entry.forme || 'carre'));
+                    tableHtml += `<td class="drawer-cell">${formatCell(drawerVal)}</td>`;
 
                     // Cellule univers fusionnée (rowspan) seulement pour la première entrée de chaque date
                     if (entryIndex === 0) {
@@ -990,27 +1193,32 @@
             }
 
             const csvContent = [
-                ['Période', 'Date', 'Nom Loto', 'Numéros Tirés', 'Combinaison', 'Dénomination', 'Alpha Ranking', 'Granque', 'Petique', 'Ligne', 'Colonne', 'Parité', 'Unidos', 'Univers', 'Forme', 'Engine', 'Beastie', 'Tome'],
-                ...currentJournalData.journal.map(entry => [
-                    `P${entry.period}`,
-                    entry.date,
-                    entry.lottery_name,
-                    entry.winning_numbers.join(', '),
-                    entry.combination,
-                    entry.denomination || 'N/A',
-                    entry.alpha_ranking || 'N/A',
-                    entry.granque || 'N/A',
-                    entry.petique || 'N/A',
-                    entry.ligne || 'N/A',
-                    entry.colonne || 'N/A',
-                    entry.parite || 'N/A',
-                    entry.unidos || 'N/A',
-                    entry.univers,
-                    entry.forme,
-                    entry.engine,
-                    entry.beastie,
-                    entry.tome
-                ])
+                ['Période', 'Date', 'Nom Loto', 'Numéros Tirés', 'Combinaison', 'Dénomination', 'Alpha Ranking', 'Granque', 'Petique', 'Ligne', 'Colonne', 'Parité', 'Unidos', 'Chip', 'Drawer', 'Univers', 'Forme', 'Engine', 'Beastie', 'Tome'],
+                ...currentJournalData.journal.map(entry => {
+                    const drawerVal = entry.drawer_name || entry.drawer || ('drawer_' + (entry.chip || entry.chip_number || 'unknown') + '_' + (entry.forme || 'carre'));
+                    return [
+                        `P${entry.period}`,
+                        entry.date,
+                        entry.lottery_name,
+                        (entry.winning_numbers || []).join(', '),
+                        entry.combination,
+                        entry.denomination || 'N/A',
+                        entry.alpha_ranking || 'N/A',
+                        entry.granque || 'N/A',
+                        entry.petique || 'N/A',
+                        entry.ligne || 'N/A',
+                        entry.colonne || 'N/A',
+                        entry.parite || 'N/A',
+                        entry.unidos || 'N/A',
+                        entry.chip || 'N/A',
+                        drawerVal,
+                        entry.univers || 'N/A',
+                        entry.forme || 'N/A',
+                        entry.engine || 'N/A',
+                        entry.beastie || 'N/A',
+                        entry.tome || 'N/A'
+                    ];
+                })
             ].map(row => row.join(',')).join('\n');
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1026,11 +1234,11 @@
             document.getElementById('journalContainer').innerHTML =
                 `<div class="error">${message}</div>`;
         }
-        
+
         function toggleDrawSelection() {
             const checkbox = document.getElementById('enableDrawSelection');
             const container = document.getElementById('draw-selector-container');
-            
+
             if (checkbox.checked) {
                 container.style.display = 'block';
             } else {
@@ -1038,10 +1246,10 @@
                 window.currentDrawSelection = null;
             }
         }
-        
+
         function generateTestDataForDate(selectedDate) {
             const displayDate = new Date(selectedDate).toLocaleDateString('fr-FR');
-            
+
             const testJournal = [
                 {
                     period: 1,
@@ -1065,7 +1273,7 @@
                     tome: 'tome1'
                 }
             ];
-            
+
             return {
                 journal: testJournal,
                 total_periods: 1,
@@ -1074,6 +1282,8 @@
             };
         }
     </script>
+    <script src="assets/js/structural-weights-client.js"></script>
+    <script src="assets/js/katula-advanced-stats.js"></script>
 </body>
 
 </html>

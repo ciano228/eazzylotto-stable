@@ -12,6 +12,8 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Embedding
 from tensorflow.keras.optimizers import Adam
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 import joblib
+from session_statistics_engine import SessionStatisticsEngine
+import itertools
 
 class LSTMPredictor:
     """
@@ -33,72 +35,86 @@ class LSTMPredictor:
         os.makedirs(os.path.dirname(self.model_path), exist_ok=True)
     
     def prepare_data(self, db: Session) -> Tuple[np.ndarray, np.ndarray, List[str]]:
-        """Prépare les données pour l'entraînement LSTM"""
+        """Prépare les données TEMPRAILES REELLES pour l'entraînement LSTM"""
+        print(f"Preparation des donnees Sequentielles pour {self.attribute_type}...")
+
+        # 1. Fetch Session Draws (All History)
+        # We need a way to get all draws. Since we don't have session_id here, 
+        # we might need to query the session_draws table directly.
+        # Let's assume we want ALL draws from ALL sessions for the universe (or just filter by universe if stored).
+        # Typically draws are per session. Let's fetch draws from session 2 (Main) or all.
+        # For now, let's grab all draws from table `session_draws` ordered by date.
         
-        print(f"🔄 Préparation des données LSTM pour {self.attribute_type}...")
+        query = text("""
+            SELECT winning_numbers, draw_date 
+            FROM session_draws 
+            ORDER BY draw_date ASC, draw_number ASC
+            LIMIT 5000
+        """)
+        result = db.execute(query)
+        draws_rows = result.fetchall()
         
-        # Récupérer les données historiques
-        if self.attribute_type in ['forme', 'engine', 'beastie', 'tome', 'chip']:
-            query = f"""
-                SELECT 
-                    c.{self.attribute_type} as attribute_value,
-                    c.combination_id,
-                    ROW_NUMBER() OVER (ORDER BY c.combination_id ASC) as sequence_order
-                FROM combinations c 
-                WHERE c.univers = :universe 
-                AND c.{self.attribute_type} IS NOT NULL
-                ORDER BY c.combination_id ASC
-                LIMIT 2000
-            """
-        elif self.attribute_type == 'parite':
-            query = """
-                SELECT 
-                    p.parite as attribute_value,
-                    c.combination_id,
-                    ROW_NUMBER() OVER (ORDER BY c.combination_id ASC) as sequence_order
-                FROM combinations c 
-                LEFT JOIN parite p ON c.parite_id = p.parite_id
-                WHERE c.univers = :universe 
-                AND p.parite IS NOT NULL
-                ORDER BY c.combination_id ASC
-                LIMIT 2000
-            """
-        elif self.attribute_type == 'unidos':
-            query = """
-                SELECT 
-                    u.unidos as attribute_value,
-                    c.combination_id,
-                    ROW_NUMBER() OVER (ORDER BY c.combination_id ASC) as sequence_order
-                FROM combinations c 
-                LEFT JOIN unidos u ON c.unidos_id = u.unidos_id
-                WHERE c.univers = :universe 
-                AND u.unidos IS NOT NULL
-                ORDER BY c.combination_id ASC
-                LIMIT 2000
-            """
+        if not draws_rows:
+            raise ValueError("Aucun tirage trouvé dans l'historique.")
+
+        # 2. Extract Attributes using Engine Logic
+        # We need the map.
+        # Config DB manually or from env
+        import os
+        db_config = {
+            'dbname': os.getenv('DB_NAME', 'katooling_main_system'),
+            'user': os.getenv('DB_USER', 'postgres'),
+            'password': os.getenv('DB_PASSWORD', 'Katulaa_33'),
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'port': os.getenv('DB_PORT', '5432')
+        }
+        stats_engine = SessionStatisticsEngine(db_config)
+        universe_map = stats_engine._load_universe_map(self.universe)
         
-        result = db.execute(text(query), {"universe": self.universe})
-        data = result.fetchall()
+        raw_sequence = []
         
-        if len(data) < self.sequence_length + 10:
-            raise ValueError(f"Pas assez de données pour {self.attribute_type} (minimum {self.sequence_length + 10})")
-        
-        # Convertir en DataFrame
-        df = pd.DataFrame(data, columns=['attribute_value', 'combination_id', 'sequence_order'])
-        
-        # Encoder les valeurs catégorielles
-        values = df['attribute_value'].values
+        for row in draws_rows:
+            nums = row[0] # winning_numbers
+            if not nums or len(nums) < 2: continue
+            
+            # clean nums
+            valid_nums = [int(n) for n in nums if str(n).isdigit()]
+            
+            # Generate pairs
+            pairs = list(itertools.combinations(valid_nums, 2))
+            
+            draw_attrs = []
+            for p in pairs:
+                p_key = tuple(sorted(p))
+                if p_key in universe_map:
+                    attrs_list = universe_map[p_key]
+                    for a in attrs_list:
+                        val = a.get(self.attribute_type)
+                        # Specific handling for base_name or others
+                        target_key = self.attribute_type
+                        if target_key == 'granque': target_key = 'granque_name'
+                        
+                        val = a.get(target_key)
+                        if val and val != "---":
+                            draw_attrs.append(val)
+            
+            # Add to main sequence
+            # Strategy: Flatten? Or take most frequent?
+            # Flattening preserves all data.
+            raw_sequence.extend(draw_attrs)
+
+        if len(raw_sequence) < self.sequence_length + 10:
+             raise ValueError(f"Pas assez de données d'attributs ({len(raw_sequence)}) pour l'entraînement.")
+
+        # 3. Encode
+        values = np.array(raw_sequence)
         unique_values = list(set(values))
-        
-        # Encoder les valeurs
         encoded_values = self.label_encoder.fit_transform(values)
         
-        # Créer des séquences pour LSTM
+        # 4. Create Sequences
         X, y = self._create_sequences(encoded_values)
         
-        print(f"✅ Données préparées: {len(X)} séquences de longueur {self.sequence_length}")
-        print(f"📊 Valeurs uniques: {len(unique_values)} - {unique_values}")
-        
+        print(f"Donnees Sequentielles pretes: {len(X)} sequences.")
         return X, y, unique_values
     
     def _create_sequences(self, data: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -117,7 +133,7 @@ class LSTMPredictor:
     def build_model(self, num_classes: int) -> Sequential:
         """Construit le modèle LSTM"""
         
-        print(f"🏗️ Construction du modèle LSTM pour {num_classes} classes...")
+        print(f"Construction du modele LSTM pour {num_classes} classes...")
         
         model = Sequential([
             # Couche d'embedding pour les valeurs catégorielles
@@ -146,13 +162,13 @@ class LSTMPredictor:
             metrics=['accuracy']
         )
         
-        print("✅ Modèle LSTM construit avec succès!")
+        print("Modele LSTM construit avec succes!")
         return model
     
     def train(self, db: Session, epochs: int = 50, validation_split: float = 0.2) -> Dict[str, Any]:
         """Entraîne le modèle LSTM"""
         
-        print(f"🚀 Début de l'entraînement LSTM pour {self.attribute_type}...")
+        print(f"Debut de l'entrainement LSTM pour {self.attribute_type}...")
         
         try:
             # Préparer les données
@@ -194,14 +210,14 @@ class LSTMPredictor:
                 "timestamp": datetime.now().isoformat()
             }
             
-            print(f"✅ Entraînement terminé!")
-            print(f"📊 Précision finale: {final_accuracy:.3f}")
-            print(f"📊 Précision validation: {val_accuracy:.3f}" if val_accuracy else "")
+            print(f"Entrainement termine!")
+            print(f"Precision finale: {final_accuracy:.3f}")
+            print(f"Precision validation: {val_accuracy:.3f}" if val_accuracy else "")
             
             return training_results
             
         except Exception as e:
-            print(f"❌ Erreur lors de l'entraînement: {e}")
+            print(f"Erreur lors de l'entrainement: {e}")
             raise e
     
     def predict_next(self, db: Session, sequence_length: int = None) -> Dict[str, Any]:
@@ -210,7 +226,7 @@ class LSTMPredictor:
         if sequence_length is None:
             sequence_length = self.sequence_length
         
-        print(f"🔮 Prédiction LSTM pour {self.attribute_type}...")
+        print(f"Prediction LSTM pour {self.attribute_type}...")
         
         try:
             # Charger le modèle si nécessaire
@@ -260,54 +276,65 @@ class LSTMPredictor:
                 "timestamp": datetime.now().isoformat()
             }
             
-            print(f"✅ Prédiction LSTM terminée - Top prédiction: {results[0]['predicted_value']} ({results[0]['confidence_percent']}%)")
+            print(f"SUCCESS: Prediction LSTM terminee - Top prediction: {results[0]['predicted_value']} ({results[0]['confidence_percent']}%)")
             
             return prediction_result
             
         except Exception as e:
-            print(f"❌ Erreur lors de la prédiction LSTM: {e}")
+            print(f"ERROR: Erreur lors de la prediction LSTM: {e}")
             raise e
     
     def _get_recent_sequence(self, db: Session, length: int) -> np.ndarray:
-        """Récupère la séquence récente pour la prédiction"""
+        """Récupère la séquence RÉCENTE pour la prédiction (Live)"""
         
-        if self.attribute_type in ['forme', 'engine', 'beastie', 'tome', 'chip']:
-            query = f"""
-                SELECT c.{self.attribute_type} as attribute_value
-                FROM combinations c 
-                WHERE c.univers = :universe 
-                AND c.{self.attribute_type} IS NOT NULL
-                ORDER BY c.combination_id DESC
-                LIMIT :length
-            """
-        elif self.attribute_type == 'parite':
-            query = """
-                SELECT p.parite as attribute_value
-                FROM combinations c 
-                LEFT JOIN parite p ON c.parite_id = p.parite_id
-                WHERE c.univers = :universe 
-                AND p.parite IS NOT NULL
-                ORDER BY c.combination_id DESC
-                LIMIT :length
-            """
-        elif self.attribute_type == 'unidos':
-            query = """
-                SELECT u.unidos as attribute_value
-                FROM combinations c 
-                LEFT JOIN unidos u ON c.unidos_id = u.unidos_id
-                WHERE c.univers = :universe 
-                AND u.unidos IS NOT NULL
-                ORDER BY c.combination_id DESC
-                LIMIT :length
-            """
+        # Fetch last N draws
+        query = text("""
+            SELECT winning_numbers 
+            FROM session_draws 
+            ORDER BY draw_date DESC, draw_number DESC
+            LIMIT 50
+        """)
+        result = db.execute(query)
+        rows = result.fetchall()
         
-        result = db.execute(text(query), {"universe": self.universe, "length": length})
-        data = result.fetchall()
+        # Setup Engine
+        import os
+        db_config = {
+            'dbname': os.getenv('DB_NAME', 'katooling_main_system'),
+            'user': os.getenv('DB_USER', 'postgres'),
+            'password': os.getenv('DB_PASSWORD', 'Katulaa_33'),
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'port': os.getenv('DB_PORT', '5432')
+        }
+        stats_engine = SessionStatisticsEngine(db_config)
+        universe_map = stats_engine._load_universe_map(self.universe)
         
-        # Inverser l'ordre pour avoir la séquence chronologique
-        sequence = np.array([row[0] for row in reversed(data)])
+        raw_sequence = []
         
-        return sequence
+        # Process in REVERSE to build chronological history (Older -> Newer)
+        # rows are DESC (Newest first).
+        for row in reversed(rows):
+            nums = row[0]
+            if not nums or len(nums) < 2: continue
+            valid_nums = [int(n) for n in nums if str(n).isdigit()]
+            pairs = list(itertools.combinations(valid_nums, 2))
+            
+            for p in pairs:
+                p_key = tuple(sorted(p))
+                if p_key in universe_map:
+                    attrs_list = universe_map[p_key]
+                    for a in attrs_list:
+                        target_key = self.attribute_type
+                        if target_key == 'granque': target_key = 'granque_name'
+                        val = a.get(target_key)
+                        if val and val != "---":
+                            raw_sequence.append(val)
+                            
+        # We need the LAST 'length' items
+        if len(raw_sequence) < length:
+             return np.array(raw_sequence) # Short sequence
+             
+        return np.array(raw_sequence[-length:])
     
     def save_model(self):
         """Sauvegarde le modèle et les encodeurs"""
@@ -315,7 +342,7 @@ class LSTMPredictor:
         if self.model is not None:
             self.model.save(self.model_path)
             joblib.dump(self.label_encoder, self.encoder_path)
-            print(f"💾 Modèle sauvegardé: {self.model_path}")
+            print(f"Modele sauvegarde: {self.model_path}")
     
     def load_model(self):
         """Charge le modèle et les encodeurs"""
@@ -323,7 +350,7 @@ class LSTMPredictor:
         if os.path.exists(self.model_path) and os.path.exists(self.encoder_path):
             self.model = load_model(self.model_path)
             self.label_encoder = joblib.load(self.encoder_path)
-            print(f"📂 Modèle chargé: {self.model_path}")
+            print(f"Modele charge: {self.model_path}")
         else:
             raise FileNotFoundError(f"Modèle non trouvé pour {self.attribute_type}")
     
@@ -351,7 +378,7 @@ class LSTMPredictor:
                 "timestamp": datetime.now().isoformat()
             }
             
-            print(f"📊 Évaluation {self.attribute_type}: Précision = {accuracy:.3f}")
+            print(f"Evaluation {self.attribute_type}: Precision = {accuracy:.3f}")
             
             return evaluation_results
             

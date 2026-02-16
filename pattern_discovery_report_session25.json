@@ -1,0 +1,381 @@
+{
+  "metadata": {
+    "generated_at": "2026-01-03T21:23:02.687387",
+    "total_draws_analyzed": 520,
+    "patterns_discovered": 53,
+    "min_frequency_threshold": 25
+  },
+  "top_patterns": [
+    {
+      "pattern": "forme:rectangle",
+      "count": 774,
+      "frequency_percent": 148.85,
+      "num_attributes": 1,
+      "category": "geometric"
+    },
+    {
+      "pattern": "tome:tome1",
+      "count": 619,
+      "frequency_percent": 119.04,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "forme:cercle",
+      "count": 554,
+      "frequency_percent": 106.54,
+      "num_attributes": 1,
+      "category": "geometric"
+    },
+    {
+      "pattern": "tome:tome2",
+      "count": 463,
+      "frequency_percent": 89.04,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "granque:Q2",
+      "count": 442,
+      "frequency_percent": 85.0,
+      "num_attributes": 1,
+      "category": "spatial"
+    },
+    {
+      "pattern": "granque:Q1",
+      "count": 393,
+      "frequency_percent": 75.58,
+      "num_attributes": 1,
+      "category": "spatial"
+    },
+    {
+      "pattern": "forme:rectangle_tome:tome1",
+      "count": 392,
+      "frequency_percent": 75.38,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "petique:q1",
+      "count": 388,
+      "frequency_percent": 74.62,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "petique:q2",
+      "count": 369,
+      "frequency_percent": 70.96,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "petique:q3",
+      "count": 309,
+      "frequency_percent": 59.42,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "granque:Q1_petique:q1",
+      "count": 303,
+      "frequency_percent": 58.27,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "petique:q4",
+      "count": 262,
+      "frequency_percent": 50.38,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "petique:q2_tome:tome1",
+      "count": 250,
+      "frequency_percent": 48.08,
+      "num_attributes": 2,
+      "category": "other"
+    },
+    {
+      "pattern": "tome:tome3",
+      "count": 246,
+      "frequency_percent": 47.31,
+      "num_attributes": 1,
+      "category": "other"
+    },
+    {
+      "pattern": "granque:Q2_petique:q2",
+      "count": 246,
+      "frequency_percent": 47.31,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "forme:rectangle_granque:Q1",
+      "count": 245,
+      "frequency_percent": 47.12,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "forme:rectangle_granque:Q2",
+      "count": 242,
+      "frequency_percent": 46.54,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "forme:rectangle_tome:tome2",
+      "count": 238,
+      "frequency_percent": 45.77,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "granque:Q1_tome:tome2",
+      "count": 234,
+      "frequency_percent": 45.0,
+      "num_attributes": 2,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "forme:rectangle_petique:q1",
+      "count": 231,
+      "frequency_percent": 44.42,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "forme:rectangle_petique:q2",
+      "count": 230,
+      "frequency_percent": 44.23,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "engine:ship",
+      "count": 230,
+      "frequency_percent": 44.23,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "forme:cercle_tome:tome1",
+      "count": 227,
+      "frequency_percent": 43.65,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "forme:cercle_tome:tome2",
+      "count": 225,
+      "frequency_percent": 43.27,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "engine:train",
+      "count": 219,
+      "frequency_percent": 42.12,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "engine:bus",
+      "count": 213,
+      "frequency_percent": 40.96,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "granque:Q2_tome:tome1",
+      "count": 211,
+      "frequency_percent": 40.58,
+      "num_attributes": 2,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "forme:rectangle_granque:Q1_petique:q1",
+      "count": 210,
+      "frequency_percent": 40.38,
+      "num_attributes": 3,
+      "category": "spatial"
+    },
+    {
+      "pattern": "petique:q1_tome:tome2",
+      "count": 205,
+      "frequency_percent": 39.42,
+      "num_attributes": 2,
+      "category": "other"
+    },
+    {
+      "pattern": "forme:cercle_granque:Q2",
+      "count": 200,
+      "frequency_percent": 38.46,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "forme:rectangle_petique:q3",
+      "count": 196,
+      "frequency_percent": 37.69,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "granque:Q2_tome:tome2",
+      "count": 191,
+      "frequency_percent": 36.73,
+      "num_attributes": 2,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "engine:car",
+      "count": 190,
+      "frequency_percent": 36.54,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "granque:Q3",
+      "count": 174,
+      "frequency_percent": 33.46,
+      "num_attributes": 1,
+      "category": "spatial"
+    },
+    {
+      "pattern": "granque:Q1_petique:q1_tome:tome2",
+      "count": 170,
+      "frequency_percent": 32.69,
+      "num_attributes": 3,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "granque:Q3_tome:tome1",
+      "count": 169,
+      "frequency_percent": 32.5,
+      "num_attributes": 2,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "forme:rectangle_petique:q2_tome:tome1",
+      "count": 164,
+      "frequency_percent": 31.54,
+      "num_attributes": 3,
+      "category": "geometric"
+    },
+    {
+      "pattern": "forme:rectangle_granque:Q2_petique:q2",
+      "count": 161,
+      "frequency_percent": 30.96,
+      "num_attributes": 3,
+      "category": "spatial"
+    },
+    {
+      "pattern": "engine:helicoptere",
+      "count": 157,
+      "frequency_percent": 30.19,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "forme:cercle_petique:q1",
+      "count": 157,
+      "frequency_percent": 30.19,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "engine:ship_petique:q4",
+      "count": 156,
+      "frequency_percent": 30.0,
+      "num_attributes": 2,
+      "category": "mobility"
+    },
+    {
+      "pattern": "forme:cercle_granque:Q1",
+      "count": 148,
+      "frequency_percent": 28.46,
+      "num_attributes": 2,
+      "category": "spatial"
+    },
+    {
+      "pattern": "engine:car_forme:rectangle",
+      "count": 147,
+      "frequency_percent": 28.27,
+      "num_attributes": 2,
+      "category": "geometric_mobility"
+    },
+    {
+      "pattern": "forme:cercle_petique:q4",
+      "count": 145,
+      "frequency_percent": 27.88,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "forme:rectangle_tome:tome3",
+      "count": 144,
+      "frequency_percent": 27.69,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "granque:Q2_petique:q2_tome:tome1",
+      "count": 144,
+      "frequency_percent": 27.69,
+      "num_attributes": 3,
+      "category": "temporal_spatial"
+    },
+    {
+      "pattern": "petique:q3_tome:tome3",
+      "count": 142,
+      "frequency_percent": 27.31,
+      "num_attributes": 2,
+      "category": "other"
+    },
+    {
+      "pattern": "forme:cercle_petique:q2",
+      "count": 139,
+      "frequency_percent": 26.73,
+      "num_attributes": 2,
+      "category": "geometric"
+    },
+    {
+      "pattern": "engine:plane",
+      "count": 137,
+      "frequency_percent": 26.35,
+      "num_attributes": 1,
+      "category": "mobility"
+    },
+    {
+      "pattern": "engine:bus_petique:q1",
+      "count": 134,
+      "frequency_percent": 25.77,
+      "num_attributes": 2,
+      "category": "mobility"
+    },
+    {
+      "pattern": "petique:q4_tome:tome1",
+      "count": 134,
+      "frequency_percent": 25.77,
+      "num_attributes": 2,
+      "category": "other"
+    },
+    {
+      "pattern": "granque:Q5",
+      "count": 132,
+      "frequency_percent": 25.38,
+      "num_attributes": 1,
+      "category": "spatial"
+    },
+    {
+      "pattern": "engine:ship_forme:cercle",
+      "count": 131,
+      "frequency_percent": 25.19,
+      "num_attributes": 2,
+      "category": "geometric_mobility"
+    }
+  ]
+}

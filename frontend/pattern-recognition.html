@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconnaissance de Patterns - EazzyCalculator</title>
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <style>
+        :root {
+            --pattern-glow: #8e2de2;
+            /* Deep purple */
+            --pattern-bg: #0d0c1d;
+            --pattern-card: #1c1a35;
+        }
+
+        body {
+            background-color: var(--pattern-bg);
+            color: #e0e0e0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .pattern-header {
+            background: linear-gradient(135deg, #2a204c 0%, #0d0c1d 100%);
+            padding: 2rem 0;
+            border-bottom: 1px solid #4a2d82;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .pattern-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--pattern-glow), transparent);
+            box-shadow: 0 0 15px var(--pattern-glow);
+        }
+
+        .power-card {
+            background: var(--pattern-card);
+            border: 1px solid #4a2d82;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .power-card:hover {
+            border-color: var(--pattern-glow);
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .glow-text {
+            color: var(--pattern-glow);
+            text-shadow: 0 0 10px rgba(142, 45, 226, 0.5);
+        }
+
+        .input-number-pill {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #4a2d82;
+            border-radius: 20px;
+            padding: 10px 15px;
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Supprime les flèches spinner sur les inputs number */
+        .input-number-pill::-webkit-outer-spin-button,
+        .input-number-pill::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .input-number-pill[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .input-number-pill:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.7);
+            border-color: var(--pattern-glow);
+            transform: scale(1.05);
+        }
+
+        .input-number-pill.is-invalid {
+            border-color: #dc3545 !important;
+            /* Rouge pour les doublons */
+            box-shadow: 0 0 15px rgba(220, 53, 69, 0.6);
+            animation: shake 0.5s;
+        }
+
+        .btn-pattern {
+            background: linear-gradient(90deg, #8e2de2, #4a00e0);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pattern:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(142, 45, 226, 0.4);
+        }
+
+        .pattern-attribute {
+            background-color: rgba(142, 45, 226, 0.1);
+            border-left: 3px solid var(--pattern-glow);
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spinner-container {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-item {
+            border-left: 2px solid #5a5a5a;
+            padding-left: 15px;
+            margin-left: 10px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background-color: var(--pattern-glow);
+            border-radius: 50%;
+            border: 2px solid var(--pattern-card);
+        }
+
+        .timeline-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item-body {
+            background-color: rgba(142, 45, 226, 0.05);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-container"></div>
+
+    <header class="pattern-header">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold glow-text"><i class="fas fa-fingerprint"></i> PATTERN RECOGNITION CENTER</h1>
+            <p class="text-muted">Analyse des Signatures et Prédiction des Tirages Jumeaux</p>
+        </div>
+    </header>
+
+    <div class="container pb-5">
+        <div class="row g-4">
+
+            <!-- Left Panel: Input & Session Controls -->
+            <div class="col-lg-4">
+                <div class="power-card p-4 mb-4">
+                    <h4 class="mb-4"><i class="fas fa-cogs"></i> Configuration</h4>
+
+                    <!-- Universe Selection -->
+                    <div class="mb-4">
+                        <label for="patternUniverse" class="small text-muted mb-2">UNIVERS ACTUEL</label>
+                        <select id="patternUniverse" class="form-select bg-dark text-white border-secondary">
+                            <option value="mundo">MUNDO (Stable)</option>
+                            <option value="fruity">FRUITY (Aggressive)</option>
+                            <option value="trigga">TRIGGA (Patterns)</option>
+                            <option value="roaster">ROASTER (Cycles)</option>
+                            <option value="sunshine">SUNSHINE (Linear)</option>
+                        </select>
+                    </div>
+
+                    <!-- Session Loading -->
+                    <div class="mb-4">
+                        <h6 class="small text-muted mb-2">CHARGER UNE SESSION</h6>
+                        <div class="input-group mb-3">
+                            <select id="sessionSelect" class="form-select bg-dark text-white border-secondary">
+                                <option value="">-- Sélectionner une session --</option>
+                            </select>
+                            <button class="btn btn-outline-secondary" type="button" id="loadSessionButton">
+                                <i class="fas fa-download"></i> Charger
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <input type="date" id="startDate"
+                                class="form-control bg-dark text-white border-secondary me-2">
+                            <input type="date" id="endDate" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <button class="btn btn-pattern w-100 mt-3" id="loadPeriodButton">
+                            <i class="fas fa-calendar-alt"></i> Charger Période
+                        </button>
+                    </div>
+
+                    <!-- Trigger Draw Input -->
+                    <div class="mb-4 text-center">
+                        <label class="small text-muted mb-3 d-block">TIRAGE DÉCLENCHEUR</label>
+                        <div id="trigger-inputs-container" class="d-flex justify-content-center gap-2 flex-wrap">
+                            <!-- Dynamic number inputs will be injected here -->
+                        </div>
+                        <button class="btn btn-pattern w-100 mt-3" id="analyzeDrawButton">
+                            <i class="fas fa-search"></i> Analyser Tirage
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results & Predictions -->
+            <div class="col-lg-8">
+                <div id="pattern-placeholder" class="power-card h-100 spinner-container text-center">
+                    <i class="fas fa-fingerprint fa-4x mb-4 text-secondary opacity-25"></i>
+                    <h3 class="text-secondary">En attente de tirage ou session...</h3>
+                    <p class="text-muted small">Entrez un tirage déclencheur ou chargez une session historique pour
+                        commencer l'analyse.</p>
+                </div>
+
+                <div id="pattern-results" style="display: none;">
+                    <!-- Signature Visualization -->
+                    <div class="power-card p-4 mb-4">
+                        <h4 class="mb-4"><i class="fas fa-dna"></i> Signature du Tirage</h4>
+                        <div id="signature-display" class="row">
+                            <!-- Signature details will be loaded here -->
+                        </div>
+                        <div id="signature-empty" class="alert alert-info text-center mt-3" style="display: none;">
+                            Aucune signature trouvée pour ce tirage.
+                        </div>
+                    </div>
+
+                    <!-- Historical Twin Draws -->
+                    <div class="power-card p-4 mb-4">
+                        <h4 class="mb-4"><i class="fas fa-clone"></i> Tirages Historiques Jumeaux</h4>
+                        <div id="twin-draws-list">
+                            <!-- Twin draws will be loaded here -->
+                        </div>
+                        <div id="twin-draws-empty" class="alert alert-info text-center mt-3" style="display: none;">
+                            Aucun tirage jumeau trouvé.
+                        </div>
+                    </div>
+
+                    <!-- Prediction Panel -->
+                    <div class="power-card p-4">
+                        <h4 class="mb-4"><i class="fas fa-meteor"></i> Panneau de Prédiction</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Numéros à Surveiller</h6>
+                                <ul id="watch-numbers-list" class="list-group list-group-flush">
+                                    <!-- Numbers to watch -->
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Duos Probables</h6>
+                                <ul id="probable-duos-list" class="list-group list-group-flush">
+                                    <!-- Probable duos -->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h6>Météo des Attributs</h6>
+                            <div id="attribute-weather-display">
+                                <!-- Attribute weather messages -->
+                            </div>
+                        </div>
+                        <div id="prediction-empty" class="alert alert-info text-center mt-3" style="display: none;">
+                            Aucune prédiction disponible.
+                        </div>
+                    </div>
+
+                    <!-- Session Progress Panel -->
+                    <div class="power-card p-4 mt-4">
+                        <h4 class="mb-4"><i class="fas fa-chart-line"></i> Progression de Session</h4>
+                        <div id="session-progress-timeline">
+                            <!-- Session draws and their analysis will be displayed here -->
+                        </div>
+                        <div id="session-progress-empty" class="alert alert-info text-center mt-3"
+                            style="display: none;">
+                            Aucune donnée de session disponible pour cette période.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/universal-header.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8881';
+        console.log("Pattern Recognition API Base configurée sur :", API_BASE);
+    </script>
+    <script src="assets/js/pattern-recognition.js?v=2.2"></script>
+</body>
+
+</html>

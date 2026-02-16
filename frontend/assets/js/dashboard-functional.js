@@ -3,7 +3,7 @@
  * Rend toutes les composantes du dashboard fonctionnelles
  */
 
-const API_BASE = 'http://localhost:8081/api';
+const API_BASE = 'http://localhost:8000/api';
 
 // Configuration des couleurs par univers
 const UNIVERSE_COLORS = {
@@ -61,12 +61,12 @@ class DashboardManager {
     async loadDashboardStats() {
         try {
             console.log('🔄 Chargement des statistiques du dashboard...');
-            
+
             // Essayer de charger les vraies données avec timeout
             const timeout = 3000; // 3 secondes max
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
-            
+
             try {
                 // Charger les statistiques générales
                 const [resultsStats, predictionsHistory, katoolingStatus] = await Promise.all([
@@ -78,11 +78,11 @@ class DashboardManager {
                 clearTimeout(timeoutId);
                 this.updateDashboardStats(resultsStats, predictionsHistory, katoolingStatus);
                 console.log('✅ Statistiques chargées depuis l\'API');
-                
+
             } catch (apiError) {
                 clearTimeout(timeoutId);
                 console.warn('⚠️ APIs non disponibles, utilisation de données simulées:', apiError.message);
-                
+
                 // Utiliser des données simulées
                 const simulatedStats = this.generateSimulatedStats();
                 this.updateDashboardStats(
@@ -92,11 +92,11 @@ class DashboardManager {
                 );
                 console.log('✅ Données simulées chargées');
             }
-            
+
         } catch (error) {
             console.error('❌ Erreur lors du chargement des statistiques:', error);
             this.showError('Recherche des données en cours...');
-            
+
             // Fallback final avec données par défaut
             setTimeout(() => {
                 const defaultStats = this.generateSimulatedStats();
@@ -204,7 +204,7 @@ class DashboardManager {
 
     async navigateToSection(section) {
         this.currentSection = section;
-        
+
         // Masquer toutes les sections
         document.querySelectorAll('.dashboard-section').forEach(s => {
             s.style.display = 'none';
@@ -433,7 +433,7 @@ class DashboardManager {
                     prediction_horizon: 5
                 })
             });
-            
+
             this.displayPredictions(predictions.predictions || []);
             this.showSuccess('Prédictions générées avec succès');
         } catch (error) {
@@ -453,7 +453,7 @@ class DashboardManager {
                     prediction_horizon: 5
                 })
             });
-            
+
             this.displayKatoolingWorkflow(workflow);
             this.showSuccess('Workflow KATOOLING exécuté avec succès');
         } catch (error) {
@@ -475,7 +475,7 @@ class DashboardManager {
                     marking_type: 'combination'
                 })
             });
-            
+
             this.displayTemporalAnalysisResults(analysis);
             this.showSuccess('Analyse temporelle terminée');
         } catch (error) {
@@ -496,7 +496,7 @@ class DashboardManager {
                     draw_type: 'standard'
                 })
             });
-            
+
             this.showSuccess(`Tirage créé avec l'ID: ${draw.id}`);
             this.loadDashboardStats(); // Recharger les stats
         } catch (error) {
@@ -518,11 +518,11 @@ class DashboardManager {
         };
 
         const response = await fetch(url, config);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         return await response.json();
     }
 
@@ -567,9 +567,9 @@ class DashboardManager {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.textContent = message;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.remove();
         }, 3000);
@@ -631,8 +631,8 @@ function navigateToSettings() {
 function handleCardClick(event) {
     const card = event.currentTarget;
     const section = card.getAttribute('data-section');
-    
-    switch(section) {
+
+    switch (section) {
         case 'research':
             navigateToResearch();
             break;

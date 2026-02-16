@@ -337,11 +337,7 @@ async def get_chip_formes(universe: str, chip_number: str):
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving chip formes: {str(e)}")
-from fastapi.staticfiles import StaticFiles
-from pathlib import Path
-
-backend_path = Path(__file__).parent / "backend"
-app.mount("/static", StaticFiles(directory=str(backend_path)), name="static")
+# StaticFiles supprimé pour éviter l'erreur de chemin
 
 if __name__ == "__main__":
     print("Serveur PostgreSQL demarré sur http://localhost:8000")

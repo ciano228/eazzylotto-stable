@@ -14,42 +14,22 @@ class CombinationService:
     
     @staticmethod
     def get_combination_info(db: Session, num1: int, num2: int) -> Dict[str, Any]:
-        """Récupère les informations d'une combinaison depuis la DB avec jointures"""
+        """Récupère les informations d'une combinaison depuis la DB"""
         # S'assurer que num1 <= num2 pour la recherche
         if num1 > num2:
             num1, num2 = num2, num1
             
-        # Import du modèle Chip
-        from app.models.chip import Chip
-        
-        # Requête avec jointures pour récupérer les noms de parité, unidos et chip
-        result = db.query(
-            Combination,
-            Parite.parite.label('parite_name'),
-            Unidos.unidos.label('unidos_name'),
-            Chip.chip_name.label('chip_name')
-        ).outerjoin(
-            Parite, Combination.parite_id == Parite.parite_id
-        ).outerjoin(
-            Unidos, Combination.unidos_id == Unidos.unidos_id
-        ).outerjoin(
-            Chip, Combination.chip_id == Chip.chip_id
-        ).filter(
+        # Requête simple sans jointures (les tables parite, unidos, chips n'existent pas)
+        combination = db.query(Combination).filter(
             Combination.num1 == num1,
             Combination.num2 == num2
         ).first()
         
-        if result:
-            combination, parite_name, unidos_name, chip_name = result
-            
-            # Debug logs
-            print(f"DEBUG - Combination {num1}-{num2}:")
-            print(f"  parite_id: {combination.parite_id}, parite_name: {parite_name}")
-            print(f"  unidos_id: {combination.unidos_id}, unidos_name: {unidos_name}")
-            print(f"  chip_id: {combination.chip_id}, chip_name: {chip_name}")
-            
+        if combination:
             return {
                 "combination": f"{num1}-{num2}",
+                "num1": combination.num1,
+                "num2": combination.num2,
                 "univers": combination.univers,
                 "forme": combination.forme,
                 "engine": combination.engine,
@@ -61,10 +41,21 @@ class CombinationService:
                 "petique": combination.petique,
                 "ligne": combination.ligne,
                 "colonne": combination.colonne,
-                "parite": parite_name or f"PARITE-{combination.parite_id}",
-                "unidos": unidos_name or f"UNIDOS-{combination.unidos_id}",
-                "chip": chip_name or f"CHIP-{combination.chip_id}",
-                "combination_id": combination.combination_id
+                "parite_id": combination.parite_id,
+                "unidos_id": combination.unidos_id,
+                "chip": combination.chip,
+                "chip_id": combination.chip_id,
+                "combination_id": combination.combination_id,
+                "quartier": combination.quartier,
+                "region": combination.region,
+                "gentile": combination.gentile,
+                "base_name": combination.base_name,
+                "cell_num1": combination.cell_num1,
+                "cell_num2": combination.cell_num2,
+                "position_num1": combination.position_num1,
+                "position_num2": combination.position_num2,
+                "drawer": combination.drawer if hasattr(combination, 'drawer') else None,
+                "drawer_name": combination.drawer_name if hasattr(combination, 'drawer_name') else None
             }
         return None
     

@@ -1,92 +1,106 @@
 """
-Module de calcul sécurisé pour EazzyCalculator.
-Fournit des fonctions pour évaluer des expressions mathématiques de manière sécurisée.
+Module de calculatrice sécurisée
+Évalue les expressions mathématiques de manière sécurisée
 """
 import ast
 import operator
-import logging
+from typing import Union
 
-logger = logging.getLogger(__name__)
 
-# Opérateurs mathématiques autorisés
-OPERATORS = {
+# Opérateurs autorisés
+ALLOWED_OPERATORS = {
     ast.Add: operator.add,
     ast.Sub: operator.sub,
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
     ast.Pow: operator.pow,
     ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
 }
 
-def evaluate_expression(expr: str) -> float:
+
+def evaluate_expression(expr: str) -> Union[int, float]:
     """
-    Évalue une expression mathématique de manière sécurisée.
+    Évalue une expression mathématique de manière sécurisée
     
     Args:
-        expr (str): L'expression mathématique à évaluer
+        expr: Expression mathématique sous forme de chaîne
         
     Returns:
-        float: Le résultat du calcul
+        Résultat du calcul
         
     Raises:
-        ValueError: Si l'expression contient des opérations non autorisées
-        SyntaxError: Si l'expression est mal formée
+        ValueError: Si l'expression contient des éléments non autorisés
     """
     try:
         # Parser l'expression
-        parsed = ast.parse(expr, mode='eval')
+        node = ast.parse(expr, mode='eval')
         
-        # Vérifier qu'il n'y a pas d'appels de fonctions ou d'attributs
-        for node in ast.walk(parsed):
-            if isinstance(node, (ast.Call, ast.Attribute)):
-                raise ValueError("Les appels de fonctions ne sont pas autorisés")
-                
-        # Évaluer l'expression
-        return _eval_node(parsed.body)
+        # Évaluer de manière sécurisée
+        result = _eval_node(node.body)
         
-    except SyntaxError as e:
-        logger.error(f"Erreur de syntaxe dans l'expression: {expr}")
-        raise ValueError(f"Erreur de syntaxe dans l'expression: {str(e)}") from e
+        return result
+        
+    except SyntaxError:
+        raise ValueError("Expression mathématique invalide")
     except Exception as e:
-        logger.error(f"Erreur lors de l'évaluation de l'expression: {expr}")
-        raise ValueError(f"Erreur lors de l'évaluation: {str(e)}") from e
+        raise ValueError(f"Erreur lors de l'évaluation: {str(e)}")
 
-def _eval_node(node: ast.AST) -> float:
-    """
-    Évalue récursivement un nœud AST.
+
+def _eval_node(node):
+    """Évalue récursivement un nœud AST"""
     
-    Args:
-        node: Le nœud AST à évaluer
-        
-    Returns:
-        float: Le résultat de l'évaluation
-        
-    Raises:
-        ValueError: Si une opération non autorisée est rencontrée
-    """
-    # Nombres
     if isinstance(node, ast.Constant):
-        if isinstance(node.value, (int, float)):
-            return float(node.value)
-        raise ValueError(f"Type de constante non supporté: {type(node.value).__name__}")
+        # Nombre constant
+        return node.value
     
-    # Nombres (compatibilité Python < 3.8)
     elif isinstance(node, ast.Num):
-        return float(node.n)
+        # Nombre (compatibilité Python < 3.8)
+        return node.n
     
-    # Opérations unaires
-    elif isinstance(node, ast.UnaryOp):
-        operator_func = OPERATORS.get(type(node.op))
-        if operator_func is None:
-            raise ValueError(f"Opérateur unaire non supporté: {type(node.op).__name__}")
-        return operator_func(_eval_node(node.operand))
-    
-    # Opérations binaires
     elif isinstance(node, ast.BinOp):
-        operator_func = OPERATORS.get(type(node.op))
-        if operator_func is None:
-            raise ValueError(f"Opérateur binaire non supporté: {type(node.op).__name__}")
-        return operator_func(_eval_node(node.left), _eval_node(node.right))
+        # Opération binaire
+        op_type = type(node.op)
+        
+        if op_type not in ALLOWED_OPERATORS:
+            raise ValueError(f"Opérateur non autorisé: {op_type.__name__}")
+        
+        left = _eval_node(node.left)
+        right = _eval_node(node.right)
+        
+        return ALLOWED_OPERATORS[op_type](left, right)
     
-    # Autres types de nœuds non supportés
-    raise ValueError(f"Expression non supportée: {type(node).__name__}")
+    elif isinstance(node, ast.UnaryOp):
+        # Opération unaire
+        op_type = type(node.op)
+        
+        if op_type not in ALLOWED_OPERATORS:
+            raise ValueError(f"Opérateur non autorisé: {op_type.__name__}")
+        
+        operand = _eval_node(node.operand)
+        
+        return ALLOWED_OPERATORS[op_type](operand)
+    
+    else:
+        raise ValueError(f"Type de nœud non autorisé: {type(node).__name__}")
+
+
+# Exemples d'utilisation
+if __name__ == "__main__":
+    # Tests
+    test_expressions = [
+        "2 + 2",
+        "10 - 5",
+        "3 * 4",
+        "15 / 3",
+        "2 ** 3",
+        "(2 + 3) * 4",
+        "-5 + 10",
+    ]
+    
+    for expr in test_expressions:
+        try:
+            result = evaluate_expression(expr)
+            print(f"{expr} = {result}")
+        except ValueError as e:
+            print(f"{expr} -> Erreur: {e}")

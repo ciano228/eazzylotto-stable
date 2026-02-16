@@ -3,7 +3,7 @@ Service de données UI pour Katula
 """
 from typing import Dict, List, Any
 import psycopg2
-from katula_ui_mapper import KatulaUIMapper
+from .katula_ui_mapper import KatulaUIMapper
 
 class KatulaUIDataService:
     """Service pour préparer les données UI de Katula"""

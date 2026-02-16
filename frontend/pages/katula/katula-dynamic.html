@@ -405,6 +405,66 @@
             z-index: 30;
         }
         
+        /* Styles pour la légende des formes */
+        .formes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .forme-item {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .forme-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .forme-item.selected {
+            border-color: #2c3e50;
+            background: #ecf0f1 !important;
+        }
+        
+        .forme-legend-icon {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .forme-legend-text {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+        
+        .forme-position {
+            font-size: 0.7em;
+            color: #999;
+        }
+        
+        .clear-filters-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .clear-filters-btn:hover {
+            background: #c0392b;
+        }
+        
         /* Lignes de séparation rouges selon l'image */
         .separation-lines {
             position: absolute;
@@ -1673,22 +1733,19 @@
             word-break: break-word;
         }
 
-        /* Styles pour les icônes des tiroirs */
+        /* Styles pour les icônes des tiroirs selon l'ordre métier */
        .drawer-icon {
            display: inline-block;
            text-align: center;
            min-width: 20px;
+           font-weight: bold;
        }
-       .drawer-icon.carre { color: #3498db; } /* Bleu */
-       .drawer-icon.triangle { color: #27ae60; } /* Vert */
-       .drawer-icon.cercle { color: #f1c40f; } /* Jaune */
-       .drawer-icon.rectangle { color: #e74c3c; } /* Rouge */
 
-        /* Couleurs des icônes de formes seulement */
-        .forme-icon.carre { color: #3498db; } /* Bleu */
-        .forme-icon.triangle { color: #27ae60; } /* Vert */
-        .forme-icon.cercle { color: #f1c40f; } /* Jaune */
-        .forme-icon.rectangle { color: #e74c3c; } /* Rouge */
+        /* Couleurs des icônes de formes selon l'ordre métier */
+        .forme-icon.carre, .drawer-icon.carre { color: #3498db !important; } /* Bleu - Tiroir 1 */
+        .forme-icon.triangle, .drawer-icon.triangle { color: #2ecc71 !important; } /* Vert - Tiroir 2 */
+        .forme-icon.cercle, .drawer-icon.cercle { color: #f1c40f !important; } /* Jaune - Tiroir 3 */
+        .forme-icon.rectangle, .drawer-icon.rectangle { color: #e74c3c !important; } /* Rouge - Tiroir 4 */
         
         /* Styles supprimés - remplacés par la nouvelle approche avec spans colorés */
 
@@ -2271,57 +2328,35 @@
         const sizeStep = 5;      // Pas d'incrémentation
         let selectedForme = null;
 
-        // Définition des icônes pour chaque type de forme
+        // Définition des icônes pour chaque type de forme selon la logique métier
         const FORME_ICONS = {
-            'carre': '◼',
-            'cercle': '●',
-            'triangle': '▲',
-            'rectangle': '▬',
-            'losange': '◆',
-            'hexagone': '⬢',
-            'pentagone': '⬟',
-            'octogone': '⯃',
-            'ovale': '⬭',
-            'trapeze': '⏢',
-            'parallelogramme': '▰',
-            'coeur': '❤',
-            'etoile': '★',
-            'croissant': '☽',
-            'nuage': '☁',
-            'flocon': '❄',
-            // Formes composées
-            'carre-triangle': '■▲',
-            'carre-cercle': '■●',
-            'carre-rectangle': '■▬',
-            'triangle-carre': '▲■',
+            // Formes de base - ordre métier strict
+            'carre': '◼',      // Bleu - Position 1
+            'triangle': '▲',   // Vert - Position 2  
+            'cercle': '●',     // Jaune - Position 3
+            'rectangle': '▬',  // Rouge - Position 4
+            // Formes composées - combinaisons logiques
+            'carre-triangle': '◼▲',
+            'carre-cercle': '◼●',
+            'carre-rectangle': '◼▬',
+            'triangle-carre': '▲◼',
             'triangle-cercle': '▲●',
             'triangle-rectangle': '▲▬',
-            'cercle-carre': '●■',
+            'cercle-carre': '●◼',
             'cercle-triangle': '●▲',
             'cercle-rectangle': '●▬',
-            'rectangle-carre': '▬■',
+            'rectangle-carre': '▬◼',
             'rectangle-triangle': '▬▲',
             'rectangle-cercle': '▬●'
         };
 
-        // Définition des couleurs pour chaque type de forme
+        // Définition des couleurs pour chaque type de forme selon la logique métier
         const FORME_COLORS = {
-            'carre': '#3498db',        // Bleu
-            'triangle': '#2ecc71',     // Vert
-            'cercle': '#f1c40f',       // Jaune
-            'rectangle': '#e74c3c',    // Rouge
-            // Autres formes avec des couleurs par défaut
-            'losange': '#1abc9c',      // Turquoise
-            'hexagone': '#e67e22',     // Orange foncé
-            'pentagone': '#9b59b6',    // Violet
-            'ovale': '#f39c12',        // Orange
-            'trapeze': '#2ecc71',      // Vert
-            'parallelogramme': '#9b59b6', // Violet
-            'coeur': '#e91e63',        // Rose
-            'etoile': '#f1c40f',       // Jaune
-            'croissant': '#95a5a6',    // Gris
-            'nuage': '#ecf0f1',        // Gris clair
-            'flocon': '#3498db'        // Bleu
+            // Formes de base - couleurs fixes selon l'ordre métier
+            'carre': '#3498db',        // Bleu - Position 1 (tiroir 1)
+            'triangle': '#2ecc71',     // Vert - Position 2 (tiroir 2)
+            'cercle': '#f1c40f',       // Jaune - Position 3 (tiroir 3)
+            'rectangle': '#e74c3c'     // Rouge - Position 4 (tiroir 4)
         };
 
         // Fonction utilitaire pour générer une couleur aléatoire
@@ -2334,45 +2369,51 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
-        // Fonction pour obtenir une couleur en fonction du type de forme
+        // Fonction pour obtenir une couleur en fonction du type de forme selon la logique métier
         function getFormeColor(forme) {
             if (!forme) return '#95a5a6';
             
             const formeLower = forme.toLowerCase();
             
-            // Vérifier d'abord les correspondances exactes
+            // Correspondances exactes selon l'ordre métier
             if (FORME_COLORS[formeLower]) {
                 return FORME_COLORS[formeLower];
             }
             
-            // Vérifier les correspondances partielles pour les formes composées
+            // Pour les formes composées, utiliser la couleur de la première forme
+            if (formeLower.includes('-')) {
+                const [forme1] = formeLower.split('-');
+                if (FORME_COLORS[forme1]) {
+                    return FORME_COLORS[forme1];
+                }
+            }
+            
+            // Vérifier les correspondances partielles pour les formes de base
             for (const [key, value] of Object.entries(FORME_COLORS)) {
                 if (formeLower.includes(key)) {
                     return value;
                 }
             }
             
-            // Si aucune correspondance, retourner une couleur aléatoire basée sur la chaîne
-            const hash = formeLower.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-            const colors = Object.values(FORME_COLORS);
-            return colors[hash % colors.length];
+            // Couleur par défaut si aucune correspondance
+            return '#95a5a6';
         }
         
         function generateFormeIcon(forme) {
-            if (!forme) return '?';
+            if (!forme) return '❓';
             
             const formeLower = forme.toLowerCase();
             const displayName = formeLower.split('-').map(word => 
-                word.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-            ).join(' - ');
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' + ');
             
             if (formeLower.includes('-')) {
-                // Forme composée - créer deux spans colorés
+                // Forme composée - afficher les deux icônes avec leurs couleurs métier
                 const [forme1, forme2] = formeLower.split('-');
-                const icon1 = FORME_ICONS[forme1] || '?';
-                const icon2 = FORME_ICONS[forme2] || '?';
-                const color1 = FORME_COLORS[forme1] || '#666';
-                const color2 = FORME_COLORS[forme2] || '#666';
+                const icon1 = FORME_ICONS[forme1] || '❓';
+                const icon2 = FORME_ICONS[forme2] || '❓';
+                const color1 = FORME_COLORS[forme1] || '#95a5a6';
+                const color2 = FORME_COLORS[forme2] || '#95a5a6';
                 
                 return `
                     <span class="forme-icon-composite" title="${displayName}">
@@ -2380,7 +2421,7 @@
                         <span class="forme-part" style="color: ${color2}">${icon2}</span>
                     </span>`;
             } else {
-                // Forme simple
+                // Forme simple avec couleur métier
                 const icon = FORME_ICONS[formeLower] || '❓';
                 const color = FORME_COLORS[formeLower] || '#95a5a6';
                 
@@ -2392,13 +2433,16 @@
         }
 
         function generateFormeLegendIcon(forme) {
+            const color = FORME_COLORS[forme] || '#95a5a6';
+            const icon = FORME_ICONS[forme] || '❓';
+            
             if (forme.includes('-')) {
-                // Forme composée - créer deux spans colorés pour la légende
+                // Forme composée - afficher les deux parties
                 const [forme1, forme2] = forme.split('-');
-                const icon1 = FORME_ICONS[forme1] || '?';
-                const icon2 = FORME_ICONS[forme2] || '?';
-                const color1 = FORME_COLORS[forme1] || '#666';
-                const color2 = FORME_COLORS[forme2] || '#666';
+                const icon1 = FORME_ICONS[forme1] || '❓';
+                const icon2 = FORME_ICONS[forme2] || '❓';
+                const color1 = FORME_COLORS[forme1] || '#95a5a6';
+                const color2 = FORME_COLORS[forme2] || '#95a5a6';
                 
                 return `
                     <div class="forme-legend-composite">
@@ -2407,10 +2451,7 @@
                     </div>
                 `;
             } else {
-                // Forme simple
-                const icon = FORME_ICONS[forme] || '?';
-                const color = FORME_COLORS[forme] || '#666';
-                
+                // Forme simple avec couleur métier
                 return `<span class="forme-legend-simple" style="color: ${color}">${icon}</span>`;
             }
         }
@@ -3280,13 +3321,24 @@
         }
 
         function getUniverseFormes() {
-            // Utiliser les formes récupérées depuis la DB
+            // Utiliser les formes récupérées depuis la DB dans l'ordre métier
             if (universeData && universeData.formes && universeData.formes.formes) {
                 return universeData.formes.formes;
             }
             
-            // Formes par défaut si pas de données DB
-            return ['carre', 'triangle', 'cercle', 'rectangle'];
+            // Formes par défaut dans l'ordre métier strict
+            const universe = (currentUniverse || '').toLowerCase();
+            
+            // Ordre métier strict pour chaque univers
+            const universeFormes = {
+                'mundo': ['carre', 'triangle', 'cercle', 'rectangle'],
+                'fruity': ['carre', 'triangle', 'cercle', 'rectangle'],
+                'trigga': ['carre', 'triangle', 'cercle', 'rectangle', 'carre-triangle', 'carre-cercle', 'triangle-cercle'],
+                'roaster': ['carre', 'triangle', 'cercle', 'rectangle', 'carre-triangle', 'carre-cercle', 'triangle-cercle', 'rectangle-carre'],
+                'sunshine': ['carre', 'triangle', 'cercle', 'rectangle', 'carre-triangle', 'carre-cercle', 'triangle-cercle', 'rectangle-carre']
+            };
+            
+            return universeFormes[universe] || ['carre', 'triangle', 'cercle', 'rectangle'];
         }
 
         // Configuration des tiroirs par type d'univers
@@ -3370,26 +3422,21 @@
             const mainCompartment = mainForme && compartments[mainForme] || chipData;
             const mainFormeIcon = generateFormeIcon(mainForme);
             
-            // Définir les formes spécifiques pour chaque tiroir selon l'univers
+            // Définir les formes spécifiques pour chaque tiroir selon l'ordre métier strict
             const drawerFormes = [];
             const universe = (universeData.universe || '').toLowerCase();
             
-            if (universe === 'mundo' || universe === 'fruity') {
-                // Ordre spécifique pour les univers 'mundo' et 'fruity'
-                drawerFormes[0] = 'carre';    // Premier tiroir : carré
-                drawerFormes[1] = 'triangle'; // Deuxième tiroir : triangle
-                drawerFormes[2] = 'cercle';   // Troisième tiroir : cercle
-                drawerFormes[3] = 'rectangle'; // Quatrième tiroir : rectangle
-                
-                // S'assurer qu'on ne dépasse pas le nombre de tiroirs configuré
-                for (let i = 4; i < config.drawersCount; i++) {
-                    drawerFormes[i] = formesOrder[i] || `forme_${i+1}`;
-                }
-            } else {
-                // Pour les autres univers, utiliser l'ordre par défaut
-                for (let i = 0; i < config.drawersCount; i++) {
-                    drawerFormes[i] = i < formesOrder.length ? formesOrder[i] : `forme_${i+1}`;
-                }
+            // Ordre métier strict pour tous les univers
+            const ordreMetier = ['carre', 'triangle', 'cercle', 'rectangle'];
+            
+            // Appliquer l'ordre métier pour les 4 premiers tiroirs
+            for (let i = 0; i < Math.min(4, config.drawersCount); i++) {
+                drawerFormes[i] = ordreMetier[i];
+            }
+            
+            // Pour les tiroirs supplémentaires, utiliser les formes de l'univers
+            for (let i = 4; i < config.drawersCount; i++) {
+                drawerFormes[i] = i < formesOrder.length ? formesOrder[i] : `forme_${i+1}`;
             }
             
             // Ajouter les tiroirs avec les formes spécifiées
@@ -3401,21 +3448,19 @@
                 let formeToShow = forme;
                 let formeColor = getFormeColor(forme);
                 
-                // Pour les univers 'mundo' et 'fruity', forcer les icônes spécifiques
-                if (universe === 'mundo' || universe === 'fruity') {
-                    if (i === 0) {
-                        formeToShow = 'carre';
-                        formeColor = '#3498db'; // Bleu
-                    } else if (i === 1) {
-                        formeToShow = 'triangle';
-                        formeColor = '#2ecc71'; // Vert
-                    } else if (i === 2) {
-                        formeToShow = 'cercle';
-                        formeColor = '#f1c40f'; // Jaune
-                    } else if (i === 3) {
-                        formeToShow = 'rectangle';
-                        formeColor = '#e74c3c'; // Rouge
-                    }
+                // Appliquer l'ordre métier strict pour tous les univers
+                if (i === 0) {
+                    formeToShow = 'carre';
+                    formeColor = '#3498db'; // Bleu - Tiroir 1
+                } else if (i === 1) {
+                    formeToShow = 'triangle';
+                    formeColor = '#2ecc71'; // Vert - Tiroir 2
+                } else if (i === 2) {
+                    formeToShow = 'cercle';
+                    formeColor = '#f1c40f'; // Jaune - Tiroir 3
+                } else if (i === 3) {
+                    formeToShow = 'rectangle';
+                    formeColor = '#e74c3c'; // Rouge - Tiroir 4
                 }
                 
                 const formeIcon = generateFormeIcon(formeToShow);
@@ -3482,22 +3527,18 @@
                 // Définir le titre du tiroir avec l'icône et la couleur appropriées
                 let formeName = displayForme;
                 
-                // Pour les univers 'mundo' et 'fruity', forcer les icônes des formes
-                if (universe === 'mundo' || universe === 'fruity') {
-                    if (i === 0) formeName = '◼';
-                    else if (i === 1) formeName = '▲';
-                    else if (i === 2) formeName = '●';
-                    else if (i === 3) formeName = '▬';
-                }
+                // Appliquer les icônes métier pour tous les univers
+                if (i === 0) formeName = '◼';      // Carré - Tiroir 1
+                else if (i === 1) formeName = '▲'; // Triangle - Tiroir 2
+                else if (i === 2) formeName = '●'; // Cercle - Tiroir 3
+                else if (i === 3) formeName = '▬'; // Rectangle - Tiroir 4
                 
-                // Ajouter une classe pour le style spécifique de l'icône
+                // Ajouter une classe pour le style spécifique de l'icône selon l'ordre métier
                 let iconClass = '';
-                if (universe === 'mundo' || universe === 'fruity') {
-                    if (i === 0) iconClass = 'carre';
-                    else if (i === 1) iconClass = 'triangle';
-                    else if (i === 2) iconClass = 'cercle';
-                    else if (i === 3) iconClass = 'rectangle';
-                }
+                if (i === 0) iconClass = 'carre';
+                else if (i === 1) iconClass = 'triangle';
+                else if (i === 2) iconClass = 'cercle';
+                else if (i === 3) iconClass = 'rectangle';
                 
                 // Créer le contenu du titre du tiroir avec l'icône stylisée
                 const drawerTitle = `
@@ -3701,13 +3742,23 @@
                 <div class="formes-grid">
             `;
             
-            formes.forEach(forme => {
+            // Afficher les formes dans l'ordre métier avec leurs couleurs et positions
+            formes.forEach((forme, index) => {
+                const position = index + 1;
+                const color = FORME_COLORS[forme] || '#95a5a6';
+                const icon = FORME_ICONS[forme] || '❓';
+                
                 html += `
-                    <div class="forme-item" onclick="selectForme('${forme}')" data-forme="${forme}">
+                    <div class="forme-item" onclick="selectForme('${forme}')" data-forme="${forme}" style="border-left: 4px solid ${color}">
                         <div class="forme-legend-icon">
-                            ${generateFormeLegendIcon(forme)}
+                            <span style="color: ${color}; font-size: 2em;">${icon}</span>
                         </div>
-                        <div class="forme-legend-text">${forme}</div>
+                        <div class="forme-legend-text">
+                            <strong>Tiroir ${position}: ${forme.toUpperCase()}</strong>
+                        </div>
+                        <div class="forme-position" style="color: ${color}; font-size: 0.8em;">
+                            Position ${position} - ${color}
+                        </div>
                     </div>
                 `;
             });

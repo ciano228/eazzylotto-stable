@@ -5,7 +5,7 @@
 
 const UniversalHeader = {
     // Générer le header universel
-    generateHeader: function(currentPage = '', options = {}) {
+    generateHeader: function (currentPage = '', options = {}) {
         const config = {
             showNavigation: options.showNavigation !== false,
             showUserInfo: options.showUserInfo || false,
@@ -27,7 +27,7 @@ const UniversalHeader = {
     },
 
     // Générer le logo authentique
-    generateLogo: function() {
+    generateLogo: function () {
         return `
             <a href="index.html" class="eazzylotto-logo-link">
                 <div class="eazzylotto-logo">
@@ -45,7 +45,7 @@ const UniversalHeader = {
     },
 
     // Générer la navigation
-    generateNavigation: function(currentPage = '') {
+    generateNavigation: function (currentPage = '') {
         const navItems = [
             { key: 'accueil', label: 'Bienvenue', url: 'accueil.html' },
             { key: 'katooling', label: 'Méthode KATOOLING', url: 'katooling-method.html' },
@@ -54,7 +54,8 @@ const UniversalHeader = {
             { key: 'actualites', label: 'Actualités', url: 'actualites.html' },
             { key: 'support', label: 'Support', url: 'support.html' },
             { key: 'contact', label: 'Contact', url: 'contact.html' },
-            { key: 'abonnement', label: 'Abonnement', url: 'abonnement.html' }
+            { key: 'abonnement', label: 'Abonnement', url: 'abonnement.html' },
+            { key: 'ai-center', label: 'AI Center ✨', url: 'ai-center.html' }
         ];
 
         let navHTML = '<nav class="header-nav">';
@@ -72,7 +73,7 @@ const UniversalHeader = {
     },
 
     // Générer les boutons d'authentification
-    generateAuthButtons: function() {
+    generateAuthButtons: function () {
         return `
             <div class="auth-buttons">
                 <a href="login.html" class="auth-btn login-btn">Se connecter</a>
@@ -82,7 +83,7 @@ const UniversalHeader = {
     },
 
     // Générer les infos utilisateur
-    generateUserInfo: function() {
+    generateUserInfo: function () {
         return `
             <div class="user-info">
                 <span class="user-welcome">Bienvenue, <strong>Utilisateur</strong></span>
@@ -93,7 +94,7 @@ const UniversalHeader = {
     },
 
     // Injecter le header dans une page
-    injectHeader: function(containerId = 'header-container', currentPage = '', options = {}) {
+    injectHeader: function (containerId = 'header-container', currentPage = '', options = {}) {
         const container = document.getElementById(containerId);
         if (container) {
             container.innerHTML = this.generateHeader(currentPage, options);
@@ -101,13 +102,13 @@ const UniversalHeader = {
             // Si pas de container spécifique, injecter au début du body
             document.body.insertAdjacentHTML('afterbegin', this.generateHeader(currentPage, options));
         }
-        
+
         this.addHeaderStyles();
         this.initHeaderInteractions();
     },
 
     // Ajouter les styles du header
-    addHeaderStyles: function() {
+    addHeaderStyles: function () {
         if (document.getElementById('universal-header-styles')) return;
 
         const styles = document.createElement('style');
@@ -399,7 +400,7 @@ const UniversalHeader = {
     },
 
     // Initialiser les interactions du header
-    initHeaderInteractions: function() {
+    initHeaderInteractions: function () {
         // Animation des boules du logo
         const balls = document.querySelectorAll('.o-ball');
         balls.forEach((ball, index) => {
@@ -430,12 +431,12 @@ const UniversalHeader = {
     },
 
     // Fonction de déconnexion
-    logout: function() {
+    logout: function () {
         if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
             // Supprimer les données de session
             localStorage.removeItem('eazzylotto_user');
             localStorage.removeItem('eazzylotto_loginTime');
-            
+
             // Rediriger vers la page d'accueil
             window.location.href = 'index.html';
         }
@@ -443,7 +444,7 @@ const UniversalHeader = {
 };
 
 // Auto-injection si un container existe
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const headerContainer = document.getElementById('header-container');
     if (headerContainer) {
         const currentPage = document.body.dataset.page || '';

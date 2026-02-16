@@ -9,8 +9,15 @@ const EazzyLotto = {
         appName: 'EazzyLotto',
         domain: 'eazzylotto.com',
         version: '1.0.0',
-        apiBase: 'http://localhost:8000/api',
-        frontendPort: 8005
+        apiBase: 'http://localhost:8881/api',
+        frontendPort: 8005,
+        // Configuration pour l'analyse temporelle
+        temporalAnalysis: {
+            defaultPeriods: ['P1', 'P2', 'P3', 'P4', 'CUSTOM'],
+            defaultMarkingTypes: ['chip', 'denomination', 'tome', 'granque', 'forme', 'parite', 'zone'],
+            defaultTableCount: 4,
+            maxTables: 12
+        }
     },
 
     // Thème et couleurs

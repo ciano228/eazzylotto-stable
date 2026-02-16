@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EazzyCalculator - Saisie Intelligente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/universal-header.js?v=5"></script>
+    <style>
+        :root {
+            --primary: #1890ff;
+            --success: #52c41a;
+            --danger: #ff4d4f;
+            --warning: #faad14;
+            --info: #13c2c2;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --border: #d9d9d9;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding-top: 120px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+
+        /* Session Selector */
+        .session-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .session-selector select,
+        .session-selector button {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .session-selector button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .session-selector button:hover {
+            background: #40a9ff;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: linear-gradient(135deg, #e6f7ff, #f0fdff);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .period-stats {
+            background: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            border-radius: var(--radius);
+            text-align: center;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* Draw Info */
+        .draw-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .cycle-info {
+            background: #fff7e6;
+            border: 1px solid var(--warning);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #d46b08;
+        }
+
+        /* Numbers Grid */
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .number-input {
+            width: 100%;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.3s;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .number-input.filled {
+            background: #e6f7ff;
+            border-color: var(--primary);
+        }
+
+        .number-input.error {
+            background: #fff2f0;
+            border-color: var(--danger);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .action-buttons button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #73d13d;
+        }
+
+        .next-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .next-btn:hover {
+            background: #40a9ff;
+        }
+
+        .nodraw-btn {
+            background: var(--warning);
+            color: white;
+        }
+
+        .nodraw-btn:hover {
+            background: #ffc53d;
+        }
+
+        .history-btn {
+            background: var(--info);
+            color: white;
+        }
+
+        .history-btn:hover {
+            background: #36cfc9;
+        }
+
+        .journal-btn {
+            background: #722ed1;
+            color: white;
+        }
+
+        .journal-btn:hover {
+            background: #9254de;
+        }
+
+        /* Results History */
+        .history-section {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .period-delimiter {
+            background: linear-gradient(90deg, #1890ff, #40a9ff);
+            color: white;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .draw-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .draw-item:last-child {
+            border-bottom: none;
+        }
+
+        .no-draw-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            background: #fff7e6;
+            color: #d46b08;
+            font-style: italic;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .schedule-day {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+        }
+
+        .schedule-day input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .schedule-day label {
+            min-width: 80px;
+            font-weight: 600;
+        }
+
+        .schedule-day input[type="text"],
+        .schedule-day input[type="time"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* No Draw Indicator */
+        .no-draw-indicator {
+            background: #fff7e6;
+            border: 2px dashed var(--warning);
+            color: #d46b08;
+            padding: 15px;
+            text-align: center;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        /* Message System */
+        .message {
+            position: fixed;
+            top: 150px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 600;
+            z-index: 1100;
+            box-shadow: var(--shadow);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .message.show {
+            transform: translateX(0);
+        }
+
+        .message.success {
+            background: var(--success);
+        }
+
+        .message.error {
+            background: var(--danger);
+        }
+
+        .message.warning {
+            background: var(--warning);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .numbers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .action-buttons button {
+                min-width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .session-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .session-selector select,
+            .session-selector button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .draw-info {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-container"></div>
+
+    <div class="container">
+        <!-- Session Management -->
+        <div class="card">
+            <h2 class="section-title">Gestion des Sessions</h2>
+            <div class="session-selector">
+                <select id="sessionSelect">
+                    <option value="">Choisir une session...</option>
+                </select>
+                <button id="activateBtn">Activer</button>
+                <button id="newSessionBtn">Nouvelle Session</button>
+            </div>
+        </div>
+
+        <!-- Progress Statistics -->
+        <div class="card progress-section">
+            <h2 class="section-title">Progression</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Tirage Actuel</h3>
+                    <div class="value" id="currentDrawStat">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Tirages</h3>
+                    <div class="value" id="totalDrawsStat">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Complétés</h3>
+                    <div class="value" id="completedStat">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Progrès</h3>
+                    <div class="value" id="progressStat">-</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="period-stats" id="periodStats">Période -/- tirages</div>
+        </div>
+
+        <!-- Draw Information -->
+        <div class="card">
+            <h2 class="section-title">Informations du Tirage</h2>
+            <div class="draw-info">
+                <div class="form-group">
+                    <label for="lottoName">Nom du Loto:</label>
+                    <input type="text" id="lottoName" value="Loto du Mercredi">
+                </div>
+                <div class="form-group">
+                    <label for="expectedDate">Date prévue:</label>
+                    <input type="date" id="expectedDate">
+                </div>
+                <div class="cycle-info" id="cycleInfo">
+                    Position: Jour -/- du cycle
+                </div>
+            </div>
+        </div>
+
+        <!-- Numbers Input -->
+        <div class="card">
+            <h2 class="section-title">Saisie des Numéros</h2>
+            <div class="numbers-grid" id="numbersGrid">
+                <!-- Dynamically generated -->
+            </div>
+            <div class="action-buttons">
+                <button id="saveBtn" class="save-btn"> Sauvegarder</button>
+                <button id="nextBtn" class="next-btn"> Tirage Suivant</button>
+                <button id="noDrawBtn" class="nodraw-btn"> Pas de Tirage</button>
+                <button id="journalBtn" class="journal-btn"> Journal</button>
+                <button id="historyBtn" class="history-btn"> Historique</button>
+            </div>
+        </div>
+
+        <!-- Results History -->
+        <div class="card">
+            <h2 class="section-title">Historique des Tirages</h2>
+            <div class="history-section" id="resultsHistory">
+                <!-- Dynamically generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- New Session Modal -->
+    <div class="modal" id="newSessionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nouvelle Session</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="sessionForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sessionName">Nom de la session:</label>
+                        <input type="text" id="sessionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numbersPerDraw">Numéros par tirage:</label>
+                        <input type="number" id="numbersPerDraw" min="3" max="10" value="5" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cycleLength">Tirages par période (cycle):</label>
+                        <input type="number" id="cycleLength" min="1" max="30" value="7" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalDraws">Total de tirages:</label>
+                        <input type="number" id="totalDraws" min="1" max="365" value="28" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rangeMax">Plage de numéros (max):</label>
+                        <input type="number" id="rangeMax" min="10" max="99" value="90" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Date de début:</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                </div>
+
+                <h3>Planning Hebdomadaire</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                    Vous pouvez ajouter plusieurs lotos pour le même jour en cliquant sur "+"
+                </p>
+                <div id="scheduleSlots">
+                    <!-- Les slots seront générés dynamiquement -->
+                </div>
+                <button type="button" id="addDaySlot" class="btn-secondary" style="width: 100%; margin-top: 10px;">
+                    Ajouter un jour/horaire
+                </button>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelSessionBtn">Annuler</button>
+                    <button type="submit" class="btn-primary">Créer Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Historique Complet</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="fullHistory">
+                <!-- Dynamically generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Modal -->
+    <div class="modal" id="journalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Journal Statistique</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="journalContent">
+                <p>Fonctionnalité à implémenter...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message System -->
+    <div class="message" id="message"></div>
+
+    <script>
+        // =============================================
+        // CONFIGURATION GLOBALE
+        // =============================================
+        const CONFIG = {
+            API_BASE: 'http://localhost:8001/api',  // Port par défaut du serveur intégré
+            SESSION_REFRESH_INTERVAL: 30000,  // 30 secondes
+            MAX_RETRY_ATTEMPTS: 3,
+            RETRY_DELAY: 2000  // 2 secondes
+                saveBtn.addEventListener('click', saveCurrentDraw);
+            }
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', nextDraw);
+            }
+            
+            const noDrawBtn = document.getElementById('noDrawBtn');
+            if (noDrawBtn) {
+                noDrawBtn.addEventListener('click', saveNoDrawResult);
+            }
+            
+            const historyBtn = document.getElementById('historyBtn');
+            if (historyBtn) {
+                historyBtn.addEventListener('click', loadFullHistory);
+            }
+            
+            const journalBtn = document.getElementById('journalBtn');
+            if (journalBtn) {
+                journalBtn.addEventListener('click', openStatisticalJournal);
+            }
+        }
+        
+        let currentSession = null;
+        let currentDrawData = null;
+        let allDraws = [];
+
+        // DOM Elements
+        const sessionSelect = document.getElementById('sessionSelect');
+        const activateBtn = document.getElementById('activateBtn');
+        const newSessionBtn = document.getElementById('newSessionBtn');
+        const newSessionModal = document.getElementById('newSessionModal');
+        const historyModal = document.getElementById('historyModal');
+        const journalModal = document.getElementById('journalModal');
+        const sessionForm = document.getElementById('sessionForm');
+        const numbersGrid = document.getElementById('numbersGrid');
+        const saveBtn = document.getElementById('saveBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const noDrawBtn = document.getElementById('noDrawBtn');
+        const journalBtn = document.getElementById('journalBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const messageEl = document.getElementById('message');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inject universal header
+            if (typeof UniversalHeader !== 'undefined') {
+                UniversalHeader.injectHeader('header-container', 'smart-input', {
+                    showNavigation: true,
+                    showUserInfo: false
+                });
+            }
+
+            // Set default date to today
+            const expectedDate = document.getElementById('expectedDate');
+            if (expectedDate) {
+                expectedDate.valueAsDate = new Date();
+            }
+
+            // Set default start date to today
+            const startDate = document.getElementById('startDate');
+            if (startDate) {
+                startDate.valueAsDate = new Date();
+            }
+
+            // Load sessions
+            loadSessions();
+
+            // Event listeners
+            if (activateBtn) activateBtn.addEventListener('click', activateSession);
+            if (newSessionBtn) newSessionBtn.addEventListener('click', () => newSessionModal.classList.add('active'));
+            
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+            
+            const cancelBtn = document.getElementById('cancelSessionBtn');
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModals);
+            
+            if (sessionForm) sessionForm.addEventListener('submit', createSession);
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    closeModals();
+                }
+            });
+        });
+
+                    // Gérer les deux formats: tableau direct OU {value: [...]}
+                    const data = await response.json();
+        const sessions = Array.isArray(data) ? data : (data.value || []);
+
+        sessionSelect.innerHTML = '<option value="">Choisir une session...</option>';
+
+        if (sessions.length === 0) {
+            sessionSelect.innerHTML = '<option value="">Aucune session - Créez-en une</option>';
+            return;
+        }
+
+        sessions.forEach(session => {
+            const option = document.createElement('option');
+            option.value = session.session_id || session.session_uuid || session.id;
+            option.textContent = session.session_name || session.name;
+            sessionSelect.appendChild(option);
+        });
+
+        const dayMap = {
+            'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3,
+            'thursday': 4, 'friday': 5, 'saturday': 6
+        };
+
+        // Construire liste des jours actifs
+        const activeDays = [];
+        Object.keys(schedule).forEach(day => {
+            if (schedule[day] && schedule[day].length > 0) {
+                schedule[day].forEach(lotto => {
+                    activeDays.push({
+                        dayOfWeek: dayMap[day],
+                        name: lotto.name,
+                        time: lotto.time,
+                        dayName: day
+                    });
+                });
+            }
+        });
+
+        // Trier par jour de semaine
+        activeDays.sort((a, b) => a.dayOfWeek - b.dayOfWeek);
+
+        // Générer les dates pour tous les tirages
+        let currentDate = new Date(start);
+        let drawsGenerated = 0;
+
+        while (drawsGenerated < totalDraws) {
+            activeDays.forEach(dayInfo => {
+                if (drawsGenerated >= totalDraws) return;
+
+                // Trouver la prochaine occurrence de ce jour
+                const dayOfWeek = currentDate.getDay();
+                const daysUntilTarget = (dayInfo.dayOfWeek - dayOfWeek + 7) % 7;
+                const targetDate = new Date(currentDate);
+                targetDate.setDate(currentDate.getDate() + daysUntilTarget);
+
+                scheduleArray.push({
+                    drawNumber: drawsGenerated + 1,
+                    date: targetDate.toISOString().split('T')[0],
+                    name: dayInfo.name,
+                    time: dayInfo.time,
+                    dayName: dayInfo.dayName
+                });
+
+                drawsGenerated++;
+            });
+
+            // Passer à la semaine suivante
+            currentDate.setDate(currentDate.getDate() + 7);
+        }
+
+        return scheduleArray;
+                }
+
+        // Create new session
+        async function createSession(e) {
+            e.preventDefault();
+
+            // Build schedule from form
+            const dayMap = {
+                'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3,
+                'friday': 4, 'saturday': 5, 'sunday': 6
+            };
+
+            const lotterySchedule = [];
+            const scheduleSlots = document.querySelectorAll('.schedule-day');
+
+            scheduleSlots.forEach(slot => {
+                const checkbox = slot.querySelector('.schedule-checkbox');
+                if (checkbox && checkbox.checked) {
+                    const dayKey = slot.dataset.day;
+                    const nameInput = slot.querySelector('.schedule-name');
+                    const timeInput = slot.querySelector('.schedule-time');
+                    
+                    if (nameInput && timeInput && nameInput.value) {
+                        lotterySchedule.push({
+                            name: `${nameInput.value} (${timeInput.value})`,
+                            day_offset: dayMap[dayKey] || 0
+                        });
+                    }
+                }
+            });
+
+            // Validate form
+            if (lotterySchedule.length === 0) {
+                showMessage('Veuillez sélectionner au moins un jour de tirage', 'warning');
+                return;
+            }
+
+            const startDateInput = document.getElementById('startDate');
+            const numbersPerDrawInput = document.getElementById('numbersPerDraw');
+            const rangeMaxInput = document.getElementById('rangeMax');
+            const sessionNameInput = document.getElementById('sessionName');
+            const cycleLengthInput = document.getElementById('cycleLength');
+            const totalDrawsInput = document.getElementById('totalDraws');
+
+            if (!startDateInput || !numbersPerDrawInput || !rangeMaxInput || !sessionNameInput || 
+                !cycleLengthInput || !totalDrawsInput) {
+                showMessage('Erreur: Formulaire incomplet', 'error');
+                return;
+            }
+
+            // Format date to DD/MM/YYYY
+            const [year, month, day] = startDateInput.value.split('-');
+            const startDateFormatted = `${day}/${month}/${year}`;
+
+            // Prepare session data
+            const sessionData = {
+                name: sessionNameInput.value,
+                lottery_type: `${numbersPerDrawInput.value}/${rangeMaxInput.value}`,
+                numbers_per_draw: parseInt(numbersPerDrawInput.value),
+                cycle_length: parseInt(cycleLengthInput.value),
+                total_draws: parseInt(totalDrawsInput.value),
+                number_range_min: 1,
+                number_range_max: parseInt(rangeMaxInput.value),
+                start_date: startDateFormatted,
+                lottery_schedule: lotterySchedule,
+                description: ""
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sessionData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Erreur lors de la création');
+                }
+
+                const result = await response.json();
+                showMessage(result.message || 'Session créée avec succès');
+                closeModals();
+                sessionForm.reset();
+
+                // Reload sessions
+                await loadSessions();
+            } catch (error) {
+                console.error('Error creating session:', error);
+                showMessage(`Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        // Générer les slots de planning dynamiquement
+        function generateScheduleSlots() {
+            const container = document.getElementById('scheduleSlots');
+            const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+            const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+            container.innerHTML = '';
+
+            // Créer au moins un slot vide par jour
+            dayKeys.forEach((key, index) => {
+                addScheduleSlot(container, key, days[index]);
+            });
+        }
+
+        function addScheduleSlot(container, dayKey = 'monday', dayName = 'Lundi', lottoName = '', lottoTime = '19:00') {
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'schedule-day';
+            slotDiv.dataset.day = dayKey;
+
+            slotDiv.innerHTML = `
+                <input type="checkbox" class="schedule-checkbox" data-day="${dayKey}">
+                <label style="min-width: 100px;">${dayName}</label>
+                <input type="text" class="schedule-name" placeholder="Nom loto" value="${lottoName}">
+                <input type="time" class="schedule-time" value="${lottoTime}">
+                <button type="button" class="btn-secondary" style="padding: 5px 10px;" onclick="removeScheduleSlot(this)">✖</button>
+                <button type="button" class="btn-secondary" style="padding: 5px 10px;" onclick="duplicateScheduleSlot(this)">+</button>
+            `;
+
+            container.appendChild(slotDiv);
+        }
+
+        function removeScheduleSlot(button) {
+            const slot = button.closest('.schedule-day');
+            const container = document.getElementById('scheduleSlots');
+
+            // Garder au moins un slot
+            if (container.children.length > 1) {
+                slot.remove();
+            } else {
+                alert('Vous devez garder au moins un jour de tirage');
+            }
+        }
+
+        function duplicateScheduleSlot(button) {
+            const slot = button.closest('.schedule-day');
+            const dayKey = slot.dataset.day;
+            const dayName = slot.querySelector('label').textContent;
+            const name = slot.querySelector('.schedule-name').value;
+            const time = slot.querySelector('.schedule-time').value;
+
+            const container = document.getElementById('scheduleSlots');
+            addScheduleSlot(container, dayKey, dayName, name, time);
+        }
+
+        // Load current draw
+        async function loadCurrentDraw() {
+            if (!currentSession) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/current-draw`);
+                if (!response.ok) throw new Error('Erreur lors du chargement du tirage');
+
+                currentDrawData = await response.json();
+
+                // AJOUT: Auto-remplissage des infos depuis le planning
+                if (currentSession && currentSession.schedule && currentDrawData) {
+                    // Calculer automatiquement le nom et la date
+                    fillLottoInfoFromSchedule(currentDrawData.draw_number);
+                }
+
+                updateDrawUI();
+            } catch (error) {
+                console.error('Error loading current draw:', error);
+                showMessage('Erreur lors du chargement du tirage actuel', 'error');
+            }
+        }
+
+        // NOUVELLE FONCTION: Auto-remplissage des infos loto depuis le planning
+        function fillLottoInfoFromSchedule(drawNumber) {
+            if (!currentSession || !currentSession.schedule) return;
+
+            const startDate = new Date(currentSession.start_date);
+            const schedule = currentSession.schedule;
+            const cycleLength = currentSession.cycle_length || 7;
+
+            // Calculer position dans le cycle
+            const positionInCycle = (drawNumber - 1) % cycleLength;
+
+            // Construire liste des jours actifs (ordre chronologique)
+            const dayMap = {
+                'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3,
+                'thursday': 4, 'friday': 5, 'saturday': 6
+            };
+
+            const activeDays = [];
+            Object.keys(schedule).forEach(day => {
+                if (schedule[day] && schedule[day].length > 0) {
+                    schedule[day].forEach(lotto => {
+                        activeDays.push({
+                            dayOfWeek: dayMap[day],
+                            name: lotto.name,
+                            time: lotto.time
+                        });
+                    });
+                }
+            });
+
+            // Trier par jour de semaine
+            activeDays.sort((a, b) => a.dayOfWeek - b.dayOfWeek);
+
+            if (activeDays.length > 0 && positionInCycle < activeDays.length) {
+                const lottoInfo = activeDays[positionInCycle];
+
+                // Auto-remplir le nom
+                document.getElementById('lottoName').value = lottoInfo.name;
+
+                // Calculer la date prévue
+                const weekNumber = Math.floor((drawNumber - 1) / cycleLength);
+                const targetDate = new Date(startDate);
+                targetDate.setDate(startDate.getDate() + (weekNumber * 7));
+
+                // Ajuster au bon jour de la semaine
+                const currentDay = targetDate.getDay();
+                const daysToAdd = (lottoInfo.dayOfWeek - currentDay + 7) % 7;
+                targetDate.setDate(targetDate.getDate() + daysToAdd);
+
+                // Auto-remplir la date
+                document.getElementById('expectedDate').value = targetDate.toISOString().split('T')[0];
+
+                // Mettre à jour l'info du cycle
+                document.getElementById('cycleInfo').textContent =
+                    `Position: Jour ${positionInCycle + 1}/${cycleLength} du cycle - ${lottoInfo.name}`;
+            }
+        }
+
+        // Update draw UI based on current draw data
+        function updateDrawUI() {
+            if (!currentDrawData) return;
+
+            // Update draw info
+            document.getElementById('lottoName').value = currentDrawData.lottery_name || 'Loto du Jour';
+            document.getElementById('expectedDate').value = currentDrawData.draw_date || new Date().toISOString().split('T')[0];
+
+            // Update cycle info
+            const cycleLength = currentSession.cycle_length || 7;
+            const positionInCycle = currentDrawData.position_in_period || ((currentDrawData.draw_number - 1) % cycleLength) + 1;
+            document.getElementById('cycleInfo').textContent = `Position: Jour ${positionInCycle}/${cycleLength} du cycle`;
+
+            // Generate numbers grid
+            generateNumbersGrid();
+
+            // If draw is already completed, fill the numbers
+            if (currentDrawData.is_completed && !currentDrawData.is_no_draw) {
+                const numbers = currentDrawData.winning_numbers || [];
+                const inputs = numbersGrid.querySelectorAll('input');
+
+                numbers.forEach((num, index) => {
+                    if (inputs[index]) {
+                        inputs[index].value = num;
+                        inputs[index].classList.add('filled');
+                    }
+                });
+            }
+
+            // Show no draw indicator if applicable
+            if (currentDrawData.is_no_draw) {
+                showNoDrawIndicator(currentDrawData.no_draw_reason);
+            }
+        }
+
+        // Generate numbers grid based on session configuration
+        function generateNumbersGrid() {
+            if (!currentSession) return;
+
+            numbersGrid.innerHTML = '';
+            const numbersPerDraw = currentSession.numbers_per_draw || 5;
+
+            for (let i = 0; i < numbersPerDraw; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'number-input';
+                input.min = 1;
+                input.max = currentSession.number_range_max || 90;
+                input.placeholder = `#${i + 1}`;
+
+                // Add validation on input
+                input.addEventListener('input', function () {
+                    validateNumberInput(this);
+                });
+
+                // Add keyboard navigation
+                input.addEventListener('keydown', function (e) {
+                    handleNumberInputKeydown(e, i);
+                });
+
+                numbersGrid.appendChild(input);
+            }
+        }
+
+        // Validate number input
+        function validateNumberInput(input) {
+            const value = parseInt(input.value);
+            const max = currentSession ? currentSession.number_range_max : 90;
+
+            // Reset classes
+            input.classList.remove('filled', 'error');
+
+            if (!input.value) return;
+
+            if (isNaN(value) || value < 1 || value > max) {
+                input.classList.add('error');
+                return false;
+            }
+
+            // Check for duplicates
+            const inputs = numbersGrid.querySelectorAll('input');
+            const values = Array.from(inputs)
+                .map(i => parseInt(i.value))
+                .filter(v => !isNaN(v));
+
+            const duplicates = values.filter((v, i) => values.indexOf(v) !== i);
+
+            if (duplicates.includes(value)) {
+                input.classList.add('error');
+                return false;
+            }
+
+            input.classList.add('filled');
+            return true;
+        }
+
+        // Handle keyboard navigation in number inputs
+        function handleNumberInputKeydown(e, index) {
+            const inputs = numbersGrid.querySelectorAll('input');
+            const maxIndex = inputs.length - 1;
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (index < maxIndex) {
+                    inputs[index + 1].focus();
+                } else {
+                    saveCurrentDraw();
+                }
+            } else if (e.key === 'ArrowRight' && index < maxIndex) {
+                inputs[index + 1].focus();
+            } else if (e.key === 'ArrowLeft' && index > 0) {
+                inputs[index - 1].focus();
+            }
+        }
+
+        // Save current draw
+        async function saveCurrentDraw() {
+            if (!currentSession || !currentDrawData) {
+                showMessage('Aucune session active', 'warning');
+                return;
+            }
+
+            // Validate all inputs
+            const inputs = numbersGrid.querySelectorAll('input');
+            const numbers = [];
+            let valid = true;
+
+            for (const input of inputs) {
+                if (!validateNumberInput(input)) {
+                    valid = false;
+                }
+
+                if (input.value) {
+                    numbers.push(parseInt(input.value));
+                }
+            }
+
+            if (!valid) {
+                showMessage('Veuillez corriger les erreurs avant de sauvegarder', 'warning');
+                return;
+            }
+
+            if (numbers.length !== inputs.length) {
+                showMessage('Veuillez remplir tous les numéros', 'warning');
+                return;
+            }
+
+            // Sort numbers
+            numbers.sort((a, b) => a - b);
+
+            try {
+                const response = await fetch(
+                    `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            numbers: numbers,
+                            draw_date: document.getElementById('expectedDate').value,
+                            is_no_draw: false,
+                            no_draw_reason: null,
+                            lottery_name: document.getElementById('lottoName').value
+                        })
+                    }
+                );
+
+                if (!response.ok) throw new Error('Erreur lors de la sauvegarde');
+
+                showMessage('Tirage sauvegardé avec succès');
+                await loadCurrentDraw();
+                await loadDrawsHistory();
+                updateStats();
+            } catch (error) {
+                console.error('Error saving draw:', error);
+                showMessage('Erreur lors de la sauvegarde du tirage', 'error');
+            }
+        }
+
+        // Save no draw result
+        async function saveNoDrawResult() {
+            if (!currentSession || !currentDrawData) {
+                showMessage('Aucune session active', 'warning');
+                return;
+            }
+
+            const reason = prompt("Raison de l'absence de tirage:");
+            if (reason === null) return; // User cancelled
+
+            try {
+                const response = await fetch(
+                    `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            numbers: [],
+                            draw_date: document.getElementById('expectedDate').value,
+                            is_no_draw: true,
+                            no_draw_reason: reason,
+                            lottery_name: document.getElementById('lottoName').value
+                        })
+                    }
+                );
+
+                if (!response.ok) throw new Error('Erreur lors de la sauvegarde');
+
+                showMessage('✅ No Draw enregistré', 'success');
+                await loadCurrentDraw();
+                await loadDrawsHistory();
+                updateStats();
+            } catch (error) {
+                console.error('Error saving no draw:', error);
+                showMessage('Erreur lors de l\'enregistrement du No Draw', 'error');
+            }
+        }
+
+        // Move to next draw
+        async function nextDraw() {
+            if (!currentSession || !currentDrawData) {
+                showMessage('Aucune session active', 'warning');
+                return;
+            }
+
+            // If current draw is not saved, ask for confirmation
+            if (!currentDrawData.is_completed) {
+                const confirmNext = confirm('Le tirage actuel n\'est pas sauvegardé. Passer au tirage suivant?');
+                if (!confirmNext) return;
+            }
+
+            try {
+                // In a real implementation, we would call an API to advance to the next draw
+                // For now, we'll just reload the current draw which should advance if the current is completed
+                await loadCurrentDraw();
+                showMessage('Passage au tirage suivant');
+            } catch (error) {
+                console.error('Error moving to next draw:', error);
+                showMessage('Erreur lors du passage au tirage suivant', 'error');
+            }
+        }
+
+        // Show no draw indicator
+        function showNoDrawIndicator(reason) {
+            const existingIndicator = document.querySelector('.no-draw-indicator');
+            if (existingIndicator) existingIndicator.remove();
+
+            const indicator = document.createElement('div');
+            indicator.className = 'no-draw-indicator';
+            indicator.innerHTML = `🚫 PAS DE TIRAGE - ${reason || 'Raison non spécifiée'}`;
+
+            numbersGrid.parentNode.insertBefore(indicator, numbersGrid);
+        }
+
+        // Load draws history
+        async function loadDrawsHistory() {
+            if (!currentSession) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
+                if (!response.ok) throw new Error('Erreur lors du chargement de l\'historique');
+
+                allDraws = await response.json();
+                displayGroupedHistory();
+            } catch (error) {
+                console.error('Error loading draws history:', error);
+            }
+        }
+
+        // Group draws by periods
+        function groupDrawsByPeriods(draws) {
+            if (!currentSession) return [];
+
+            const drawsPerPeriod = currentSession.cycle_length || 7;
+            const periods = [];
+
+            for (let i = 0; i < draws.length; i += drawsPerPeriod) {
+                const periodDraws = draws.slice(i, i + drawsPerPeriod);
+                const periodNumber = Math.floor(i / drawsPerPeriod) + 1;
+
+                periods.push({
+                    number: periodNumber,
+                    draws: periodDraws,
+                    startDate: periodDraws[0]?.draw_date,
+                    endDate: periodDraws[periodDraws.length - 1]?.draw_date
+                });
+            }
+
+            return periods;
+        }
+
+        // Display grouped history
+        function displayGroupedHistory() {
+            const periods = groupDrawsByPeriods(allDraws);
+            let html = '';
+
+            periods.forEach(period => {
+                // Period delimiter
+                html += `
+                    <div class="period-delimiter">
+                        🗓️ PÉRIODE ${period.number} (${period.startDate || '?'} - ${period.endDate || '?'})
+                    </div>
+                `;
+
+                // Draws in the period
+                period.draws.forEach(draw => {
+                    if (draw.is_no_draw) {
+                        html += `<div class="no-draw-item">🚫 Tirage ${draw.draw_number} - PAS DE TIRAGE (${draw.no_draw_reason || 'Raison non spécifiée'})</div>`;
+                    } else {
+                        html += `
+                            <div class="draw-item">
+                                <span>Tirage ${draw.draw_number}</span>
+                                <span>${draw.winning_numbers ? draw.winning_numbers.join(', ') : 'Non défini'}</span>
+                            </div>
+                        `;
+                    }
+                });
+            });
+
+            document.getElementById('resultsHistory').innerHTML = html;
+        }
+
+        // Load full history for modal
+        async function loadFullHistory() {
+            if (!currentSession) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
+                if (!response.ok) throw new Error('Erreur lors du chargement de l\'historique complet');
+
+                const draws = await response.json();
+                const periods = groupDrawsByPeriods(draws);
+                let html = '';
+
+                periods.forEach(period => {
+                    html += `
+                        <div class="period-delimiter">
+                            🗓️ PÉRIODE ${period.number} (${period.startDate || '?'} - ${period.endDate || '?'})
+                        </div>
+                    `;
+
+                    period.draws.forEach(draw => {
+                        if (draw.is_no_draw) {
+                            html += `<div class="no-draw-item">🚫 Tirage ${draw.draw_number} - PAS DE TIRAGE (${draw.no_draw_reason || 'Raison non spécifiée'})</div>`;
+                        } else {
+                            html += `
+                                <div class="draw-item">
+                                    <span>Tirage ${draw.draw_number} - ${draw.lottery_name || 'Loto'}</span>
+                                    <span>${draw.winning_numbers ? draw.winning_numbers.join(', ') : 'Non défini'}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                });
+
+                document.getElementById('fullHistory').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading full history:', error);
+                document.getElementById('fullHistory').innerHTML = '<p>Erreur lors du chargement de l\'historique</p>';
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            if (!currentSession || !currentDrawData) return;
+
+            // Current draw
+            document.getElementById('currentDrawStat').textContent = currentDrawData.draw_number || '-';
+
+            // Total draws
+            document.getElementById('totalDrawsStat').textContent = currentSession.total_draws || '-';
+
+            // Completed draws
+            const completed = allDraws.filter(d => d.is_completed).length;
+            document.getElementById('completedStat').textContent = completed;
+
+            // Progress percentage
+            const progress = Math.round((completed / currentSession.total_draws) * 100);
+            document.getElementById('progressStat').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            // Period stats
+            const cycleLength = currentSession.cycle_length || 7;
+            const currentPeriod = Math.ceil((currentDrawData.draw_number || 1) / cycleLength);
+            const drawsInPeriod = Math.min(
+                cycleLength - ((currentDrawData.draw_number - 1) % cycleLength),
+                currentSession.total_draws - completed
+            );
+
+            document.getElementById('periodStats').textContent =
+                `Période ${currentPeriod} - ${drawsInPeriod}/${cycleLength} tirages`;
+        }
+
+        // Open statistical journal (placeholder)
+        function openStatisticalJournal() {
+            // This would open a modal with statistical analysis
+            alert('Fonctionnalité Journal Statistique à implémenter');
+        }
+    </script>
+</body>
+
+</html>

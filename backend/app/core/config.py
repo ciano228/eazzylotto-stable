@@ -1,5 +1,6 @@
-from pydantic_settings import BaseSettings
-from typing import List
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
+from typing import List, Union, Optional
 import os
 
 class Settings(BaseSettings):
@@ -8,12 +9,21 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "EazzyCalculator"
     
     # CORS Configuration
-    CORS_ORIGINS: List[str] = [
+    CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost",
         "http://localhost:3000",
         "http://localhost:8000",
         "https://eazzycalculator.com",
     ]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
     
     # Authentication
     SECRET_KEY: str = os.getenv("SECRET_KEY", "your-secret-key-here")
@@ -30,9 +40,20 @@ class Settings(BaseSettings):
     API_KEY_NAME: str = "access_token"
     API_KEY_HEADER: str = "X-API-Key"
     
-    class Config:
-        case_sensitive = True
-        env_file = ".env"
+    # Missing fields from .env
+    DEBUG: bool = True
+    ENVIRONMENT: str = "development"
+    API_VERSION: str = "2.0.0"
+    API_TITLE: str = "EazzyCalculator API"
+    LOG_LEVEL: str = "INFO"
+    HOST: Optional[str] = "0.0.0.0"
+    PORT: Optional[int] = 8000
+
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+        env_file=".env",
+        extra="ignore"
+    )
 
 # Instance de configuration globale
 settings = Settings()

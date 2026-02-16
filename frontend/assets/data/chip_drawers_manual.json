@@ -1,0 +1,297 @@
+{
+  "mundo": {
+    "chip1": [
+      { "drawer_name": "drawer_1_carre", "drawer": "drawer_1_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_1_triangle", "drawer": "drawer_1_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_1_cercle", "drawer": "drawer_1_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_1_rectangle", "drawer": "drawer_1_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip2": [
+      { "drawer_name": "drawer_2_carre", "drawer": "drawer_2_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_2_triangle", "drawer": "drawer_2_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_2_cercle", "drawer": "drawer_2_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_2_rectangle", "drawer": "drawer_2_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip3": [
+      { "drawer_name": "drawer_3_carre", "drawer": "drawer_3_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_3_triangle", "drawer": "drawer_3_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_3_cercle", "drawer": "drawer_3_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_3_rectangle", "drawer": "drawer_3_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip4": [
+      { "drawer_name": "drawer_4_carre", "drawer": "drawer_4_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_4_triangle", "drawer": "drawer_4_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_4_cercle", "drawer": "drawer_4_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_4_rectangle", "drawer": "drawer_4_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip5": [
+      { "drawer_name": "drawer_5_carre", "drawer": "drawer_5_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_5_triangle", "drawer": "drawer_5_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_5_cercle", "drawer": "drawer_5_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_5_rectangle", "drawer": "drawer_5_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip6": [
+      { "drawer_name": "drawer_6_carre", "drawer": "drawer_6_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_6_triangle", "drawer": "drawer_6_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_6_cercle", "drawer": "drawer_6_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_6_rectangle", "drawer": "drawer_6_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip7": [
+      { "drawer_name": "drawer_7_carre", "drawer": "drawer_7_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_7_triangle", "drawer": "drawer_7_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_7_cercle", "drawer": "drawer_7_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_7_rectangle", "drawer": "drawer_7_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip8": [
+      { "drawer_name": "drawer_8_carre", "drawer": "drawer_8_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_8_triangle", "drawer": "drawer_8_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_8_cercle", "drawer": "drawer_8_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_8_rectangle", "drawer": "drawer_8_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip9": [
+      { "drawer_name": "drawer_9_carre", "drawer": "drawer_9_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_9_triangle", "drawer": "drawer_9_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_9_cercle", "drawer": "drawer_9_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_9_rectangle", "drawer": "drawer_9_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip10": [
+      { "drawer_name": "drawer_10_carre", "drawer": "drawer_10_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_10_triangle", "drawer": "drawer_10_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_10_cercle", "drawer": "drawer_10_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_10_rectangle", "drawer": "drawer_10_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip11": [
+      { "drawer_name": "drawer_11_carre", "drawer": "drawer_11_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_11_triangle", "drawer": "drawer_11_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_11_cercle", "drawer": "drawer_11_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_11_rectangle", "drawer": "drawer_11_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip12": [
+      { "drawer_name": "drawer_12_carre", "drawer": "drawer_12_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_12_triangle", "drawer": "drawer_12_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_12_cercle", "drawer": "drawer_12_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_12_rectangle", "drawer": "drawer_12_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip13": [
+      { "drawer_name": "drawer_13_carre", "drawer": "drawer_13_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_13_triangle", "drawer": "drawer_13_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_13_cercle", "drawer": "drawer_13_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_13_rectangle", "drawer": "drawer_13_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip14": [
+      { "drawer_name": "drawer_14_carre", "drawer": "drawer_14_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_14_triangle", "drawer": "drawer_14_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_14_cercle", "drawer": "drawer_14_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_14_rectangle", "drawer": "drawer_14_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip15": [
+      { "drawer_name": "drawer_15_carre", "drawer": "drawer_15_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_15_triangle", "drawer": "drawer_15_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_15_cercle", "drawer": "drawer_15_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_15_rectangle", "drawer": "drawer_15_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip16": [
+      { "drawer_name": "drawer_16_carre", "drawer": "drawer_16_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_16_triangle", "drawer": "drawer_16_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_16_cercle", "drawer": "drawer_16_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_16_rectangle", "drawer": "drawer_16_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip17": [
+      { "drawer_name": "drawer_17_carre", "drawer": "drawer_17_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_17_triangle", "drawer": "drawer_17_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_17_cercle", "drawer": "drawer_17_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_17_rectangle", "drawer": "drawer_17_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip18": [
+      { "drawer_name": "drawer_18_carre", "drawer": "drawer_18_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_18_triangle", "drawer": "drawer_18_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_18_cercle", "drawer": "drawer_18_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_18_rectangle", "drawer": "drawer_18_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip19": [
+      { "drawer_name": "drawer_19_carre", "drawer": "drawer_19_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_19_triangle", "drawer": "drawer_19_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_19_cercle", "drawer": "drawer_19_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_19_rectangle", "drawer": "drawer_19_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip20": [
+      { "drawer_name": "drawer_20_carre", "drawer": "drawer_20_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_20_triangle", "drawer": "drawer_20_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_20_cercle", "drawer": "drawer_20_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_20_rectangle", "drawer": "drawer_20_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip21": [
+      { "drawer_name": "drawer_21_carre", "drawer": "drawer_21_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_21_triangle", "drawer": "drawer_21_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_21_cercle", "drawer": "drawer_21_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_21_rectangle", "drawer": "drawer_21_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip22": [
+      { "drawer_name": "drawer_22_carre", "drawer": "drawer_22_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_22_triangle", "drawer": "drawer_22_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_22_cercle", "drawer": "drawer_22_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_22_rectangle", "drawer": "drawer_22_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip23": [
+      { "drawer_name": "drawer_23_carre", "drawer": "drawer_23_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_23_triangle", "drawer": "drawer_23_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_23_cercle", "drawer": "drawer_23_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_23_rectangle", "drawer": "drawer_23_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip24": [
+      { "drawer_name": "drawer_24_carre", "drawer": "drawer_24_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_24_triangle", "drawer": "drawer_24_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_24_cercle", "drawer": "drawer_24_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_24_rectangle", "drawer": "drawer_24_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip25": [
+      { "drawer_name": "drawer_25_carre", "drawer": "drawer_25_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_25_triangle", "drawer": "drawer_25_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_25_cercle", "drawer": "drawer_25_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_25_rectangle", "drawer": "drawer_25_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip26": [
+      { "drawer_name": "drawer_26_carre", "drawer": "drawer_26_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_26_triangle", "drawer": "drawer_26_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_26_cercle", "drawer": "drawer_26_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_26_rectangle", "drawer": "drawer_26_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip27": [
+      { "drawer_name": "drawer_27_carre", "drawer": "drawer_27_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_27_triangle", "drawer": "drawer_27_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_27_cercle", "drawer": "drawer_27_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_27_rectangle", "drawer": "drawer_27_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip28": [
+      { "drawer_name": "drawer_28_carre", "drawer": "drawer_28_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_28_triangle", "drawer": "drawer_28_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_28_cercle", "drawer": "drawer_28_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_28_rectangle", "drawer": "drawer_28_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip29": [
+      { "drawer_name": "drawer_29_carre", "drawer": "drawer_29_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_29_triangle", "drawer": "drawer_29_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_29_cercle", "drawer": "drawer_29_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_29_rectangle", "drawer": "drawer_29_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip30": [
+      { "drawer_name": "drawer_30_carre", "drawer": "drawer_30_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_30_triangle", "drawer": "drawer_30_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_30_cercle", "drawer": "drawer_30_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_30_rectangle", "drawer": "drawer_30_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip31": [
+      { "drawer_name": "drawer_31_carre", "drawer": "drawer_31_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_31_triangle", "drawer": "drawer_31_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_31_cercle", "drawer": "drawer_31_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_31_rectangle", "drawer": "drawer_31_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip32": [
+      { "drawer_name": "drawer_32_carre", "drawer": "drawer_32_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_32_triangle", "drawer": "drawer_32_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_32_cercle", "drawer": "drawer_32_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_32_rectangle", "drawer": "drawer_32_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip33": [
+      { "drawer_name": "drawer_33_carre", "drawer": "drawer_33_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_33_triangle", "drawer": "drawer_33_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_33_cercle", "drawer": "drawer_33_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_33_rectangle", "drawer": "drawer_33_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip34": [
+      { "drawer_name": "drawer_34_carre", "drawer": "drawer_34_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_34_triangle", "drawer": "drawer_34_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_34_cercle", "drawer": "drawer_34_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_34_rectangle", "drawer": "drawer_34_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip35": [
+      { "drawer_name": "drawer_35_carre", "drawer": "drawer_35_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_35_triangle", "drawer": "drawer_35_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_35_cercle", "drawer": "drawer_35_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_35_rectangle", "drawer": "drawer_35_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip36": [
+      { "drawer_name": "drawer_36_carre", "drawer": "drawer_36_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_36_triangle", "drawer": "drawer_36_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_36_cercle", "drawer": "drawer_36_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_36_rectangle", "drawer": "drawer_36_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip37": [
+      { "drawer_name": "drawer_37_carre", "drawer": "drawer_37_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_37_triangle", "drawer": "drawer_37_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_37_cercle", "drawer": "drawer_37_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_37_rectangle", "drawer": "drawer_37_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip38": [
+      { "drawer_name": "drawer_38_carre", "drawer": "drawer_38_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_38_triangle", "drawer": "drawer_38_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_38_cercle", "drawer": "drawer_38_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_38_rectangle", "drawer": "drawer_38_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip39": [
+      { "drawer_name": "drawer_39_carre", "drawer": "drawer_39_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_39_triangle", "drawer": "drawer_39_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_39_cercle", "drawer": "drawer_39_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_39_rectangle", "drawer": "drawer_39_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip40": [
+      { "drawer_name": "drawer_40_carre", "drawer": "drawer_40_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_40_triangle", "drawer": "drawer_40_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_40_cercle", "drawer": "drawer_40_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_40_rectangle", "drawer": "drawer_40_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip41": [
+      { "drawer_name": "drawer_41_carre", "drawer": "drawer_41_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_41_triangle", "drawer": "drawer_41_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_41_cercle", "drawer": "drawer_41_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_41_rectangle", "drawer": "drawer_41_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip42": [
+      { "drawer_name": "drawer_42_carre", "drawer": "drawer_42_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_42_triangle", "drawer": "drawer_42_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_42_cercle", "drawer": "drawer_42_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_42_rectangle", "drawer": "drawer_42_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip43": [
+      { "drawer_name": "drawer_43_carre", "drawer": "drawer_43_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_43_triangle", "drawer": "drawer_43_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_43_cercle", "drawer": "drawer_43_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_43_rectangle", "drawer": "drawer_43_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip44": [
+      { "drawer_name": "drawer_44_carre", "drawer": "drawer_44_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_44_triangle", "drawer": "drawer_44_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_44_cercle", "drawer": "drawer_44_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_44_rectangle", "drawer": "drawer_44_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip45": [
+      { "drawer_name": "drawer_45_carre", "drawer": "drawer_45_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_45_triangle", "drawer": "drawer_45_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_45_cercle", "drawer": "drawer_45_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_45_rectangle", "drawer": "drawer_45_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip46": [
+      { "drawer_name": "drawer_46_carre", "drawer": "drawer_46_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_46_triangle", "drawer": "drawer_46_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_46_cercle", "drawer": "drawer_46_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_46_rectangle", "drawer": "drawer_46_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip47": [
+      { "drawer_name": "drawer_47_carre", "drawer": "drawer_47_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_47_triangle", "drawer": "drawer_47_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_47_cercle", "drawer": "drawer_47_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_47_rectangle", "drawer": "drawer_47_rectangle", "forme": "rectangle", "denomination": null }
+    ],
+    "chip48": [
+      { "drawer_name": "drawer_48_carre", "drawer": "drawer_48_carre", "forme": "carre", "denomination": null },
+      { "drawer_name": "drawer_48_triangle", "drawer": "drawer_48_triangle", "forme": "triangle", "denomination": null },
+      { "drawer_name": "drawer_48_cercle", "drawer": "drawer_48_cercle", "forme": "cercle", "denomination": null },
+      { "drawer_name": "drawer_48_rectangle", "drawer": "drawer_48_rectangle", "forme": "rectangle", "denomination": null }
+    ]
+  },
+  "fruity": {
+    "chip1": [
+      { "drawer_name": "drawer_1_fruity_a", "drawer": "drawer_1_fruity_a", "forme": "carre", "denomination": null }
+    ]
+  }
+}

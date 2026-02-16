@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from app.database.connection import get_db
 from app.services.session_service import SessionService
 from app.services.real_katula_service import RealKatulaService
+from app.services.existing_structure_service import ExistingStructureService
 
 router = APIRouter()
 
@@ -61,6 +62,21 @@ async def create_session(session_data: SessionCreate, db: Session = Depends(get_
             cycle_length=session_data.cycle_length
         )
         
+        # Trigger fix_session_mapping to update session mapping
+        try:
+            import sys
+            import os
+            # Ensure backend directory is in path to import fix_session_mapping
+            backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+            if backend_dir not in sys.path:
+                sys.path.append(backend_dir)
+            
+            from fix_session_mapping import fix_session_mapping
+            print("Triggering fix_session_mapping after session creation...")
+            fix_session_mapping()
+        except Exception as e:
+            print(f"Warning: Failed to run fix_session_mapping: {e}")
+        
         return {
             "message": "Session créée avec succès",
             "id": session.id,
@@ -81,13 +97,6 @@ async def create_session(session_data: SessionCreate, db: Session = Depends(get_
 async def get_all_sessions(db: Session = Depends(get_db)):
     """Récupérer toutes les sessions disponibles"""
     try:
-        # Essayer d'abord les vraies données
-        from app.services.real_katula_service import RealKatulaService
-        real_sessions = RealKatulaService.get_real_sessions()
-        
-        if real_sessions.get("data_source") == "real_database":
-            return real_sessions
-        
         # Fallback sur les données locales
         sessions = SessionService.get_all_sessions(db)
         
@@ -104,10 +113,13 @@ async def get_all_sessions(db: Session = Depends(get_db)):
                 "number_range_max": session.number_range_max,
                 "total_draws": session.total_draws,
                 "current_draw": session.current_draw,
+                "cycle_length": session.cycle_length,
                 "is_active": session.is_active,
                 "created_at": session.created_at.isoformat() if session.created_at else None,
                 "status": "active" if session.is_active else "inactive",
                 "universe": session.lottery_type,  # Pour compatibilité frontend
+                "start_date": session.start_date.isoformat() if session.start_date else None,
+                "end_date": progress.get("end_date"),
                 "progress": progress
             })
         
@@ -142,6 +154,7 @@ async def get_active_session(db: Session = Depends(get_db)):
                 "number_range_max": session.number_range_max,
                 "total_draws": session.total_draws,
                 "current_draw": session.current_draw,
+                "cycle_length": session.cycle_length,
                 "is_active": session.is_active
             },
             "progress": progress
@@ -152,16 +165,24 @@ async def get_active_session(db: Session = Depends(get_db)):
 
 @router.post("/sessions/{session_id}/activate")
 async def activate_session(session_id: int, db: Session = Depends(get_db)):
-    """Activer une session spécifique"""
+    """Activer une session spécifique et synchroniser automatiquement les tirages"""
     try:
         session = SessionService.activate_session(db, session_id)
         
         if not session:
             raise HTTPException(status_code=404, detail="Session non trouvée")
         
+        # Auto-synchronisation intelligente des tirages avec le planning
+        sync_result = SessionService.sync_session_schedule(db, session_id)
+        
         return {
-            "message": f"Session '{session.name}' activée",
-            "session_id": session.id
+            "message": f"Session '{session.name}' activée et synchronisée",
+            "session_id": session.id,
+            "sync_info": {
+                "created_draws": sync_result.get("created", 0),
+                "updated_draws": sync_result.get("updated", 0),
+                "total_draws": sync_result.get("total", 0)
+            }
         }
         
     except Exception as e:
@@ -245,10 +266,35 @@ async def get_session_progress(session_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/sessions/{session_id}/draws")
-async def get_session_draws(session_id: int, db: Session = Depends(get_db)):
-    """Récupérer tous les tirages d'une session"""
+@router.post("/sessions/{session_id}/sync")
+async def sync_session_schedule(session_id: int, db: Session = Depends(get_db)):
+    """Synchronize session draws with expected schedule, creating missing placeholders"""
     try:
+        result = SessionService.sync_session_schedule(db, session_id)
+        
+        if "error" in result:
+            raise HTTPException(status_code=404, detail=result["error"])
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/sessions/{session_id}/draws")
+async def get_session_draws(session_id: int, source: Optional[str] = None, db: Session = Depends(get_db)):
+    """Récupérer tous les tirages d'une session, en spécifiant la source de données."""
+    try:
+        if source == "real":
+            # Utiliser le service qui comble les tirages manquants
+            result = ExistingStructureService.get_real_session_draws(session_id)
+            if "error" in result:
+                raise HTTPException(status_code=500, detail=result["error"])
+            return result["value"]
+
+        # Comportement par défaut pour la base de données locale
         draws = SessionService.get_session_draws(db, session_id)
         
         return [

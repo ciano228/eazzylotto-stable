@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="assets/js/universal-header.js"></script>
     <link rel="stylesheet" href="assets/css/katula-dynamic.css">
 </head>
+
 <body>
     <div class="container">
         <div id="header-container"></div>
@@ -19,7 +21,8 @@
             <button id="toggleSidePanelBtn" class="btn" onclick="toggleSidePanel()">
                 <i class="fas fa-sliders-h"></i> Panneau latéral
             </button>
-            <button id="updateStatusBtn" class="btn btn-update" onclick="showUpdatePanel()" title="Vérifier les mises à jour">
+            <button id="updateStatusBtn" class="btn btn-update" onclick="showUpdatePanel()"
+                title="Vérifier les mises à jour">
                 <i class="fas fa-sync-alt"></i> <span id="updateStatusText">Mises à jour</span>
                 <span id="updateBadge" class="update-badge" style="display: none;"></span>
             </button>
@@ -27,14 +30,14 @@
 
         <div id="universeInfo" class="universe-info" style="display: none;"></div>
         <div id="formesLegend" class="formes-legend" style="display: none;"></div>
-        
+
         <div class="main-content">
             <div id="katulaContainer"></div>
             <div id="loadingIndicator" class="loading" style="display: none;">
                 🔄 Chargement des données depuis la base de données...
             </div>
         </div>
-        
+
         <!-- Panneau latéral pour Granque et Tome -->
         <div id="sidePanel" class="side-panel">
             <div class="side-panel-header">
@@ -66,7 +69,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Panneau des mises à jour -->
         <div id="updatePanel" class="update-panel">
             <div class="update-panel-header">
@@ -110,12 +113,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Bouton pour ouvrir le panneau -->
         <button id="openPanelBtn" class="open-panel-btn" onclick="toggleSidePanel()" style="display: none;">
             📊 Analyse
         </button>
     </div>
 
-    <script src="assets/js/katula-dynamic.js"></script>
-</body>depot github pour </html>
+    <script src="assets/js/katula-dynamic.js?v=11"></script>
+</body>
+
+</html>

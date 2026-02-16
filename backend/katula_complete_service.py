@@ -60,9 +60,9 @@ class KatulaCompleteService:
             type=UniverseType.HYBRID,
             forms=[
                 'carre', 'triangle', 'cercle', 'rectangle',
-                'carre-triangle', 'carre-cercle', 'carre-rectangle',
-                'triangle-carre', 'triangle-cercle', 'triangle-rectangle',
-                'cercle-rectangle'  # 10 formes au total
+                'triangle-cercle', 'triangle-rectangle',
+                'cercle-rectangle', 'cercle-triangle', 
+                'rectangle-cercle', 'rectangle-triangle'
             ],
             description='4 formes de base + 6 combinaisons',
             rows=8,
@@ -88,7 +88,7 @@ class KatulaCompleteService:
                 'carre', 'triangle', 'cercle', 'rectangle',
                 'carre-triangle', 'carre-cercle', 'carre-rectangle',
                 'triangle-carre', 'triangle-cercle', 'triangle-rectangle',
-                'cercle-carre', 'cercle-triangle', 'cercle-rectangle',
+                'cercle-carre', 'cercle-triangle', 'cercle-rectangle', 
                 'rectangle-carre', 'rectangle-triangle', 'rectangle-cercle'
             ],
             description='4 formes de base + 12 combinaisons',
@@ -98,8 +98,35 @@ class KatulaCompleteService:
     }
     
     def __init__(self):
-        from config import DB_CONFIG
-        self.db_config = DB_CONFIG
+        import os
+        from dotenv import load_dotenv
+        load_dotenv()
+        
+        # Configuration BD depuis .env
+        db_url = os.getenv('DATABASE_URL')
+        if db_url and db_url.startswith('postgresql://'):
+            import re
+            match = re.match(r'postgresql://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+)', db_url)
+            if match:
+                self.db_config = {
+                    'user': match.group(1),
+                    'password': match.group(2),
+                    'host': match.group(3),
+                    'port': int(match.group(4)),
+                    'database': match.group(5)
+                }
+            else:
+                raise ValueError(f"Format DATABASE_URL invalide: {db_url}")
+        else:
+            self.db_config = {
+                'host': os.getenv('KATULA_DB_HOST', 'localhost'),
+                'database': os.getenv('KATULA_DB_NAME', 'katooling_main_system'),
+                'user': os.getenv('KATULA_DB_USER', 'postgres'),
+                'password': os.getenv('KATULA_DB_PASSWORD', 'Katulaa_33'),
+                'port': int(os.getenv('KATULA_DB_PORT', '5432'))
+            }
+        
+        print(f"[DEBUG] Config BD: {self.db_config['host']}:{self.db_config['port']}/{self.db_config['database']} user={self.db_config['user']}")
     
     def get_chip_compartments(self, universe: str, chip_number: int) -> Dict[str, Any]:
         """Récupère les compartiments d'un chip dans l'ordre exact avec dénominations et combinaisons"""
@@ -107,24 +134,18 @@ class KatulaCompleteService:
             conn = psycopg2.connect(**self.db_config)
             cursor = conn.cursor()
             
-            # Récupérer toutes les données du chip avec les combinaisons
+            # Récupérer toutes les données du chip depuis combinations
             cursor.execute("""
                 SELECT 
-                    f.forme,
-                    STRING_AGG(DISTINCT f.denomination, '/') as denominations,
-                    f.petique,
-                    f.tome,
-                    f.granque_name,
-                    STRING_AGG(DISTINCT c.combination_value || ' (pos:' || c.position || ')', ', ') as combinations
-                FROM table_de_katula f
-                LEFT JOIN table_combinations c ON 
-                    f.chip_id = c.chip_id AND 
-                    f.forme = c.forme AND 
-                    f.denomination = c.denomination
-                WHERE f.univers = %s AND f.chip_id = %s
-                GROUP BY f.forme, f.petique, f.tome, f.granque_name
-                ORDER BY f.forme
-            """, (universe, chip_number))
+                    forme,
+                    denomination,
+                    petique,
+                    tome,
+                    granque_name
+                FROM combinations
+                WHERE univers = %s AND chip = %s
+                ORDER BY forme, denomination
+            """, (universe, f'chip{chip_number}'))
             
             results = cursor.fetchall()
             cursor.close()
@@ -134,26 +155,50 @@ class KatulaCompleteService:
             compartments = []
             forme_order = self._get_forme_order_for_universe(universe)
             
+            # Grouper les résultats par forme
+            forme_groups = {}
+            for row in results:
+                forme = row[0]
+                if forme not in forme_groups:
+                    forme_groups[forme] = []
+                forme_groups[forme].append({
+                    'denomination': row[1],
+                    'petique': row[2],
+                    'tome': row[3],
+                    'granque_name': row[4]
+                })
+            
+            # RÈGLE MÉTIER: Afficher tous les tiroirs selon l'univers
             for position, forme in enumerate(forme_order, 1):
-                # Trouver les données pour cette forme
-                forme_data = [r for r in results if r[0] == forme]
-                
-                if forme_data:
-                    for data in forme_data:
-                        compartments.append(ChipCompartment(
-                            position=position,
-                            forme=data[0],
-                            denomination=data[1],
-                            petique=data[2],
-                            tome=data[3],
-                            granque_name=data[4]
-                        ))
-                else:
-                    # Compartiment vide mais préservé dans l'ordre
+                if forme in forme_groups:
+                    # Forme avec données BD - regrouper toutes les dénominations uniques
+                    items = forme_groups[forme]
+                    # Dédupliquer les dénominations
+                    unique_denominations = list(dict.fromkeys([item['denomination'] for item in items]))
+                    
+                    if len(unique_denominations) > 1:
+                        # Plusieurs dénominations uniques -> les joindre avec '/'
+                        combined_denomination = '/'.join(unique_denominations)
+                    else:
+                        # Une seule dénomination (ou toutes identiques)
+                        combined_denomination = unique_denominations[0]
+                    
+                    # Utiliser les données du premier élément pour les autres champs
+                    first_item = items[0]
                     compartments.append(ChipCompartment(
                         position=position,
                         forme=forme,
-                        denomination="",
+                        denomination=combined_denomination,
+                        petique=first_item['petique'],
+                        tome=first_item['tome'],
+                        granque_name=first_item['granque_name']
+                    ))
+                else:
+                    # Forme sans données - tiroir vide
+                    compartments.append(ChipCompartment(
+                        position=position,
+                        forme=forme,
+                        denomination="---",
                         petique="",
                         tome="",
                         granque_name=""
@@ -163,10 +208,14 @@ class KatulaCompleteService:
                 "universe": universe,
                 "chip_number": chip_number,
                 "compartments": [c.__dict__ for c in compartments],
-                "total_compartments": len(compartments)
+                "total_compartments": len(compartments),
+                "multiple_denominations_found": any('/' in c.denomination for c in compartments)
             }
             
         except Exception as e:
+            print(f"[ERROR] get_chip_compartments: {e}")
+            import traceback
+            traceback.print_exc()
             return {"error": str(e)}
     
     def get_universe_config(self, universe: str) -> UniverseConfig:
@@ -224,19 +273,18 @@ class KatulaCompleteService:
                 cursor = conn.cursor()
                 print("[DEBUG] Connexion à la base de données établie")
                 
-                # 3. Exécuter la requête
+                # 3. Exécuter la requête simplifiée sur combinations
                 query = """
                     SELECT 
-                        chip_id,
+                        chip,
                         forme,
-                        STRING_AGG(DISTINCT denomination, '/') as denominations,
+                        denomination,
                         petique,
                         tome,
                         granque_name
-                    FROM table_de_katula
-                    WHERE univers = %s
-                    GROUP BY chip_id, forme, petique, tome, granque_name
-                    ORDER BY chip_id, forme
+                    FROM combinations
+                    WHERE univers = %s AND chip IS NOT NULL
+                    ORDER BY chip, forme
                 """
                 print(f"[DEBUG] Exécution de la requête pour l'univers: {universe}")
                 cursor.execute(query, (universe,))
@@ -262,10 +310,19 @@ class KatulaCompleteService:
             try:
                 chips = {}
                 for row in results:
-                    chip_id = row[0]
-                    if chip_id not in chips:
-                        chips[chip_id] = []
-                    chips[chip_id].append({
+                    chip_str = row[0]  # chip comme 'chip1', 'chip2', etc.
+                    # Extraire le numéro du chip
+                    try:
+                        if chip_str.startswith('chip'):
+                            chip_num = int(chip_str.replace('chip', ''))
+                        else:
+                            chip_num = int(chip_str)
+                    except:
+                        continue
+                    
+                    if chip_num not in chips:
+                        chips[chip_num] = []
+                    chips[chip_num].append({
                         'forme': row[1],
                         'denomination': row[2],
                         'petique': row[3],
@@ -291,7 +348,7 @@ class KatulaCompleteService:
                     'cols': config.cols,
                     'total_chips': total_chips,
                     'matrix': matrix,
-                    'source': 'table_de_katula',
+                    'source': 'combinations',
                     'status': 'success'
                 }
                 
@@ -422,12 +479,12 @@ class KatulaCompleteService:
                         params.extend([start, end])
                     where_conditions.append(f"({' OR '.join(range_conditions)})")
             
-            # Exécuter la requête
+            # Exécuter la requête simplifiée sur combinations
             query = f"""
-                SELECT chip_id, forme, denomination, petique, tome, granque_name, ligne, colonne
-                FROM table_de_katula 
+                SELECT chip, forme, denomination, petique, tome, granque_name, ligne, colonne
+                FROM combinations 
                 WHERE {' AND '.join(where_conditions)}
-                ORDER BY chip_id, forme
+                ORDER BY chip, forme
             """
             
             cursor.execute(query, params)
@@ -438,7 +495,16 @@ class KatulaCompleteService:
             # Organiser les résultats par chip
             filtered_chips = {}
             for result in results:
-                chip_id, forme, denomination, petique, tome, granque_name, ligne, colonne = result
+                chip_str, forme, denomination, petique, tome, granque_name, ligne, colonne = result
+                
+                # Extraire le numéro du chip
+                try:
+                    if isinstance(chip_str, str) and chip_str.startswith('chip'):
+                        chip_id = int(chip_str.replace('chip', ''))
+                    else:
+                        chip_id = int(str(chip_str).replace('chip', ''))
+                except (ValueError, AttributeError):
+                    continue
                 
                 if chip_id not in filtered_chips:
                     filtered_chips[chip_id] = {
@@ -480,7 +546,7 @@ class KatulaCompleteService:
                     ARRAY_AGG(DISTINCT petique) as petiques,
                     ARRAY_AGG(DISTINCT tome) as tomes,
                     ARRAY_AGG(DISTINCT granque_name) as granques
-                FROM table_de_katula 
+                FROM combinations 
                 WHERE univers = %s
             """, (universe,))
             
@@ -506,7 +572,7 @@ class KatulaCompleteService:
                     "petiques": petiques,
                     "tomes": tomes,
                     "granques": granques,
-                    "quadrants": ["Q1_top_left", "Q2_top_right", "Q3_bottom_left", "Q4_bottom_right"],
+                    "quadrants": ["q1_top_left", "q2_top_right", "q3_bottom_left", "q+4_bottom_right"],
                     "geometric_zones": [
                         "top_left", "top_center", "top_right",
                         "middle_left", "middle_center", "middle_right",
@@ -575,10 +641,10 @@ class KatulaCompleteService:
         col_mid = cols // 2
         
         # Initialiser les plages
-        q1 = []  # Q1_top_left
-        q2 = []  # Q2_top_right
-        q3 = []  # Q3_bottom_left
-        q4 = []  # Q4_bottom_right
+        q1 = []  # q1_top_left
+        q2 = []  # q2_top_right
+        q3 = []  # q3_bottom_left
+        q4 = []  # q4_bottom_right
         
         # Parcourir tous les chips et les assigner aux quadrants
         for chip_num in range(1, config.total_chips + 1):
@@ -612,10 +678,10 @@ class KatulaCompleteService:
             return ranges
         
         return {
-            "Q1_top_left": to_ranges(q1),
-            "Q2_top_right": to_ranges(q2),
-            "Q3_bottom_left": to_ranges(q3),
-            "Q4_bottom_right": to_ranges(q4)
+            "q1_top_left": to_ranges(q1),
+            "q2_top_right": to_ranges(q2),
+            "q3_bottom_left": to_ranges(q3),
+            "q4_bottom_right": to_ranges(q4)
         }
 
     def get_denomination_details(self, universe: str, denomination: str) -> Dict[str, Any]:
@@ -625,10 +691,10 @@ class KatulaCompleteService:
             cursor = conn.cursor()
             
             cursor.execute("""
-                SELECT chip_id, ligne, colonne, forme, petique, tome, granque_name
-                FROM table_de_katula 
+                SELECT chip, ligne, colonne, forme, petique, tome, granque_name
+                FROM combinations 
                 WHERE univers = %s AND denomination = %s
-                ORDER BY chip_id
+                ORDER BY chip
             """, (universe, denomination))
             
             results = cursor.fetchall()
@@ -637,8 +703,18 @@ class KatulaCompleteService:
             
             details = []
             for result in results:
+                chip_str = result[0]
+                # Extraire le numéro du chip
+                try:
+                    if chip_str.startswith('chip'):
+                        chip_id = int(chip_str.replace('chip', ''))
+                    else:
+                        chip_id = int(chip_str)
+                except:
+                    chip_id = chip_str
+                
                 details.append({
-                    "chip_id": result[0],
+                    "chip_id": chip_id,
                     "position": f"{result[1]}{result[2]}",
                     "forme": result[3],
                     "petique": result[4],

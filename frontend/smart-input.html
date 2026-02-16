@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
         * {
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -16,33 +18,39 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
+
         .header {
             background: linear-gradient(135deg, #1890ff, #40a9ff);
             color: white;
             padding: 30px;
             text-align: center;
         }
+
         .header h1 {
             margin: 0;
             font-size: 2.5em;
             font-weight: 300;
         }
+
         .header p {
             margin: 10px 0 0 0;
             opacity: 0.9;
             font-size: 1.1em;
         }
+
         .main-content {
             padding: 30px;
         }
+
         .session-selector {
             background: #f8f9fa;
             border-radius: 10px;
@@ -50,34 +58,43 @@
             margin-bottom: 30px;
             border-left: 5px solid #1890ff;
         }
+
         .session-controls {
             display: grid;
             grid-template-columns: 1fr auto auto;
             gap: 15px;
             align-items: end;
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
         }
+
         label {
             font-weight: 600;
             margin-bottom: 8px;
             color: #333;
             font-size: 14px;
         }
-        select, input, button {
+
+        select,
+        input,
+        button {
             padding: 12px;
             border: 2px solid #e1e5e9;
             border-radius: 8px;
             font-size: 14px;
             transition: all 0.3s ease;
         }
-        select:focus, input:focus {
+
+        select:focus,
+        input:focus {
             outline: none;
             border-color: #1890ff;
             box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
         }
+
         button {
             background: #1890ff;
             color: white;
@@ -86,23 +103,28 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
+
         button:hover {
             background: #40a9ff;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
         }
+
         button:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
+
         .create-session-btn {
             background: #52c41a;
         }
+
         .create-session-btn:hover {
             background: #73d13d;
         }
+
         .progress-section {
             background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
             border-radius: 10px;
@@ -110,6 +132,7 @@
             margin-bottom: 30px;
             border: 1px solid #91d5ff;
         }
+
         .progress-bar {
             width: 100%;
             height: 20px;
@@ -118,12 +141,14 @@
             overflow: hidden;
             margin: 15px 0;
         }
+
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #1890ff, #52c41a);
             transition: width 0.5s ease;
             border-radius: 10px;
         }
+
         .draw-input-section {
             background: white;
             border: 2px solid #f0f0f0;
@@ -131,20 +156,24 @@
             padding: 30px;
             margin-bottom: 30px;
         }
+
         .draw-header {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .draw-title {
             font-size: 1.8em;
             color: #1890ff;
             margin: 0;
             font-weight: 600;
         }
+
         .draw-subtitle {
             color: #666;
             margin: 5px 0 0 0;
         }
+
         .numbers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -152,9 +181,11 @@
             max-width: 600px;
             margin: 0 auto 30px auto;
         }
+
         .number-input {
             position: relative;
         }
+
         .number-input input {
             width: 100%;
             text-align: center;
@@ -167,22 +198,26 @@
             padding: 15px 10px;
             transition: all 0.3s ease;
         }
+
         .number-input input:focus {
             background: white;
             border-color: #1890ff;
             box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
             transform: scale(1.05);
         }
+
         .number-input input.filled {
             background: #e6f7ff;
             border-color: #1890ff;
             color: #1890ff;
         }
+
         .number-input input.error {
             background: #fff2f0;
             border-color: #ff4d4f;
             color: #ff4d4f;
         }
+
         .number-input label {
             position: absolute;
             top: -10px;
@@ -193,28 +228,34 @@
             color: #666;
             font-weight: 500;
         }
+
         .action-buttons {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-top: 30px;
         }
+
         .save-btn {
             background: #52c41a;
             padding: 15px 30px;
             font-size: 16px;
         }
+
         .save-btn:hover {
             background: #73d13d;
         }
+
         .next-btn {
             background: #722ed1;
             padding: 15px 30px;
             font-size: 16px;
         }
+
         .next-btn:hover {
             background: #9254de;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -223,30 +264,56 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
         }
+
+        /* Simple loading spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(0, 0, 0, 0.12);
+            border-top-color: #1890ff;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .modal-content {
             background-color: white;
-            margin: 5% auto;
+            margin: 2% auto;
             padding: 30px;
             border-radius: 15px;
             width: 90%;
             max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
         .modal-header {
             text-align: center;
             margin-bottom: 25px;
         }
+
         .modal-form {
             display: grid;
             gap: 20px;
         }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
+
         .close {
             color: #aaa;
             float: right;
@@ -255,9 +322,11 @@
             cursor: pointer;
             line-height: 1;
         }
+
         .close:hover {
             color: #000;
         }
+
         .success-message {
             background: #f6ffed;
             border: 1px solid #b7eb8f;
@@ -267,6 +336,7 @@
             margin: 15px 0;
             text-align: center;
         }
+
         .error-message {
             background: #fff2f0;
             border: 1px solid #ffccc7;
@@ -276,12 +346,14 @@
             margin: 15px 0;
             text-align: center;
         }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
+
         .stat-card {
             text-align: center;
             padding: 15px;
@@ -289,45 +361,110 @@
             border-radius: 10px;
             border: 1px solid #e1e5e9;
         }
+
         .stat-value {
             font-size: 2em;
             font-weight: bold;
             color: #1890ff;
             margin: 0;
         }
+
         .stat-label {
             color: #666;
             font-size: 0.9em;
             margin: 5px 0 0 0;
         }
+
+        .results-history-section {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #52c41a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item.pending {
+            background: #fff7e6;
+            border-left-color: #faad14;
+        }
+
+        .period-separator {
+            height: 4px;
+            background: #ff4d4f;
+            margin: 20px 0;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .period-separator::after {
+            content: 'FIN DE PÉRIODE';
+            position: absolute;
+            right: 0;
+            top: -25px;
+            background: #ff4d4f;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Style unifié pour N-D / N-H (Inspiré du journal avancé) */
+        .no-draw-tag,
+        .no-hold-tag {
+            background-color: #ff4d4f !important;
+            color: white !important;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            display: inline-block;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .session-controls {
                 grid-template-columns: 1fr;
             }
+
             .numbers-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+
             .action-buttons {
                 flex-direction: column;
             }
         }
     </style>
 </head>
-<body class="custom-background">
+
+<body>
     <div id="header-container"></div>
     <div class="container">
-    <script>
-    // Injecter le header universel au chargement de la page
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof UniversalHeader !== 'undefined') {
-            UniversalHeader.injectHeader('header-container', 'smart-input', {
-                showNavigation: true,
-                showUserInfo: false
+        <script>
+            // Injecter le header universel au chargement de la page
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof UniversalHeader !== 'undefined') {
+                    UniversalHeader.injectHeader('header-container', 'smart-input', {
+                        showNavigation: true,
+                        showUserInfo: false
+                    });
+                }
             });
-        }
-    });
-    </script>
+        </script>
 
+        <div id="session-resume-message"></div>
         <div class="main-content">
             <!-- Sélecteur de Session -->
             <div class="session-selector">
@@ -335,12 +472,38 @@
                 <div class="session-controls">
                     <div class="form-group">
                         <label for="sessionSelect">Session Active:</label>
-                        <select id="sessionSelect">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <select id="sessionSelect">
+                                <option value="">Chargement...</option>
+                            </select>
+                            <button id="loadSessionBtn" onclick="onLoadSessionClick()" disabled
+                                style="padding:10px 12px;background:#1890ff;color:#fff;border:none;border-radius:8px;">Charger</button>
+                            <div id="sessionLoader" style="display:none" aria-hidden="true" title="Chargement"><span
+                                    class="spinner"></span></div>
+                        </div>
+                    </div>
+                    <button onclick="activateSession()" id="activateBtn" disabled
+                        style="display: none;">Activer</button>
+                    <button onclick="deleteCurrentSession()" id="deleteSessionBtn" style="background: #ff4d4f;"
+                        disabled>🗑️ Supprimer Session</button>
+                    <button onclick="showCreateSessionModal()" class="create-session-btn">Nouvelle Session</button>
+                    <button onclick="syncSessionSchedule()" id="syncSessionBtn"
+                        style="background: #722ed1; color: white;" disabled>🔄 Synchroniser Tirages</button>
+                </div>
+            </div>
+
+            <!-- Sélecteur de Période -->
+            <div class="progress-section" id="periodSection" style="display: none;">
+                <h3 style="margin-top: 0; color: #1890ff;">📅 Sélection de Période</h3>
+                <div
+                    style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: end; margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label for="periodSelect">Période à compléter:</label>
+                        <select id="periodSelect">
                             <option value="">Chargement...</option>
                         </select>
                     </div>
-                    <button onclick="activateSession()" id="activateBtn" disabled>Activer</button>
-                    <button onclick="showCreateSessionModal()" class="create-session-btn">Nouvelle Session</button>
+                    <button onclick="loadPeriod()" id="loadPeriodBtn" disabled>Charger Période</button>
                 </div>
             </div>
 
@@ -371,21 +534,30 @@
             </div>
 
             <!-- Section Saisie -->
-            <div class="draw-input-section" id="drawInputSection" style="display: none;">
+            <div class="draw-input-section" id="drawInputSection">
                 <div class="draw-header">
                     <h2 class="draw-title" id="drawTitle">Tirage #1</h2>
                     <p class="draw-subtitle" id="drawSubtitle">Saisissez les numéros gagnants</p>
                 </div>
 
                 <!-- Champs nom et date -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
                     <div class="form-group">
-                        <label for="drawName">Nom du Tirage:</label>
+                        <label for="drawName">Nom de la Loto:</label>
                         <input type="text" id="drawName" placeholder="Ex: Loto du Samedi" style="text-align: left;">
                     </div>
                     <div class="form-group">
                         <label for="drawDate">Date du Tirage:</label>
                         <input type="date" id="drawDate">
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <button type="button" onclick="updateDrawDate()"
+                                style="padding: 8px; font-size: 12px; background: #faad14; flex: 1;">📅
+                                Aujourd'hui</button>
+                            <button type="button" onclick="markAsNoDraw()"
+                                style="padding: 8px; font-size: 12px; background: #ff7875; flex: 1;">❌ Pas de
+                                tirage</button>
+                        </div>
                     </div>
                 </div>
 
@@ -393,18 +565,16 @@
                     <!-- Les champs seront générés dynamiquement -->
                 </div>
 
-                <div class="action-buttons">
-                    <button onclick="saveCurrentDraw()" class="save-btn" id="saveBtn" disabled>
+                <div class="action-buttons" id="actionButtons">
+                    <button onclick="saveCurrentDraw()" class="save-btn" id="saveBtn">
                         💾 Sauvegarder
                     </button>
-                    <button onclick="nextDraw()" class="next-btn" id="nextBtn" disabled>
+                    <button onclick="nextDraw()" class="next-btn" id="nextBtn">
                         ➡️ Tirage Suivant
                     </button>
-                    <button onclick="openStatisticalJournal()" style="background: #fa8c16; padding: 15px 30px; font-size: 16px;">
-                        📊 Journal Statistique
-                    </button>
-                    <button onclick="showResultsHistory()" style="background: #722ed1; padding: 15px 30px; font-size: 16px;">
-                        📈 Historique Résultats
+                    <button onclick="openStatisticalJournal()"
+                        style="background: #fa8c16; padding: 15px 30px; font-size: 16px;">
+                        📊 Analyse Katula
                     </button>
                 </div>
 
@@ -412,15 +582,13 @@
             </div>
 
             <!-- Historique des résultats -->
-            <div id="resultsHistorySection" class="results-history-section" style="margin-top:40px; display:none; background:#f8f9fa; padding:30px; border-radius:15px;">
-                <h2 id="historySessionTitle" style="text-align:center;color:#1890ff; margin-bottom:20px;">Historique des Résultats</h2>
+            <div id="resultsHistorySection" class="results-history-section" style="margin-top:40px; display: none;">
+                <h2 id="historySessionTitle" style="text-align:center;color:#1890ff;"></h2>
                 <div id="resultsHistory"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <button onclick="showResultsHistory()" style="background:#ff4d4f; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">
-                        ❌ Masquer l'Historique
-                    </button>
-                </div>
             </div>
+
+            <!-- Conteneur de messages global -->
+            <div id="globalMessageContainer"></div>
         </div>
     </div>
 
@@ -436,12 +604,12 @@
                     <label for="sessionName">Nom de la Session:</label>
                     <input type="text" id="sessionName" placeholder="Ex: Session Janvier 2025" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="sessionDescription">Description (optionnelle):</label>
                     <input type="text" id="sessionDescription" placeholder="Description de la session">
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="lotteryType">Type de Loto:</label>
@@ -452,11 +620,13 @@
                         <input type="number" id="numbersPerDraw" min="3" max="10" value="6" required>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="totalDraws">Nombre de Tirages:</label>
+                        <label for="totalDraws">Tirages par Période:</label>
                         <input type="number" id="totalDraws" min="1" max="100" value="21" required>
+                        <small style="color: #666; margin-top: 5px; display: block;">Une période = cycle complet de
+                            tirages</small>
                     </div>
                     <div class="form-group">
                         <label for="numberRange">Plage de Numéros:</label>
@@ -472,12 +642,14 @@
                     <label for="startDate">Date de Début de la Session:</label>
                     <input type="date" id="startDate" required>
                 </div>
-                
+
                 <!-- Planning des Lotos -->
                 <div class="form-group">
                     <label>Planning Hebdomadaire des Lotos:</label>
-                    <div id="lotterySchedule" style="border: 1px solid #e1e5e9; border-radius: 8px; padding: 15px; background: #f8f9fa;">
-                        <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <div id="lotterySchedule"
+                        style="border: 1px solid #e1e5e9; border-radius: 8px; padding: 15px; background: #f8f9fa;">
+                        <div
+                            style="display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-bottom: 10px;">
                             <span style="font-weight: bold; width: 80px;">Jour</span>
                             <span style="font-weight: bold;">Nom de la Loto</span>
                             <span style="font-weight: bold; width: 80px;">Action</span>
@@ -495,16 +667,18 @@
                                 <option value="5">Samedi</option>
                                 <option value="6">Dimanche</option>
                             </select>
-                            <input type="text" id="lotteryNameInput" placeholder="Nom de la loto" style="flex: 1; margin-right: 10px;">
-                            <button type="button" onclick="addLotteryToSchedule()" style="width: auto; padding: 8px 15px;">
+                            <input type="text" id="lotteryNameInput" placeholder="Nom de la loto"
+                                style="flex: 1; margin-right: 10px;">
+                            <button type="button" onclick="addLotteryToSchedule()"
+                                style="width: auto; padding: 8px 15px;">
                                 ➕ Ajouter
                             </button>
                         </div>
                     </div>
                 </div>
-                
+
                 <div style="text-align: center; margin-top: 25px;">
-                    <button type="submit" style="padding: 15px 30px; font-size: 16px;">
+                    <button type="button" onclick="createSession()" style="padding: 15px 30px; font-size: 16px;">
                         ✨ Créer la Session Cyclique
                     </button>
                 </div>
@@ -513,73 +687,369 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api';
+        // Use the current origin and the mounted API + unified router prefix
+        const API_BASE = window.location.origin + '/api/unified';
+        // Écoute BroadcastChannel pour synchroniser l'univers sélectionné depuis d'autres onglets/pages
+        try {
+            const bc = new BroadcastChannel('katula-universe');
+            bc.addEventListener('message', (ev) => {
+                const data = ev.data || {};
+                const val = data.univers || data.universe;
+                if (val) {
+                    console.log('[BC] smart-input received universe ->', val);
+                    window.selectedUniverse = val;
+                    // Afficher un toast léger pour informer l'utilisateur
+                    try {
+                        let container = document.getElementById('toastContainer');
+                        if (!container) {
+                            container = document.createElement('div');
+                            container.id = 'toastContainer';
+                            Object.assign(container.style, {
+                                position: 'fixed', top: '20px', right: '20px', zIndex: 2000,
+                                display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end'
+                            });
+                            document.body.appendChild(container);
+                        }
+                        const toast = document.createElement('div');
+                        toast.className = 'client-toast-message';
+                        toast.textContent = 'Univers synchronisé : ' + val;
+                        Object.assign(toast.style, { background: 'rgba(24,144,255,0.95)', color: 'white', padding: '8px 12px', borderRadius: '6px' });
+                        container.appendChild(toast);
+                        setTimeout(() => { try { toast.remove(); } catch (e) { } }, 2200);
+                    } catch (e) {
+                        console.log('Toast error:', e);
+
+                    }
+                }
+            });
+        } catch (e) {
+            console.warn('BroadcastChannel not available in this environment', e);
+        }
         let currentSession = null;
         let currentDrawData = null;
 
+        // Fonction de debug pour vérifier la table work_sessions
+        async function debugWorkSessions() {
+            console.log('🔍 DEBUG: Vérification directe de work_sessions...');
+            try {
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                const data = await response.json();
+                console.log('🗃️ Contenu brut work_sessions:', data);
+
+                if (data.sessions && data.sessions.length > 0) {
+                    console.log('📊 Première session work_sessions:', data.sessions[0]);
+                    console.log('🔑 Colonnes disponibles:', Object.keys(data.sessions[0]));
+                } else {
+                    console.log('⚠️ Table work_sessions vide ou inaccessible');
+                }
+            } catch (error) {
+                console.error('❌ Erreur debug work_sessions:', error);
+            }
+        }
+
+        // Test automatique de création de session
+        async function exploreDatabase() {
+            console.log('🔍 EXPLORATION AUTOMATIQUE DE LA BASE DE DONNÉES');
+
+            try {
+                // Utiliser un endpoint qui existe
+                const response = await fetch(`${API_BASE}/session/sessions`);
+                if (!response.ok) {
+                    console.log('⚠️ Endpoint exploration non disponible');
+                    return;
+                }
+                const data = await response.json();
+
+                console.log('📊 DONNÉES DE LA BASE:', data);
+
+                if (data.tables) {
+                    console.log('📋 Tables disponibles:', data.tables);
+                }
+
+                if (data.work_sessions) {
+                    console.log('👥 Sessions existantes:', data.work_sessions.length);
+                    data.work_sessions.forEach((session, i) => {
+                        console.log(`  Session ${i + 1}: ID=${session.id}, Nom="${session.name}", Tirages=${session.total_draws}`);
+                    });
+                }
+
+                if (data.session_draws) {
+                    console.log('🎯 Tirages existants:', data.session_draws.length);
+                    data.session_draws.forEach((draw, i) => {
+                        const numbers = draw.winning_numbers ? draw.winning_numbers.join('-') : 'Vide';
+                        console.log(`  Tirage ${i + 1}: Session=${draw.session_id}, #${draw.draw_number}, Numéros=[${numbers}]`);
+                    });
+                }
+
+                displayDatabaseSummary(data);
+
+                // Si on a des tirages dans l'exploration, les afficher aussi dans l'historique
+                if (data.session_draws && data.session_draws.length > 0) {
+                    displayResultsHistory(data.session_draws);
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur exploration BD:', error);
+            }
+        }
+
+        function displayDatabaseSummary(data) {
+            const container = document.getElementById('resultsHistory');
+            const section = document.getElementById('resultsHistorySection');
+            const title = document.getElementById('historySessionTitle');
+
+            if (!container) return;
+
+            section.style.display = 'block';
+            title.textContent = 'Exploration de la Base de Données';
+
+            let html = '<div style="background: #f0f9ff; padding: 15px; border-radius: 8px;">';
+            html += `<h3 style="margin: 0; color: #1890ff;">📊 Résumé de la Base</h3>`;
+            html += `<p><strong>Tables:</strong> ${data.tables ? data.tables.join(', ') : 'Aucune'}</p>`;
+            html += `<p><strong>Sessions:</strong> ${data.work_sessions ? data.work_sessions.length : 0}</p>`;
+            html += `<p><strong>Tirages:</strong> ${data.session_draws ? data.session_draws.length : 0}</p>`;
+            html += '</div>';
+
+            // Afficher les tirages existants
+            if (data.session_draws && data.session_draws.length > 0) {
+                html += '<h4 style="color: #1890ff; margin-top: 20px;">Tirages Existants:</h4>';
+                data.session_draws.slice(0, 10).forEach(draw => {
+                    const numbers = draw.winning_numbers && draw.winning_numbers.length > 0 ?
+                        draw.winning_numbers.join(' - ') : 'Aucun numéro';
+                    const status = draw.is_completed ? '✅' : '⏳';
+                    html += `<div style="background: #fff7e6; padding: 8px; margin: 3px 0; border-radius: 4px;">`;
+                    html += `${status} Session ${draw.session_id}, Tirage #${draw.draw_number}: ${numbers}`;
+                    if (draw.session_name) html += ` (${draw.session_name})`;
+                    html += `</div>`;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function testSessionCreation() {
+            console.log('🧪 TEST AUTOMATIQUE DE CRÉATION DE SESSION');
+
+            const testData = {
+                name: 'Test Session Auto',
+                description: 'Session de test automatique',
+                lottery_type: '5/90',
+                numbers_per_draw: 5,
+                total_draws: 3,
+                number_range_min: 1,
+                number_range_max: 90,
+                start_date: '01/01/2025',
+                lottery_schedule: [
+                    { day_offset: 1, name: 'Loto Mardi' },
+                    { day_offset: 5, name: 'Loto Samedi' }
+                ],
+                cycle_length: 7
+            };
+
+            try {
+                console.log('📤 Test - Envoi données:', testData);
+
+                const response = await fetch(`${API_BASE}/session/simple`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+
+                console.log('📥 Test - Statut:', response.status);
+
+                const responseText = await response.text();
+                console.log('📋 Test - Réponse brute:', responseText);
+
+                if (response.ok) {
+                    console.log('✅ Test réussi!');
+                } else {
+                    console.log('❌ Test échoué:', responseText);
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur test:', error);
+            }
+        }
+
         // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSessions();
-            loadActiveSession();
+        document.addEventListener('DOMContentLoaded', function () {
+            // Debug work_sessions d'abord
+            setTimeout(debugWorkSessions, 500);
+
+            // Essayer de reprendre la dernière session automatiquement
+            const resumed = resumeLastSession();
+
+            // Charger la liste des sessions dans tous les cas
+            setTimeout(loadSessions, resumed ? 1500 : 800);
         });
 
-        // Gestion des sessions avec données de test
-        async function loadSessions() {
+        // Reprendre la dernière session depuis localStorage
+        function resumeLastSession() {
+            const lastSessionId = localStorage.getItem('last_session_id');
+            const messageDiv = document.getElementById('session-resume-message');
+            if (lastSessionId) {
+                console.log('🔄 Tentative de reprise auto de la session ID:', lastSessionId);
+                if (messageDiv) {
+                    messageDiv.innerHTML = `<div class="success-message">Reprise de la dernière session en cours...</div>`;
+                }
+                loadSessionDetails(lastSessionId);
+                return true;
+            }
+            return false;
+        }
+
+        // Effacer la dernière session de localStorage
+        function clearLastSession() {
+            localStorage.removeItem('last_session_id');
+            const messageDiv = document.getElementById('session-resume-message');
+            if (messageDiv) {
+                messageDiv.innerHTML = '';
+            }
+            console.log('🗑️ Mémoire de la dernière session effacée.');
+        }
+
+        // Session loader helpers
+        function showSessionLoader() {
+            const el = document.getElementById('sessionLoader');
+            const btn = document.getElementById('loadSessionBtn');
+            if (el) el.style.display = 'inline-block';
+            if (btn) btn.disabled = true;
+        }
+
+        function hideSessionLoader() {
+            const el = document.getElementById('sessionLoader');
+            const btn = document.getElementById('loadSessionBtn');
+            if (el) el.style.display = 'none';
+            if (btn) btn.disabled = false;
+        }
+
+        // Manual load button handler
+        async function onLoadSessionClick() {
+            const select = document.getElementById('sessionSelect');
+            const sessionId = select ? select.value : null;
+            if (!sessionId) { showMessage('Veuillez sélectionner une session', 'error'); return; }
             try {
-                // Utiliser des données de test
-                const sessions = [
-                    { id: 1, name: 'Session Test 1', current_draw: 5, total_draws: 21, is_active: true },
-                    { id: 2, name: 'Session Test 2', current_draw: 12, total_draws: 21, is_active: false },
-                    { id: 3, name: 'Session Janvier 2025', current_draw: 1, total_draws: 21, is_active: false }
-                ];
-                
+                showSessionLoader();
+                await loadSessionDetails(sessionId);
+            } finally {
+                hideSessionLoader();
+            }
+        }
+
+        // Gestion des sessions
+        async function loadSessions() {
+            showSessionLoader();
+            try {
+                console.log('🔄 Chargement des sessions depuis work_sessions...');
+                console.log('🔗 URL complète:', `${API_BASE}/session/sessions`);
+
+                const response = await fetch(`${API_BASE}/session/sessions`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('📡 Statut réponse:', response.status, response.statusText);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Erreur HTTP:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('📊 Données work_sessions reçues:', JSON.stringify(data, null, 2));
+
+                const sessions = data.sessions || data.value || [];
+                // Save globally for lookup (used when session id is non-numeric or simulation names appear)
+                window.availableSessions = sessions;
+                console.log('📋 Sessions extraites:', sessions);
+
                 const select = document.getElementById('sessionSelect');
                 select.innerHTML = '<option value="">Sélectionner une session</option>';
-                
-                sessions.forEach(session => {
-                    const option = document.createElement('option');
-                    option.value = session.id;
-                    option.textContent = `${session.name} (${session.current_draw}/${session.total_draws})`;
-                    if (session.is_active) {
-                        option.selected = true;
+
+                if (Array.isArray(sessions) && sessions.length > 0) {
+                    console.log(`🔍 Traitement de ${sessions.length} sessions:`);
+                    sessions.forEach((session, index) => {
+                        console.log(`  Session ${index + 1}:`, {
+                            id: session.id,
+                            name: session.name,
+                            lottery_type: session.lottery_type,
+                            total_draws: session.total_draws,
+                            is_active: session.is_active
+                        });
+
+                        const option = document.createElement('option');
+                        // Some simulated sessions might not expose numeric 'id'; fall back to name
+                        option.value = session.id || session.name;
+                        const currentDraw = session.current_draw || 1;
+                        option.textContent = `${session.name} (${currentDraw}/${session.total_draws}) - ${session.lottery_type}`;
+
+                        // Pré-selectionner si c'est la session en mémoire
+                        const lastSessionId = localStorage.getItem('last_session_id');
+                        if (lastSessionId && session.id == lastSessionId) {
+                            option.selected = true;
+                        }
+
+                        select.appendChild(option);
+                    });
+
+                    console.log(`✅ ${sessions.length} sessions work_sessions chargées dans le dropdown`);
+
+                    select.onchange = async function () {
+                        let sessionId = this.value;
+                        console.log('🔄 Changement de session vers ID:', sessionId);
+                        if (sessionId) {
+                            // If sessionId is a name (non-numeric), attempt to map to numeric id
+                            if (isNaN(sessionId)) {
+                                const found = (window.availableSessions || []).find(s => (s.id && String(s.id) === String(sessionId)) || (s.name && s.name === sessionId));
+                                if (found && found.id) sessionId = found.id;
+                            }
+                            // show quick loading UI
+                            document.getElementById('progressSection').style.display = 'block';
+                            document.getElementById('resultsHistorySection').style.display = 'block';
+                            await loadSessionDetails(sessionId);
+                        } else {
+                            currentSession = null;
+                            currentDrawData = null;
+                            document.getElementById('progressSection').style.display = 'none';
+                            document.getElementById('drawInputSection').style.display = 'none';
+                            document.getElementById('resultsHistorySection').style.display = 'none';
+                            clearLastSession(); // Effacer si on désélectionne
+                        }
+                    };
+
+                    // If an option was pre-selected (from localStorage), trigger loading now
+                    const preselected = select.querySelector('option[selected]');
+                    const effective = preselected ? preselected.value : select.value;
+                    if (effective) {
+                        console.log('🔁 Auto-chargement de la session sélectionnée:', effective);
+                        // small delay to ensure DOM/UI updates
+                        setTimeout(() => loadSessionDetails(effective), 50);
                     }
-                    select.appendChild(option);
-                });
-                
-                document.getElementById('activateBtn').disabled = false;
-                console.log(`✅ ${sessions.length} sessions chargées`);
-                
+
+                    document.getElementById('deleteSessionBtn').disabled = false;
+                    document.getElementById('syncSessionBtn').disabled = false;
+
+                } else {
+                    console.warn('⚠️ Aucune session work_sessions trouvée ou format incorrect');
+                    console.log('🔍 Type de sessions:', typeof sessions, 'Contenu:', sessions);
+                    select.innerHTML += '<option disabled>Aucune session disponible</option>';
+                }
+
             } catch (error) {
-                console.error('❌ Erreur:', error);
-                document.getElementById('sessionSelect').innerHTML = '<option value="">Erreur de chargement</option>';
+                console.error('❌ Erreur chargement sessions work_sessions:', error);
+                const sel = document.getElementById('sessionSelect');
+                if (sel) sel.innerHTML = '<option value="">Erreur: ' + error.message + '</option>';
+            } finally {
+                hideSessionLoader();
             }
         }
 
         async function loadActiveSession() {
-            try {
-                // Session de test
-                currentSession = {
-                    id: 1,
-                    name: 'Session Test 1',
-                    numbers_per_draw: 6,
-                    number_range_min: 1,
-                    number_range_max: 49
-                };
-                
-                const progress = {
-                    current_draw: 5,
-                    total_draws: 21,
-                    completed_draws: 4,
-                    progress_percentage: 19,
-                    session_name: 'Session Test 1'
-                };
-                
-                updateProgressDisplay(progress);
-                await loadCurrentDraw();
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
+            // Cette fonction n'est plus nécessaire car on charge les sessions manuellement
+            console.log('🔄 Chargement automatique désactivé - utiliser le sélecteur de session');
         }
 
         async function activateSession() {
@@ -590,82 +1060,118 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${sessionId}/activate`, {
-                    method: 'POST'
+                console.log('🔄 Activation session ID:', sessionId);
+
+                const response = await fetch(`${API_BASE}/sessions/${sessionId}/activate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 });
+
+                console.log('📥 Réponse activation:', response.status);
                 const result = await response.json();
-                
+                console.log('📋 Résultat activation:', result);
+
                 if (response.ok) {
-                    showMessage(result.message, 'success');
-                    await loadActiveSession();
+                    console.log('✅ Session activée avec succès!');
+
+                    // Nettoyer les données précédentes
+                    currentSession = null;
+                    currentDrawData = null;
+
+                    // Recharger les sessions pour mettre à jour l'affichage
+                    await loadSessions();
+
+                    // Mettre à jour la sélection dans le dropdown
+                    const sessionSelect = document.getElementById('sessionSelect');
+                    if (sessionSelect) {
+                        sessionSelect.value = sessionId;
+                    }
+
+                    // Charger les détails de la session activée
+                    await loadSessionDetails(sessionId);
+
+                    // Debug: vérifier si les boutons sont visibles
+                    setTimeout(() => {
+                        const drawSection = document.getElementById('drawInputSection');
+                        const actionButtons = document.getElementById('actionButtons');
+                        console.log('🔍 Debug - Section visible:', drawSection?.style.display);
+                        console.log('🔍 Debug - Boutons visibles:', actionButtons?.style.display);
+                        showMessage('✅ Session activée avec succès!', 'success');
+                    }, 500);
+
                 } else {
-                    showMessage('Erreur lors de l\'activation: ' + result.detail, 'error');
+                    console.error('❌ Erreur activation:', result);
+                    showMessage('Erreur lors de l\'activation: ' + (result.detail || result.message || 'Erreur inconnue'), 'error');
                 }
-                
+
             } catch (error) {
+                console.error('❌ Erreur activation:', error);
                 showMessage('Erreur de connexion: ' + error.message, 'error');
             }
         }
 
         function updateProgressDisplay(progress) {
+            if (!progress) {
+                console.warn('⚠️ Pas de données de progrès');
+                return;
+            }
+
             document.getElementById('progressSection').style.display = 'block';
             document.getElementById('drawInputSection').style.display = 'block';
-            
-            document.getElementById('currentDrawStat').textContent = progress.current_draw;
-            document.getElementById('totalDrawsStat').textContent = progress.total_draws;
-            document.getElementById('completedStat').textContent = progress.completed_draws;
-            document.getElementById('progressStat').textContent = progress.progress_percentage + '%';
-            document.getElementById('progressFill').style.width = progress.progress_percentage + '%';
-            document.getElementById('sessionInfo').textContent = `Session: ${progress.session_name}`;
+
+            document.getElementById('currentDrawStat').textContent = progress.current_draw || '-';
+            document.getElementById('totalDrawsStat').textContent = progress.total_draws || '-';
+            document.getElementById('completedStat').textContent = progress.completed_draws || '-';
+            document.getElementById('progressStat').textContent = (progress.progress_percentage || 0) + '%';
+            document.getElementById('progressFill').style.width = (progress.progress_percentage || 0) + '%';
+            document.getElementById('sessionInfo').textContent = `Session: ${progress.session_name || 'Inconnue'}`;
+
+            // S'assurer que les boutons sont visibles
+            setTimeout(() => {
+                const saveBtn = document.getElementById('saveBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                if (saveBtn) saveBtn.style.display = 'inline-block';
+                if (nextBtn) nextBtn.style.display = 'inline-block';
+            }, 100);
         }
 
         async function loadCurrentDraw() {
-            if (!currentSession) return;
-
-            try {
-                // Tirage de test
-                const draw = {
-                    draw_number: 5,
-                    lottery_name: 'Loto Test',
-                    draw_date: new Date().toLocaleDateString('fr-FR'),
-                    is_completed: false,
-                    winning_numbers: []
-                };
-                
-                currentDrawData = draw;
-                setupDrawInput(draw);
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
+            // Cette fonction utilise un endpoint qui n'existe pas
+            // La logique est maintenant dans loadSessionDetails
+            console.log('🔄 loadCurrentDraw désactivée - utilise loadSessionDetails à la place');
         }
 
         function setupDrawInput(draw) {
-            document.getElementById('drawTitle').textContent = draw.lottery_name;
-            document.getElementById('drawSubtitle').textContent = `Tirage #${draw.draw_number} - ${draw.draw_date}`;
-            
-            // Générer les champs de saisie
-            const numbersGrid = document.getElementById('numbersGrid');
-            numbersGrid.innerHTML = '';
-            
-            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
-                const numberInput = document.createElement('div');
-                numberInput.className = 'number-input';
-                numberInput.innerHTML = `
-                    <label>N°${i}</label>
-                    <input 
-                        type="number" 
-                        id="num${i}" 
-                        min="${currentSession.number_range_min}" 
-                        max="${currentSession.number_range_max}"
-                        placeholder="${i}"
-                        oninput="handleNumberInput(${i})"
-                        onkeydown="handleKeyDown(event, ${i})"
-                    >
-                `;
-                numbersGrid.appendChild(numberInput);
+            console.log('🎯 Setup tirage:', draw);
+            console.log('📊 Session actuelle:', currentSession);
+
+            if (!currentSession) {
+                console.error('❌ Pas de session active!');
+                return;
             }
-            
+
+            // Titre avec informations enrichies
+            const titleText = draw.scheduled_day ?
+                `${draw.lottery_name} (${draw.scheduled_day})` :
+                draw.lottery_name;
+
+            document.getElementById('drawTitle').textContent = titleText;
+
+            const subtitleText = draw.scheduled_day ?
+                `Tirage #${draw.draw_number} - ${draw.draw_date} - ${draw.scheduled_day}` :
+                `Tirage #${draw.draw_number} - ${draw.draw_date}`;
+
+            document.getElementById('drawSubtitle').textContent = subtitleText;
+
+            // Pré-remplir les champs nom et date avec les données du planning
+            document.getElementById('drawName').value = draw.lottery_name || '';
+            document.getElementById('drawDate').value = draw.draw_date || new Date().toISOString().split('T')[0];
+
+            // Générer les champs de saisie (utiliser la fonction dédiée)
+            generateNumberInputs();
+
             // Pré-remplir si le tirage est déjà complété
             if (draw.is_completed && draw.winning_numbers.length > 0) {
                 draw.winning_numbers.forEach((num, index) => {
@@ -675,41 +1181,42 @@
                         input.classList.add('filled');
                     }
                 });
-                updateButtonStates();
             }
-            
-            // Focus sur le premier champ
+
+            // Focus sur le premier champ et activer les boutons
             setTimeout(() => {
-                document.getElementById('num1').focus();
+                const firstInput = document.getElementById('num1');
+                if (firstInput) firstInput.focus();
+                updateButtonStates();
             }, 100);
         }
 
         function handleNumberInput(position) {
             const input = document.getElementById(`num${position}`);
             let value = input.value;
-            
+
             // Validation
             input.classList.remove('error', 'filled');
-            
+
             // Passer au champ suivant automatiquement si 2 chiffres ou plus
             if (value.length >= 2) {
                 const numValue = parseInt(value);
-                
+
                 if (numValue) {
                     // Vérifier la plage
                     if (numValue < currentSession.number_range_min || numValue > currentSession.number_range_max) {
                         input.classList.add('error');
                         return;
                     }
-                    
+
                     // Vérifier les doublons
                     if (checkDuplicate(numValue, position)) {
                         input.classList.add('error');
                         return;
                     }
-                    
+
                     input.classList.add('filled');
-                    
+
                     // Passer au champ suivant automatiquement
                     if (position < currentSession.numbers_per_draw) {
                         const nextInput = document.getElementById(`num${position + 1}`);
@@ -726,16 +1233,16 @@
                         input.classList.add('error');
                         return;
                     }
-                    
+
                     if (checkDuplicate(numValue, position)) {
                         input.classList.add('error');
                         return;
                     }
-                    
+
                     input.classList.add('filled');
                 }
             }
-            
+
             updateButtonStates();
         }
 
@@ -761,65 +1268,205 @@
         }
 
         function updateButtonStates() {
+            if (!currentSession) return;
+
             const numbers = getCurrentNumbers();
-            const isComplete = numbers.length === currentSession.numbers_per_draw && 
-                              numbers.every(n => n !== null);
-            
-            document.getElementById('saveBtn').disabled = !isComplete;
-            document.getElementById('nextBtn').disabled = !isComplete;
+            const isComplete = numbers.length === currentSession.numbers_per_draw &&
+                numbers.every(n => n !== null);
+
+            const saveBtn = document.getElementById('saveBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (saveBtn) saveBtn.disabled = !isComplete;
+            if (nextBtn) nextBtn.disabled = !isComplete;
         }
 
         function getCurrentNumbers() {
+            if (!currentSession) return [];
+
             const numbers = [];
             for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
                 const input = document.getElementById(`num${i}`);
-                const value = parseInt(input.value);
-                numbers.push(value || null);
+                if (input) {
+                    const value = parseInt(input.value);
+                    numbers.push(value || null);
+                }
             }
             return numbers.filter(n => n !== null);
         }
 
         async function saveCurrentDraw() {
             const numbers = getCurrentNumbers();
-            
+
             if (numbers.length !== currentSession.numbers_per_draw) {
                 showMessage('Veuillez remplir tous les numéros', 'error');
                 return;
             }
 
             try {
-                const response = await fetch(
-                    `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            numbers: numbers,
-                            draw_date: new Date().toLocaleDateString('fr-FR')
-                        })
-                    }
-                );
-                
-                const result = await response.json();
-                
+                const drawData = {
+                    numbers: numbers,
+                    draw_date: document.getElementById('drawDate').value,
+                    lottery_name: document.getElementById('drawName').value || currentDrawData.lottery_name,
+                    is_no_draw: false
+                };
+
+                console.log('💾 SAUVEGARDE TIRAGE');
+                console.log('💾 Session:', currentSession.id, 'Tirage:', currentDrawData.draw_number);
+                console.log('💾 Données:', drawData);
+
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(drawData)
+                });
+
                 if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Sauvegarde réussie:', result);
+
+                    // Marquer comme complété
+                    currentDrawData.is_completed = true;
+                    currentDrawData.winning_numbers = numbers;
+
                     showMessage('✅ Tirage sauvegardé avec succès!', 'success');
-                    await loadActiveSession(); // Recharger pour mettre à jour le progrès
+
+                    // Recharger l'historique pour afficher le nouveau tirage
+                    await loadSessionHistory(currentSession.id);
+
+                    // Passer automatiquement au tirage suivant
+                    setTimeout(async () => {
+                        currentDrawData.is_completed = true;
+                        currentDrawData.winning_numbers = numbers;
+
+                        // Générer le prochain tirage
+                        const nextDrawNumber = currentDrawData.draw_number + 1;
+                        const nextDraw = generateDrawFromSchedule(currentSession, nextDrawNumber);
+
+                        // Configurer l'interface pour le prochain tirage
+                        setupDrawForSession(nextDraw);
+                        clearInputs();
+
+                        showMessage(`➡️ Tirage suivant: ${nextDraw.lottery_name}`, 'success');
+                    }, 1500);
                 } else {
-                    showMessage('Erreur lors de la sauvegarde: ' + result.detail, 'error');
+                    const error = await response.json();
+                    console.error('❌ Erreur sauvegarde:', error);
+                    showMessage('Erreur sauvegarde: ' + (error.detail || 'Erreur inconnue'), 'error');
                 }
-                
+
             } catch (error) {
+                console.error('❌ Erreur sauvegarde:', error);
                 showMessage('Erreur de connexion: ' + error.message, 'error');
             }
         }
 
+        // Afficher un historique factice avec les vraies données
+        function displayFakeHistory(drawNumber, numbers) {
+            const container = document.getElementById('resultsHistory');
+            const section = document.getElementById('resultsHistorySection');
+            const title = document.getElementById('historySessionTitle');
+
+            if (!container) return;
+
+            section.style.display = 'block';
+            title.textContent = `Historique - ${currentSession?.name || 'Session'}`;
+
+            const numbersText = numbers.join(' - ');
+            const html = `
+                <div style="max-height: 500px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px; padding: 15px;">
+                    <div class="history-item" style="background: #f6ffed; border-left: 4px solid #52c41a; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                        <div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                ✅ #${drawNumber} - ${currentDrawData.lottery_name || 'Loto'} (P1)
+                            </div>
+                            <div style="font-size: 13px; color: #666;">
+                                📅 ${currentDrawData.draw_date || new Date().toISOString().split('T')[0]}
+                            </div>
+                            <div style="font-weight: bold; color: #1890ff; margin-top: 5px;">
+                                ${numbersText}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 11px; color: #666;">Complété</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+
+
         async function nextDraw() {
-            await saveCurrentDraw();
-            setTimeout(async () => {
-                await loadCurrentDraw();
+            console.log('➡️ PASSAGE AU TIRAGE SUIVANT');
+
+            if (!currentDrawData) {
+                console.log('⚠️ Pas de tirage actuel, génération du premier tirage');
+                const firstDraw = generateDrawFromSchedule(currentSession, 1);
+                setupDrawForSession(firstDraw);
                 clearInputs();
-            }, 1000);
+                return;
+            }
+
+            if (!currentDrawData.is_completed) {
+                console.log('⚠️ Tirage actuel non complété, sauvegarde d\'abord');
+                await saveCurrentDraw();
+                return;
+            }
+
+            // Recharger les tirages existants pour avoir l'état à jour
+            const existingDraws = await loadExistingDraws(currentSession);
+            console.log('📊 Tirages existants après sauvegarde:', existingDraws.length);
+
+            // Calculer le prochain numéro de tirage
+            const nextDrawNumber = currentDrawData.draw_number + 1;
+            console.log('🔍 Recherche tirage #', nextDrawNumber);
+
+            // Vérifier si on termine une période (= cycle_length défini en BD)
+            const drawsPerPeriod = currentSession.cycle_length || 7;
+            const currentPeriod = Math.ceil(currentDrawData.draw_number / drawsPerPeriod);
+            const isEndOfPeriod = (currentDrawData.draw_number % drawsPerPeriod) === 0;
+
+            console.log(`📊 Tirage actuel: ${currentDrawData.draw_number}, Période: ${currentPeriod}, Fin de période: ${isEndOfPeriod} (Périodicité: ${drawsPerPeriod})`);
+
+            if (isEndOfPeriod) {
+                console.log(`🔴 FIN DE PÉRIODE ${currentPeriod}`);
+                showMessage(`🔴 Fin de la Période ${currentPeriod} (${drawsPerPeriod} tirages)`, 'success');
+
+                // Afficher les options pour continuer
+                showPeriodEndOptions(currentPeriod);
+                return;
+            }
+
+            // Continuer dans la même période
+            const nextDraw = generateDrawFromSchedule(currentSession, nextDrawNumber);
+            console.log('🎯 Prochain tirage généré:', nextDraw);
+
+            // Configurer l'interface pour le prochain tirage
+            setupDrawForSession(nextDraw);
+            clearInputs();
+
+            const period = Math.ceil(nextDrawNumber / drawsPerPeriod);
+            showMessage(`✅ Tirage #${nextDrawNumber} - ${nextDraw.lottery_name} (Période ${period})`, 'success');
+        }
+
+        function updateProgressAfterDraw() {
+            if (!currentSession) return;
+
+            const completedDraws = currentDrawData.draw_number - 1;
+            const progress = {
+                current_draw: currentDrawData.draw_number,
+                total_draws: currentSession.total_draws,
+                completed_draws: completedDraws,
+                progress_percentage: Math.round((completedDraws / currentSession.total_draws) * 100),
+                session_name: currentSession.name
+            };
+
+            updateProgressDisplay(progress);
         }
 
         function clearInputs() {
@@ -834,172 +1481,1582 @@
             updateButtonStates();
         }
 
+
+        // Lottery Schedule Management
+        let lotterySchedule = [];
+
+        function addLotteryToSchedule() {
+            const dayOffset = parseInt(document.getElementById('daySelect').value);
+            const lotteryName = document.getElementById('lotteryNameInput').value.trim();
+
+            if (!lotteryName) {
+                showMessage('Veuillez entrer un nom de loto', 'error');
+                return;
+            }
+
+            lotterySchedule.push({ day_offset: dayOffset, name: lotteryName });
+            updateScheduleDisplay();
+
+            // Reset inputs
+            document.getElementById('lotteryNameInput').value = '';
+        }
+
+        function removeLotteryFromSchedule(index) {
+            lotterySchedule.splice(index, 1);
+            updateScheduleDisplay();
+        }
+
+        function updateScheduleDisplay() {
+            const container = document.getElementById('scheduleItems');
+            const dayNames = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+            if (lotterySchedule.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#888;padding:10px;">Aucun loto ajoutÃ©</div>';
+                return;
+            }
+
+            container.innerHTML = lotterySchedule.map((item, index) => `
+                <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 8px; background: white; border-radius: 5px; margin-bottom: 5px;">
+                    <span style="width: 80px;">${dayNames[item.day_offset]}</span>
+                    <span>${item.name}</span>
+                    <button type="button" onclick="removeLotteryFromSchedule(${index})" style="width: 80px; padding: 5px; background: #ff4d4f; color: white; border: none; border-radius: 5px; cursor: pointer;">Retirer</button>
+                </div>
+            `).join('');
+        }
         // Gestion du modal
         function showCreateSessionModal() {
+            // Set start date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+
+            // Reset and display schedule
+            lotterySchedule = [];
+            updateScheduleDisplay();
+
             document.getElementById('createSessionModal').style.display = 'block';
         }
 
         function closeCreateSessionModal() {
             document.getElementById('createSessionModal').style.display = 'none';
-            document.getElementById('createSessionForm').reset();
         }
 
-        document.getElementById('createSessionForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const range = document.getElementById('numberRange').value.split('-');
-            const sessionData = {
+        // Fonction pour créer une session
+        async function createSession() {
+            clearLastSession(); // On ne veut pas de reprise auto après création
+            const startDateValue = document.getElementById('startDate').value;
+
+            // Logique de tri Ordonnanceur Calendaire (Dimanche en premier)
+            const sortedSchedule = [...(lotterySchedule || [])].sort((a, b) => {
+                const dayA = a.day_offset === 6 ? -1 : a.day_offset;
+                const dayB = b.day_offset === 6 ? -1 : b.day_offset;
+                return dayA - dayB;
+            });
+
+            const formData = {
                 name: document.getElementById('sessionName').value,
-                description: document.getElementById('sessionDescription').value,
+                description: document.getElementById('sessionDescription').value || '',
                 lottery_type: document.getElementById('lotteryType').value,
                 numbers_per_draw: parseInt(document.getElementById('numbersPerDraw').value),
                 total_draws: parseInt(document.getElementById('totalDraws').value),
-                number_range_min: parseInt(range[0]),
-                number_range_max: parseInt(range[1])
+                number_range_min: 1,
+                number_range_max: parseInt(document.getElementById('numberRange').value.split('-')[1]),
+                start_date: startDateValue ? startDateValue.split('-').reverse().join('/') : null,
+                lottery_schedule: sortedSchedule,
+                cycle_length: 7
             };
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions`, {
+                console.log('📤 Envoi des données:', formData);
+
+                const response = await fetch(`${API_BASE}/session`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(sessionData)
+                    body: JSON.stringify(formData)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
-                    showMessage('✨ Session créée avec succès!', 'success');
+                    showMessage('✅ Session créée avec succès!', 'success');
                     closeCreateSessionModal();
+                    document.getElementById('createSessionForm').reset();
+                    lotterySchedule = [];
+                    updateScheduleDisplay();
                     await loadSessions();
-                    await loadActiveSession();
                 } else {
-                    showMessage('Erreur lors de la création: ' + result.detail, 'error');
+                    showMessage('Erreur: ' + (result.detail || 'Erreur inconnue'), 'error');
                 }
-                
             } catch (error) {
                 showMessage('Erreur de connexion: ' + error.message, 'error');
             }
+        }
+
+        // Soumission du formulaire de création de session
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('createSessionForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                await createSession();
+            });
         });
 
         function showMessage(message, type) {
-            const container = document.getElementById('messageContainer');
+            // Essayer d'abord le conteneur local, puis le global
+            let container = document.getElementById('messageContainer') || document.getElementById('globalMessageContainer');
+
+            if (!container) {
+                console.log(`[${type.toUpperCase()}] ${message}`);
+                return;
+            }
+
             const className = type === 'success' ? 'success-message' : 'error-message';
-            
             container.innerHTML = `<div class="${className}">${message}</div>`;
-            
+
             setTimeout(() => {
-                container.innerHTML = '';
+                if (container) {
+                    container.innerHTML = '';
+                }
             }, 5000);
         }
 
-        // Charger et afficher l'historique des résultats
+        // Fonction pour charger l'historique des résultats
         async function loadResultsHistory() {
-            if (!currentSession) return;
-            try {
-                // Données de test
-                const draws = [
-                    { id: 1, draw_number: 4, draw_date: '15/01/2025', winning_numbers: [7, 14, 21, 28, 35, 42] },
-                    { id: 2, draw_number: 3, draw_date: '14/01/2025', winning_numbers: [3, 12, 19, 26, 33, 40] },
-                    { id: 3, draw_number: 2, draw_date: '13/01/2025', winning_numbers: [5, 11, 18, 25, 32, 39] },
-                    { id: 4, draw_number: 1, draw_date: '12/01/2025', winning_numbers: [1, 8, 15, 22, 29, 36] }
-                ];
-                displayResultsHistory(draws);
-            } catch (error) {
-                showMessage('Erreur lors du chargement de l\'historique', 'error');
-            }
-        }
-        
-        // Fonction pour afficher/masquer l'historique
-        function showResultsHistory() {
-            const section = document.getElementById('resultsHistorySection');
-            if (section.style.display === 'none' || !section.style.display) {
-                section.style.display = 'block';
-                loadResultsHistory();
-            } else {
-                section.style.display = 'none';
-            }
+            await loadAndDisplayHistory();
         }
 
-        // Affichage de l'historique, tri descendant, séparateurs de périodes
-        function displayResultsHistory(draws) {
+        // Affichage de l'historique avec marqueurs de fin de période
+        async function displayResultsHistory(draws) {
             const container = document.getElementById('resultsHistory');
             const title = document.getElementById('historySessionTitle');
+            const section = document.getElementById('resultsHistorySection');
+
             if (!draws || draws.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:#888;">Aucun résultat enregistré</p>';
+                container.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">📋 Aucun résultat enregistré pour le moment</p>';
                 title.textContent = '';
+                section.style.display = 'none';
                 return;
             }
-            // Nom de la session en titre
-            title.textContent = currentSession.name;
-            // Tri descendant (plus récent en haut)
-            draws.sort((a, b) => b.draw_number - a.draw_number);
-            // Regroupement par périodes
-            const drawsPerPeriod = currentSession.numbers_per_draw || 7;
-            let html = '';
-            let lastPeriod = null;
-            draws.forEach((draw, idx) => {
-                const period = Math.floor((draw.draw_number - 1) / drawsPerPeriod) + 1;
-                if (period !== lastPeriod) {
-                    if (lastPeriod !== null) {
-                        html += '<div style="height:6px;background:#ff4d4f;margin:30px 0;border-radius:3px;"></div>';
-                    }
-                    html += `<div style='font-weight:bold;color:#faad14;margin:20px 0 10px 0;'>Période ${period}</div>`;
-                    lastPeriod = period;
-                }
-                html += `<div class='result-item' style='background:#f8f9fa;padding:15px 20px;margin-bottom:10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;'>` +
-                    `<div><b>#${draw.draw_number}</b> | <span style='color:#1890ff;'>${draw.draw_date || ''}</span> : <span>${(draw.winning_numbers||[]).join(' - ')}</span></div>` +
-                    `<div><button onclick='editResult(${draw.id})' style='background:#1890ff;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;'>✏️</button></div>` +
-                    `</div>`;
+
+            section.style.display = 'block';
+
+            // Determine the session name for the main title
+            let mainSessionName = currentSession ? currentSession.name : (draws[0].session_name || 'Toutes les Sessions');
+            title.textContent = `Historique - ${mainSessionName}`;
+
+            // Récupérer les paramètres des sessions pour les calculs de période
+            // (Note: on suppose que availableSessions est à jour)
+            const sessions = window.availableSessions || [];
+
+            // Performance: Limiter à 500 tirages pour l'affichage (Augmenté pour sessions denses)
+            const displayLimit = 500;
+            // Tri chronologique strict : Date décroissante, puis Numéro de tirage décroissant
+            const sortedDraws = [...draws].sort((a, b) => {
+                const dateA = new Date(a.draw_date || a.date);
+                const dateB = new Date(b.draw_date || b.date);
+                if (dateB - dateA !== 0) return dateB - dateA;
+                return (b.draw_number || 0) - (a.draw_number || 0);
             });
+            const drawsToRender = sortedDraws.slice(0, displayLimit);
+            const isTruncated = draws.length > displayLimit;
+
+            // Grouper par session
+            const groupedBySession = {};
+            drawsToRender.forEach(draw => {
+                if (!groupedBySession[draw.session_id]) {
+                    groupedBySession[draw.session_id] = [];
+                }
+                groupedBySession[draw.session_id].push(draw);
+            });
+
+            let html = '<div style="max-height: 80vh; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px; padding: 15px; background: white;">';
+
+            if (isTruncated) {
+                html += `<div style="padding: 12px; background: #fff7e6; border: 1px solid #ffe58f; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; color: #856404;">
+                    ⚠️ L'affichage est limité aux <strong>${displayLimit} derniers tirages</strong> sur ${draws.length}. 
+                    <br>Pour une analyse complète, utilisez le <a href="advanced-journal.html?session=${currentSession ? currentSession.id : ''}" style="color: #1890ff; font-weight: bold; text-decoration: underline;">Journal Statistique Avancé</a>.
+                </div>`;
+            }
+
+            // Parcourir les sessions (ordre décroissant d'ID pour avoir les plus récentes d'abord)
+            Object.keys(groupedBySession).sort((a, b) => Number(b) - Number(a)).forEach(sessionId => {
+                const sessionDraws = groupedBySession[sessionId];
+                const session = sessions.find(s => s.id == sessionId);
+
+                // Utiliser cycle_length (Périodicité) comme référence absolue pour la période
+                let drawsPerPeriod = (session && session.cycle_length) ? Number(session.cycle_length) : 7;
+                console.log(`📊 Session ${sessionId} - Périodicité utilisée pour l'affichage: ${drawsPerPeriod}`);
+
+                const periodGroups = {};
+                sessionDraws.forEach(draw => {
+                    const period = Math.ceil(draw.draw_number / drawsPerPeriod);
+                    if (!periodGroups[period]) periodGroups[period] = [];
+                    periodGroups[period].push(draw);
+                });
+
+                // Afficher les périodes de la plus récente à la plus ancienne
+                const periods = Object.keys(periodGroups).sort((a, b) => b - a);
+
+                periods.forEach((period, pIdx) => {
+                    const periodDraws = periodGroups[period];
+                    // Calculer la plage de tirages pour cette période
+                    const drawNums = periodDraws.map(d => Number(d.draw_number));
+                    const minDraw = Math.min(...drawNums);
+                    const maxDraw = Math.max(...drawNums);
+                    const sessionName = session?.name || 'Session ' + sessionId;
+
+                    // Séparateur de période (Trait rouge gras - Règle Métier)
+                    if (pIdx === 0) {
+                        html += `<div style="font-weight: bold; color: #1890ff; margin: 20px 0 10px 0; padding: 10px; background: #f0f9ff; border-radius: 6px; text-align: center; border: 1px solid #adc6ff;">
+                            📅 PÉRIODE ${period} (Tirages #${minDraw} - #${maxDraw}) - ${sessionName}
+                        </div>`;
+                    } else {
+                        html += `
+                            <div style="margin: 30px 0 15px 0; position: relative; text-align: center;">
+                                <div style="position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #ff4d4f; z-index: 1;"></div>
+                                <span style="position: relative; z-index: 2; background: white; padding: 0 15px; font-weight: bold; color: #ff4d4f; font-size: 14px;">
+                                    PÉRIODE ${period} (Tirages #${minDraw} - #${maxDraw})
+                                </span>
+                            </div>
+                        `;
+                    }
+
+                    periodDraws.forEach(draw => {
+                        let numbersText, statusIcon, bgColor, borderColor, statusText;
+
+                        if (draw.is_no_draw || draw.status === 'no_draw') {
+                            numbersText = '<span class="no-draw-tag">NO-DRAW</span>';
+                            statusIcon = '🚫';
+                            statusText = draw.no_draw_reason || 'Pas de tirage';
+                            bgColor = '#fff1f0';
+                            borderColor = '#ff7875';
+                        } else if (draw.winning_numbers && draw.winning_numbers.length > 0) {
+                            numbersText = draw.winning_numbers.join(' - ');
+                            statusIcon = '✅';
+                            statusText = 'Complété';
+                            bgColor = '#f6ffed';
+                            borderColor = '#52c41a';
+                        } else {
+                            numbersText = '<span class="no-hold-tag">NO-HOLD (Saisie requise)</span>';
+                            statusIcon = '⏳';
+                            statusText = 'Saisie requise';
+                            bgColor = '#fff7e6';
+                            borderColor = '#faad14';
+                        }
+
+                        html += `
+                        <div style="background: ${bgColor}; border-left: 4px solid ${borderColor}; padding: 12px; margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; margin-bottom: 3px; font-size: 15px; color: #333;">
+                                    ${statusIcon} Tirage <span style="color: #1890ff;">#${draw.draw_number}</span> - ${draw.lottery_name || 'Loto'}
+                                </div>
+                                <div style="font-size: 12px; color: #666;">
+                                    📅 ${draw.draw_date || ''} ${draw.scheduled_day ? '(' + draw.scheduled_day + ')' : ''} | <small>${statusText}</small>
+                                </div>
+                                <div style="font-weight: bold; color: #1890ff; margin-top: 4px; font-size: 15px;">
+                                    ${numbersText}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 6px; margin-left:12px;">
+                                <button onclick="editResult(${draw.draw_number})" style="background: #faad14; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;" title="Modifier">✏️</button>
+                                <button onclick="deleteResult(${draw.draw_number})" style="background: #ff4d4f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;" title="Supprimer">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                    });
+
+                    // Ligne de fin de période
+                    html += `
+                        <div style="height:2px; background: #eee; margin: 15px 0; border-radius:1px; position:relative; text-align:center;">
+                            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#f8f9fa; color:#999; padding:0 10px; font-size:10px;">FIN P${period}</span>
+                        </div>`;
+                });
+            });
+
+            html += '</div>';
             container.innerHTML = html;
+            try {
+                container.scrollTop = 0;
+            } catch (e) { }
         }
 
-        // Edition d'un résultat (affiche un prompt simple pour la démo)
-        async function editResult(drawId) {
-            const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
-            const draws = await response.json();
-            const draw = draws.find(d => d.id === drawId);
-            if (!draw) return;
-            const newDate = prompt('Nouvelle date du tirage (JJ/MM/AAAA) :', draw.draw_date || '');
-            const newNumbers = prompt('Nouveaux numéros (séparés par un espace) :', (draw.winning_numbers||[]).join(' '));
-            if (newDate && newNumbers) {
-                const numbersArr = newNumbers.split(/\s+/).map(x => parseInt(x)).filter(x => !isNaN(x));
-                await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws/${draw.draw_number}`, {
-                    method: 'PUT',
+        // Edition d'un résultat
+        async function editResult(drawNumber) {
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                const draw = draws.find(d => d.draw_number === drawNumber);
+
+                if (!draw) {
+                    showMessage('Tirage non trouvé', 'error');
+                    return;
+                }
+
+                const newDate = prompt('Date du tirage (AAAA-MM-JJ) :', draw.draw_date || '');
+                if (newDate === null) return;
+
+                const newName = prompt('Nom du loto :', draw.lottery_name || '');
+                if (newName === null) return;
+
+                const currentNumbers = (draw.winning_numbers || []).join(' ');
+                const newNumbers = prompt('Numéros gagnants (séparés par un espace, vide pour no-draw) :', currentNumbers);
+                if (newNumbers === null) return;
+
+                const numbersArr = newNumbers.trim() ? newNumbers.trim().split(/\s+/).map(x => parseInt(x)).filter(x => !isNaN(x)) : [];
+
+                const updateData = {
+                    numbers: numbersArr,
+                    draw_date: newDate,
+                    lottery_name: newName,
+                    is_no_draw: numbersArr.length === 0
+                };
+
+                const updateResponse = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${drawNumber}`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ numbers: numbersArr, draw_date: newDate })
+                    body: JSON.stringify(updateData)
                 });
-                await loadResultsHistory();
-                showMessage('Résultat modifié', 'success');
+
+                if (updateResponse.ok) {
+                    showMessage('✅ Résultat modifié avec succès', 'success');
+                    await loadAndDisplayHistory();
+                } else {
+                    const error = await updateResponse.json();
+                    showMessage('Erreur: ' + (error.detail || 'Erreur inconnue'), 'error');
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur modification:', error);
+                showMessage('Erreur de connexion: ' + error.message, 'error');
             }
         }
 
-        // Appel dans loadActiveSession et saveCurrentDraw
-        const originalLoadActiveSession = loadActiveSession;
-        loadActiveSession = async function() {
-            await originalLoadActiveSession.apply(this, arguments);
-            await loadResultsHistory();
-        };
-        const originalSaveCurrentDraw = saveCurrentDraw;
-        saveCurrentDraw = async function() {
-            await originalSaveCurrentDraw.apply(this, arguments);
-            await loadResultsHistory();
-        };
+        // Supprimer un résultat
+        async function deleteResult(drawNumber) {
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer le tirage #${drawNumber} ?`)) return;
 
-        // Fonction pour ouvrir le journal statistique
-        function openStatisticalJournal() {
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${drawNumber}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('✅ Tirage supprimé', 'success');
+                    await loadAndDisplayHistory();
+                } else {
+                    showMessage('Erreur lors de la suppression', 'error');
+                }
+            } catch (error) {
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
+        }
+
+        // Basculer entre tirage normal et no-draw
+        async function toggleNoDraw(drawNumber, isCurrentlyNoDraw) {
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                const draw = draws.find(d => d.draw_number === drawNumber);
+
+                if (!draw) return;
+
+                let updateData;
+                if (isCurrentlyNoDraw) {
+                    // Convertir en tirage normal
+                    const numbers = prompt('Numéros gagnants (séparés par un espace) :', '');
+                    if (numbers === null) return;
+                    const numbersArr = numbers.trim().split(/\s+/).map(x => parseInt(x)).filter(x => !isNaN(x));
+                    updateData = {
+                        numbers: numbersArr,
+                        draw_date: draw.draw_date,
+                        lottery_name: draw.lottery_name,
+                        is_no_draw: false
+                    };
+                } else {
+                    // Convertir en no-draw
+                    const reason = prompt('Raison du no-draw :', 'Jour férié');
+                    if (reason === null) return;
+                    updateData = {
+                        numbers: [],
+                        draw_date: draw.draw_date,
+                        lottery_name: draw.lottery_name,
+                        is_no_draw: true,
+                        no_draw_reason: reason
+                    };
+                }
+
+                const updateResponse = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${drawNumber}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (updateResponse.ok) {
+                    showMessage('✅ Tirage mis à jour', 'success');
+                    await loadAndDisplayHistory();
+                } else {
+                    showMessage('Erreur lors de la mise à jour', 'error');
+                }
+            } catch (error) {
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
+        }
+
+        // Charger et afficher l'historique des résultats
+        async function loadAndDisplayHistory() {
+            if (!currentSession) {
+                console.log('⚠️ Pas de session active pour charger l\'historique');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+
+                console.log('📊 Tirages pour session', currentSession.id, ':', draws);
+
+                const historySection = document.getElementById('resultsHistorySection');
+                const historyTitle = document.getElementById('historySessionTitle');
+                const historyContainer = document.getElementById('resultsHistory');
+
+                historySection.style.display = 'block';
+                historyTitle.textContent = `Historique - ${currentSession.name}`;
+
+                if (draws && draws.length > 0) {
+                    await displayResultsHistory(draws);
+                } else {
+                    historyContainer.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">Aucun tirage enregistré pour cette session</p>';
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement historique:', error);
+            }
+        }
+
+        // Fonction pour ouvrir le journal statistique de Katula
+        async function openStatisticalJournal() {
             if (!currentSession) {
                 showMessage('Aucune session active. Veuillez d\'abord activer une session.', 'error');
                 return;
             }
-            
-            // Rediriger vers le journal avec l'ID de session
-            const url = `advanced-journal.html?session=${currentSession.id}&universe=mundo`;
-            window.open(url, '_blank');
+
+            try {
+                // Charger les tirages de la session pour analyse Katula
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                if (!response.ok) {
+                    throw new Error('Impossible de charger les tirages');
+                }
+
+                const draws = await response.json();
+                const validDraws = draws.filter(d => d.winning_numbers && d.winning_numbers.length > 0);
+
+                if (validDraws.length === 0) {
+                    showMessage('Aucun tirage avec numéros gagnants trouvé pour l\'analyse Katula', 'error');
+                    return;
+                }
+
+                // Déterminer l'univers sélectionné (flexible: select sur la page, variable globale, header)
+                function getSelectedUniverse() {
+                    // 1) Chercher un sélecteur courant: '#universe' (utilisé dans le header/journal)
+                    const u1 = document.getElementById('universe');
+                    if (u1 && u1.value) return u1.value;
+
+                    // 2) Ancien nom possible sur la page
+                    const sel = document.getElementById('universeSelect');
+                    if (sel && sel.value) return sel.value;
+
+                    // 3) Variable globale éventuelle
+                    if (window.selectedUniverse) return window.selectedUniverse;
+
+                    // 4) UniversalHeader helper (si exposé)
+                    if (window.UniversalHeader && typeof UniversalHeader.getCurrentUniverse === 'function') {
+                        try { const u = UniversalHeader.getCurrentUniverse(); if (u) return u; } catch (e) { }
+                    }
+
+                    // 5) Meta tag fallback
+                    const meta = document.querySelector('meta[name="universe"]');
+                    if (meta && meta.content) return meta.content;
+
+                    // Par défaut
+                    return 'mundo';
+                }
+
+                const universe = getSelectedUniverse();
+
+                // Debug: afficher l'univers sélectionné
+                console.log('🔎 Selected universe (client):', universe);
+
+                // Toast helper (visible alert) - affichage en haut à droite
+                function showToast(message, duration = 4000) {
+                    try {
+                        let container = document.getElementById('toastContainer');
+                        if (!container) {
+                            container = document.createElement('div');
+                            container.id = 'toastContainer';
+                            Object.assign(container.style, {
+                                position: 'fixed',
+                                top: '20px',
+                                right: '20px',
+                                zIndex: 2000,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                                alignItems: 'flex-end'
+                            });
+                            document.body.appendChild(container);
+                        }
+
+                        const toast = document.createElement('div');
+                        toast.className = 'client-toast-message';
+                        toast.textContent = message;
+                        Object.assign(toast.style, {
+                            background: 'rgba(24,144,255,0.95)',
+                            color: 'white',
+                            padding: '10px 14px',
+                            borderRadius: '8px',
+                            boxShadow: '0 6px 18px rgba(0,0,0,0.2)',
+                            fontSize: '13px',
+                            maxWidth: '320px',
+                            opacity: '0',
+                            transform: 'translateY(-6px)',
+                            transition: 'opacity 200ms ease, transform 200ms ease'
+                        });
+
+                        container.appendChild(toast);
+
+                        // animate in
+                        requestAnimationFrame(() => {
+                            toast.style.opacity = '1';
+                            toast.style.transform = 'translateY(0)';
+                        });
+
+                        // remove after duration
+                        setTimeout(() => {
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translateY(-6px)';
+                            setTimeout(() => { try { toast.remove(); } catch (e) { } }, 220);
+                        }, duration);
+                    } catch (e) {
+                        console.log('Toast error:', e);
+                    }
+                }
+
+                // Afficher un toast visible pour indiquer l'univers envoyé
+                showToast('Univers sélectionné : ' + universe, 5000);
+
+                // Analyser avec le service Katula (envoi des draws au backend pour stockage/traitement)
+                try {
+                    await fetch(`${API_BASE}/katula/analyze-session`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            session_id: currentSession.id,
+                            session_name: currentSession.name,
+                            draws: validDraws,
+                            // Envoyer les deux clés (compatibilité): anglais 'universe' et français 'univers'
+                            universe: universe,
+                            univers: universe
+                        })
+                    });
+                } catch (e) {
+                    console.warn('⚠️ Analyse Katula POST failed (non-blocking):', e);
+                }
+
+                // Ouvrir le journal avancé : NE PAS FORCER univers=mundo
+                // Si on connaît explicitement une valeur utilisateur récente (window.selectedUniverse)
+                // on peut la passer, sinon laisser la page choisir via son propre sélecteur.
+                let url = `advanced-journal.html?session=${currentSession.id}&analysis=true`;
+                const knownUniverse = window.selectedUniverse || null;
+                if (knownUniverse && knownUniverse !== 'mundo') {
+                    url += `&univers=${encodeURIComponent(knownUniverse)}`;
+                }
+
+                console.log('🔗 Opening journal URL:', url);
+                window.location.href = url;
+                showMessage(`📊 Analyse Katula demandée pour ${validDraws.length} tirages`, 'success');
+
+            } catch (error) {
+                console.error('❌ Erreur analyse Katula:', error);
+                // Fallback vers journal standard
+                const url = `advanced-journal.html?session=${currentSession.id}&universe=${encodeURIComponent(universe)}`;
+                window.location.href = url;
+                showMessage(`📊 Journal statistique ouvert (mode standard)`, 'success');
+            }
+        }
+
+        // Fonction pour mettre à jour la date du tirage
+        function updateDrawDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('drawDate').value = today;
+            showMessage('📅 Date mise à jour à aujourd\'hui', 'success');
+        }
+
+        // Fonction pour mettre à jour automatiquement la date lors du passage au tirage suivant
+        function autoUpdateDateForNextDraw() {
+            if (currentDrawData && currentDrawData.draw_number > 1) {
+                // Calculer la prochaine date basée sur le planning de la session
+                const currentDate = new Date(document.getElementById('drawDate').value || new Date());
+
+                // Ajouter 3-4 jours par défaut (logique simple)
+                const nextDate = new Date(currentDate);
+                nextDate.setDate(nextDate.getDate() + 3);
+
+                document.getElementById('drawDate').value = nextDate.toISOString().split('T')[0];
+            }
+        }
+
+        // Fonction pour marquer un jour sans tirage
+        async function markAsNoDraw() {
+            const reason = prompt('Raison du No Draw (optionnel):', 'Jour férié / Report');
+            if (reason === null) return; // Annulé
+
+            try {
+                const drawData = {
+                    numbers: [],
+                    draw_date: document.getElementById('drawDate').value,
+                    lottery_name: document.getElementById('drawName').value || 'Loto Standard',
+                    is_no_draw: true,
+                    no_draw_reason: reason
+                };
+
+                const response = await fetch(
+                    `${API_BASE}/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(drawData)
+                    }
+                );
+
+                if (response.ok) {
+                    showMessage(`🚫 No Draw enregistré: ${reason}`, 'success');
+                    await loadLastIncompletePeriod(currentSession);
+                } else {
+                    const error = await response.json();
+                    showMessage('Erreur: ' + (error.detail || 'Erreur inconnue'), 'error');
+                }
+            } catch (error) {
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
+        }
+
+        // Synchroniser le planning de la session (générer les tirages manquants)
+        async function syncSessionSchedule() {
+            if (!currentSession) {
+                showMessage('Veuillez charger une session d\'abord', 'error');
+                return;
+            }
+
+            try {
+                const syncBtn = document.getElementById('syncSessionBtn');
+                if (syncBtn) {
+                    syncBtn.disabled = true;
+                    syncBtn.textContent = '⏳ Synchronisation...';
+                }
+
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const message = result.created > 0
+                        ? `✅ ${result.created} nouveau(x) tirage(s) créé(s) (Total: ${result.total})`
+                        : `ℹ️ Planning déjà à jour (${result.existing} tirages existants)`;
+
+                    showMessage(message, 'success');
+
+                    // Recharger l'historique pour afficher les nouveaux tirages
+                    if (result.created > 0) {
+                        await loadSessionHistory(currentSession.id);
+                    }
+                } else {
+                    const error = await response.json();
+                    showMessage('Erreur synchronisation: ' + (error.detail || 'Erreur inconnue'), 'error');
+                }
+            } catch (error) {
+                console.error('❌ Erreur synchronisation:', error);
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            } finally {
+                const syncBtn = document.getElementById('syncSessionBtn');
+                if (syncBtn) {
+                    syncBtn.disabled = false;
+                    syncBtn.textContent = '🔄 Synchroniser Tirages';
+                }
+            }
+        }
+
+
+        // Fonction pour charger les détails d'une session activée
+        async function loadSessionDetails(sessionId) {
+            try {
+                showSessionLoader();
+                // Mémoriser la session en cours
+                localStorage.setItem('last_session_id', sessionId);
+                console.log('📝 Session ID', sessionId, 'mémorisée.');
+
+                console.log('🔍 Chargement session complète:', sessionId);
+
+                const response = await fetch(`${API_BASE}/sessions/${sessionId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('📋 Session complète:', data);
+
+                    if (data.session) {
+                        currentSession = data.session;
+
+                        // Parser le planning de loteries depuis la BD
+                        if (currentSession.lottery_schedule && typeof currentSession.lottery_schedule === 'string') {
+                            try {
+                                currentSession.lottery_schedule = JSON.parse(currentSession.lottery_schedule);
+                            } catch (e) {
+                                currentSession.lottery_schedule = [];
+                            }
+                        }
+
+                        console.log('📅 Planning loteries:', currentSession.lottery_schedule);
+
+                        // 1. Afficher le nom de la session
+                        displaySessionHeader(currentSession);
+
+                        // 2. Charger les tirages existants (UNE SEULE FOIS)
+                        const existingDraws = await loadExistingDraws(currentSession);
+
+                        // 3. Trouver le prochain tirage à compléter selon le planning
+                        const nextDraw = findNextDrawFromSchedule(currentSession, existingDraws);
+
+                        // 4. Configurer l'interface pour ce tirage
+                        setupDrawForSession(nextDraw);
+
+                        // 5. Afficher l'historique filtré avec les données DÉJÀ CHARGÉES
+                        if (existingDraws.length > 0) {
+                            await displayResultsHistory(existingDraws);
+                        } else {
+                            displayEmptyHistoryMessage();
+                        }
+                    }
+                } else {
+                    // Si la session n'est pas trouvée, on nettoie la mémoire
+                    if (response.status === 404) {
+                        clearLastSession();
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement session:', error);
+                clearLastSession(); // Nettoyer en cas d'erreur réseau etc.
+            } finally {
+                hideSessionLoader();
+            }
+        }
+
+        function displayEmptyHistoryMessage() {
+            const historySection = document.getElementById('resultsHistorySection');
+            const historyContainer = document.getElementById('resultsHistory');
+
+            historySection.style.display = 'block';
+            historyContainer.innerHTML = `
+                <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; text-align: center;">
+                    <h3 style="color: #1890ff; margin: 0 0 10px 0;">📋 Session: ${currentSession.name}</h3>
+                    <p style="margin: 0; color: #666;">Aucun tirage enregistré. Commencez par saisir le premier tirage selon le planning.</p>
+                </div>
+            `;
+        }
+
+        // Afficher l'en-tête de session
+        function displaySessionHeader(session) {
+            // Normalize lottery_schedule which may be stored as an array or as
+            // an object with numeric keys mapping to names (e.g. {0: 'monday', ...}).
+            let scheduleRaw = session.lottery_schedule || [];
+            let schedule = [];
+
+            if (Array.isArray(scheduleRaw)) {
+                schedule = scheduleRaw;
+            } else if (scheduleRaw && typeof scheduleRaw === 'object') {
+                // Sort keys to preserve order when keys are numeric strings
+                const keys = Object.keys(scheduleRaw).sort((a, b) => Number(a) - Number(b));
+                schedule = keys.map(k => {
+                    const v = scheduleRaw[k];
+                    if (typeof v === 'string') return { name: v };
+                    return v;
+                });
+            }
+
+            const drawsPerPeriod = schedule.length;
+            const scheduleNames = (schedule.map ? schedule.map(s => s.name || s).join(', ') : '');
+
+            const headerHtml = `
+                <div style="background: #e6f7ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #1890ff;">
+                    <h2 style="margin: 0; color: #1890ff;">📊 ${session.name}</h2>
+                    <p style="margin: 5px 0 0 0; color: #666;">${session.description || 'Session de travail'}</p>
+                    <p style="margin: 5px 0 0 0; color: #666;"><strong>Type:</strong> ${session.lottery_type} | <strong>Numéros par tirage:</strong> ${session.numbers_per_draw} | <strong>Périodicité:</strong> ${drawsPerPeriod} tirages/période</p>
+                    <p style="margin: 5px 0 0 0; color: #999; font-size: 12px;"><strong>Planning:</strong> ${scheduleNames}</p>
+                </div>
+            `;
+
+            // Insérer avant la section de progrès
+            const progressSection = document.getElementById('progressSection');
+            progressSection.insertAdjacentHTML('beforebegin', headerHtml);
+        }
+
+        // Générer l'historique complet de la session avec gestion des périodes
+        function generateFullSessionHistory(session) {
+            const history = [];
+            const schedule = session.lottery_schedule || [];
+            const startDate = session.start_date ? new Date(session.start_date) : new Date();
+            const drawsPerPeriod = session.cycle_length || 7;
+
+            for (let drawNumber = 1; drawNumber <= session.total_draws; drawNumber++) {
+                const draw = generateDrawFromSchedule(session, drawNumber);
+
+                // Calculer la période (cycle_length est la référence)
+                const period = Math.ceil(drawNumber / drawsPerPeriod);
+                const positionInPeriod = ((drawNumber - 1) % drawsPerPeriod) + 1;
+
+                draw.period = period;
+                draw.position_in_period = positionInPeriod;
+                draw.is_period_start = positionInPeriod === 1;
+                draw.is_period_end = positionInPeriod === drawsPerPeriod;
+
+                // Marquer comme complété si c'est dans le passé (simulation)
+                const drawDate = new Date(draw.draw_date);
+                const today = new Date();
+
+                if (drawDate < today) {
+                    draw.is_completed = true;
+                    draw.winning_numbers = []; // Pas de numéros réels pour la simulation
+                } else {
+                    draw.is_completed = false;
+                    draw.winning_numbers = [];
+                }
+
+                history.push(draw);
+            }
+
+            return history;
+        }
+
+        // Afficher l'historique complet chronologique
+        function displayFullHistory(history) {
+            const container = document.getElementById('resultsHistory');
+            const title = document.getElementById('historySessionTitle');
+
+            title.textContent = `Historique complet - ${currentSession.name}`;
+
+            let html = '<div style="max-height: 400px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px; padding: 15px;">';
+
+            history.forEach((draw, index) => {
+                const statusIcon = draw.is_completed ? '✅' : '⏳';
+                const statusText = draw.is_completed ? 'Complété' : 'En attente';
+                const numbersText = draw.winning_numbers.length > 0 ? draw.winning_numbers.join(' - ') : 'Pas encore saisi';
+                const bgColor = draw.is_completed ? '#f6ffed' : '#fff7e6';
+
+                html += `
+                    <div style="background: ${bgColor}; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 3px solid ${draw.is_completed ? '#52c41a' : '#faad14'};">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${statusIcon} #${draw.draw_number} - ${draw.lottery_name}</strong>
+                                <br>
+                                <small style="color: #666;">${draw.draw_date} ${draw.scheduled_day ? '(' + draw.scheduled_day + ')' : ''}</small>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 12px; color: #666;">${statusText}</div>
+                                <div style="font-weight: bold; color: #1890ff;">${numbersText}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            // Afficher la section historique
+            document.getElementById('resultsHistorySection').style.display = 'block';
+        }
+
+        // Trouver le prochain tirage à compléter
+        function findNextDrawToComplete(history) {
+            return history.find(draw => !draw.is_completed);
+        }
+
+        // Configurer la saisie pour le prochain tirage
+        function setupNextDrawInput(nextDraw) {
+            console.log('🔧 Configuration tirage:', nextDraw);
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('drawInputSection').style.display = 'block';
+
+            currentDrawData = nextDraw;
+            setupDrawInput(nextDraw);
+
+            // S'assurer que les boutons sont dans le bon état
+            setTimeout(() => {
+                updateButtonStates();
+                console.log('🔍 Cases de saisie générées:', document.querySelectorAll('.number-input').length);
+            }, 200);
+        }
+
+        // Afficher les options de fin de période
+        function showPeriodEndOptions(completedPeriod) {
+            const drawSection = document.getElementById('drawInputSection');
+            drawSection.innerHTML = `
+                <div style="text-align: center; padding: 40px; background: #f0f9ff; border-radius: 15px; border: 2px solid #91d5ff;">
+                    <h2 style="color: #1890ff; margin: 0;">🎉 Période ${completedPeriod} Terminée</h2>
+                    <p style="color: #666; margin: 15px 0;">Vous avez complété ${currentSession.total_draws} tirages pour cette période.</p>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                        <button onclick="startNewPeriod()" style="background: #52c41a; color: white; padding: 15px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                            ▶️ Continuer Période ${completedPeriod + 1}
+                        </button>
+                        <button onclick="pauseSession()" style="background: #faad14; color: white; padding: 15px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                            ⏸️ Mettre en Pause
+                        </button>
+                    </div>
+                    
+                    <p style="color: #999; font-size: 12px; margin-top: 20px;">
+                        Vous pouvez continuer cette session plus tard en la sélectionnant à nouveau.
+                    </p>
+                </div>
+            `;
+            drawSection.style.display = 'block';
+        }
+
+        // Commencer une nouvelle période
+        async function startNewPeriod() {
+            console.log('🆕 DÉMARRAGE NOUVELLE PÉRIODE');
+
+            if (!currentSession) {
+                showMessage('Aucune session active', 'error');
+                return;
+            }
+
+            // Restaurer l'interface normale
+            await loadSessionDetails(currentSession.id);
+            showMessage('▶️ Session reprise', 'success');
+        }
+
+        // Mettre la session en pause
+        function pauseSession() {
+            const drawSection = document.getElementById('drawInputSection');
+            drawSection.innerHTML = `
+                <div style="text-align: center; padding: 40px; background: #fff7e6; border-radius: 15px; border: 2px solid #ffd591;">
+                    <h2 style="color: #faad14; margin: 0;">⏸️ Session en Pause</h2>
+                    <p style="color: #666; margin: 15px 0;">La session "${currentSession.name}" est maintenant en pause.</p>
+                    <p style="color: #666; margin: 10px 0;">Vous pouvez revenir à tout moment en sélectionnant cette session.</p>
+                    
+                    <div style="margin-top: 25px;">
+                        <button onclick="location.reload()" style="background: #1890ff; color: white; padding: 12px 20px; border: none; border-radius: 6px; margin-right: 10px; cursor: pointer;">
+                            🔄 Choisir Autre Session
+                        </button>
+                        <button onclick="resumeCurrentSession()" style="background: #52c41a; color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer;">
+                            ▶️ Reprendre Maintenant
+                        </button>
+                    </div>
+                </div>
+            `;
+            drawSection.style.display = 'block';
+
+            showMessage('⏸️ Session mise en pause - Vous pouvez y revenir plus tard', 'success');
+        }
+
+        // Mettre à jour les statistiques de session
+        function updateSessionStats(history) {
+            const completed = history.filter(d => d.is_completed).length;
+            const total = history.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            const progress = {
+                current_draw: completed + 1,
+                total_draws: total,
+                completed_draws: completed,
+                progress_percentage: percentage,
+                session_name: currentSession.name
+            };
+
+            updateProgressDisplay(progress);
+            document.getElementById('progressSection').style.display = 'block';
+        }
+
+        // Fonction pour charger le tirage actuel basé sur le planning de la session
+        async function loadCurrentDrawFromSchedule(session, drawNumber) {
+            try {
+                // Récupérer les tirages existants
+                const drawsResponse = await fetch(`${API_BASE}/sessions/${session.id}/draws`);
+                let existingDraws = [];
+                if (drawsResponse.ok) {
+                    existingDraws = await drawsResponse.json();
+                } else {
+                    console.warn('⚠️ Pas de tirages existants, génération depuis le planning');
+                    existingDraws = [];
+                }
+
+                // Chercher le tirage actuel dans les tirages existants
+                let currentDraw = existingDraws.find(d => d.draw_number === drawNumber);
+
+                if (!currentDraw) {
+                    // Générer le tirage basé sur le planning de la session
+                    currentDraw = generateDrawFromSchedule(session, drawNumber);
+                }
+
+                console.log('🎯 Tirage actuel:', currentDraw);
+                currentDrawData = currentDraw;
+                setupDrawInput(currentDraw);
+
+            } catch (error) {
+                console.error('❌ Erreur chargement tirage:', error);
+                // Fallback vers un tirage générique
+                const fallbackDraw = {
+                    draw_number: drawNumber,
+                    lottery_name: session.lottery_type || 'Loto',
+                    draw_date: new Date().toISOString().split('T')[0],
+                    is_completed: false,
+                    winning_numbers: []
+                };
+                currentDrawData = fallbackDraw;
+                setupDrawInput(fallbackDraw);
+            }
+        }
+
+        // Trouver le prochain tirage à compléter selon le planning
+        function findNextDrawFromSchedule(session, existingDraws) {
+            const schedule = session.lottery_schedule || [];
+
+            console.log('🔍 Recherche prochain tirage...');
+            console.log('📊 Tirages existants:', existingDraws.length);
+
+            // Créer une Map pour recherche O(1) par numéro de tirage
+            const drawsMap = new Map();
+            existingDraws.forEach(d => {
+                if (d.draw_number) drawsMap.set(Number(d.draw_number), d);
+            });
+
+            // Trouver le premier tirage non complété
+            let drawNumber = 1;
+            while (drawNumber <= 2000) { // Augmenté pour sessions très denses
+                const existingDraw = drawsMap.get(drawNumber);
+
+                if (!existingDraw || !existingDraw.is_completed) {
+                    const nextDraw = generateDrawFromSchedule(session, drawNumber, existingDraw);
+                    console.log(`✅ Prochain tirage trouvé: #${drawNumber} - ${nextDraw.lottery_name} (${nextDraw.scheduled_day})`);
+                    return nextDraw;
+                }
+                drawNumber++;
+            }
+
+            return null;
+        }
+
+        // Fonction pour générer un tirage basé sur le planning de la session (Ordonnanceur Calendaire)
+        function generateDrawFromSchedule(session, drawNumber, existingDraw = null) {
+            const schedule = session.lottery_schedule || [];
+            const startDate = session.start_date ? new Date(session.start_date) : new Date();
+
+            let drawInfo = {
+                draw_number: drawNumber,
+                session_id: session.id,
+                is_completed: false,
+                winning_numbers: [],
+                is_no_draw: false
+            };
+
+            if (existingDraw && existingDraw.lottery_name && existingDraw.lottery_name !== 'DELETED' && existingDraw.lottery_name.trim() !== '') {
+                drawInfo = { ...drawInfo, ...existingDraw };
+                return drawInfo;
+            }
+
+            if (schedule.length > 0) {
+                // S'assurer que le planning est trié par jour (Dimanche d'abord)
+                const sortedSchedule = [...schedule].sort((a, b) => {
+                    const dayA = a.day_offset === 6 ? -1 : a.day_offset;
+                    const dayB = b.day_offset === 6 ? -1 : b.day_offset;
+                    return dayA - dayB;
+                });
+
+                const cycleLength = session.cycle_length || 7;
+                const scheduleCount = sortedSchedule.length;
+
+                const currentPeriod = Math.ceil(drawNumber / cycleLength);
+                const positionInPeriod = ((drawNumber - 1) % cycleLength) + 1;
+
+                const scheduleIndex = (positionInPeriod - 1) % scheduleCount;
+                const lotteryItem = sortedSchedule[scheduleIndex];
+
+                // Calculer la date absolue (Calendar Anchoring)
+                // En JS, getDay() renvoie 0 pour Dimanche, 1 pour Lundi ... 6 pour Samedi.
+                const startDay = startDate.getDay();
+                // Nombre de jours pour reculer jusqu'au Dimanche de la semaine de début
+                const daysToAnchor = startDay;
+
+                const anchorDate = new Date(startDate);
+                anchorDate.setDate(anchorDate.getDate() - daysToAnchor);
+                anchorDate.setHours(0, 0, 0, 0);
+
+                const periodsFromStart = Math.floor((drawNumber - 1) / cycleLength);
+                const weeksPerPeriod = cycleLength / 7;
+                const weeksInternal = Math.floor((positionInPeriod - 1) / scheduleCount);
+                const totalWeeks = (periodsFromStart * weeksPerPeriod) + weeksInternal;
+
+                // Mapper lotteryItem.day_offset (0=Lun, 6=Dim) vers JS getDay (0=Dim, 1=Lun)
+                const targetDayJS = (lotteryItem.day_offset + 1) % 7;
+
+                const drawDate = new Date(anchorDate);
+                drawDate.setDate(drawDate.getDate() + (totalWeeks * 7) + targetDayJS);
+
+                drawInfo.lottery_name = lotteryItem.name;
+                drawInfo.draw_date = drawDate.toISOString().split('T')[0];
+                drawInfo.scheduled_day = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'][lotteryItem.day_offset];
+                drawInfo.cycle_number = periodsFromStart + 1;
+                drawInfo.position_in_cycle = scheduleIndex + 1;
+                drawInfo.period = currentPeriod;
+                drawInfo.position_in_period = positionInPeriod;
+
+                console.log(`📅 Tirage #${drawNumber}: ${drawInfo.lottery_name} le ${drawInfo.scheduled_day} ${drawInfo.draw_date}`);
+            } else {
+                const drawDate = new Date(startDate);
+                drawDate.setDate(drawDate.getDate() + (drawNumber - 1) * 3);
+                drawInfo.lottery_name = `${session.lottery_type || 'Loto'} #${drawNumber}`;
+                drawInfo.draw_date = drawDate.toISOString().split('T')[0];
+            }
+
+            return drawInfo;
+        }
+
+        // Fonction spéciale pour générer le premier tirage d'une nouvelle période
+        function generateDrawFromScheduleForNewPeriod(session, drawNumber, completedPeriods) {
+            // Utiliser la fonction principale avec la logique corrigée
+            return generateDrawFromSchedule(session, drawNumber);
+        }
+
+        // Configurer l'interface pour un tirage spécifique
+        function setupDrawForSession(drawInfo) {
+            if (!drawInfo) {
+                console.log('⚠️ Pas de tirage suivant');
+                return;
+            }
+
+            currentDrawData = drawInfo;
+
+            // Afficher les sections
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('drawInputSection').style.display = 'block';
+
+            // Mettre à jour le titre avec les informations du planning
+            const titleText = drawInfo.scheduled_day ?
+                `${drawInfo.lottery_name} (${drawInfo.scheduled_day})` :
+                drawInfo.lottery_name;
+
+            document.getElementById('drawTitle').textContent = titleText;
+
+            const subtitleText = `Tirage #${drawInfo.draw_number} - ${drawInfo.draw_date}${drawInfo.cycle_number ? ` - Cycle ${drawInfo.cycle_number}` : ''}`;
+            document.getElementById('drawSubtitle').textContent = subtitleText;
+
+            // Pré-remplir les champs
+            document.getElementById('drawName').value = drawInfo.lottery_name || '';
+            document.getElementById('drawDate').value = drawInfo.draw_date || new Date().toISOString().split('T')[0];
+
+            // Générer les champs de saisie
+            generateNumberInputs();
+
+            // Pré-remplir si déjà complété
+            if (drawInfo.is_completed && drawInfo.winning_numbers && drawInfo.winning_numbers.length > 0) {
+                drawInfo.winning_numbers.forEach((num, index) => {
+                    const input = document.getElementById(`num${index + 1}`);
+                    if (input) {
+                        input.value = num;
+                        input.classList.add('filled');
+                    }
+                });
+            }
+
+            // Mettre à jour les statistiques
+            updateSessionProgress();
+
+            setTimeout(() => {
+                const firstInput = document.getElementById('num1');
+                if (firstInput && !drawInfo.is_completed) firstInput.focus();
+                updateButtonStates();
+            }, 100);
+        }
+
+
+        // Alias conservé pour compatibilité si nécessaire ailleurs
+        async function loadSessionHistory(sessionId) {
+            const drawsResponse = await fetch(`${API_BASE}/sessions/${sessionId}/draws`);
+            const sessionDraws = await drawsResponse.json();
+            await displayResultsHistory(sessionDraws);
+        }
+
+        // Mettre à jour le progrès de la session
+        function updateSessionProgress() {
+            if (!currentSession || !currentDrawData) return;
+
+            const completedCount = currentDrawData.draw_number - 1;
+            const totalDraws = currentSession.total_draws;
+            const percentage = Math.round((completedCount / totalDraws) * 100);
+
+            document.getElementById('currentDrawStat').textContent = currentDrawData.draw_number;
+            document.getElementById('totalDrawsStat').textContent = totalDraws;
+            document.getElementById('completedStat').textContent = completedCount;
+            document.getElementById('progressStat').textContent = percentage + '%';
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('sessionInfo').textContent = `Session: ${currentSession.name}`;
+        }
+
+        // Charger les données existantes depuis la base de données
+        async function loadExistingDraws(session) {
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${session.id}/draws`);
+                if (response.ok) {
+                    const draws = await response.json();
+                    console.log('📊 Tirages existants:', draws.length);
+                    return draws;
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement tirages:', error);
+            }
+            return [];
+        }
+
+        // Afficher le sélecteur de période
+        function displayPeriodSelector(session) {
+            document.getElementById('periodSection').style.display = 'block';
+
+            const totalPeriods = Math.ceil(session.total_draws / session.total_draws);
+            const select = document.getElementById('periodSelect');
+            select.innerHTML = '';
+
+            for (let i = 1; i <= totalPeriods; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Période ${i}`;
+                select.appendChild(option);
+            }
+
+            document.getElementById('loadPeriodBtn').disabled = false;
+        }
+
+        // Charger la dernière période incomplète
+        async function loadLastIncompletePeriod(session) {
+            const draws = await loadExistingDraws(session);
+            const lastIncomplete = draws.find(d => !d.is_completed) ||
+                { draw_number: 1, lottery_name: 'Premier tirage', draw_date: new Date().toISOString().split('T')[0], is_completed: false, winning_numbers: [] };
+
+            currentDrawData = lastIncomplete;
+            currentSession = session; // S'assurer que currentSession est défini
+
+            // Forcer l'affichage et la génération des champs
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('drawInputSection').style.display = 'block';
+
+            // FORCER L'AFFICHAGE DE LA SECTION HISTORIQUE
+            const historySection = document.getElementById('resultsHistorySection');
+            const historyTitle = document.getElementById('historySessionTitle');
+            const historyContainer = document.getElementById('resultsHistory');
+
+            historySection.style.display = 'block';
+            historyTitle.textContent = `Historique - ${session.name}`;
+            historyContainer.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">📋 Aucun résultat enregistré pour le moment</p>';
+
+            // Générer immédiatement les champs de saisie
+            generateNumberInputs();
+            setupDrawInput(lastIncomplete);
+
+            // Charger et afficher l'historique
+            await loadAndDisplayHistory();
+        }
+
+        // Charger une période spécifique
+        async function loadPeriod() {
+            const periodNum = document.getElementById('periodSelect').value;
+            if (!periodNum) return;
+
+            console.log('📅 Chargement période:', periodNum);
+            await loadLastIncompletePeriod(currentSession);
+        }
+
+        // Générer les champs de saisie des numéros
+        function generateNumberInputs() {
+            const numbersGrid = document.getElementById('numbersGrid');
+            if (!numbersGrid) {
+                console.error('❌ numbersGrid non trouvé');
+                return;
+            }
+
+            // Utiliser une valeur par défaut si currentSession n'est pas défini
+            const numbersPerDraw = currentSession?.numbers_per_draw || 5;
+            const minRange = currentSession?.number_range_min || 1;
+            const maxRange = currentSession?.number_range_max || 90;
+
+            numbersGrid.innerHTML = '';
+            console.log('🔢 Génération de', numbersPerDraw, 'champs');
+
+            for (let i = 1; i <= numbersPerDraw; i++) {
+                const numberInput = document.createElement('div');
+                numberInput.className = 'number-input';
+                numberInput.innerHTML = `
+                    <label>N°${i}</label>
+                    <input 
+                        type="number" 
+                        id="num${i}" 
+                        min="${minRange}" 
+                        max="${maxRange}"
+                        placeholder="${i}"
+                        oninput="handleNumberInput(${i})"
+                        onkeydown="handleKeyDown(event, ${i})"
+                    >
+                `;
+                numbersGrid.appendChild(numberInput);
+            }
+
+            console.log('✅ Champs générés:', numbersGrid.children.length);
+        }
+
+        // Supprimer la session sélectionnée
+        async function deleteCurrentSession() {
+            clearLastSession(); // Nettoyer la mémoire avant toute chose
+            const sessionId = document.getElementById('sessionSelect').value;
+            if (!sessionId) {
+                showMessage('Veuillez sélectionner une session à supprimer', 'error');
+                return;
+            }
+
+            const sessionName = document.getElementById('sessionSelect').selectedOptions[0].textContent;
+
+            if (!confirm(`⚠️ ATTENTION: Supprimer définitivement la session:\n\n"${sessionName}"\n\nTous les tirages de cette session seront perdus.\n\nContinuer?`)) return;
+
+            console.log('🗑️ Tentative de suppression session ID:', sessionId);
+            console.log('🗑️ Nom de session:', sessionName);
+
+            try {
+                // Test 1: Essayer DELETE classique
+                console.log('🔄 Test 1: DELETE /sessions/' + sessionId);
+                let response = await fetch(`${API_BASE}/sessions/${sessionId}`, {
+                    method: 'DELETE'
+                });
+
+                console.log('📥 Réponse DELETE:', response.status, response.statusText);
+
+                if (response.ok) {
+                    console.log('✅ DELETE réussi');
+                    showMessage('✅ Session supprimée avec succès (DELETE)', 'success');
+                    await resetInterface();
+                    return;
+                }
+
+                // Test 2: Essayer POST /sessions/{id}/delete
+                console.log('🔄 Test 2: POST /sessions/' + sessionId + '/delete');
+                response = await fetch(`${API_BASE}/sessions/${sessionId}/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                console.log('📥 Réponse POST delete:', response.status, response.statusText);
+
+                if (response.ok) {
+                    console.log('✅ POST delete réussi');
+                    showMessage('✅ Session supprimée avec succès (POST delete)', 'success');
+                    await resetInterface();
+                    return;
+                }
+
+                // Test 3: Marquer comme supprimée
+                console.log('🔄 Test 3: Marquage comme supprimée');
+                response = await fetch(`${API_BASE}/session`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: sessionId,
+                        name: `[SUPPRIMÉE] ${sessionName.replace('[SUPPRIMÉE] ', '')}`,
+                        is_active: false
+                    })
+                });
+
+                console.log('📥 Réponse PUT:', response.status, response.statusText);
+
+                if (response.ok) {
+                    console.log('✅ Marquage réussi');
+                    showMessage('✅ Session marquée comme supprimée', 'success');
+                    await resetInterface();
+                    return;
+                }
+
+                // Toutes les méthodes ont échoué
+                const errorText = await response.text();
+                console.error('❌ Toutes les méthodes ont échoué. Dernière erreur:', errorText);
+                showMessage(`❌ Impossible de supprimer la session. Statut: ${response.status}. Détails: ${errorText}`, 'error');
+
+            } catch (error) {
+                console.error('❌ Erreur de connexion:', error);
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
+        }
+
+        // Fonction helper pour réinitialiser l'interface
+        async function resetInterface() {
+            currentSession = null;
+            currentDrawData = null;
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('drawInputSection').style.display = 'none';
+            document.getElementById('resultsHistorySection').style.display = 'none';
+            document.getElementById('deleteSessionBtn').disabled = true;
+            document.getElementById('activateBtn').disabled = true;
+            await loadSessions();
+        }
+
+        // Reprendre la session actuelle après une pause
+        async function resumeCurrentSession() {
+            if (!currentSession) {
+                showMessage('Aucune session active à reprendre', 'error');
+                return;
+            }
+
+            console.log('🔄 Reprise de la session:', currentSession.name);
+
+            try {
+                // Recharger les détails de la session pour reprendre où on était
+                await loadSessionDetails(currentSession.id);
+                showMessage(`▶️ Session "${currentSession.name}" reprise`, 'success');
+            } catch (error) {
+                console.error('❌ Erreur reprise session:', error);
+                showMessage('Erreur lors de la reprise: ' + error.message, 'error');
+            }
+        }
+
+        // Éditer un tirage
+        async function editDraw(drawNumber) {
+            if (!currentSession) {
+                showMessage('Aucune session active', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                const draws = await response.json();
+                const draw = draws.find(d => d.draw_number === drawNumber);
+
+                if (!draw) {
+                    showMessage('Tirage non trouvé', 'error');
+                    return;
+                }
+
+                const newDate = prompt('Date du tirage (AAAA-MM-JJ) :', draw.draw_date || '');
+                if (newDate === null) return;
+
+                const newName = prompt('Nom du loto :', draw.lottery_name || '');
+                if (newName === null) return;
+
+                const currentNumbers = (draw.winning_numbers || []).join(' ');
+                const newNumbers = prompt('Numéros gagnants (séparés par un espace, vide pour no-draw) :', currentNumbers);
+                if (newNumbers === null) return;
+
+                const numbersArr = newNumbers.trim() ? newNumbers.trim().split(/\s+/).map(x => parseInt(x)).filter(x => !isNaN(x)) : [];
+
+                const updateData = {
+                    numbers: numbersArr,
+                    draw_date: newDate,
+                    lottery_name: newName,
+                    is_no_draw: numbersArr.length === 0
+                };
+
+                const updateResponse = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${drawNumber}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (updateResponse.ok) {
+                    showMessage('✅ Tirage modifié avec succès', 'success');
+                    await loadSessionHistory(currentSession.id);
+                } else {
+                    const error = await updateResponse.json();
+                    showMessage('Erreur: ' + (error.detail || 'Erreur inconnue'), 'error');
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur modification:', error);
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
+        }
+
+        // Supprimer un tirage
+        async function deleteDraw(drawNumber) {
+            if (!currentSession) {
+                showMessage('Aucune session active', 'error');
+                return;
+            }
+
+            if (!confirm(`Êtes-vous sûr de vouloir supprimer le tirage #${drawNumber} ?\n\nTous les tirages suivants seront renumérotés.\n\nCette action est irréversible.`)) return;
+
+            try {
+                // Charger tous les tirages de la session
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.id}/draws`);
+                const allDraws = await response.json();
+
+                // Filtrer pour supprimer le tirage spécifié
+                const remainingDraws = allDraws.filter(d => d.draw_number !== drawNumber);
+
+                // Filtrer seulement les tirages avec des données valides
+                const validDraws = remainingDraws.filter(draw =>
+                    draw.lottery_name &&
+                    draw.lottery_name.trim() !== '' &&
+                    draw.lottery_name !== 'null' &&
+                    (draw.winning_numbers && draw.winning_numbers.length > 0) || draw.is_no_draw
+                );
+
+                // Renuméroter les tirages valides restants
+                const renumberedDraws = validDraws
+                    .sort((a, b) => new Date(a.draw_date) - new Date(b.draw_date))
+                    .map((draw, index) => ({
+                        ...draw,
+                        draw_number: index + 1
+                    }));
+
+                console.log(`Suppression: ${allDraws.length} -> ${validDraws.length} tirages valides`);
+
+                // Vider et recréer avec les tirages valides renumérotés
+                for (let i = 1; i <= allDraws.length; i++) {
+                    try {
+                        await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${i}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                numbers: [],
+                                draw_date: new Date().toISOString().split('T')[0],
+                                lottery_name: 'DELETED',
+                                is_no_draw: false,
+                                is_completed: false
+                            })
+                        });
+                    } catch (e) {
+                        // Ignorer les erreurs de nettoyage
+                    }
+                }
+
+                // Recréer seulement les tirages valides
+                for (const draw of renumberedDraws) {
+                    await fetch(`${API_BASE}/sessions/${currentSession.id}/draws/${draw.draw_number}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            numbers: draw.winning_numbers || [],
+                            draw_date: draw.draw_date,
+                            lottery_name: draw.lottery_name,
+                            is_no_draw: draw.is_no_draw || false
+                        })
+                    });
+                }
+
+                showMessage(`✅ Tirage #${drawNumber} supprimé et ${renumberedDraws.length} tirages renumérotés`, 'success');
+
+                // Recharger l'interface
+                await loadSessionHistory(currentSession.id);
+                await loadSessionDetails(currentSession.id);
+
+            } catch (error) {
+                console.error('❌ Erreur suppression:', error);
+                showMessage('Erreur de connexion: ' + error.message, 'error');
+            }
         }
 
         // Fermer le modal en cliquant à l'extérieur
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('createSessionModal');
             if (event.target === modal) {
                 closeCreateSessionModal();
@@ -1007,4 +3064,5 @@
         }
     </script>
 </body>
+
 </html>

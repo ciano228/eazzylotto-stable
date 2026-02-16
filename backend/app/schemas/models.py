@@ -1,78 +1,107 @@
-from pydantic import BaseModel
-from typing import List, Optional
+"""
+Schémas Pydantic pour les modèles de données
+"""
+from pydantic import BaseModel, Field
+from typing import Optional, List
 from datetime import datetime
 
-# Modèles d'authentification
+
+# Schémas d'authentification
 class UserBase(BaseModel):
     username: str
     email: str
 
+
 class UserCreate(UserBase):
     password: str
+
 
 class UserLogin(BaseModel):
     username: str
     password: str
 
+
 class User(UserBase):
     id: int
-    is_active: bool
+    is_active: bool = True
+    is_superuser: bool = False
     created_at: datetime
     last_login: Optional[datetime] = None
-
+    
     class Config:
         from_attributes = True
+
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
-    user_id: int
+    token_type: str = "bearer"
+    user_id: Optional[int] = None
 
-# Modèles de calcul
+
+class TokenData(BaseModel):
+    user_id: Optional[int] = None
+
+
+# Schémas de calcul
 class CalcRequest(BaseModel):
-    expr: str
+    expr: str = Field(..., description="Expression mathématique à évaluer")
+
 
 class CalcResponse(BaseModel):
-    expr: str
     result: float
-    status: str
+    expression: str
 
-# Modèles de session
-class SessionBase(BaseModel):
-    name: str
-    status: str = "active"
 
-class SessionCreate(SessionBase):
-    draws: List[int]
+# Schémas Katula
+class KatulaMatrixRequest(BaseModel):
+    universe: str = "mundo"
+    chip_number: Optional[int] = None
 
-class Session(SessionBase):
-    id: int
-    date: datetime
-    draws: List[int]
 
-    class Config:
-        from_attributes = True
-
-# Modèles de prédiction
-class Prediction(BaseModel):
-    id: int
+class KatulaAnalysisRequest(BaseModel):
+    universe: str = "mundo"
     numbers: List[int]
-    confidence: float
-    model: str
-    date: str
-    status: str
 
-# Modèles d'analyse
-class AnalyticsTrend(BaseModel):
-    date: str
-    sessions: int
-    accuracy: float
 
-class FrequencyData(BaseModel):
-    number: int
-    frequency: int
+class JournalEntryRequest(BaseModel):
+    num1: int
+    num2: int
 
-class AnalyticsResponse(BaseModel):
-    stats: dict
-    trends: List[AnalyticsTrend]
-    frequency: List[FrequencyData]
+
+class DrawValidationRequest(BaseModel):
+    numbers: List[int]
+    universe: str = "mundo"
+
+
+# Schémas de session
+class SessionCreate(BaseModel):
+    name: str
+    lottery_type: str
+    description: Optional[str] = None
+
+
+class SessionUpdate(BaseModel):
+    name: Optional[str] = None
+    is_active: Optional[bool] = None
+    description: Optional[str] = None
+
+
+class DrawCreate(BaseModel):
+    draw_number: int
+    draw_date: str
+    winning_numbers: List[int]
+    lottery_name: str
+    is_completed: bool = True
+
+
+# Schémas d'analyse
+class AnalysisRequest(BaseModel):
+    session_id: int
+    universe: str = "mundo"
+    analysis_type: str = "full"
+
+
+class PredictionRequest(BaseModel):
+    universe: str = "mundo"
+    historical_draws: List[List[int]]
+    prediction_count: int = 5

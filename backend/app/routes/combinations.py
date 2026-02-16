@@ -7,7 +7,7 @@ from sqlalchemy import text
 from typing import List, Dict, Any, Optional
 from app.database.connection import get_db
 
-router = APIRouter(prefix="/api/combinations", tags=["combinations"])
+router = APIRouter(prefix="/combinations", tags=["combinations"])
 
 @router.get("/universe/{universe}")
 async def get_combinations_by_universe(

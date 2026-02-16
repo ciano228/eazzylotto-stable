@@ -1,0 +1,212 @@
+/* 
+ * Styles pour l'affichage des drawers en liste verticale
+ * Mode DRAWER (empilement naturel) vs Mode CHIP (classique)
+ */
+
+/* ========== MODE DRAWER - Liste Verticale (Empilement Naturel) ========== */
+
+.mini-chip-cell.drawer-mode.vertical-list {
+    position: relative;
+    padding: 0;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 80px;
+}
+
+/* Header avec numéro de chip */
+.chip-number-header {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    color: white;
+    font-size: 0.85em;
+    font-weight: bold;
+    padding: 4px 8px;
+    text-align: center;
+    border-bottom: 2px solid #16a085;
+}
+
+/* Container de la liste verticale */
+.drawer-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 2px;
+    flex: 1;
+}
+
+/* Item drawer dans la liste */
+.drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    min-height: 24px;
+}
+
+/* Drawer ACTIF */
+.drawer-item.active {
+    background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border-color: #2c3e50;
+    box-shadow: 0 1px 4px rgba(52, 152, 219, 0.4);
+    font-weight: bold;
+}
+
+.drawer-item.active:hover {
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.6);
+}
+
+/* Drawer INACTIF */
+.drawer-item.inactive {
+    background: #f8f9fa;
+    color: #999;
+    opacity: 0.7;
+}
+
+.drawer-item.inactive:hover {
+    opacity: 0.9;
+    transform: translateX(2px);
+}
+
+/* Icône de forme */
+.drawer-item .forme-icon {
+    font-size: 1.2em;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Nom du drawer */
+.drawer-item .drawer-name {
+    font-size: 0.75em;
+    flex: 1;
+    font-weight: 600;
+}
+
+/* Badge de compteur */
+.drawer-item .count-badge {
+    background: #e74c3c;
+    color: white;
+    font-size: 0.65em;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Message si aucun drawer */
+.no-drawers {
+    text-align: center;
+    color: #999;
+    font-size: 0.7em;
+    padding: 8px;
+    font-style: italic;
+}
+
+/* ========== MODE CHIP - Classique ========== */
+
+.mini-chip-cell.chip-mode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 60px;
+}
+
+.mini-chip-cell.chip-mode:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mini-chip-cell.chip-mode.occurred {
+    color: white;
+}
+
+.mini-chip-cell.chip-mode .occurrence-counter {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.7em;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 1200px) {
+    .drawer-item {
+        min-height: 20px;
+        padding: 3px 5px;
+    }
+
+    .drawer-item .forme-icon {
+        font-size: 1.1em;
+    }
+
+    .chip-number-header {
+        font-size: 0.8em;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 768px) {
+    .drawer-item {
+        min-height: 18px;
+        padding: 2px 4px;
+        gap: 4px;
+    }
+
+    .drawer-item .forme-icon {
+        font-size: 1em;
+        min-width: 16px;
+    }
+
+    .drawer-item .drawer-name {
+        font-size: 0.7em;
+    }
+
+    .drawer-item .count-badge {
+        font-size: 0.6em;
+        padding: 1px 4px;
+    }
+}
+
+/* ========== ANIMATIONS ========== */
+
+@keyframes drawerPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 1px 4px rgba(52, 152, 219, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.7);
+    }
+}
+
+.drawer-item.active.highlight {
+    animation: drawerPulse 1.5s infinite;
+}
+
+/* Toggle entre modes */
+.mini-chip-cell {
+    transition: all 0.3s ease;
+}

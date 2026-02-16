@@ -247,6 +247,25 @@
             border-radius: 8px;
             margin: 20px 0;
         }
+        .period-separator {
+            height: 10px;
+            background: linear-gradient(90deg,#ff4d4f,#ff1f1f);
+            margin: 22px 0;
+            border-radius: 4px;
+            position: relative;
+        }
+        .period-separator span {
+            position: absolute;
+            right: 10px;
+            top: -28px;
+            background: #ff1f1f;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 
@@ -338,7 +357,8 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api/analytics';
+        // Use the current origin + /api so we call the mounted API router
+        const API_BASE = window.location.origin + '/api';
         let currentData = null;
 
         // Initialisation
@@ -358,7 +378,7 @@
 
         async function loadSessions() {
             try {
-                const response = await fetch('http://localhost:8000/api/session/sessions');
+                const response = await fetch(`${API_BASE}/unified/session/sessions`);
                 const data = await response.json();
                 
                 if (response.ok) {
@@ -410,12 +430,40 @@
             loadBtn.textContent = '🔄 Chargement...';
 
             try {
-                // Simuler des données de résultats (en attendant l'API réelle)
-                const mockResults = generateMockResults(universe, sessionId, period);
-                
-                displayPerformanceMetrics(mockResults.performance);
-                displayAccuracyStats(mockResults.accuracy);
-                displayHistoryTable(mockResults.history);
+                    let draws = [];
+                    let drawsPerPeriod = 21;
+
+                    if (sessionId) {
+                        // Load real draws for the selected session
+                        const respDraws = await fetch(`${API_BASE}/unified/sessions/${sessionId}/draws`);
+                        if (respDraws.ok) {
+                            draws = await respDraws.json();
+                        }
+
+                        // Get session info to determine period size
+                        try {
+                            const respSession = await fetch(`${API_BASE}/unified/sessions/${sessionId}`);
+                            if (respSession.ok) {
+                                const sdata = await respSession.json();
+                                const sessionObj = sdata.session || sdata;
+                                drawsPerPeriod = sessionObj.total_draws || drawsPerPeriod;
+                            }
+                        } catch (e) {
+                            console.log('Impossible de récupérer les infos de session:', e);
+                        }
+                    } else {
+                        // Simulate results when no session selected
+                        const mockResults = generateMockResults(universe, sessionId, period);
+                        displayPerformanceMetrics(mockResults.performance);
+                        displayAccuracyStats(mockResults.accuracy);
+                        // Ensure mock history is ordered oldest -> newest
+                        const mockHistory = Array.isArray(mockResults.history) ? mockResults.history.slice() : [];
+                        mockHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        draws = mockHistory.map((h, i) => ({ draw_number: i+1, draw_date: h.date, lottery_name: h.session, winning_numbers: h.prediction }));
+                    }
+
+                    // Render history table with period separators
+                    displayHistoryTable(draws, drawsPerPeriod);
 
             } catch (error) {
                 showError('Erreur lors du chargement: ' + error.message);
@@ -522,39 +570,70 @@
             container.innerHTML = html;
         }
 
-        function displayHistoryTable(history) {
+        function displayHistoryTable(history, drawsPerPeriod = 21) {
             const tbody = document.getElementById('historyTableBody');
-            
             let html = '';
-            
-            history.forEach(record => {
-                const statusClass = record.status === 'success' ? 'status-success' : 
-                                  record.status === 'partial' ? 'status-partial' : 'status-miss';
-                
-                const statusText = record.status === 'success' ? 'Succès' : 
-                                 record.status === 'partial' ? 'Partiel' : 'Échec';
-                
-                // Générer les boules de numéros
-                const predictionBalls = record.prediction.map(num => {
-                    const isHit = record.result.includes(num);
-                    return `<div class="number-ball ${isHit ? 'hit' : 'miss'}">${num}</div>`;
-                }).join('');
-                
+
+            if (!history || history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888;">Aucun résultat disponible</td></tr>';
+                return;
+            }
+
+            // Sort by draw_number
+            history.sort((a, b) => (a.draw_number || 0) - (b.draw_number || 0));
+
+            history.forEach((record, idx) => {
+                const periodIndex = Math.ceil((record.draw_number || (idx+1)) / drawsPerPeriod);
+                const isPeriodEnd = ((record.draw_number || (idx+1)) % drawsPerPeriod) === 0;
+
+                // If this is the first item or starts a new period, optionally insert a header (optional)
+                if (record.draw_number && (record.draw_number === 1 || ((record.draw_number - 1) % drawsPerPeriod) === 0)) {
+                    html += `<tr><td colspan="7" style="font-weight:700;color:#1890ff;padding:10px 0;">📅 PÉRIODE ${periodIndex}</td></tr>`;
+                }
+
+                // Determine status and numbers
+                let numbersText = '⏳ To be updated';
+                let statusIcon = '⏳';
+                let bgColor = '#fff7e6';
+                let borderColor = '#faad14';
+
+                if (record.is_no_draw) {
+                    numbersText = 'NO-DRAW';
+                    statusIcon = '🚫';
+                    bgColor = '#fff1f0';
+                    borderColor = '#ff7875';
+                } else if (record.winning_numbers && record.winning_numbers.length > 0) {
+                    numbersText = (Array.isArray(record.winning_numbers) ? record.winning_numbers.join(' - ') : String(record.winning_numbers));
+                    statusIcon = '✅';
+                    bgColor = '#f6ffed';
+                    borderColor = '#52c41a';
+                }
+
+                const dateText = record.draw_date || record.date || '';
+                const sessionName = record.session_name || record.session || '';
+
                 html += `
-                    <tr>
-                        <td>${record.date}</td>
-                        <td>${record.session}</td>
-                        <td>${record.universe}</td>
-                        <td>
-                            <div class="winning-numbers">${predictionBalls}</div>
-                        </td>
-                        <td>${record.result.join(', ')}</td>
-                        <td>${record.accuracy}%</td>
-                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <tr style="background:${bgColor};border-left:4px solid ${borderColor};">
+                        <td style="padding:12px;vertical-align:middle;font-weight:700;">${dateText}</td>
+                        <td style="padding:12px;vertical-align:middle;">${sessionName}</td>
+                        <td style="padding:12px;vertical-align:middle;">${record.universe || ''}</td>
+                        <td style="padding:12px;vertical-align:middle;">${numbersText}</td>
+                        <td style="padding:12px;vertical-align:middle;">${Array.isArray(record.winning_numbers) ? record.winning_numbers.join(', ') : ''}</td>
+                        <td style="padding:12px;vertical-align:middle;">${record.accuracy || ''}</td>
+                        <td style="padding:12px;vertical-align:middle;">${statusIcon}</td>
                     </tr>
                 `;
+
+                // Insert visible period separator when reaching end of a period
+                if (isPeriodEnd) {
+                    html += `
+                        <tr><td colspan="7" style="padding:0;border:none;">
+                            <div class="period-separator"><span>FIN DE PÉRIODE</span></div>
+                        </td></tr>
+                    `;
+                }
             });
-            
+
             tbody.innerHTML = html;
         }
 

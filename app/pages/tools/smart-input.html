@@ -505,7 +505,7 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api';
+        const API_BASE = '/api';
         let currentSession = null;
         let currentDrawData = null;
 
@@ -519,11 +519,10 @@
         async function loadSessions() {
             try {
                 console.log('🔄 Chargement des sessions...');
-                console.log('🔗 URL API:', `${API_BASE}/session/sessions`);
+                console.log('🔗 URL API:', `${API_BASE}/sessions`);
                 
-                // Ajouter un paramètre de cache-busting
                 const cacheBuster = new Date().getTime();
-                const response = await fetch(`${API_BASE}/session/sessions?_t=${cacheBuster}`, {
+                const response = await fetch(`${API_BASE}/sessions?_t=${cacheBuster}`, {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache',
@@ -538,8 +537,7 @@
                 const data = await response.json();
                 console.log('📊 Données reçues:', data);
                 
-                // L'API retourne un objet avec une propriété 'value' contenant les sessions
-                const sessions = data.value || data.sessions || data;
+                const sessions = data.sessions || [];
                 
                 const select = document.getElementById('sessionSelect');
                 if (!select) {
@@ -552,8 +550,8 @@
                 if (Array.isArray(sessions) && sessions.length > 0) {
                     sessions.forEach(session => {
                         const option = document.createElement('option');
-                        option.value = session.id;
-                        option.textContent = `${session.name} (${session.current_draw}/${session.total_draws})`;
+                        option.value = session.name;
+                        option.textContent = `${session.name} (${session.completed_draws || 0}/${session.total_draws || 'N/A'})`;
                         if (session.is_active) {
                             option.selected = true;
                         }
@@ -583,24 +581,24 @@
         async function loadActiveSession() {
             try {
                 console.log('🔄 Chargement de la session active...');
-                console.log('🔗 URL API:', `${API_BASE}/session/sessions/active`);
-                
                 const cacheBuster = new Date().getTime();
-                const response = await fetch(`${API_BASE}/session/sessions/active?_t=${cacheBuster}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const response = await fetch(`${API_BASE}/sessions?_t=${cacheBuster}`);
                 const data = await response.json();
-                
-                if (data.session) {
-                    currentSession = data.session;
-                    updateProgressDisplay(data.progress);
-                    await loadCurrentDraw();
+
+                if (data.sessions && data.sessions.length > 0) {
+                    const activeSession = data.sessions.find(s => s.is_active);
+                    if (activeSession) {
+                        const detailResponse = await fetch(`${API_BASE}/sessions/${activeSession.name}?_t=${cacheBuster}`);
+                        const detailData = await detailResponse.json();
+                        if(detailData.session){
+                            currentSession = detailData.session;
+                            updateProgressDisplay(currentSession); 
+                            await loadCurrentDraw();
+                        }
+                    } else {
+                        console.log("Pas de session active trouvée.");
+                    }
                 }
-                
             } catch (error) {
                 console.error('Erreur lors du chargement de la session active:', error);
             }
@@ -614,16 +612,17 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${sessionId}/activate`, {
+                const response = await fetch(`${API_BASE}/sessions/${sessionId}/activate`, {
                     method: 'POST'
                 });
                 const result = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && result.status === 'success') {
                     showMessage(result.message, 'success');
+                    await loadSessions();
                     await loadActiveSession();
                 } else {
-                    showMessage('Erreur lors de l\'activation: ' + result.detail, 'error');
+                    showMessage('Erreur lors de l\'activation: ' + (result.detail || result.error), 'error');
                 }
                 
             } catch (error) {
@@ -638,7 +637,7 @@
             document.getElementById('currentDrawStat').textContent = progress.current_draw;
             document.getElementById('totalDrawsStat').textContent = progress.total_draws;
             document.getElementById('completedStat').textContent = progress.completed_draws;
-            document.getElementById('progressStat').textContent = progress.progress_percentage + '%';
+            document.getElementById('progressStat').textContent = Math.round(progress.progress_percentage) + '%';
             document.getElementById('progressFill').style.width = progress.progress_percentage + '%';
             document.getElementById('sessionInfo').textContent = `Session: ${progress.session_name}`;
         }
@@ -647,12 +646,14 @@
             if (!currentSession) return;
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/current-draw`);
-                const draw = await response.json();
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.name}/current-draw`);
+                const result = await response.json();
                 
-                if (response.ok) {
-                    currentDrawData = draw;
-                    setupDrawInput(draw);
+                if (response.ok && result.status === 'success') {
+                    currentDrawData = result.draw;
+                    setupDrawInput(result.draw);
+                } else {
+                     console.error('Erreur lors du chargement du tirage actuel:', result.error);
                 }
                 
             } catch (error) {
@@ -662,13 +663,15 @@
 
         function setupDrawInput(draw) {
             document.getElementById('drawTitle').textContent = draw.lottery_name;
-            document.getElementById('drawSubtitle').textContent = `Tirage #${draw.draw_number} - ${draw.draw_date}`;
+            document.getElementById('drawSubtitle').textContent = `Tirage #${draw.draw_number} - ${new Date(draw.draw_date).toLocaleDateString()}`;
             
-            // Générer les champs de saisie
             const numbersGrid = document.getElementById('numbersGrid');
             numbersGrid.innerHTML = '';
             
-            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+            const numberRange = currentSession.metadata.number_range || "1-90";
+            const [min, max] = numberRange.split('-').map(Number);
+
+            for (let i = 1; i <= currentSession.metadata.numbers_per_draw; i++) {
                 const numberInput = document.createElement('div');
                 numberInput.className = 'number-input';
                 numberInput.innerHTML = `
@@ -676,8 +679,8 @@
                     <input 
                         type="number" 
                         id="num${i}" 
-                        min="${currentSession.number_range_min}" 
-                        max="${currentSession.number_range_max}"
+                        min="${min}" 
+                        max="${max}"
                         placeholder="${i}"
                         oninput="handleNumberInput(${i})"
                         onkeydown="handleKeyDown(event, ${i})"
@@ -686,21 +689,20 @@
                 numbersGrid.appendChild(numberInput);
             }
             
-            // Pré-remplir si le tirage est déjà complété
-            if (draw.is_completed && draw.winning_numbers.length > 0) {
-                draw.winning_numbers.forEach((num, index) => {
+            if (draw.is_completed && draw.numbers && draw.numbers.length > 0) {
+                draw.numbers.forEach((num, index) => {
                     const input = document.getElementById(`num${index + 1}`);
                     if (input) {
                         input.value = num;
                         input.classList.add('filled');
                     }
                 });
-                updateButtonStates();
             }
-            
-            // Focus sur le premier champ
+            updateButtonStates();
             setTimeout(() => {
-                document.getElementById('num1').focus();
+                const firstEmpty = document.querySelector('.numbers-grid input:not(.filled)');
+                if(firstEmpty) firstEmpty.focus();
+                else document.getElementById('num1').focus();
             }, 100);
         }
 
@@ -708,51 +710,24 @@
             const input = document.getElementById(`num${position}`);
             let value = input.value;
             
-            // Validation
             input.classList.remove('error', 'filled');
             
-            // Passer au champ suivant automatiquement si 2 chiffres ou plus
-            if (value.length >= 2) {
+            if (value.length >= 1) {
                 const numValue = parseInt(value);
-                
-                if (numValue) {
-                    // Vérifier la plage
-                    if (numValue < currentSession.number_range_min || numValue > currentSession.number_range_max) {
-                        input.classList.add('error');
-                        return;
-                    }
-                    
-                    // Vérifier les doublons
-                    if (checkDuplicate(numValue, position)) {
-                        input.classList.add('error');
-                        return;
-                    }
-                    
-                    input.classList.add('filled');
-                    
-                    // Passer au champ suivant automatiquement
-                    if (position < currentSession.numbers_per_draw) {
-                        const nextInput = document.getElementById(`num${position + 1}`);
-                        if (nextInput && !nextInput.value) {
-                            setTimeout(() => nextInput.focus(), 100);
-                        }
-                    }
+                const numberRange = currentSession.metadata.number_range || "1-90";
+                const [min, max] = numberRange.split('-').map(Number);
+
+                if (numValue < min || numValue > max || checkDuplicate(numValue, position)) {
+                    input.classList.add('error');
+                    return;
                 }
-            } else if (value.length === 1) {
-                const numValue = parseInt(value);
-                if (numValue) {
-                    // Validation pour les nombres à 1 chiffre aussi
-                    if (numValue < currentSession.number_range_min || numValue > currentSession.number_range_max) {
-                        input.classList.add('error');
-                        return;
+                input.classList.add('filled');
+
+                if (value.length >= String(max).length && position < currentSession.metadata.numbers_per_draw) {
+                    const nextInput = document.getElementById(`num${position + 1}`);
+                    if (nextInput && !nextInput.value) {
+                        setTimeout(() => nextInput.focus(), 100);
                     }
-                    
-                    if (checkDuplicate(numValue, position)) {
-                        input.classList.add('error');
-                        return;
-                    }
-                    
-                    input.classList.add('filled');
                 }
             }
             
@@ -760,8 +735,7 @@
         }
 
         function handleKeyDown(event, position) {
-            // Navigation avec les flèches
-            if (event.key === 'ArrowRight' && position < currentSession.numbers_per_draw) {
+            if (event.key === 'ArrowRight' && position < currentSession.metadata.numbers_per_draw) {
                 document.getElementById(`num${position + 1}`).focus();
             } else if (event.key === 'ArrowLeft' && position > 1) {
                 document.getElementById(`num${position - 1}`).focus();
@@ -769,7 +743,7 @@
         }
 
         function checkDuplicate(value, currentPosition) {
-            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+            for (let i = 1; i <= currentSession.metadata.numbers_per_draw; i++) {
                 if (i !== currentPosition) {
                     const otherInput = document.getElementById(`num${i}`);
                     if (otherInput && parseInt(otherInput.value) === value) {
@@ -782,7 +756,7 @@
 
         function updateButtonStates() {
             const numbers = getCurrentNumbers();
-            const isComplete = numbers.length === currentSession.numbers_per_draw && 
+            const isComplete = numbers.length === currentSession.metadata.numbers_per_draw && 
                               numbers.every(n => n !== null);
             
             document.getElementById('saveBtn').disabled = !isComplete;
@@ -791,42 +765,45 @@
 
         function getCurrentNumbers() {
             const numbers = [];
-            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+            for (let i = 1; i <= currentSession.metadata.numbers_per_draw; i++) {
                 const input = document.getElementById(`num${i}`);
                 const value = parseInt(input.value);
-                numbers.push(value || null);
+                if (!isNaN(value)) {
+                    numbers.push(value);
+                }
             }
-            return numbers.filter(n => n !== null);
+            return numbers;
         }
 
         async function saveCurrentDraw() {
             const numbers = getCurrentNumbers();
             
-            if (numbers.length !== currentSession.numbers_per_draw) {
-                showMessage('Veuillez remplir tous les numéros', 'error');
+            if (numbers.length !== currentSession.metadata.numbers_per_draw) {
+                showMessage('Veuillez remplir tous les numéros valides', 'error');
                 return;
             }
 
             try {
                 const response = await fetch(
-                    `${API_BASE}/session/sessions/${currentSession.id}/draws/${currentDrawData.draw_number}`,
+                    `${API_BASE}/sessions/${currentSession.name}/save-draw`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
+                            draw_id: currentDrawData.draw_id,
                             numbers: numbers,
-                            draw_date: new Date().toLocaleDateString('fr-FR')
+                            draw_date: document.getElementById('drawDate').value || new Date().toISOString().split('T')[0]
                         })
                     }
                 );
                 
                 const result = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && result.status === 'success') {
                     showMessage('✅ Tirage sauvegardé avec succès!', 'success');
-                    await loadActiveSession(); // Recharger pour mettre à jour le progrès
+                    await loadActiveSession();
                 } else {
-                    showMessage('Erreur lors de la sauvegarde: ' + result.detail, 'error');
+                    showMessage('Erreur lors de la sauvegarde: ' + (result.detail || result.error), 'error');
                 }
                 
             } catch (error) {
@@ -843,7 +820,7 @@
         }
 
         function clearInputs() {
-            for (let i = 1; i <= currentSession.numbers_per_draw; i++) {
+            for (let i = 1; i <= (currentSession.metadata.numbers_per_draw || 6) ; i++) {
                 const input = document.getElementById(`num${i}`);
                 if (input) {
                     input.value = '';
@@ -862,24 +839,75 @@
         function closeCreateSessionModal() {
             document.getElementById('createSessionModal').style.display = 'none';
             document.getElementById('createSessionForm').reset();
+            document.getElementById('scheduleItems').innerHTML = '';
+        }
+
+        function addLotteryToSchedule() {
+            const daySelect = document.getElementById('daySelect');
+            const lotteryNameInput = document.getElementById('lotteryNameInput');
+            const scheduleItems = document.getElementById('scheduleItems');
+
+            const day = daySelect.options[daySelect.selectedIndex].text;
+            const dayValue = daySelect.value;
+            const name = lotteryNameInput.value.trim();
+
+            if (!name) {
+                alert('Veuillez entrer un nom pour la loto.');
+                return;
+            }
+
+            const itemId = `schedule-item-${Date.now()}`;
+            const item = document.createElement('div');
+            item.id = itemId;
+            item.className = 'schedule-item';
+            item.style.display = 'grid';
+            item.style.gridTemplateColumns = 'auto 1fr auto';
+            item.style.gap = '10px';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '10px';
+            item.dataset.day = dayValue;
+            item.dataset.name = name;
+
+            item.innerHTML = `
+                <span style="width: 80px;">${day}</span>
+                <span>${name}</span>
+                <button type="button" onclick="document.getElementById('${itemId}').remove()" style="width: 80px; background: #ff4d4f; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                    Supprimer
+                </button>
+            `;
+
+            scheduleItems.appendChild(item);
+            lotteryNameInput.value = '';
         }
 
         document.getElementById('createSessionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            const scheduleItems = document.querySelectorAll('#scheduleItems .schedule-item');
+            const weekly_schedule = [];
+            scheduleItems.forEach(item => {
+                weekly_schedule.push({
+                    day_of_week: parseInt(item.dataset.day),
+                    loto_name: item.dataset.name
+                });
+            });
+
             const range = document.getElementById('numberRange').value.split('-');
             const sessionData = {
-                name: document.getElementById('sessionName').value,
+                session_name: document.getElementById('sessionName').value,
                 description: document.getElementById('sessionDescription').value,
-                lottery_type: document.getElementById('lotteryType').value,
-                numbers_per_draw: parseInt(document.getElementById('numbersPerDraw').value),
                 total_draws: parseInt(document.getElementById('totalDraws').value),
-                number_range_min: parseInt(range[0]),
-                number_range_max: parseInt(range[1])
+                start_date: document.getElementById('startDate').value,
+                weekly_schedule: weekly_schedule,
+                metadata: {
+                    lottery_type: document.getElementById('lotteryType').value,
+                    numbers_per_draw: parseInt(document.getElementById('numbersPerDraw').value),
+                    number_range: document.getElementById('numberRange').value
+                }
             };
 
             try {
-                const response = await fetch(`${API_BASE}/session/sessions`, {
+                const response = await fetch(`${API_BASE}/unified/session`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(sessionData)
@@ -887,13 +915,13 @@
                 
                 const result = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && result.status === 'success') {
                     showMessage('✨ Session créée avec succès!', 'success');
                     closeCreateSessionModal();
                     await loadSessions();
-                    await loadActiveSession();
+                    await activateSession(sessionData.session_name);
                 } else {
-                    showMessage('Erreur lors de la création: ' + result.detail, 'error');
+                    showMessage('Erreur lors de la création: ' + (result.detail || result.error), 'error');
                 }
                 
             } catch (error) {
@@ -912,21 +940,19 @@
             }, 5000);
         }
 
-        // Charger et afficher l'historique des résultats
-async function loadResultsHistory() {
+        async function loadResultsHistory() {
             if (!currentSession) return;
             try {
-                const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
-                const draws = await response.json();
-                if (response.ok) {
-                    displayResultsHistory(draws);
+                const response = await fetch(`${API_BASE}/sessions/${currentSession.name}/draws`);
+                const result = await response.json();
+                if (response.ok && result.status === 'success') {
+                    displayResultsHistory(result.draws);
                 }
             } catch (error) {
                 showMessage('Erreur lors du chargement de l\'historique', 'error');
             }
         }
 
-        // Affichage de l'historique, tri descendant, séparateurs de périodes
         function displayResultsHistory(draws) {
             const container = document.getElementById('resultsHistory');
             const title = document.getElementById('historySessionTitle');
@@ -935,12 +961,10 @@ async function loadResultsHistory() {
                 title.textContent = '';
                 return;
             }
-            // Nom de la session en titre
             title.textContent = currentSession.name;
-            // Tri descendant (plus récent en haut)
             draws.sort((a, b) => b.draw_number - a.draw_number);
-            // Regroupement par périodes
-            const drawsPerPeriod = currentSession.numbers_per_draw || 7;
+            
+            const drawsPerPeriod = currentSession.metadata.numbers_per_draw || 7;
             let html = '';
             let lastPeriod = null;
             draws.forEach((draw, idx) => {
@@ -953,34 +977,20 @@ async function loadResultsHistory() {
                     lastPeriod = period;
                 }
                 html += `<div class='result-item' style='background:#f8f9fa;padding:15px 20px;margin-bottom:10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;'>` +
-                    `<div><b>#${draw.draw_number}</b> | <span style='color:#1890ff;'>${draw.draw_date || ''}</span> : <span>${(draw.winning_numbers||[]).join(' - ')}</span></div>` +
-                    `<div><button onclick='editResult(${draw.id})' style='background:#1890ff;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;'>✏️</button></div>` +
+                    `<div><b>#${draw.draw_number}</b> | <span style='color:#1890ff;'>${new Date(draw.draw_date).toLocaleDateString() || ''}</span> : <span>${(draw.numbers||[]).join(' - ')}</span></div>` +
+                    `<div><button onclick='editResult(${draw.draw_id})' style='background:#1890ff;color:white;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;'>✏️</button></div>` +
                     `</div>`;
             });
             container.innerHTML = html;
         }
 
-        // Edition d'un résultat (affiche un prompt simple pour la démo)
         async function editResult(drawId) {
-            const response = await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws`);
-            const draws = await response.json();
-            const draw = draws.find(d => d.id === drawId);
-            if (!draw) return;
-            const newDate = prompt('Nouvelle date du tirage (JJ/MM/AAAA) :', draw.draw_date || '');
-            const newNumbers = prompt('Nouveaux numéros (séparés par un espace) :', (draw.winning_numbers||[]).join(' '));
-            if (newDate && newNumbers) {
-                const numbersArr = newNumbers.split(/\s+/).map(x => parseInt(x)).filter(x => !isNaN(x));
-                await fetch(`${API_BASE}/session/sessions/${currentSession.id}/draws/${draw.draw_number}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ numbers: numbersArr, draw_date: newDate })
-                });
-                await loadResultsHistory();
-                showMessage('Résultat modifié', 'success');
-            }
+            // This function needs a proper implementation, likely with a modal.
+            // The current PUT endpoint is not available in simple_server.py
+            console.log("Editing draw:", drawId);
+            showMessage("La modification n'est pas encore implémentée.", "error");
         }
 
-        // Appel dans loadActiveSession et saveCurrentDraw
         const originalLoadActiveSession = loadActiveSession;
         loadActiveSession = async function() {
             await originalLoadActiveSession.apply(this, arguments);
@@ -992,19 +1002,15 @@ async function loadResultsHistory() {
             await loadResultsHistory();
         };
 
-        // Fonction pour ouvrir le journal statistique
         function openStatisticalJournal() {
             if (!currentSession) {
                 showMessage('Aucune session active. Veuillez d\'abord activer une session.', 'error');
                 return;
             }
-            
-            // Rediriger vers le journal avec l'ID de session
-            const url = `advanced-journal.html?session=${currentSession.id}&universe=mundo`;
+            const url = `advanced-journal.html?session=${currentSession.name}&universe=mundo`;
             window.open(url, '_blank');
         }
 
-        // Fermer le modal en cliquant à l'extérieur
         window.onclick = function(event) {
             const modal = document.getElementById('createSessionModal');
             if (event.target === modal) {

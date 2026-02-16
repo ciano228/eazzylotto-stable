@@ -8,9 +8,13 @@ from config import DB_CONFIG
 from katula_complete_service import katula_service
 from katula_ui_data_service import KatulaUIDataService
 from katula_ui_mapper import KatulaUIMapper
+from session_statistics_engine import SessionStatisticsEngine
+from unified_db_session_service import UnifiedDBSessionService
 
 app = FastAPI(title="Katula Advanced API")
 ui_data_service = KatulaUIDataService(DB_CONFIG)
+stats_engine = SessionStatisticsEngine(DB_CONFIG)
+session_service = UnifiedDBSessionService(DB_CONFIG)
 
 # Monter les fichiers statiques
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

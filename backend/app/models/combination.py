@@ -42,7 +42,7 @@ class Combination(Base):
     base_name = Column(String)
     quartier = Column(String)
     region = Column(String)
-    gentillee = Column(String)
+    gentile = Column(String)
     chip = Column(String)
     ligne = Column(String)
     colonne = Column(String)

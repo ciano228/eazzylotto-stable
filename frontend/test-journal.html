@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Journal Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1890ff;
+        }
+        button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #40a9ff;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+        }
+        .error {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test du Service de Journal Statistique</h1>
+        
+        <h3>Test 1: Combinaison 34-38</h3>
+        <button onclick="testCombination()">Tester 34-38</button>
+        <div id="result1" class="result"></div>
+        
+        <h3>Test 2: Journal Complet</h3>
+        <button onclick="testJournal()">Générer Journal [34, 38, 12, 45]</button>
+        <div id="result2" class="result"></div>
+        
+        <h3>Test 3: Validation Univers</h3>
+        <button onclick="testValidation()">Valider Univers</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        async function testCombination() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/journal/combination/34/38`);
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (response.ok ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Erreur: ' + error.message;
+            }
+        }
+
+        async function testJournal() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/journal/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        numbers: [34, 38, 12, 45]
+                    })
+                });
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (response.ok ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Erreur: ' + error.message;
+            }
+        }
+
+        async function testValidation() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.textContent = 'Chargement...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/journal/validate-universe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        numbers: [34, 38],
+                        universe: 'mundo'
+                    })
+                });
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (response.ok ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Erreur: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

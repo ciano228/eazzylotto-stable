@@ -86,48 +86,49 @@ class KatulaValidator:
         
         # Get detailed chip structures
         self.cur.execute("""
-            WITH forme_order(forme, ordre) AS (
-                VALUES 
-                    ('carre', 1),
-                    ('triangle', 2),
-                    ('cercle', 3),
-                    ('rectangle', 4),
-                    ('carre-triangle', 5),
-                    ('carre-cercle', 6),
-                    ('carre-rectangle', 7),
-                    ('triangle-carre', 8),
-                    ('triangle-cercle', 9),
-                    ('triangle-rectangle', 10),
-                    ('cercle-carre', 11),
-                    ('cercle-triangle', 12),
-                    ('cercle-rectangle', 13),
-                    ('rectangle-carre', 14),
-                    ('rectangle-triangle', 15),
-                    ('rectangle-cercle', 16)
-            ),
-            ordered_formes AS (
-                SELECT DISTINCT t.forme, COALESCE(fo.ordre, 99) as ordre
+            WITH chip_stats AS (
+                WITH ordered_formes AS (
+                    SELECT DISTINCT forme,
+                        CASE forme 
+                            WHEN 'carre' THEN 1
+                            WHEN 'triangle' THEN 2
+                            WHEN 'cercle' THEN 3
+                            WHEN 'rectangle' THEN 4
+                            WHEN 'carre-triangle' THEN 5
+                            WHEN 'carre-cercle' THEN 6
+                            WHEN 'carre-rectangle' THEN 7
+                            WHEN 'triangle-carre' THEN 8
+                            WHEN 'triangle-cercle' THEN 9
+                            WHEN 'triangle-rectangle' THEN 10
+                            WHEN 'cercle-carre' THEN 11
+                            WHEN 'cercle-triangle' THEN 12
+                            WHEN 'cercle-rectangle' THEN 13
+                            WHEN 'rectangle-carre' THEN 14
+                            WHEN 'rectangle-triangle' THEN 15
+                            WHEN 'rectangle-cercle' THEN 16
+                            ELSE 99
+                        END as forme_order
+                    FROM table_de_katula 
+                    WHERE univers = %(universe)s
+                )
+                SELECT 
+                    chip,
+                    COUNT(*) as compartment_count,
+                    array_agg(DISTINCT t.forme ORDER BY of.forme_order) as formes,
+                    array_agg(DISTINCT petique ORDER BY petique) as petiques,
+                    array_agg(DISTINCT ligne ORDER BY ligne) as lignes,
+                    array_agg(DISTINCT colonne ORDER BY colonne) as colonnes
                 FROM table_de_katula t
-                LEFT JOIN forme_order fo ON t.forme = fo.forme
-                WHERE t.univers = %s
-                ORDER BY COALESCE(fo.ordre, 99)
+                JOIN ordered_formes of ON t.forme = of.forme
+                WHERE t.univers = %(universe)s
+                GROUP BY chip
+                ORDER BY CASE 
+                    WHEN chip ~ '^[0-9]+$' THEN (chip::integer)
+                    ELSE 999999  -- Put non-numeric chips at the end
+                END
             )
-            SELECT 
-                t.chip,
-                COUNT(*) as compartment_count,
-                array_agg(DISTINCT of.forme) as formes,
-                array_agg(DISTINCT t.petique ORDER BY t.petique) as petiques,
-                array_agg(DISTINCT t.ligne ORDER BY t.ligne) as lignes,
-                array_agg(DISTINCT t.colonne ORDER BY t.colonne) as colonnes
-            FROM table_de_katula t
-            CROSS JOIN ordered_formes of
-            WHERE t.univers = %s AND t.forme = of.forme
-            GROUP BY t.chip
-            ORDER BY CASE 
-                WHEN t.chip ~ '^[0-9]+$' THEN (t.chip::integer)
-                ELSE 999999
-            END;
-        """, (universe, universe))
+            SELECT * FROM chip_stats;
+        """, (universe,))
         
         chips = {}
         for row in self.cur.fetchall():

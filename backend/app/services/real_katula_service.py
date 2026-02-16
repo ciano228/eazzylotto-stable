@@ -4,6 +4,7 @@ Colonnes: chip_id, univers, ligne, colonne, petique, chip, forme, denomination
 """
 import os
 import psycopg2
+import psycopg2.extras
 from dotenv import load_dotenv
 from typing import Dict, List, Optional
 
@@ -175,6 +176,19 @@ class RealKatulaService:
                 'coordonnee': f"{ligne}-{colonne}"
             })
         
+        return results
+
+    def get_grid_data(self, univers: str) -> List[Dict]:
+        """Récupérer toutes les données de la grille pour un univers."""
+        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute("""
+            SELECT ligne, colonne, chip, forme, denomination, petique
+            FROM table_de_katula
+            WHERE univers = %s
+        """, (univers,))
+        results = []
+        for row in cursor.fetchall():
+            results.append(dict(row))
         return results
 
 # Instance globale

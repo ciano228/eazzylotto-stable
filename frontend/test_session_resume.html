@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Session Resume</title>
+</head>
+<body>
+    <h1>Test Session Resume</h1>
+    <p>This page is for testing the automatic session resume functionality of `smart-input.html`.</p>
+    
+    <h2>Instructions</h2>
+    <ol>
+        <li>Click the "Set Dummy Session ID and Go to Smart Input" button below.</li>
+        <li>The `smart-input.html` page should load and display the message "Reprise de la dernière session en cours...".</li>
+        <li>Select a new session from the dropdown to verify that the message is cleared.</li>
+    </ol>
+
+    <button onclick="setDummySessionAndGo()">Set Dummy Session ID and Go to Smart Input</button>
+
+    <script>
+        function setDummySessionAndGo() {
+            // Set a dummy last session ID to test the functionality
+            localStorage.setItem('last_session_id', '12345');
+            window.location.href = 'smart-input.html';
+        }
+    </script>
+
+</body>
+</html>

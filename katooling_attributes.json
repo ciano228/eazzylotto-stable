@@ -1,0 +1,43 @@
+{
+    "universe": "mundo",
+    "mapping_size": 544,
+    "attribute_columns": [
+        "forme",
+        "tome",
+        "granque_name",
+        "petique",
+        "engine",
+        "beastie",
+        "alpha_ranking",
+        "chip",
+        "denomination",
+        "parite",
+        "region",
+        "gentile",
+        "quartier",
+        "base_name",
+        "ligne",
+        "colonne",
+        "value"
+    ],
+    "sample_pair": "59-74",
+    "sample_data": {
+        "forme": "triangle",
+        "tome": "tome2",
+        "granque_name": "Q1",
+        "petique": "q1",
+        "engine": "train",
+        "beastie": "cow",
+        "alpha_ranking": "b",
+        "chip": "chip1",
+        "denomination": "forest 1",
+        "parite": "2",
+        "region": "C-A",
+        "gentile": "cc",
+        "quartier": "1/4-1/4",
+        "base_name": "forest",
+        "ligne": "L1",
+        "colonne": "C1",
+        "value": "59-74"
+    }
+}

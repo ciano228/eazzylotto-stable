@@ -1,291 +1,126 @@
 """
-Service de Matrice Katula - Extraction et formatage des données
-Extrait les informations de la table 'combinations' et les retourne sous forme de matrice
+Service de Matrice Katula
+Gère l'extraction et la manipulation des données de la matrice Katula
 """
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, List
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from datetime import datetime
-import json
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import os
+
 
 class KatulaMatrixService:
-    """
-    Service pour extraire les données de la table combinations et les formatter en matrice
-    """
+    """Service pour gérer les données de la matrice Katula"""
     
     @staticmethod
     def extract_combinations_matrix(
         db: Session, 
         universe: str = "mundo", 
-        limit: int = 100
+        limit: int = 1000
     ) -> Dict[str, Any]:
-        """
-        Extrait les données de la table combinations et les retourne sous forme de matrice
-        """
+        """Extrait les données de combinaisons pour la matrice Katula"""
+        
         try:
-            # Requête pour extraire toutes les informations pertinentes
-            query = """
+            # Utiliser psycopg2 directement pour plus de fiabilité
+            conn = psycopg2.connect(
+                dbname=os.getenv('DB_NAME', 'katooling_main_system'),
+                user=os.getenv('DB_USER', 'postgres'),
+                password=os.getenv('DB_PASSWORD', 'Katulaa_33'),
+                host=os.getenv('DB_HOST', 'localhost'),
+                port=os.getenv('DB_PORT', '5432')
+            )
+            
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            
+            # Requête pour récupérer les combinaisons
+            cursor.execute("""
                 SELECT 
-                    combination_id,
-                    num1, num2,
-                    chip, chip_id,
-                    univers,
-                    granque_name,
-                    tome,
-                    forme,
-                    denomination,
-                    created_at
-                FROM combinations 
-                WHERE univers = :universe 
+                    combination_id, num1, num2, univers, forme,
+                    denomination, chip, chip_id, granque_name, tome,
+                    petique, ligne, colonne, alpha_ranking
+                FROM combinations
+                WHERE univers = %s
                 ORDER BY combination_id DESC
-                LIMIT :limit
-            """
+                LIMIT %s
+            """, (universe, limit))
             
-            result = db.execute(text(query), {
-                "universe": universe,
-                "limit": limit
-            })
+            rows = cursor.fetchall()
             
-            combinations = result.fetchall()
-            
-            if not combinations:
-                return {
-                    "error": "Aucune combinaison trouvée",
-                    "universe": universe,
-                    "total_found": 0
-                }
-            
-            # Formatter les données en matrice
             matrix_data = []
-            denominations_map = {}
-            formes_map = {}
-            
-            for combo in combinations:
-                # Données de base
-                combo_data = {
-                    "combination_id": combo.combination_id,
-                    "numbers": f"{combo.num1}-{combo.num2}",
-                    "num1": combo.num1,
-                    "num2": combo.num2,
-                    "chip": combo.chip,
-                    "chip_id": combo.chip_id,
-                    "universe": combo.univers,
-                    "granque_name": getattr(combo, 'granque_name', None),
-                    "tome": getattr(combo, 'tome', None),
-                    "forme": getattr(combo, 'forme', None),
-                    "denomination": getattr(combo, 'denomination', None),
-                    "created_at": getattr(combo, 'created_at', None)
-                }
-                
-                matrix_data.append(combo_data)
-                
-                # Construire les maps pour les dénominations et formes
-                if combo_data["denomination"]:
-                    if combo_data["denomination"] not in denominations_map:
-                        denominations_map[combo_data["denomination"]] = []
-                    denominations_map[combo_data["denomination"]].append(combo_data)
-                
-                if combo_data["forme"]:
-                    if combo_data["forme"] not in formes_map:
-                        formes_map[combo_data["forme"]] = []
-                    formes_map[combo_data["forme"]].append(combo_data)
-            
-            # Statistiques et attributs
-            stats = KatulaMatrixService._calculate_matrix_stats(matrix_data)
-            
-            return {
-                "universe": universe,
-                "total_combinations": len(matrix_data),
-                "matrix_data": matrix_data,
-                "denominations": denominations_map,
-                "formes": formes_map,
-                "statistics": stats,
-                "extraction_timestamp": datetime.now().isoformat()
-            }
-            
-        except Exception as e:
-            return {"error": f"Erreur lors de l'extraction: {str(e)}"}
-    
-    @staticmethod
-    def get_katula_table_data(
-        db: Session, 
-        universe: str = "mundo"
-    ) -> Dict[str, Any]:
-        """
-        Extrait spécifiquement les données de la table combinations
-        """
-        try:
-            # Requête pour extraire les données de la table combinations
-            query = """
-                SELECT 
-                    combination_id,
-                    num1, num2,
-                    chip, chip_id,
-                    univers,
-                    granque_name,
-                    tome,
-                    forme,
-                    denomination,
-                    created_at
-                FROM combinations 
-                WHERE univers = :universe 
-                ORDER BY combination_id DESC
-                LIMIT 1000
-            """
-            
-            result = db.execute(text(query), {"universe": universe})
-            combinations = result.fetchall()
-            
-            # Formater les données
-            formatted_data = []
-            for row in combinations:
-                formatted_data.append({
-                    "combination_id": row.combination_id,
-                    "num1": row.num1,
-                    "num2": row.num2,
-                    "chip": row.chip,
-                    "chip_id": row.chip_id,
-                    "univers": row.univers,
-                    "granque_name": row.granque_name,
-                    "tome": row.tome,
-                    "forme": row.forme,
-                    "denomination": row.denomination,
-                    "created_at": row.created_at.isoformat() if row.created_at else None
+            for row in rows:
+                matrix_data.append({
+                    "combination_id": row['combination_id'],
+                    "numbers": [row['num1'], row['num2']],
+                    "num1": row['num1'],
+                    "num2": row['num2'],
+                    "univers": row['univers'],
+                    "forme": row['forme'],
+                    "denomination": row['denomination'],
+                    "chip": row['chip'],
+                    "chip_id": row['chip_id'],
+                    "granque_name": row['granque_name'],
+                    "tome": row['tome'],
+                    "petique": row['petique'],
+                    "ligne": row['ligne'],
+                    "colonne": row['colonne'],
+                    "alpha_ranking": row['alpha_ranking']
                 })
             
-            # Grouper par chip pour créer la structure de matrice
-            chips = {}
-            formes = set()
-            
-            for item in formatted_data:
-                chip_num = item["chip"]
-                if chip_num not in chips:
-                    chips[chip_num] = {"formes": {}}
-                
-                forme = item["forme"]
-                if forme:
-                    formes.add(forme)
-                    if forme not in chips[chip_num]["formes"]:
-                        chips[chip_num]["formes"][forme] = []
-                    
-                    chips[chip_num]["formes"][forme].append({
-                        "denomination": item["denomination"],
-                        "tome": item["tome"],
-                        "granque_name": item["granque_name"]
-                    })
+            cursor.close()
+            conn.close()
             
             return {
-                "source": "combinations",
+                "status": "success",
                 "universe": universe,
-                "chips": chips,
-                "formes": list(formes),
-                "total_entries": len(formatted_data),
-                "extraction_timestamp": datetime.now().isoformat()
+                "total_combinations": len(matrix_data),
+                "matrix_data": matrix_data
             }
-                
+            
         except Exception as e:
-            return {"error": f"Erreur lors de l'extraction des données: {str(e)}"}
+            return {
+                "status": "error",
+                "error": str(e)
+            }
     
     @staticmethod
-    def _calculate_matrix_stats(matrix_data: List[Dict]) -> Dict[str, Any]:
-        """
-        Calcule les statistiques de la matrice
-        """
-        if not matrix_data:
-            return {}
+    def get_chip_data(universe: str, chip_number: int) -> Dict[str, Any]:
+        """Récupère toutes les données pour un chip spécifique"""
         
-        # Compter les occurrences
-        chip_counts = {}
-        forme_counts = {}
-        denomination_counts = {}
-        tome_counts = {}
-        
-        for item in matrix_data:
-            # Chips
-            chip = item.get("chip")
-            if chip:
-                chip_counts[chip] = chip_counts.get(chip, 0) + 1
-            
-            # Formes
-            forme = item.get("forme")
-            if forme:
-                forme_counts[forme] = forme_counts.get(forme, 0) + 1
-            
-            # Dénominations
-            denomination = item.get("denomination")
-            if denomination:
-                denomination_counts[denomination] = denomination_counts.get(denomination, 0) + 1
-            
-            # Tomes
-            tome = item.get("tome")
-            if tome:
-                tome_counts[tome] = tome_counts.get(tome, 0) + 1
-        
-        return {
-            "chip_distribution": chip_counts,
-            "forme_distribution": forme_counts,
-            "denomination_distribution": denomination_counts,
-            "tome_distribution": tome_counts,
-            "most_frequent_chip": max(chip_counts.items(), key=lambda x: x[1]) if chip_counts else None,
-            "most_frequent_forme": max(forme_counts.items(), key=lambda x: x[1]) if forme_counts else None,
-            "most_frequent_denomination": max(denomination_counts.items(), key=lambda x: x[1]) if denomination_counts else None
-        }
-    
-    @staticmethod
-    def format_for_katula_service(
-        db: Session, 
-        universe: str = "mundo",
-        format_type: str = "matrix"
-    ) -> Dict[str, Any]:
-        """
-        Formate les données spécifiquement pour le service katula-table
-        """
         try:
-            # Extraire les données
-            data = KatulaMatrixService.get_katula_table_data(db, universe)
+            conn = psycopg2.connect(
+                dbname=os.getenv('DB_NAME', 'katooling_main_system'),
+                user=os.getenv('DB_USER', 'postgres'),
+                password=os.getenv('DB_PASSWORD', 'Katulaa_33'),
+                host=os.getenv('DB_HOST', 'localhost'),
+                port=os.getenv('DB_PORT', '5432')
+            )
             
-            if "error" in data:
-                return data
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            chip_id = f"chip{chip_number}"
             
-            if format_type == "matrix":
-                # Format matrice 8x6 pour katula-table
-                matrix_8x6 = [[None for _ in range(6)] for _ in range(8)]
-                
-                if "matrix" in data:
-                    for item in data["matrix"]:
-                        ligne = item.get("ligne", 1)
-                        colonne = item.get("colonne", 1)
-                        
-                        # S'assurer que les indices sont dans les limites
-                        if 1 <= ligne <= 8 and 1 <= colonne <= 6:
-                            matrix_8x6[ligne-1][colonne-1] = {
-                                "chip": item.get("chip"),
-                                "forme": item.get("forme"),
-                                "denomination": item.get("denomination"),
-                                "position": f"L{ligne}C{colonne}"
-                            }
-                
-                return {
-                    "universe": universe,
-                    "format": "matrix_8x6",
-                    "matrix": matrix_8x6,
-                    "dimensions": {"rows": 8, "columns": 6},
-                    "source": data.get("source", "combinations"),
-                    "timestamp": datetime.now().isoformat()
-                }
+            cursor.execute("""
+                SELECT *
+                FROM combinations
+                WHERE univers = %s AND chip = %s
+                ORDER BY forme, denomination
+            """, (universe, chip_id))
             
-            elif format_type == "list":
-                # Format liste pour katula-table
-                return {
-                    "universe": universe,
-                    "format": "list",
-                    "data": data.get("matrix", data.get("matrix_data", [])),
-                    "source": data.get("source", "combinations"),
-                    "timestamp": datetime.now().isoformat()
-                }
+            rows = cursor.fetchall()
             
-            else:
-                return data
-                
+            cursor.close()
+            conn.close()
+            
+            return {
+                "status": "success",
+                "chip_number": chip_number,
+                "chip_id": chip_id,
+                "universe": universe,
+                "compartments": [dict(row) for row in rows]
+            }
+            
         except Exception as e:
-            return {"error": f"Erreur lors du formatage: {str(e)}"}
+            return {
+                "status": "error",
+                "error": str(e)
+            }
